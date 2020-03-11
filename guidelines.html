@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer Guidelines</title><link href='img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='css/style.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/groovy-weekly.html' class='icon'><span class='fa fa-envelope-o'></span> Groovy newsletter</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><ul class='nav-sidebar'>
+                                                <li><a href='support.html'>Support</a></li><li><a href='https://groovy.apache.org/index.html'>Contribute</a></li><li><a href='reporting-issues.html'>Reporting issues</a></li><li><a href='mailing-lists.html'>Mailing-lists</a></li><li><a href='events.html'>Events</a></li><li><a href='usergroups.html'>User groups</a></li><li><a href='thanks.html'>Thanks</a></li><li><a href='groovy-weekly.html'>Groovy newsletter</a></li>
+                                            </ul><br/><a class="twitter-timeline" href="https://twitter.com/ApacheGroovy?ref_src=twsrc%5Etfw">Tweets by ApacheGroovy</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<li class='active'><a href='guidelines.html'><strong>Developer Guidelines</strong></a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><div id='contribute-btn'>
+                                            <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/apache/groovy-website/tree/asf-site/site/src/site/pages/guidelines.groovy"'>
+                                                <i class='fa fa-pencil-square-o'></i> Improve this doc
+                                            </button>
+                                        </div><h1><i class='fa fa-map-signs'></i> Developer Guidelines</h1><article><h2>Useful build tasks</h2><ul><li>`installGroovy` or `iG` will build a local install of Groovy which can be used for testing (consider `-PskipIndy` if you don't need indy and want a faster build)</li><li>`install` will publish to local Maven repo</li><li>`testAll` to run the test suite</li><li>`groovydocAll` to produce Groovydoc for all modules</li><li>`:test --tests=some.package.SomeTest` to run an individual test</li></ul><h2>Build cache</h2><p>
+                                    The Groovy build makes use of Gradle's build cache. This speeds up the build in many scenarios
+                                    but sometimes gets in the way (we no doubt have tasks in our build that aren't properly configured wrt stale output).
+                                    In such cases, use `--no-build-cache` when running tasks.
+                                </p><h2>Binary compatibility</h2><p>
+                                    We regard binary compatibility as very important. It's not simply an issue related to
+                                    how our build works but it impacts many Groovy users. When making changes API, it's not just a case of
+                                    checking for all usages within the Groovy codebase that might be impacted but also whether
+                                    changes will impact other projects and users of Groovy.
+                                    In particular changes related to the Groovy runtime must be done with extreme care.
+                                    These are the classes that compiled Groovy code might call into during execution.
+                                </p><p>
+                                    In general, we try to evolve the Groovy codebase to minimise impact on Groovy-based frameworks.
+                                    For example, we'd ideally like a Grails application built with Groovy 3 to work with a Grails plugin compiled under Groovy 2.5.
+                                    This isn't always possible but we should then make life easier for frameworks by appropriate documentation when a breaking change is needed (see hints below).
+                                </p><p>
+                                    In theory, classes under the `org.codehaus` and 'org.apache' packages are more internal than those in the `groovy` package.
+                                    But users of Groovy will use any public/protected class, so make changes in all areas of the codebase with care.
+                                    [NOTE: If we start using JDK9+ modules more we might be able to alter this approach but we haven't started down that path yet.]  
+                                </p><p>Hints:<ul><li>Run the `:binary-compatibility:checkBinaryCompatibility` task before committing.</li><li>If a public/protected method needs a new parameter, keep the existing method and create an additional one with the extra parameter. Sometimes the old method should be `@Deprecated`.</li><li>If you want to rename a method, keep the old one and (if appropriate) deprecate the old one rather than just rename the existing one.</li><li>If the return type of a method changes but nothing else, consider creating a bridge method - the build is set up to use a `Bridger` utility to do this for `$$bridge` methods.</li><li>If the change can't be totally hidden, start a discussion in the dev/users mailing list as appropriate to investigate usages of the API by others.</li><li>If the change can't be totally hidden, do mark the related JIRA issue (create one if needed) with the `breaking` label.</li><li>If the change can't be totally hidden, do add a little summary/migration note in the relevant release note(s).</li></ul></p><h2>Checkstyle</h2><p>TBD</p><h2>Codenarc</h2><p>TBD</p><h2>Coverage</h2><p>TBD</p></article></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='http://groovy-lang.org/groovy-weekly.html'>Groovy newsletter</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community
+                                        </p><img src='img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' class='img-responsive'/>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2020 the Apache Groovy project &mdash; Groovy is Open Source, <a href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2 License</a></div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='js/vendor/jquery-1.10.2.min.js' defer></script><script src='js/vendor/classie.js' defer></script><script src='js/vendor/bootstrap.js' defer></script><script src='js/vendor/sidebarEffects.js' defer></script><script src='js/vendor/modernizr-2.6.2.min.js' defer></script><script src='js/plugins.js' defer></script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
