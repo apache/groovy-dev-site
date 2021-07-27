@@ -165,6 +165,11 @@ code reuse to occur only within the package. While it does limit creation of
 new shapes outside the original package, it offers no abstraction for a shape which
 could be either a square or circle since <code>Shape</code> is not public.</p>
 </li>
+<li>
+<p>We can use <code>protected</code> visibility to limit access of members strictly to children
+but that doesn&#8217;t help us solve the aforementioned problems like lack of a visible
+abstraction for <code>Shape</code> in the discussed example.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -201,6 +206,13 @@ Likewise for interfaces. This also applies for anonymous inner classes and trait
 <p>Provide checks in other places where such extension might occur implicitly, e.g.:&nbsp;with <code>@Delegate</code>,
 when using type coercion, etc.</p>
 </li>
+<li>
+<p>Support <code>non-sealed</code> or <code>unsealed</code> sub-hierarchies. (See JEP-409)</p>
+</li>
+<li>
+<p>Allow the permitted subclasses to be inferred automatically just for the case
+where the base and all permitted subclasses are in the same file. (See JEP-409)</p>
+</li>
 </ul>
 </div>
 </div>
@@ -216,13 +228,10 @@ are non-goals for the first implementation:</p>
 <p>Introduce the <code>sealed</code> modifier and <code>permits</code> clause in the grammar.</p>
 </li>
 <li>
-<p>Support <code>non-sealed</code> or <code>unsealed</code> sub-hierarchies.</p>
-</li>
-<li>
 <p>Require that all classes within a sealed hierarchy be compiled at the same time.</p>
 </li>
 <li>
-<p>Require that all classes within a sealed hierarchy belong to the same module.</p>
+<p>Require that all classes within a sealed hierarchy belong to the same JPMS module.</p>
 </li>
 <li>
 <p>Add warnings to the static compiler if a switch is used for a sealed hierarchy
@@ -261,12 +270,8 @@ and not all types are exhaustively covered.</p>
 </div>
 <div class="sect2">
 <h3 id="_reference_implementation">Reference implementation</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>TBD</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><a href="https://github.com/apache/groovy/pull/1606" class="bare">https://github.com/apache/groovy/pull/1606</a></p>
 </div>
 </div>
 <div class="sect2">
