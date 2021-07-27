@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-13</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/groovy-weekly.html' class='icon'><span class='fa fa-envelope-o'></span> Groovy newsletter</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-13</a></li><li><a href='#_abstract_sealed_classes' class='anchor-link'>Abstract: Sealed classes</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-13</h1><p>Author: <i/></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-13</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Sealed classes</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2021-07-22</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2021-07-22</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract_sealed_classes">Abstract: Sealed classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sealed classes and interfaces restrict which other classes or interfaces may extend or implement them.
+By supporting sealed classes and interfaces, the Groovy programming language
+can offer an additional mechanism for controlling class hierarchy construction.</p>
+</div>
+<div class="sect2">
+<h3 id="_motivation">Motivation</h3>
+<div class="paragraph">
+<p>Inheritance is a powerful mechanism for creating hierarchies of related class and interfaces.
+Sometimes, it is desirable to restrict the definition of children in such hierarchies.
+Modifiers already provide some mechanisms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If all of our classes and interfaces are public, this indicates that we want
+maximum reuse.</p>
+</li>
+<li>
+<p>The <code>final</code> modifier offers one mechanism for restricting further inheritance at the method or class level.
+It effectively limits all further extension and indicates no further code reuse is desired.</p>
+</li>
+<li>
+<p>By making a base class package-private we can limit extension to only classes within
+the same package. If an abstract <code>Shape</code> class is package-private, I could have
+public classes <code>Square</code> and <code>Circle</code> in the same package. This indicates that we want
+code reuse to occur only within the package. While it does limit creation of
+new shapes outside the original package, it offers no abstraction for a shape which
+could be either a square or circle since <code>Shape</code> is not public.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Sealed classes or interfaces can be public but have an associated list of allowed children.
+Classes or interfaces which are not in that list cannot inherit from those sealed types.
+This indicates that we want code reuse within the hierarchy but not beyond.
+Parent classes in the hierarchy can be made <em>accessible</em>, without also making them <em>extensible</em>.
+This allows hierarchies to be created with maximum reuse within but without having
+to defensively code for arbitrary extensions added at a later time.</p>
+</div>
+<div class="paragraph">
+<p>Such classes are useful in defining Algebraic Data Types (ADTs) and in scenarios where
+we might want to reason about whether we have accounted for all possible types, e.g.&nbsp;the
+static compiler may wish to give a warning if a switch block doesn&#8217;t exhaustively
+cover all possible types by respective case branches.</p>
+</div>
+<div class="sect3">
+<h4 id="_initial_implementation">Initial implementation</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Provide a <code>@Sealed</code> marker annotation or AST transform which allows a list of
+permitted children to be defined. Use of this annotation will be an incubating
+feature subject to change. Explicit use may eventually be discouraged and instead
+a keyword, e.g. <code>sealed</code> would be encouraged instead. However, the annotation
+could be retained to offer support for this feature on earlier JVMs or versions
+of Groovy prior to any grammar changes.</p>
+</li>
+<li>
+<p>Prohibit extension of JDK16+ sealed classes or annotated <code>@Sealed</code> classes.
+Likewise for interfaces. This also applies for anonymous inner classes and traits.</p>
+</li>
+<li>
+<p>Provide checks in other places where such extension might occur implicitly, e.g.:&nbsp;with <code>@Delegate</code>,
+when using type coercion, etc.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_potential_extensions">Potential extensions</h4>
+<div class="paragraph">
+<p>The following potential extensions are possibly all desirable but
+are non-goals for the first implementation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Introduce the <code>sealed</code> modifier and <code>permits</code> clause in the grammar.</p>
+</li>
+<li>
+<p>Support <code>non-sealed</code> or <code>unsealed</code> sub-hierarchies.</p>
+</li>
+<li>
+<p>Require that all classes within a sealed hierarchy be compiled at the same time.</p>
+</li>
+<li>
+<p>Require that all classes within a sealed hierarchy belong to the same module.</p>
+</li>
+<li>
+<p>Add warnings to the static compiler if a switch is used for a sealed hierarchy
+and not all types are exhaustively covered.</p>
+</li>
+<li>
+<p>When running on JDK16+, also add sealed class information into the bytecode.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjdk.java.net/jeps/360">JEP 360: Sealed Classes (Preview)</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.java.net/jeps/397">JEP 397: Sealed Classes (Second Preview)</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.java.net/jeps/409">JEP 409: Sealed Classes</a></p>
+</li>
+<li>
+<p><a href="https://kotlinlang.org/docs/sealed-classes.html">Sealed Classes</a> in Kotlin</p>
+</li>
+<li>
+<p><a href="https://docs.scala-lang.org/sips/sealed-types.html">Sealed Classes</a> in Scala</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_reference_implementation">Reference implementation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>TBD</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jira_issues">JIRA issues</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10148">GROOVY-10148: Groovy should not allow classes to extend sealed Java classes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2021-07-22) Initial draft</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='http://groovy-lang.org/groovy-weekly.html'>Groovy newsletter</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community
+                                        </p><img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' class='img-responsive'/>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2021 the Apache Groovy project &mdash; Groovy is Open Source, <a href='http://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2 License</a></div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
