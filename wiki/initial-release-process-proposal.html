@@ -97,11 +97,11 @@ If any of the steps in the automated process fail, this documentation might prov
 <p>there&#8217;s a general agreement that a release can be done. There&#8217;s still no explicit rule telling when a new Groovy version can be released, but the history of the project shows that releases are usually done when a significant amount of bugfixes have been done justifying a release, or that new major features are ready.</p>
 </li>
 <li>
-<p>release manager has his personal setup ready. In particular:</p>
+<p>release manager has their personal setup ready. In particular:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>release manager can log into his people.apache.org account using SSH</p>
+<p>release manager can log into their people.apache.org account using SSH</p>
 </li>
 <li>
 <p>release manager has administration privileges on <a href="http://ci.groovy-lang.org">the CI server</a></p>
@@ -120,7 +120,7 @@ If any of the steps in the automated process fail, this documentation might prov
 <h2 id="_preparing_a_release">Preparing a release</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Releases are done from the CI server, but since it will involve creating tags, branches and several commits, and that the CI server doesn&#8217;t have privileges to do it, we cannot work on the Apache Git origin. Instead, it is required that the release manager forks the repository and pushes changes to his personal fork. Given that <code>GROOVY_2_4_X</code> is the branch to release, <code>upstream</code> references Apache Git, and <code>origin</code> the release manager fork on GitHub, preparing for a release usually starts with:</p>
+<p>Releases are done from the CI server, but since it will involve creating tags, branches and several commits, and that the CI server doesn&#8217;t have privileges to do it, we cannot work on the Apache Git origin. Instead, it is required that the release manager forks the repository and pushes changes to their personal fork. Given that <code>GROOVY_2_4_X</code> is the branch to release, <code>upstream</code> references Apache Git, and <code>origin</code> the release manager fork on GitHub, preparing for a release usually starts with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
