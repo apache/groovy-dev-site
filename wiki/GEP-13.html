@@ -159,7 +159,7 @@ It effectively limits all further extension and indicates no further code reuse 
 </li>
 <li>
 <p>By making a base class package-private we can limit extension to only classes within
-the same package. If an abstract <code>Shape</code> class is package-private, I could have
+the same package. If an abstract <code>Shape</code> class is package-private, we could have
 public classes <code>Square</code> and <code>Circle</code> in the same package. This indicates that we want
 code reuse to occur only within the package. While it does limit creation of
 new shapes outside the original package, it offers no abstraction for a shape which
@@ -199,8 +199,8 @@ could be retained to offer support for this feature on earlier JVMs or versions
 of Groovy prior to any grammar changes.</p>
 </li>
 <li>
-<p>Prohibit extension of JDK16+ sealed classes or annotated <code>@Sealed</code> classes.
-Likewise for interfaces. This also applies for anonymous inner classes and traits.</p>
+<p>Prohibit extension of JDK17+ sealed classes or annotated <code>@Sealed</code> classes.
+This also applies for interfaces, anonymous inner classes and traits.</p>
 </li>
 <li>
 <p>Provide checks in other places where such extension might occur implicitly, e.g.:&nbsp;with <code>@Delegate</code>,
@@ -212,6 +212,20 @@ when using type coercion, etc.</p>
 <li>
 <p>Allow the permitted subclasses to be inferred automatically just for the case
 where the base and all permitted subclasses are in the same file. (See JEP-409)</p>
+</li>
+<li>
+<p>Introduce the <code>sealed</code> modifier and <code>permits</code> clause in the grammar.</p>
+</li>
+<li>
+<p>By default, when running on JDK17+, sealed class information is added into the bytecode.
+We refer to such classes as <em>native</em> sealed classes.</p>
+</li>
+<li>
+<p>By default, when running on earlier JDKs, an annotation is added to a class to indicate that
+a class is sealed. Such classes will be recognized by Groovy 4+ compilers but not by Java.</p>
+</li>
+<li>
+<p>The <code>@SealedOptions</code> annotation has a <code>mode</code> annotation attribute which can override the default behavior.</p>
 </li>
 </ul>
 </div>
@@ -225,9 +239,6 @@ are non-goals for the first implementation:</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Introduce the <code>sealed</code> modifier and <code>permits</code> clause in the grammar.</p>
-</li>
-<li>
 <p>Require that all classes within a sealed hierarchy be compiled at the same time.</p>
 </li>
 <li>
@@ -236,9 +247,6 @@ are non-goals for the first implementation:</p>
 <li>
 <p>Add warnings to the static compiler if a switch is used for a sealed hierarchy
 and not all types are exhaustively covered.</p>
-</li>
-<li>
-<p>When running on JDK16+, also add sealed class information into the bytecode.</p>
 </li>
 </ul>
 </div>
@@ -290,7 +298,8 @@ and not all types are exhaustively covered.</p>
 <h2 id="_update_history">Update history</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>1 (2021-07-22) Initial draft</p>
+<p>1 (2021-07-22) Initial draft
+2 (2021-11-06) Update to align with 4.0.0-beta-2</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
