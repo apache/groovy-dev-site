@@ -396,10 +396,10 @@ commas if multiple arguments are used. A case that is not supported today anyway
 <p>The elements are alternating a method name, and its parameters (can be named and non-named parameters)</p>
 </li>
 <li>
-<p>A parameter element can be any kind of expression (ie. a method call foo(), foo{}, or some expression like x+y)</p>
+<p>A parameter element can be any kind of expression (i.e. a method call foo(), foo{}, or some expression like x+y)</p>
 </li>
 <li>
-<p>All those pairs of method name and parameters are actually chained method calls (ie. send "hello" to "Guillaume"
+<p>All those pairs of method name and parameters are actually chained method calls (i.e. send "hello" to "Guillaume"
 is two methods chained one after the other as send("hello").to("Guillaume"))</p>
 </li>
 </ul>
@@ -408,7 +408,7 @@ is two methods chained one after the other as send("hello").to("Guillaume"))</p>
 <div class="sect3">
 <h4 id="_interesting_benefit_of_the_enhanced_command_expressions">Interesting benefit of the enhanced command expressions</h4>
 <div class="paragraph">
-<p>More and more do we see Java Fluent APIs that chain method calls, returning this, so as to "build" a new object.
+<p>More and more do we see Java Fluent APIs that chain method calls, returning this, to "build" a new object.
 For instance, you can imagine a fluent API for building an Email message, that would look something like this in Java:</p>
 </div>
 <div class="listingblock">
@@ -438,7 +438,7 @@ WHERE "column_name" IN ('value1', 'value2', ...)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In current Groovy this could maybe expressed by</p>
+<p>In current Groovy this could be expressed by</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -462,7 +462,7 @@ WHERE "column_name" IN ('value1', 'value2', ...)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It should be noticed, that both cases have quite different semantics. In the second case the writer saves a lot of commas, but of course not all of them. Also the lack of any kind of operator like the comma makes it diifivult to span the DSL across multiple lines. A more extended example would be</p>
+<p>It should be noticed, that both cases have quite different semantics. In the second case the writer saves a lot of commas, but of course not all of them. Also the lack of any kind of operator like the comma makes it difficult to span the DSL across multiple lines. A more extended example would be</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -472,7 +472,7 @@ sql.select count("column_name") from "table_name"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To express this in map style is a bit difficult, because of where to place count&#8230;&#8203; a possible version is mabye</p>
+<p>To express this in map style is a bit difficult, because of where to place count&#8230;&#8203; a possible version is maybe</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -512,7 +512,7 @@ marinate 30.minutes at roomTemperature</code></pre>
 <div class="sect3">
 <h4 id="_extension_to_command_expressions_in_the_case_of_assignments">Extension to command expressions in the case of assignments</h4>
 <div class="paragraph">
-<p>Currently, command expressions are allowed as standalone top-leval statements or expressions, but you can&#8217;t assign such an expression to a variable with keeping that nice DSL syntax. For instance, while you can do:</p>
+<p>Currently, command expressions are allowed as standalone top-level statements or expressions, but you can&#8217;t assign such an expression to a variable with keeping that nice DSL syntax. For instance, while you can do:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -550,7 +550,7 @@ marinate 30.minutes at roomTemperature</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>has to be supported. This seems to not to be a valid version in Scala, since that would be interpreted as</p>
+<p>has to be supported. This seems not to be a valid version in Scala, since that would be interpreted as</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -582,7 +582,7 @@ marinate 30.minutes at roomTemperature</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>in Scala and is invalid in current Groovy as well as after this proposal. So it could be stated, that this proposal is less object oriented then Scala, because the DSL usually starts with the method, not the object. On the other hand it is possible to write</p>
+<p>in Scala and is invalid in current Groovy as well as after this proposal. So it could be stated, that this proposal is less object-oriented then Scala, because the DSL usually starts with the method, not the object. On the other hand it is possible to write</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -597,7 +597,7 @@ marinate 30.minutes at roomTemperature</code></pre>
 <h4 id="_to_be_evaluated_mixed_case_with_explicit_parentheses">To be evaluated: Mixed case with explicit parentheses</h4>
 <div class="paragraph">
 <p>A possible supported case is also when mixing method calls with explicit parentheses within that extended command expression.
-The benefit would be to allow the ability to also be able to call methods not taking parameters, as well as allowing an odd number of "elements" (ie. a method name or a parameter).</p>
+The benefit would be to allow the ability to also be able to call methods not taking parameters, as well as allowing an odd number of "elements" (i.e. a method name or a parameter).</p>
 </div>
 <div class="listingblock">
 <div class="content">

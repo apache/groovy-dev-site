@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Initial release process proposal</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_initiating_a_release' class='anchor-link'>Initiating a release</a></li><li><a href='#_preparing_a_release' class='anchor-link'>Preparing a release</a></li><li><a href='#_setup_the_teamcity_release_configuration' class='anchor-link'>Setup the TeamCity release configuration</a></li><li><a href='#_trigger_the_release' class='anchor-link'>Trigger the release</a></li><li><a href='#_upload_to_apache_servers' class='anchor-link'>Upload to Apache servers</a></li><li><a href='#_push_the_tag_and_new_head' class='anchor-link'>Push the tag and new HEAD</a></li><li><a href='#_send_a_vote_thread' class='anchor-link'>Send a [VOTE] thread</a></li><li><a href='#_publish_the_release' class='anchor-link'>Publish the release</a></li><li><a href='#_update_the_web_site' class='anchor-link'>Update the web site</a></li><li><a href='#_send_an_announcement_email' class='anchor-link'>Send an announcement email</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Initial release process proposal</h1><p>Author: <i/></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Initial release process proposal</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_initiating_a_release' class='anchor-link'>Initiating a release</a></li><li><a href='#_preparing_a_release' class='anchor-link'>Preparing a release</a></li><li><a href='#_set_up_the_teamcity_release_configuration' class='anchor-link'>Set up the TeamCity release configuration</a></li><li><a href='#_trigger_the_release' class='anchor-link'>Trigger the release</a></li><li><a href='#_upload_to_apache_servers' class='anchor-link'>Upload to Apache servers</a></li><li><a href='#_push_the_tag_and_new_head' class='anchor-link'>Push the tag and new HEAD</a></li><li><a href='#_send_a_vote_thread' class='anchor-link'>Send a [VOTE] thread</a></li><li><a href='#_publish_the_release' class='anchor-link'>Publish the release</a></li><li><a href='#_update_the_website' class='anchor-link'>Update the website</a></li><li><a href='#_send_an_announcement_email' class='anchor-link'>Send an announcement email</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Initial release process proposal</h1><p>Author: <i/></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>v1.2, March 28, 2018</p>
@@ -76,7 +76,7 @@ If any of the steps in the automated process fail, this documentation might prov
 <h2 id="_background">Background</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The goal of this document is to guide the release manager in order to perform a release under the Apache Incubator. This document, reflecting the status of incubation, is work in progress and will be adapted with regards to comments from the community, mentors and IPMC.</p>
+<p>The goal of this document is to guide the release manager in order to perform a release under the Apache Incubator. This document, reflecting the status of incubation, is work in progress and will be adapted in regard to comments from the community, mentors and IPMC.</p>
 </div>
 </div>
 </div>
@@ -133,7 +133,7 @@ git push origin GROOVY_2_4_X</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_setup_the_teamcity_release_configuration">Setup the TeamCity release configuration</h2>
+<h2 id="_set_up_the_teamcity_release_configuration">Set up the TeamCity release configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Go to the <a href="http://ci.groovy-lang.org/admin/editBuild.html?id=buildType:Groovy_BintrayIntegration_ReleasePlan">TeamCity release plan</a> configuration and open the VCS settings. If the VCS root attached to the configuration is not your GitHub fork, attach your VCS root, or create a new VCS root if you haven&#8217;t done it already. The VCS root MUST have write access using the token authentication.</p>
@@ -175,7 +175,7 @@ git push origin GROOVY_2_4_X</code></pre>
 </div>
 </li>
 <li>
-<p><em>Checkout branch:</em> must be set to the branch your are releasing. For example, if you are releasing a 2.4.x version of Groovy, <code>GROOVY_2_4_X</code>.</p>
+<p><em>Checkout branch:</em> must be set to the branch you are releasing. For example, if you are releasing a 2.4.x version of Groovy, <code>GROOVY_2_4_X</code>.</p>
 </li>
 <li>
 <p><em>Use release branch</em> must be checked, and it will automate the creation of a release branch. Use a branch name in the form of <code>REL_BRANCH_2_4_3</code></p>
@@ -416,7 +416,7 @@ in the <code>groovyVersion</code> parameter. Click on <code>run build</code>.</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_update_the_web_site">Update the web site</h2>
+<h2 id="_update_the_website">Update the website</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you don&#8217;t have it locally, checkout <code><a href="https://github.com/groovy/groovy-website" class="bare">https://github.com/groovy/groovy-website</a></code>.</p>
@@ -441,7 +441,7 @@ in the <code>groovyVersion</code> parameter. Click on <code>run build</code>.</p
 <div class="sectionbody">
 <div class="paragraph">
 <p>You should wait 24h before doing this (in order for <code>dist.apache.org</code> to be properly mirrored).
-Send an email to <code>dev@</code>, <code>user@</code> and <code>announce@apache.org</code>.</p>
+Email <code>dev@</code>, <code>user@</code> and <code>announce@apache.org</code>.</p>
 </div>
 <div class="paragraph">
 <p>You can use this template. Please make sure that the email at least contains the DISCLAIMER:</p>
