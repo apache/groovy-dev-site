@@ -132,7 +132,7 @@ be used when displaying ratings on a website:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>def rating4(percentage) {
+<pre class="prettyprint highlight"><code>def rating0b(percentage) {
     assert percentage &gt;= 0 &amp;&amp; percentage &lt;= 1
     int stars = Math.ceil(percentage * 10)
     ("🔵" * stars).padRight(10, "⚪")
@@ -170,7 +170,7 @@ for <code>rating3</code>, instead of <code>case 0</code>, we could use <code>cas
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>def rating5(Percent p) {
+<pre class="prettyprint highlight"><code>def rating3b(Percent p) {
     switch(p) {
         case 0.0d -&gt; "⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
         case 0.1d -&gt; "🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪"
@@ -197,9 +197,9 @@ functionality we wanted the <code>Percent</code> instances to be.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code>@Requires({ percentage &gt;= 0 &amp;&amp; percentage &lt;= 1 })
-def rating6(percentage) {
+def rating1b(percentage) {
     int stars = Math.ceil(percentage * 10)
-    ("🔵" * stars).padRight(10, "⚪")
+    "🔵" * stars + "⚪" * (10-stars)
 }</code></pre>
 </div>
 </div>
