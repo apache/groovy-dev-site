@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - Fun with rating stars</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Fun with rating stars</a></li><li><a href='#_star_ratings' class='anchor-link'>Star Ratings</a></li><li><a href='#_increasing_robustness' class='anchor-link'>Increasing Robustness</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fun with rating stars</h1><p>Author: <i/></p><hr/><div class="sect1">
+<h2 id="_star_ratings">Star Ratings</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A recent tweet showed some C# code for producing a String of stars that might
+be used when displaying ratings on a website:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/star_ratings_csharp.png" alt="image"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at several ways to do the same thing in Groovy.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating0(percentage) {
+    int stars = Math.ceil(percentage * 10)
+    ("⬤" * stars).padRight(10, "○")
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating1(percentage) {
+    int stars = Math.ceil(percentage * 10)
+    "⬤" * stars + "○" * (10-stars)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating2(percentage) {
+    int skip = 10 - Math.ceil(percentage * 10)
+    "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤○○○○○○○○○○"[skip..&lt;10+skip]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating3(percentage) {
+    switch(percentage) {
+        case 0 -&gt; "○○○○○○○○○○"
+        case { it &lt;= 0.1 } -&gt; "⬤○○○○○○○○○"
+        case { it &lt;= 0.2 } -&gt; "⬤⬤○○○○○○○○"
+        case { it &lt;= 0.3 } -&gt; "⬤⬤⬤○○○○○○○"
+        case { it &lt;= 0.4 } -&gt; "⬤⬤⬤⬤○○○○○○"
+        case { it &lt;= 0.5 } -&gt; "⬤⬤⬤⬤⬤○○○○○"
+        case { it &lt;= 0.6 } -&gt; "⬤⬤⬤⬤⬤⬤○○○○"
+        case { it &lt;= 0.7 } -&gt; "⬤⬤⬤⬤⬤⬤⬤○○○"
+        case { it &lt;= 0.8 } -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤○○"
+        case { it &lt;= 0.9 } -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤○"
+        default -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you want you can test the various edge cases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>for (i in 0..3)
+    for (j in [0, 0.09, 0.1, 0.11, 0.9, 1])
+        println "rating$i"(j)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_increasing_robustness">Increasing Robustness</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The code examples here assume that the input is in the range <code>0 &lt;= percentage &lt;= 1</code>. There are several tweaks we could do to guard against inputs outside those ranges.</p>
+</div>
+<div class="paragraph">
+<p>We could simply add an assert, e.g.:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating4(percentage) {
+    assert percentage &gt;= 0 &amp;&amp; percentage &lt;= 1
+    int stars = Math.ceil(percentage * 10)
+    ("⬤" * stars).padRight(10, "○")
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, if we wanted to not fail, tweak some of our conditions, e.g.
+for <code>rating3</code>, instead of <code>case 0</code>, we could use <code>case { it &#8656; 0 }</code>.</p>
+</div>
+<div class="paragraph">
+<p>We could push the checks into our types by making a special class, <code>Percent</code> say, which only permitted the allowed values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>final class Percent {
+    final Double value
+    Percent(Double value) {
+        assert value &gt;= 0 &amp;&amp; value &lt;= 1
+        this.value = value
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And we could optionally also use some metaprogramming to provide a custom <code>isCase</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>Double.metaClass.isCase = { Percent p -&gt; delegate &gt;= p.value }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which means we could tweak the rating method to be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>def rating5(Percent p) {
+    switch(p) {
+        case 0.0d -&gt; "○○○○○○○○○○"
+        case 0.1d -&gt; "⬤○○○○○○○○○"
+        case 0.2d -&gt; "⬤⬤○○○○○○○○"
+        case 0.3d -&gt; "⬤⬤⬤○○○○○○○"
+        case 0.4d -&gt; "⬤⬤⬤⬤○○○○○○"
+        case 0.5d -&gt; "⬤⬤⬤⬤⬤○○○○○"
+        case 0.6d -&gt; "⬤⬤⬤⬤⬤⬤○○○○"
+        case 0.7d -&gt; "⬤⬤⬤⬤⬤⬤⬤○○○"
+        case 0.8d -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤○○"
+        case 0.9d -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤○"
+        default   -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can be fancier here using <code>@EqualsAndHashCode</code> on the <code>Percent</code> class and/or using <code>@Delegate</code> on the <code>value</code> property, depending on how rich in
+functionality we wanted the <code>Percent</code> instances to be.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, we could use a design-by-contract approach:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>@Requires({ percentage &gt;= 0 &amp;&amp; percentage &lt;= 1 })
+def rating6(percentage) {
+    int stars = Math.ceil(percentage * 10)
+    ("⬤" * stars).padRight(10, "○")
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://twitter.com/JeroenFrijters/status/1615204074588180481">Original tweet</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">1.0 (2023-01-25)</dt>
+<dd>
+<p>Initial version</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
