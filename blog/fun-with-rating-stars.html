@@ -70,7 +70,7 @@ be used when displaying ratings on a website:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code>def rating0(percentage) {
     int stars = Math.ceil(percentage * 10)
-    ("⬤" * stars).padRight(10, "○")
+    ("🔵" * stars).padRight(10, "⚪")
 }</code></pre>
 </div>
 </div>
@@ -78,7 +78,7 @@ be used when displaying ratings on a website:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code>def rating1(percentage) {
     int stars = Math.ceil(percentage * 10)
-    "⬤" * stars + "○" * (10-stars)
+    "🔵" * stars + "⚪" * (10-stars)
 }</code></pre>
 </div>
 </div>
@@ -86,7 +86,7 @@ be used when displaying ratings on a website:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code>def rating2(percentage) {
     int skip = 10 - Math.ceil(percentage * 10)
-    "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤○○○○○○○○○○"[skip..&lt;10+skip]
+    "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"[skip..&lt;10+skip]
 }</code></pre>
 </div>
 </div>
@@ -94,17 +94,17 @@ be used when displaying ratings on a website:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code>def rating3(percentage) {
     switch(percentage) {
-        case 0 -&gt; "○○○○○○○○○○"
-        case { it &lt;= 0.1 } -&gt; "⬤○○○○○○○○○"
-        case { it &lt;= 0.2 } -&gt; "⬤⬤○○○○○○○○"
-        case { it &lt;= 0.3 } -&gt; "⬤⬤⬤○○○○○○○"
-        case { it &lt;= 0.4 } -&gt; "⬤⬤⬤⬤○○○○○○"
-        case { it &lt;= 0.5 } -&gt; "⬤⬤⬤⬤⬤○○○○○"
-        case { it &lt;= 0.6 } -&gt; "⬤⬤⬤⬤⬤⬤○○○○"
-        case { it &lt;= 0.7 } -&gt; "⬤⬤⬤⬤⬤⬤⬤○○○"
-        case { it &lt;= 0.8 } -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤○○"
-        case { it &lt;= 0.9 } -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤○"
-        default -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤"
+        case 0             -&gt; "⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.1 } -&gt; "🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.2 } -&gt; "🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.3 } -&gt; "🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.4 } -&gt; "🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.5 } -&gt; "🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪"
+        case { it &lt;= 0.6 } -&gt; "🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪"
+        case { it &lt;= 0.7 } -&gt; "🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪"
+        case { it &lt;= 0.8 } -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪"
+        case { it &lt;= 0.9 } -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪"
+        default            -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵"
     }
 }</code></pre>
 </div>
@@ -135,7 +135,7 @@ be used when displaying ratings on a website:</p>
 <pre class="prettyprint highlight"><code>def rating4(percentage) {
     assert percentage &gt;= 0 &amp;&amp; percentage &lt;= 1
     int stars = Math.ceil(percentage * 10)
-    ("⬤" * stars).padRight(10, "○")
+    ("🔵" * stars).padRight(10, "⚪")
 }</code></pre>
 </div>
 </div>
@@ -172,17 +172,17 @@ for <code>rating3</code>, instead of <code>case 0</code>, we could use <code>cas
 <div class="content">
 <pre class="prettyprint highlight"><code>def rating5(Percent p) {
     switch(p) {
-        case 0.0d -&gt; "○○○○○○○○○○"
-        case 0.1d -&gt; "⬤○○○○○○○○○"
-        case 0.2d -&gt; "⬤⬤○○○○○○○○"
-        case 0.3d -&gt; "⬤⬤⬤○○○○○○○"
-        case 0.4d -&gt; "⬤⬤⬤⬤○○○○○○"
-        case 0.5d -&gt; "⬤⬤⬤⬤⬤○○○○○"
-        case 0.6d -&gt; "⬤⬤⬤⬤⬤⬤○○○○"
-        case 0.7d -&gt; "⬤⬤⬤⬤⬤⬤⬤○○○"
-        case 0.8d -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤○○"
-        case 0.9d -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤○"
-        default   -&gt; "⬤⬤⬤⬤⬤⬤⬤⬤⬤⬤"
+        case 0.0d -&gt; "⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+        case 0.1d -&gt; "🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪"
+        case 0.2d -&gt; "🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪"
+        case 0.3d -&gt; "🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪"
+        case 0.4d -&gt; "🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪"
+        case 0.5d -&gt; "🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪"
+        case 0.6d -&gt; "🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪"
+        case 0.7d -&gt; "🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪"
+        case 0.8d -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪"
+        case 0.9d -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪"
+        default   -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵"
     }
 }</code></pre>
 </div>
@@ -199,7 +199,7 @@ functionality we wanted the <code>Percent</code> instances to be.</p>
 <pre class="prettyprint highlight"><code>@Requires({ percentage &gt;= 0 &amp;&amp; percentage &lt;= 1 })
 def rating6(percentage) {
     int stars = Math.ceil(percentage * 10)
-    ("⬤" * stars).padRight(10, "○")
+    ("🔵" * stars).padRight(10, "⚪")
 }</code></pre>
 </div>
 </div>
