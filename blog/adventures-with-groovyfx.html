@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - Fun with rating stars</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - Adventures with GroovyFX</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Fun with rating stars</a></li><li><a href='#_star_ratings' class='anchor-link'>Star Ratings</a></li><li><a href='#_increasing_robustness' class='anchor-link'>Increasing Robustness</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fun with rating stars</h1><p>Author: <i/></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Adventures with GroovyFX</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Adventures with GroovyFX</h1><p>Author: <i/></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -65,7 +65,23 @@
 Title
 </td>
 <td class="hdlist2">
-<p>Fun with rating stars</p>
+<p>Adventures with GroovyFX</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Date
+</td>
+<td class="hdlist2">
+<p>2022-12-12T14:22:57+00:00</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+Permalink
+</td>
+<td class="hdlist2">
+<p>adventures-with-groovyfx</p>
 </td>
 </tr>
 <tr>
@@ -76,198 +92,198 @@ Author
 <p>Paul King</p>
 </td>
 </tr>
-<tr>
-<td class="hdlist1">
-Date
-</td>
-<td class="hdlist2">
-<p>2023-01-28T22:00:45+00:00</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-Permalink
-</td>
-<td class="hdlist2">
-<p>fun-with-rating-stars</p>
-</td>
-</tr>
 </table>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_star_ratings">Star Ratings</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>A recent tweet showed some C# code for producing a String of stars that might
-be used when displaying ratings on a website:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/star_ratings_csharp.png" alt="Image of original tweet" width="366"></span></p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s have a look at several ways to do the same thing in Groovy.</p>
+<p>This blog looks at a <a href="http://groovyfx.org/">GroovyFX</a> version of a <a href="https://donraab.medium.com/my-weird-and-wonderful-first-adventures-with-javafx-6efe3b1923c8">ToDo application originally written in JavaFX</a>.
+First we start with a <code>ToDoCategory</code> enum of our ToDo categories:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>def rating0(percentage) {
-    int stars = Math.ceil(percentage * 10)
-    ("🔵" * stars).padRight(10, "⚪")
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>def rating1(percentage) {
-    int stars = Math.ceil(percentage * 10)
-    "🔵" * stars + "⚪" * (10-stars)
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>def rating2(percentage) {
-    int skip = 10 - Math.ceil(percentage * 10)
-    "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"[skip..&lt;10+skip]
-}</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>def rating3(percentage) {
-    switch(percentage) {
-        case 0             -&gt; "⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.1 } -&gt; "🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.2 } -&gt; "🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.3 } -&gt; "🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.4 } -&gt; "🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.5 } -&gt; "🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪"
-        case { it &lt;= 0.6 } -&gt; "🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪"
-        case { it &lt;= 0.7 } -&gt; "🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪"
-        case { it &lt;= 0.8 } -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪"
-        case { it &lt;= 0.9 } -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪"
-        default            -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵"
+<pre class="prettyprint highlight"><code data-lang="groovy">enum ToDoCategory {
+    EXERCISE("🚴"),
+    WORK("📊"),
+    RELAX("🧘"),
+    TV("📺"),
+    READ("📚"),
+    EVENT("🎭"),
+    CODE("💻"),
+    COFFEE("☕️"),
+    EAT("🍽"),
+    SHOP("🛒"),
+    SLEEP("😴")
+
+    final String emoji
+
+    ToDoCategory(String emoji) {
+        this.emoji = emoji
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you want you can test the various edge cases:</p>
+<p>We will have a <code>ToDoItem</code> class containing the todo task, the previously mentioned category and the due date.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>for (i in 0..3)
-    for (j in [0, 0.09, 0.1, 0.11, 0.9, 1])
-        println "rating$i"(j)</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_increasing_robustness">Increasing Robustness</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code examples here assume that the input is in the range <code>0 &lt;= percentage &lt;= 1</code>. There are several tweaks we could do to guard against inputs outside those ranges.</p>
-</div>
-<div class="paragraph">
-<p>We could simply add an assert, e.g.:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>def rating0b(percentage) {
-    assert percentage &gt;= 0 &amp;&amp; percentage &lt;= 1
-    int stars = Math.ceil(percentage * 10)
-    ("🔵" * stars).padRight(10, "⚪")
+<pre class="prettyprint highlight"><code data-lang="groovy">@Canonical
+@JsonIncludeProperties(['task', 'category', 'date'])
+@FXBindable
+class ToDoItem {
+    final String task
+    final ToDoCategory category
+    final LocalDate date
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Or, if we wanted to not fail, tweak some of our conditions, e.g.
-for <code>rating3</code>, instead of <code>case 0</code>, we could use <code>case { it &#8656; 0 }</code>.</p>
+<p>It&#8217;s annotated with <code>@JsonIncludeProperties</code> to allow easy serialization to/from JSON format, to provide easy persistence, and <code>@FXBindable</code> which eliminates the boilerplate required to define JavaFX properties.</p>
 </div>
 <div class="paragraph">
-<p>We could push the checks into our types by making a special class, <code>Percent</code> say, which only permitted the allowed values:</p>
+<p>Next, we&#8217;ll define some helper variables:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>final class Percent {
-    final Double value
-    Percent(Double value) {
-        assert value &gt;= 0 &amp;&amp; value &lt;= 1
-        this.value = value
+<pre class="prettyprint highlight"><code data-lang="groovy">var file = 'todolist.json' as File
+var mapper = new ObjectMapper().registerModule(new JavaTimeModule())
+var open = { mapper.readValue(it, new TypeReference&lt;List&lt;ToDoItem&gt;&gt;() {}) }
+var init = file.exists() ? open(file) : []
+var items = FXCollections.observableList(init)
+var close = { mapper.writeValue(file, items) }
+var table, task, category, date, images = [:]
+var urls = ToDoCategory.values().collectEntries {
+    [it, "emoji/${Integer.toHexString(it.emoji.codePointAt(0))}.png"]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, <code>mapper</code> serializes and deserializes our top-level domain object (the ToDo list) into JSON using the <a href="https://github.com/FasterXML/jackson">Jackson library</a>. The <code>open</code> and <code>close</code> Closures do the reading and writing respectively.</p>
+</div>
+<div class="paragraph">
+<p>For a bit of fun and only slightly more complexity, we have included some slightly nicer images in our application. JavaFX&#8217;s default emoji font rendering is a little sketchy on some platforms, and it&#8217;s not much work to have nice multicolored images. This is achieved using the icons from <a href="https://github.com/pavlobu/emoji-text-flow-javafx" class="bare">https://github.com/pavlobu/emoji-text-flow-javafx</a>.
+The application is perfectly functional without them (and the approximately 20 lines for the <code>cellFactory</code> and <code>cellValueFactory</code> definitions could be elided) but is prettier with the nicer images. We shrunk them to 1/3 their original size but we could certainly make them larger if we felt inclined.</p>
+</div>
+<div class="paragraph">
+<p>Our application will have a combo box for selecting a ToDo item&#8217;s category. We&#8217;ll create a factory for the combo box so that each selection will be a label with both graphic and text components.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def graphicLabelFactory = {
+    new ListCell&lt;ToDoCategory&gt;() {
+        void updateItem(ToDoCategory cat, boolean empty) {
+            super.updateItem(cat, empty)
+            if (!empty) {
+                graphic = new Label(cat.name()).tap {
+                    graphic = new ImageView(images[cat])
+                }
+            }
+        }
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>And we could optionally also use some metaprogramming to provide a custom <code>isCase</code> method:</p>
+<p>When displaying our ToDo list, we&#8217;ll use a table view. So, let&#8217;s create a factory for table cells that will use the pretty images as a centered graphic.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>Double.metaClass.isCase = { Percent p -&gt; delegate &gt;= p.value }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Which means we could tweak the rating method to be:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>def rating3b(Percent p) {
-    switch(p) {
-        case 0.0d -&gt; "⚪⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-        case 0.1d -&gt; "🔵⚪⚪⚪⚪⚪⚪⚪⚪⚪"
-        case 0.2d -&gt; "🔵🔵⚪⚪⚪⚪⚪⚪⚪⚪"
-        case 0.3d -&gt; "🔵🔵🔵⚪⚪⚪⚪⚪⚪⚪"
-        case 0.4d -&gt; "🔵🔵🔵🔵⚪⚪⚪⚪⚪⚪"
-        case 0.5d -&gt; "🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪"
-        case 0.6d -&gt; "🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪"
-        case 0.7d -&gt; "🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪"
-        case 0.8d -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵⚪⚪"
-        case 0.9d -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵⚪"
-        default   -&gt; "🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵"
+<pre class="prettyprint highlight"><code data-lang="groovy">def graphicCellFactory = {
+    new TableCell&lt;ToDoItem, ToDoItem&gt;() {
+        void updateItem(ToDoItem item, boolean empty) {
+            graphic = empty ? null : new ImageView(images[item.category])
+            alignment = Pos.CENTER
+        }
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can be fancier here using <code>@EqualsAndHashCode</code> on the <code>Percent</code> class and/or using <code>@Delegate</code> on the <code>value</code> property, depending on how rich in
-functionality we wanted the <code>Percent</code> instances to be.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, we could use a design-by-contract approach:</p>
+<p>Finally, with these definitions out of the way, we can define our GroovyFX application for manipulating our ToDo list:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>@Requires({ percentage &gt;= 0 &amp;&amp; percentage &lt;= 1 })
-def rating1b(percentage) {
-    int stars = Math.ceil(percentage * 10)
-    "🔵" * stars + "⚪" * (10-stars)
+<pre class="prettyprint highlight"><code data-lang="groovy">start {
+    stage(title: 'GroovyFX ToDo Demo', show: true, onCloseRequest: close) {
+        urls.each { k, v -&gt; images[k] = image(url: v, width: 24, height: 24) }
+        scene {
+            gridPane(hgap: 10, vgap: 10, padding: 20) {
+                columnConstraints(minWidth: 80, halignment: 'right')
+                columnConstraints(prefWidth: 250)
+
+                label('Task:', row: 1, column: 0)
+                task = textField(row: 1, column: 1, hgrow: 'always')
+
+                label('Category:', row: 2, column: 0)
+                category = comboBox(items: ToDoCategory.values().toList(),
+                        cellFactory: graphicLabelFactory, row: 2, column: 1)
+
+                label('Date:', row: 3, column: 0)
+                date = datePicker(row: 3, column: 1)
+
+                table = tableView(items: items, row: 4, columnSpan: REMAINING,
+                        onMouseClicked: {
+                            var item = items[table.selectionModel.selectedIndex.value]
+                            task.text = item.task
+                            category.value = item.category
+                            date.value = item.date
+                        }) {
+                    tableColumn(property: 'task', text: 'Task', prefWidth: 200)
+                    tableColumn(property: 'category', text: 'Category', prefWidth: 80,
+                            cellValueFactory: { new ReadOnlyObjectWrapper(it.value) },
+                            cellFactory: graphicCellFactory)
+                    tableColumn(property: 'date', text: 'Date', prefWidth: 90, type: Date)
+                }
+
+                hbox(row: 5, columnSpan: REMAINING, alignment: CENTER, spacing: 10) {
+                    button('Add', onAction: {
+                        if (task.text &amp;&amp; category.value &amp;&amp; date.value) {
+                            items &lt;&lt; new ToDoItem(task.text, category.value, date.value)
+                        }
+                    })
+                    button('Update', onAction: {
+                        if (task.text &amp;&amp; category.value &amp;&amp; date.value &amp;&amp;
+                                !table.selectionModel.empty) {
+                            items[table.selectionModel.selectedIndex.value] =
+                                    new ToDoItem(task.text, category.value, date.value)
+                        }
+                    })
+                    button('Remove', onAction: {
+                        if (!table.selectionModel.empty)
+                            items.removeAt(table.selectionModel.selectedIndex.value)
+                    })
+                }
+            }
+        }
+    }
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>We could have somewhat separated the concerns of application logic and display logic by placing the GUI part of this app in an <code>fxml</code> file. For our purposes however, we&#8217;ll keep the whole application in one source file and use Groovy&#8217;s declarative builder style.</p>
+</div>
+<div class="paragraph">
+<p>Here is the application in use:
+<span class="image"><img src="img/TodoScreenshot.png" alt="TodoScreenshot"></span></p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_references">References</h2>
+<h2 id="_further_information">Further information</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://twitter.com/JeroenFrijters/status/1615204074588180481">Original tweet</a></p>
+<p>The code for this application can be found here:</p>
 </div>
+<div class="paragraph">
+<p><a href="https://github.com/paulk-asert/groovyfx-todo" class="bare">https://github.com/paulk-asert/groovyfx-todo</a></p>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_update_history">Update history</h2>
-<div class="sectionbody">
-<div class="dlist">
-<dl>
-<dt class="hdlist1">1.0 (2023-01-25)</dt>
-<dd>
-<p>Initial version</p>
-</dd>
-</dl>
+<div class="paragraph">
+<p>It&#8217;s a Groovy 3 and JDK 8 application but see this
+<a href="https://blogs.apache.org/groovy/entry/reading-and-writing-csv-files">blog</a>
+if you want to see Jackson deserialization of classes and records
+(and Groovy&#8217;s emulated records) from CSV files using the most recent
+Groovy and JDK versions.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
