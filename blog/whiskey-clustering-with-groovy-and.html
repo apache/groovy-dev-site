@@ -81,11 +81,11 @@ Published
 <h2 id="_whiskey_clustering">Whiskey Clustering</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/c5ba5e59-737e-4ebf-91c9-08fa67dc8f70" alt="Groovy logo" width="200"></span>
+<p><span class="image right"><img src="img/groovy_logo.png" alt="Groovy logo" width="200"></span>
 This problem looks at the quest of finding the perfect single-malt Scotch whiskey. The whiskies produced from <a href="https://www.niss.org/sites/default/files/ScotchWhisky01.txt">86 distilleries</a> have been ranked by expert tasters according to 12 criteria (Body, Sweetness, Malty, Smoky, Fruity, etc.). We&#8217;ll use a K-means algorithm to calculate the centroids.</p>
 </div>
 <div class="paragraph">
-<p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/8d458e7c-8993-470a-8afd-44a46cd2b500" alt="whiskey_bottles" width="300"></span>
+<p><span class="image right"><img src="img/whiskey_bottles.jpg" alt="whiskey_bottles" width="300"></span>
 K-means is a standard data-science clustering technique. In our case, it groups whiskies with similar characteristics (according to the 12 criteria) into clusters. If we have a favourite whiskey, chances are we can find something similar by looking at other instances in the same cluster. If we are feeling like a change, we can look for a whiskey in some other cluster. The centroid is the notional "point" in the middle of the cluster. For us, it reflects the typical measure of each criteria for a whiskey in that cluster.</p>
 </div>
 </div>
@@ -115,7 +115,7 @@ This explanation drastically simplifies Ignite&#8217;s feature set. Ignite can b
 </div>
 <div class="paragraph">
 <p>It is mostly this last capability that we will use. Ignite&#8217;s <em>Machine Learning API</em> has purpose built, cluster-aware machine learning and deep learning algorithms for Classification, Regression, Clustering, and Recommendation among others. We&#8217;ll use the distributed <a href="https://ignite.apache.org/docs/latest/machine-learning/clustering/k-means-clustering">K-means Clustering</a> algorithm from their library.
-<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/abe5bcc8-f8cd-470c-8087-30693ed4a5dc" alt="Machine Learning _ Ignite Documentation"></span></p>
+<span class="image"><img src="img/apache_ignite_architecture.png" alt="Machine Learning _ Ignite Documentation"></span></p>
 </div>
 </div>
 </div>
@@ -217,7 +217,7 @@ Body, Sweetness, Smoky, Medicinal, Tobacco, Honey, Spicy, Winey, Nutty, Malty, F
 </div>
 <div class="paragraph">
 <p>We can plot the centroid characteristics in a spider plot.
-<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/9a73886e-9cf6-4937-a70d-e366a784c21c" alt="Whiskey clusters with Apache Ignite"></span></p>
+<span class="image"><img src="img/whiskey_spider_plot.png" alt="Whiskey clusters with Apache Ignite"></span></p>
 </div>
 </div>
 </div>
