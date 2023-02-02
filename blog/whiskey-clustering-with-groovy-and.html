@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whiskey Clustering with Groovy and Apache Ignite</h1><p>Author: <i>Paul King</i></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_apache_ignite' class='anchor-link'>Apache Ignite</a></li><li><a href='#_implementation_details' class='anchor-link'>Implementation Details</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whiskey Clustering with Groovy and Apache Ignite</h1><p>Author: <i>Paul King</i></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="dlist">
 <dl>
@@ -64,13 +64,27 @@
 </dl>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/c5ba5e59-737e-4ebf-91c9-08fa67dc8f70" alt="Groovy logo" width="200"></span>
+<p>In a previous <a href="https://blogs.apache.org/groovy/entry/using-groovy-with-apache-wayang">blog post</a>,
+<span class="image right"><img src="https://ignite.apache.org/img/logo.svg" alt="Ignite logo" width="150"></span> we looked at using <a href="https://wayang.apache.org/">Apache Wayang</a> (incubating) and <a href="https://spark.apache.org/">Apache Spark</a> to scale up the <a href="https://en.wikipedia.org/wiki/K-means_clustering">k-means</a> clustering algorithm. Let&#8217;s look at another useful technology for scaling up this problem, <a href="https://ignite.apache.org/">Apache Ignite</a>. They recently released a <a href="https://ignite.apache.org/releases/2.14.0/release_notes.html">new version</a>, but earlier versions are also fine for our example. Before we start, a quick reminder of the problem.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whiskey_clustering">Whiskey Clustering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/c5ba5e59-737e-4ebf-91c9-08fa67dc8f70" alt="Groovy logo" width="200"></span>
 This problem looks at the quest of finding the perfect single-malt Scotch whiskey. The whiskies produced from <a href="https://www.niss.org/sites/default/files/ScotchWhisky01.txt">86 distilleries</a> have been ranked by expert tasters according to 12 criteria (Body, Sweetness, Malty, Smoky, Fruity, etc.). We&#8217;ll use a K-means algorithm to calculate the centroids.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/8d458e7c-8993-470a-8afd-44a46cd2b500" alt="whiskey_bottles" width="300"></span>
+<p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/8d458e7c-8993-470a-8afd-44a46cd2b500" alt="whiskey_bottles" width="300"></span>
 K-means is a standard data-science clustering technique. In our case, it groups whiskies with similar characteristics (according to the 12 criteria) into clusters. If we have a favourite whiskey, chances are we can find something similar by looking at other instances in the same cluster. If we are feeling like a change, we can look for a whiskey in some other cluster. The centroid is the notional "point" in the middle of the cluster. For us, it reflects the typical measure of each criteria for a whiskey in that cluster.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apache_ignite">Apache Ignite</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Apache Ignite is a distributed database for high-performance computing with in-memory speed. It makes a cluster (or <em>grid</em>) of nodes appear like an in-memory cache.
 This explanation drastically simplifies Ignite&#8217;s feature set. Ignite can be used as:</p>
@@ -95,6 +109,11 @@ This explanation drastically simplifies Ignite&#8217;s feature set. Ignite can b
 <p>It is mostly this last capability that we will use. Ignite&#8217;s <em>Machine Learning API</em> has purpose built, cluster-aware machine learning and deep learning algorithms for Classification, Regression, Clustering, and Recommendation among others. We&#8217;ll use the distributed <a href="https://ignite.apache.org/docs/latest/machine-learning/clustering/k-means-clustering">K-means Clustering</a> algorithm from their library.
 <span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/abe5bcc8-f8cd-470c-8087-30693ed4a5dc" alt="Machine Learning _ Ignite Documentation"></span></p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_details">Implementation Details</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Apache Ignite has special capabilities for reading data into the cache. We could use <code>IgniteDataStreamer</code> or <code>IgniteCache.loadCache()</code> and load data from files, stream sources, various database sources and so forth. This is particularly relevant when using a cluster.</p>
 </div>
