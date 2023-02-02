@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Blogs</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - Deck of cards with Groovy, JDK collections and Eclipse Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,91 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#gep'>Blogs</a></li><li><a href='#adventures-with-groovyfx' class='anchor-link'>adventures-with-groovyfx</a></li><li><a href='#deck-of-cards-with-groovy' class='anchor-link'>deck-of-cards-with-groovy</a></li><li><a href='#fun-with-rating-stars' class='anchor-link'>fun-with-rating-stars</a></li><li><a href='#gmavenplus-1-6-2-released' class='anchor-link'>gmavenplus-1-6-2-released</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><h1>Blogs for Groovy</h1><p>Here you can find the Blogs for the Groovy programming language:</p><ul><li><a href='adventures-with-groovyfx.html'>adventures-with-groovyfx: adventures-with-groovyfx</a></li><li><a href='deck-of-cards-with-groovy.html'>deck-of-cards-with-groovy: deck-of-cards-with-groovy</a></li><li><a href='fun-with-rating-stars.html'>fun-with-rating-stars: fun-with-rating-stars</a></li><li><a href='gmavenplus-1-6-2-released.html'>gmavenplus-1-6-2-released: gmavenplus-1-6-2-released</a></li></ul></div></div></div></div><footer id='footer'>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Deck of cards with Groovy, JDK collections and Eclipse Collections</h1><p>Author: <i>Paul King</i></p><hr/><div class="dlist">
+<dl>
+<dt class="hdlist1">Published</dt>
+<dd>
+<p>2022-09-23T10:18:36+00:00</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Once again, <a href="https://twitter.com/TheDonRaab">Donald Raab</a> has produced an interesting <a href="https://donraab.medium.com/how-to-create-a-deck-of-cards-using-eclipse-collections-d9838ac430b7">blog post</a> on <a href="https://github.com/eclipse/eclipse-collections">Eclipse Collections</a> this one shows some code for modelling and manipulating cards with Java 17 and Eclipse Collections. His related katas are highly recommended.
+Here is the same example in Groovy (4.0.5 was used here) with just a few tweaks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">enum Rank { ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING }
+
+enum Suit { SPADES, DIAMONDS, HEARTS, CLUBS }
+
+@Sortable(includes='suit,rank')
+record Card(Rank rank, Suit suit) { }
+
+var cards = Sets.cartesianProduct(EnumSet.allOf(Rank), EnumSet.allOf(Suit), Card::new)
+var cardsBySuit = cards.groupBy(Card::suit)
+var cardsByRank = cards.groupBy(Card::rank)
+
+assert [cards, cardsByRank, cardsBySuit]*.size() == [52, 13 ,4]
+
+var random = new Random(42L)
+var deck = cards.toList().shuffleThis(random).shuffleThis(random).shuffleThis(random).toStack()
+(1..5).collect(i -&gt; deck.pop(5).toSortedList()).each(this::println)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Card[rank=FOUR, suit=SPADES], Card[rank=FOUR, suit=DIAMONDS], Card[rank=SIX, suit=HEARTS], Card[rank=NINE, suit=CLUBS], Card[rank=JACK, suit=CLUBS]]
+[Card[rank=FIVE, suit=DIAMONDS], Card[rank=TWO, suit=HEARTS], Card[rank=FIVE, suit=HEARTS], Card[rank=TEN, suit=CLUBS], Card[rank=QUEEN, suit=CLUBS]]
+[Card[rank=FIVE, suit=SPADES], Card[rank=NINE, suit=SPADES], Card[rank=QUEEN, suit=SPADES], Card[rank=THREE, suit=DIAMONDS], Card[rank=TWO, suit=CLUBS]]
+[Card[rank=EIGHT, suit=SPADES], Card[rank=TWO, suit=DIAMONDS], Card[rank=EIGHT, suit=DIAMONDS], Card[rank=KING, suit=HEARTS], Card[rank=FIVE, suit=CLUBS]]
+[Card[rank=SIX, suit=SPADES], Card[rank=KING, suit=DIAMONDS], Card[rank=THREE, suit=HEARTS], Card[rank=TEN, suit=HEARTS], Card[rank=QUEEN, suit=HEARTS]]</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">enum Rank {
+    ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING
+    String toString() { ['A', *'2'..'9', '10', 'J', 'Q', 'K'][ordinal()] }
+}
+
+enum Suit {
+    SPADES, DIAMONDS, HEARTS, CLUBS
+    String toString() { '♠♦♥♣'[ordinal()] }
+}
+
+@Sortable(includes='suit,rank')
+record Card(Rank rank, Suit suit) {
+    Card(List srPair) { this(srPair[1], srPair[0]) }
+    String toString() { "${rank}${suit}" }
+}
+
+var cards = [Suit.values(), Rank.values()].combinations().collect(Card::new)
+var cardsBySuit = cards.groupBy(Card::suit)
+var cardsByRank = cards.groupBy(Card::rank)
+
+assert [cards, cardsByRank, cardsBySuit]*.size() == [52, 13, 4]
+
+var random = new Random(42L)
+3.times { cards.shuffle(random) }
+var deck = cards as Stack
+5.times { println "Hand ${it+1}: ${(0..5).collect{ deck.pop() }.sort()}" }
+
+println "Remaining cards sorted:\n${deck.sort()}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/f519b2c3-c303-429e-b34e-97e6eac94253" alt="Cards"></span></p>
+</div>
+<div class="paragraph">
+<p>Both these Groovy examples run on JDK versions from 8 to 19&lt;br&gt;(emulated records are used in JDK versions 8 to 15).</p>
+</div>
+<div class="paragraph">
+<p><strong>Updated 25/Sep/2022</strong>: Use same ordering for the JDK collections version.</p>
+</div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
                                     <div class='col-1'>
@@ -81,7 +165,7 @@
                 </div>
             </div>
         </div>
-    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
