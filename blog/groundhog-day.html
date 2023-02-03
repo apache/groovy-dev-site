@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Blogs</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - Groundhog Day</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,39 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#gep'>Blogs</a></li><li><a href='#adventures-with-groovyfx' class='anchor-link'>adventures-with-groovyfx</a></li><li><a href='#deck-of-cards-with-groovy' class='anchor-link'>deck-of-cards-with-groovy</a></li><li><a href='#fun-with-rating-stars' class='anchor-link'>fun-with-rating-stars</a></li><li><a href='#gmavenplus-1-6-2-released' class='anchor-link'>gmavenplus-1-6-2-released</a></li><li><a href='#groovy-2-5-6-released' class='anchor-link'>groovy-2-5-6-released</a></li><li><a href='#groundhog-day' class='anchor-link'>groundhog-day</a></li><li><a href='#whiskey-clustering-with-groovy-and' class='anchor-link'>whiskey-clustering-with-groovy-and</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><h1>Blogs for Groovy</h1><p>Here you can find the Blogs for the Groovy programming language:</p><ul><li><a href='adventures-with-groovyfx'>adventures-with-groovyfx: Adventures with GroovyFX</a></li><li><a href='deck-of-cards-with-groovy'>deck-of-cards-with-groovy: Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='fun-with-rating-stars'>fun-with-rating-stars: Fun with rating stars</a></li><li><a href='gmavenplus-1-6-2-released'>gmavenplus-1-6-2-released: GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='groovy-2-5-6-released'>groovy-2-5-6-released: Groovy 2.5.6 Released</a></li><li><a href='groundhog-day'>groundhog-day: Groundhog Day</a></li><li><a href='whiskey-clustering-with-groovy-and'>whiskey-clustering-with-groovy-and: Whiskey Clustering with Groovy and Apache Ignite</a></li></ul></div></div></div></div><footer id='footer'>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Groundhog Day</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groundhog Day</h1><p>Author: <i>Paul King</i></p><hr/><div class="sidebarblock">
+<div class="content">
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Published</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2023-02-02T23:22:57+00:00</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://twitter.com/kenkousen">Ken Kousen</a> posted a
+<a href="https://twitter.com/kenkousen/status/1621272529481367554">tweet</a>
+in honor of <a href="https://en.wikipedia.org/wiki/Groundhog_Day">Groundhog Day</a>
+looking at the kotlinx-datetime library.</p>
+</div>
+<div class="paragraph">
+<p>This blog looks at a similar Groovy solution.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var groundHogDay = LocalDate.of(2023, FEBRUARY, 2)
+var springEquinoxNorthernHemisphere = LocalDate.of(2023, MARCH, 20)
+var expectedDays = use(TimeCategory) { 6.weeks + 4.days }.days
+assert springEquinoxNorthernHemisphere - groundHogDay == expectedDays</code></pre>
+</div>
+</div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
                                     <div class='col-1'>
@@ -81,7 +113,7 @@
                 </div>
             </div>
         </div>
-    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
           m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
