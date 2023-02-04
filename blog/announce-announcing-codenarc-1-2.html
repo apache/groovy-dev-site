@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, datetime, timecategory, date'/><meta name='description' content='Inspired by a recent tweet, this blog looks at some datetime manipulations to calculate the period between Groundhog day and the start of Spring.'/><title>The Apache Groovy programming language - Blogs - Groundhog Day</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='codenarc, groovy, grails'/><meta name='description' content='CodeNarc 1.2 Release Announcement'/><title>The Apache Groovy programming language - Blogs - [ANNOUNCE] Announcing CodeNarc 1.2</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,35 +53,47 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Groundhog Day</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groundhog Day</h1><p>Author: <i>Paul King</i></p><p>Last update: 2023-02-02 </p><hr/><div class="paragraph">
-<p><a href="https://twitter.com/kenkousen">Ken Kousen</a> posted a
-<a href="https://twitter.com/kenkousen/status/1621272529481367554">tweet</a>
-in honor of <a href="https://en.wikipedia.org/wiki/Groundhog_Day">Groundhog Day</a>
-looking at the kotlinx-datetime library.</p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>[ANNOUNCE] Announcing CodeNarc 1.2</a></li><li><a href='#_new_rules' class='anchor-link'>New Rules</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>[ANNOUNCE] Announcing CodeNarc 1.2</h1><p>Author: <i>Remko Popma</i></p><p>Last update: 2018-07-10 </p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The CodeNarc Team is proud to announce the release of version 1.2.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Groundhog.png" alt="Groundhog"></span></p>
+<p><a href="http://codenarc.org/">CodeNarc</a> is a static analysis tool for Groovy source code.</p>
 </div>
 <div class="paragraph">
-<p>The North American tradition, or superstition, depending on how you view such things,
-is that if the Groundhog emerges from its burrow and sees its shadow, Winter
-will continue for 6 weeks, but otherwise Spring will come early.</p>
+<p>Version 1.2 includes 5 new rules and several enhancements and bug fixes. See the full details in the <a href="https://github.com/CodeNarc/CodeNarc/blob/master/CHANGELOG.md">release notes</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_new_rules">New Rules</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>StaticFieldsBeforeInstanceFields</code> rule (convention) - Enforce that all static fields are above all instance fields within a class.</p>
+</li>
+<li>
+<p><code>StaticMethodsBeforeInstanceMethods</code> rule (convention) - Enforce that all static methods within each visibility level (public, protected, private) are above all instance methods within that same visibility level.</p>
+</li>
+<li>
+<p><code>PublicMethodsBeforeNonPublicMethods</code> rule (convention) - Enforce that all public methods are above protected and private methods.</p>
+</li>
+<li>
+<p><code>GrailsDomainStringPropertyMaxSize</code> rule (grails) - String properties in Grails domain classes have to define maximum size otherwise the property is mapped to VARCHAR(255) causing runtime exceptions to occur.</p>
+</li>
+<li>
+<p><code>NoJavaUtilDate</code> rule (convention) - Do not use java.util.Date. Prefer the classes in the java.time.* packages. Checks for construction of new java.util.Date objects.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Looking at the dates for 2023 (it differs slightly each year) we can see that
-Spring isn&#8217;t due for 6 weeks and 4 days, so if Spring starts in 6 weeks,
-it is early anyway! While it certainly falls into the category of
-nerds having fun, it&#8217;s a good simple example of using date library functionality.</p>
+<p>Check out the <a href="https://github.com/CodeNarc/CodeNarc">project on GitHub</a>!</p>
 </div>
 <div class="paragraph">
-<p>This blog looks at a similar Groovy solution:</p>
+<p>The <a href="http://grails.org/plugin/codenarc">Grails CodeNarc Plugin</a> has been updated to version 1.2 as well.</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var groundHogDay = LocalDate.of(2023, FEBRUARY, 2)
-var springEquinoxNorthernHemisphere = LocalDate.of(2023, MARCH, 20)
-var expectedDays = use(TimeCategory) { 6.weeks + 4.days }.days
-assert springEquinoxNorthernHemisphere - groundHogDay == expectedDays</code></pre>
 </div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
