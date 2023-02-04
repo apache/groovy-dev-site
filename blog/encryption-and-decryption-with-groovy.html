@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='decryption, encryption, groovy, security, bouncy castle'/><meta name='description' content='This post looks at encrypting and decrypting data using Groovy with the AES and CAST5 algorithms.'/><title>The Apache Groovy programming language - Blogs - Encryption and decryption with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Encryption and decryption with Groovy</a></li><li><a href='#_using_the_jdk_crypto_classes' class='anchor-link'>Using the JDK crypto classes</a></li><li><a href='#_using_the_bouncy_castle_library' class='anchor-link'>Using the Bouncy Castle library</a></li><li><a href='#_other_useful_functionality' class='anchor-link'>Other useful functionality</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Encryption and decryption with Groovy</h1><p>Author: <i>Paul King</i></p><p>Last update: 2022-09-19 </p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Inspired by this recent <a href="https://asyncq.com/how-to-encrypt-and-decrypt-data-in-java">blog entry</a>, here is an example showing how to encrypt and decrypt with Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_jdk_crypto_classes">Using the JDK crypto classes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we need some text to encrypt. We&#8217;ll use an excerpt of the one from the aforementioned blog post:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var text = 'Contrary to popular belief, Lorem Ipsum is not simply random text.\
+ It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we&#8217;ll create a factory for our cipher instance, generate a key, and set up an initialization vector.</p>
+</div>
+<div class="paragraph">
+<p>First, the cipher factory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var factory = { Cipher.getInstance('AES/CBC/PKCS5Padding') }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For our cipher algorithm, we are using the Advanced Encryption Standard (<a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">AES</a>) algorithm, in Cipher Block Chaining (<a href="https://www.highgo.ca/2019/08/08/the-difference-in-five-modes-in-the-aes-encryption-algorithm/">CBC</a>) mode, with <a href="https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS#5_and_PKCS#7">PKCS5 padding</a>. We&#8217;ll look at other options later.</p>
+</div>
+<div class="paragraph">
+<p>Next we generate our secret key. Our secret key is our password. Only someone who has the password will be able to decrypt the encrypted message. We could use any random bits for our key, but like passwords, we want to choose a strong key rather than a weak one. Cryptographic libraries provide classes to generate such keys. We just need to provide the key size. AES supports 128, 192 and 256-bit keys. We&#8217;ll choose 192 here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var key = generateKey('AES', 192)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our code uses this helper method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def generateKey(String algorithm, Integer size) {
+    var generator = KeyGenerator.getInstance(algorithm)
+    generator.init(size)
+    generator.generateKey()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we generate an initialization vector:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var ivParameterSpec = randomParameterSpec(factory)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It uses this helper method (we&#8217;re using the algorithm block size for our initialization vector size):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def randomParameterSpec(Closure&lt;Cipher&gt; factory) {
+    var block = new byte[factory().blockSize]
+    SecureRandom.instanceStrong.nextBytes(block)
+    new IvParameterSpec(block)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An <a href="https://en.wikipedia.org/wiki/Initialization_vector">initialization vector</a> is used to introduce some additional randomness to avoid repeating patterns in the input leading to repeating patterns in the encrypted bytes.</p>
+</div>
+<div class="paragraph">
+<p>With all these things in place, we are almost ready to encrypt or decrypt, but first, let&#8217;s define two more helper methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def encrypt(byte[] bytes, Key key, IvParameterSpec spec, Closure&lt;Cipher&gt; factory) {
+    var cipher = factory()
+    cipher.init(ENCRYPT_MODE, key, spec)
+    cipher.doFinal(bytes)
+}
+
+def decrypt(byte[] bytes, Key key, IvParameterSpec spec, Closure&lt;Cipher&gt; factory) {
+    var cipher = factory()
+    cipher.init(DECRYPT_MODE, key, spec)
+    cipher.doFinal(bytes)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And here is how we encrypt and decrypt:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var encrypted = encrypt(text.bytes, key, ivParameterSpec, factory)
+println "Encrypted bytes : $encrypted"
+println "Encrypted text : ${new String(encrypted)}"
+
+var decrypted = decrypt(encrypted, key, ivParameterSpec, factory)
+println "Decrypted bytes : $decrypted"
+println "Decrypted text : ${new String(decrypted)}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>Encrypted bytes : [-117, 36, 18, 69, -101, -8, 35, 93, -102, -49, -12, …, -19, -100]
+Encrypted text : ‹$E›ø#]šÏôæ”Á˜çp^µ³=L(Ö^_ŒC&amp;gt;CIË„ö,1É8ÆŸ.Š?vßG,Èw‰å¼zÜf&amp;gt;?µ›D¹éÆk€ °˜2êÔ}í©àhl$&amp;gt;?¹¡Kå3ÔO?±&amp;amp;…êî¶Ê–¾°®q®à—0ú‘ÔhO&amp;lt;H¦ç®Ç”ÈhAëjó QPyƒy6Ä¤*´un¼ï¯m¨´ÙjeJtëº\ó6ÆªKªœíœ
+Decrypted bytes : [67, 111, 110, 116, 114, 97, 114, 121, 32, 116, 111, 32, …, 100, 46]
+Decrypted text : Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that everything worked as expected, since the final output matches our original input text.</p>
+</div>
+<div class="paragraph">
+<p>We can alternatively, swap algorithms. There are numerous <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/javax/crypto/Cipher.html">algorithms and modes supported</a> by the JDK and others supported by third-party libraries. A nice summary can be found <a href="https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries">here</a>. Let&#8217;s have a look at using a different algorithm.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_bouncy_castle_library">Using the Bouncy Castle library</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll swap to use the CAST5 (<a href="https://en.wikipedia.org/wiki/CAST-128">CAST-128</a>) algorithm
+which supports up to a 128-bit key. We&#8217;ll use <a href="https://en.wikipedia.org/w/index.php?title=HMAC-SHA1">HMAC-SHA1</a> to generate our key.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import org.bouncycastle.jce.provider.BouncyCastleProvider
+var bc = new BouncyCastleProvider()
+factory = { Cipher.getInstance('CAST5', bc) }
+key = generateKey('HmacSHA1', 128)
+ivParameterSpec = randomParameterSpec(factory)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>CAST5 is the default algorithm used in some versions of GPG and PGP.
+It isn&#8217;t included by default in the JDK, so for this we&#8217;ll use the
+<a href="https://www.bouncycastle.org/java.html">Bouncy Castle library</a>.<br></p>
+</div>
+<div class="paragraph">
+<p><em>NOTE</em></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p>Just as an aside, if you are wanting to encrypt or decrypt GPG/PGP files, don&#8217;t use the above code. Libraries like Bouncy Castle have <a href="https://www.bouncycastle.org/docs/pgdocs1.8on/index.html">dedicated classes</a> for such scenarios.</p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>We now encrypt and decrypt as before:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">encrypted = encrypt(text.bytes, key, ivParameterSpec, factory)
+println "Encrypted text : ${new String(encrypted)}"
+decrypted = decrypt(encrypted, key, ivParameterSpec, factory)
+println "Decrypted text : ${new String(decrypted)}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>Encrypted text : Mªá?r?v9£÷~4µT'›ÙÝÁl¿Þg¾0ñŽ¡?Ü=³9Q¬»3«ÖÁ¡µ ¾@4÷`FñÙŠfø7¥#›v¤Í–‰¼Ü¢ƒE6ôŽTÙlæÏz&amp;gt;o?àL›¡¢z1nÖo9]šOÔ¼SÔOÍ#Ý7LœÀî}ó5m%q•»l%/AWT´¢zH#tì†±l¶£—Œ«©wˆÃ®&amp;gt;®Ü6ër-E
+Decrypted text : Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_useful_functionality">Other useful functionality</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Passing around binary data like our secret key or the encrypted data, has its own problems. Groovy provides extension methods to <code>encode</code> such data (and corresponding <code>decode</code> methods). For example, we can encode our secret key in various ways:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var keyBytes = key.encoded
+println keyBytes.encodeHex()
+println keyBytes.encodeBase64()
+println keyBytes.encodeBase64Url()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output (the key is random, so the output will differ for each run):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>85a0d3f0ce0cbe6402dc9579fbffcf1d
+haDT8M4MvmQC3JV5+//PHQ==
+haDT8M4MvmQC3JV5-__PHQ</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy also provides extension methods for various checksums (but you might want to look at stronger checksum algorithms in security sensitive scenarios):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println "SHA256 : ${text.sha256()}"
+println "MD5 : ${text.md5()}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>SHA256 : ccb184e35e4c32bafc730d84ec924ea2980035ea5fadb012e3b2b31abf4323c9
+MD5 : 46c61a174c2dc99204521ca89f09f63c</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are encrypting and decrypting entire files, the JDK has special classes for that too which are also easy to use from Groovy. That&#8217;s all for now.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Comparison_of_cryptography_libraries">Comparison of cryptography libraries</a> (Wikipedia)</p>
+</li>
+<li>
+<p><a href="https://asyncq.com/how-to-encrypt-and-decrypt-data-in-java">How to encrypt and decrypt data in Java</a> (also on <a href="https://i-sammy.medium.com/how-to-encrypt-and-decrypt-data-in-java-de41be237422">medium.com</a>)</p>
+</li>
+<li>
+<p><a href="https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on/1.71.1">Bouncy castle</a> in maven central</p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/java-aes-encryption-decryption">AES Encryption and Decryption in Java</a> (Baeldung)</p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/java-encryption-iv">Initialization Vector for Encryption in Java</a> (Baeldung)</p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/java-3des">3DES in Java</a> (Baeldung)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have taken a brief look at encrypting and decrypting with Apache Groovy.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
