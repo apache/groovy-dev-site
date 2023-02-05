@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, parrot'/><meta name='description' content='A summary of the highlights for Groovy 3.'/><title>The Apache Groovy programming language - Blogs - Groovy 3 Highlights</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Groovy 3 Highlights</a></li><li><a href='#_general_improvements' class='anchor-link'>General Improvements</a></li><li><a href='#_parrot_parser' class='anchor-link'>Parrot parser</a></li><li><a href='#_split_package_changes' class='anchor-link'>Split package changes</a></li><li><a href='#_dgm_improvements' class='anchor-link'>DGM improvements</a></li><li><a href='#_other_improvements' class='anchor-link'>Other Improvements</a></li><li><a href='#_getting_groovy' class='anchor-link'>Getting Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 3 Highlights</h1><p>Author: <i/></p><p>Published: 2020-02-13</p><hr/><div class="sect1">
+<h2 id="_general_improvements">General Improvements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy has both a dynamic nature (supporting code styles similar to Ruby and Python) as well as a static nature (supporting styles similar to Java, Kotlin and Scala). Groovy continues to improve both those natures - filling in any feature gaps. As just one example, Groovy has numerous facilities for better managing null values. You can use Groovy&#8217;s null-safe navigation operator, piggy back on Java&#8217;s <code>Optional</code> or provide a null-checking extension to the type checker. These are augmented in Groovy 3 with null-safe indexing for arrays, lists and maps and a new AST transformation <code>@NullCheck</code> for automatically instrumenting code with null checks.</p>
+</div>
+<div class="paragraph">
+<p>In general, the language design borrows heavily from Java, so careful attention is paid to changes in Java and acted on accordingly if appropriate. A lot of work has been done getting Groovy ready for Java modules and for making it work well with JDK versions 9-15. Other work has dramatically improved the performance of bytecode generation which makes use of the JVMs invoke dynamic capabilities. Additional changes are already underway for further improvements in these areas in Groovy 4.</p>
+</div>
+<div class="paragraph">
+<p>There are also many other performance improvements under the covers. More efficient type resolution occurs during compilation and more efficient bytecode is generated for numerous scenarios. The addition of a Maven BOM allows more flexible usage of Groovy from other projects.</p>
+</div>
+<div class="paragraph">
+<p>Groovy also has particular strengths for scripting, testing, writing Domain Specific Languages (DSLs) and in domains like financial calculations and data science. On-going work has been made to ensure those strengths are maintained. The accuracy used for high-precision numbers has been improved and is configurable. Much of the tooling such as Groovy Console and groovysh have also been improved.</p>
+</div>
+<div class="paragraph">
+<p>Other key strengths of Groovy such as its runtime and compile-time meta-programming capabilities have also seen many minor enhancements. All in all, this release represents the culmination of several years of activity. Over 500 new features, improvements and bug fixes have been added since Groovy 2.5. Just a few highlights are discussed below.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parrot_parser">Parrot parser</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy has a new parser. While mostly an internal change within Groovy, the good news for users is that the new parser is more flexible and will allow the language to more rapidly change should the need arise.</p>
+</div>
+<div class="sect2">
+<h3 id="_new_syntax">New syntax</h3>
+<div class="paragraph">
+<p>The new parser gave us the opportunity to add some new syntax features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>!in and !instanceof operators</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert 45 !instanceof Date
+assert 4 !in [1, 3, 5, 7]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Elvis assignment operator</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def first = 'Jane'
+def last = null
+first ?= 'John'
+last ?= 'Doe'
+assert [first, last] == ['Jane', 'Doe']</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Identity comparison operators</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert cat === copyCat  // operator shorthand for "is" method
+assert cat !== lion     // negated operator shorthand</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Safe indexing (for maps, lists and arrays)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println map?['someKey'] // return null if map is null instead of throwing NPE</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_compatibility">Java compatibility</h3>
+<div class="paragraph">
+<p>The Groovy syntax can be thought of as a superset of Java syntax.
+It&#8217;s considered good style to use the enhancements that Groovy provides when appropriate,
+but Groovy&#8217;s aim is to still support as much of the Java syntax as possible to allow
+easy migration from Java or easy switching for folks working with both Java and Groovy.</p>
+</div>
+<div class="paragraph">
+<p>The flexibility provided by the new parser allowed several syntax compatibility holes to be closed including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>do/while loop</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def count = 5
+def factorial = 1
+do {
+    factorial *= count--
+} while(count &gt; 1)
+assert factorial == 120</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enhanced classic Java-style for loop (see multi-assignment for-loop example; note the comma in the last clause of the for statement)</p>
+</li>
+<li>
+<p>Multi-assignment in combination with for loop</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def count = 3
+println 'The next three months are:'
+for (def (era, yr, mo) = new Date(); count--; yr = mo == 11 ? yr + 1 : yr, mo = mo == 11 ? 0 : mo + 1) {
+    println "$yr/$mo"
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Java-style array initialization (but you might prefer Groovy&#8217;s literal list notation)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def primes = new int[] {2, 3, 5, 7, 11}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Lambda expressions (but you might often prefer Groovy&#8217;s Closures which support trampoline/tail recursion, partial application/currying, memoization/auto caching)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">(1..10).forEach(e -&gt; { println e })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..10).stream()
+    .filter(e -&gt; e % 2 == 0)
+    .map(e -&gt; e * 2)
+    .toList() == [4, 8, 12, 16, 20]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def add = (int x, int y) -&gt; { def z = y; return x + z }
+assert add(3, 4) == 7</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Method references (but you might often prefer Groovy&#8217;s Method pointers which are Closures with the previously mentioned benefits)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ['1', '2', '3'] == Stream.of(1, 2, 3)
+        .map(String::valueOf)
+        .toList()</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>"var" reserved type (allows Java 10/11 features even when using JDK 8)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var two = 2                                                      // Java 10
+IntFunction&lt;Integer&gt; twice = (final var x) -&gt; x * two            // Java 11
+assert [1, 2, 3].collect{ twice.apply(it) } == [2, 4, 6]</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>ARM Try with resources (Java 7 and 9 variations work on JDK 8 - but you might prefer Groovy&#8217;s internal iteration methods for resources)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def file = new File('/path/to/file.ext')
+def reader = file.newReader()
+try(reader) {
+    String line = null
+    while (line = reader.readLine()) {
+        println line
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Nested code blocks</p>
+</li>
+<li>
+<p>Java-style non-static inner class instantiation</p>
+</li>
+<li>
+<p>Interface default methods (but you might prefer Groovy&#8217;s traits)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">interface Greetable {
+    String target()
+    default String salutation() {
+        'Greetings'
+    }
+    default String greet() {
+        "${salutation()}, ${target()}"
+    }
+}</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_split_package_changes">Split package changes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In preparation for Groovy&#8217;s modular jars to be first class modules, several classes have moved packages.
+Some examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>groovy.util.XmlParser =&gt; groovy.xml.XmlParser
+groovy.util.XmlSlurper =&gt; groovy.xml.XmlSlurper
+groovy.util.GroovyTestCase =&gt; groovy.test.GroovyTestCase</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In most cases, both the old and new class are available in Groovy 3.
+But by Groovy 4, the old classes will be removed.
+See the <a href="http://groovy-lang.org/releasenotes/groovy-3.0.html">release notes</a>
+for a complete list of these changes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dgm_improvements">DGM improvements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy adds many extension methods to existing Java classes.
+In Groovy 3, about 80 new such extension methods were added.
+We highlight just a few here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>average()</code> on arrays and iterables</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert 3 == [1, 2, 6].average()</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>takeBetween()</code> on String, CharSequence and GString</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert 'Groovy'.takeBetween( 'r', 'v' ) == 'oo'</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>shuffle()</code> and <code>shuffled()</code> on arrays and iterables</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def orig = [1, 3, 5, 7]
+def mixed = orig.shuffled()
+assert mixed.size() == orig.size()
+assert mixed.toString() ==~ /\[(\d, ){3}\d\]/</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>collect{ }</code> on Future</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Future&lt;String&gt; foobar = executor.submit{ "foobar" }
+Future&lt;Integer&gt; foobarSize = foobar.collect{ it.size() } // async
+assert foobarSize.get() == 6</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>minus()</code> on LocalDate</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def xmas = LocalDate.of(2019, Month.DECEMBER, 25)
+def newYear = LocalDate.of(2020, Month.JANUARY, 1)
+assert newYear - xmas == 7 // a week apart</code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_improvements">Other Improvements</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_improved_annotation_support">Improved Annotation Support</h3>
+<div class="paragraph">
+<p>Recent version of Java allow annotations in more places (JSR308). Groovy now also supports such use cases. This is important for frameworks like Spock, Micronaut, Grails, Jqwik and others, and also opens up the possibility for additional AST transformations (a key meta-programming feature of Groovy).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovydoc_enhancements">Groovydoc Enhancements</h3>
+<div class="paragraph">
+<p>In addition to Groovydoc supporting the new parser, you can now embed Groovydoc comments in various ways:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>They can be made available within the AST for use by AST transformations and other tools.</p>
+</li>
+<li>
+<p>Groovydoc comments starting with a special <code>/**@</code> opening comment delimiter can also be embedded into the class file. This provides a capability in Groovy inspired by languages like Ruby which can embed documentation into the standard binary jar and is thus always available rather than relying on a separate javadoc jar.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_getting_groovy">Getting Groovy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The official source release are on the <a href="https://groovy.apache.org/download.html">download page</a>.
+Convenience binaries, downloadable documentation, an SDK bundle and pointers to various community
+artifacts can be found on that page along with information to allow you to verify your installation.
+You can use the zip installation on any platform with Java support, or consider using an installer
+for your platform or IDE.</p>
+</div>
+<div class="paragraph">
+<p>The Windows installer for the latest versions of Groovy 3 are available from <a href="https://bintray.com/groovy/Distributions/Windows-Installer">bintray</a>. (community artifact)</p>
+</div>
+<div class="paragraph">
+<p>For Linux users, the latest versions of Groovy 3 are also available in the
+<a href="https://snapcraft.io/groovy">Snap Store</a>. (community artifact)</p>
+</div>
+<div class="paragraph">
+<p>For Eclipse users, the latest versions of the Groovy 3 groovy-eclipse-batch plugin are available from <a href="https://bintray.com/groovy/maven/groovy-eclipse-batch/">bintray</a>. (community artifact)</p>
+</div>
+<div class="paragraph">
+<p>For Intellij users, the latest community editions of
+<a href="https://www.jetbrains.com/idea/">IDEA</a> have Groovy 3 support.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
