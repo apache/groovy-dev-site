@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='fibonacci, groovy, recursion, streams'/><meta name='description' content='This post looks at various ways to calculate Fibonacci numbers such as recursion and iteration including optimisations like tail recursion and memoization.'/><title>The Apache Groovy programming language - Blogs - Calculating Fibonacci with Groovy revisited</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Calculating Fibonacci with Groovy revisited</a></li><li><a href='#_iterative_style' class='anchor-link'>Iterative style</a></li><li><a href='#_recursive' class='anchor-link'>Recursive</a></li><li><a href='#_streams' class='anchor-link'>Streams</a></li><li><a href='#_bytecode_and_ast_transforms' class='anchor-link'>Bytecode and AST transforms</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Calculating Fibonacci with Groovy revisited</h1><p>Author: <i/></p><p>Published: 2022-09-08</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In an earlier post,
+we looked at using <a href="https://blogs.apache.org/groovy/entry/matrix-calculations-with-groovy-apache">Matrices with Groovy</a> including using matrices to calculate Fibonacci terms. But do you need that complexity to calculate Fibonacci? Not, not at all. You can do various one-liners for that scenario (to repeat the calculation from that post):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Stream.iterate([1, 1], f -&gt; [f[1], f.sum()]).limit(8).toList()*.head()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The previous post was more about using <em>matrices</em> than Fibonacci per se, though hopefully learning
+that the Fibonacci matrix was a specialisation of the Leslie matrix was an added bonus.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at a few other options to write Fibonacci methods in Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_iterative_style">Iterative style</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Unless you learned a functional programming language as your first language, you may have written an iterative Factorial or
+Fibonacci as one of your first programming learning exercises. Such an algorithm for Fibonacci could look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fib(n) {
+    if (n &lt;= 1) return n
+
+    def previous = n.valueOf(1), next = previous, sum
+    (n-2).times {
+        sum = previous
+        previous = next
+        next = sum + previous
+    }
+    next
+}
+
+assert fib(10) == 55
+assert fib(50L) == 12586269025L
+assert fib(100G) == 354224848179261915075G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only interesting part to this solution is the use of dynamic idioms. We didn&#8217;t provide an explicit type for <code>n</code>,
+so duck-typing means the method works fine for <code>Integer</code>, <code>Long</code> and <code>BigInteger</code> values.
+This implementation does all calculations using the type of the supplied <code>n</code>,
+so the user of the method controls that aspect.</p>
+</div>
+<div class="paragraph">
+<p>Groovy gives the option to also specify an explicit type like <code>Number</code> or use <code>TypeChecked</code> or <code>CompileStatic</code>
+for type inference if you wanted. We&#8217;ll see an example of those options later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_recursive">Recursive</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once you mastered iterative programming, your next programming learning exercise may have been the recursive version of Factorial or Fibonacci. For Fibonacci, you may have coded something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fib(n) {
+    if (n &lt;= 1) return n
+    fib(n - 1) + fib(n - 2)
+}
+
+assert fib(10) == 55
+assert fib(50L) == 12586269025L
+assert fib(100G) == 354224848179261915075G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This naïve version is incredibly inefficient. Calling fib(6) ends up calculating fib(2) five times for instance:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Call_Tree_for_Fibonacci_Number_F6.svg/750px-Call_Tree_for_Fibonacci_Number_F6.svg.png" alt="Call tree for Fibonacci(6)" width="400"></span></p>
+</div>
+<div class="paragraph">
+<p>There are several ways to avoid that repetition. One option is to use the <code>@Memoized</code> annotation.
+Adding this annotation on a method causes the compiler to inject appropriate code for caching results into the method.
+This is ideal for pure functions like Fibonacci since they always return the same output for a given input.
+There are annotation attributes to adjust how big such a cache might be, but that sophistication isn&#8217;t needed here.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Memoized
+def fib(n) {
+    if (n &lt;= 1) return n
+    fib(n - 1) + fib(n - 2)
+}
+
+assert fib(10) == 55
+assert fib(50L) == 12586269025L
+assert fib(100G) == 354224848179261915075G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This now runs just as quickly as the iterative method. If you happened to use a <code>Closure</code> instead of a method,
+you can call one of the <code>memoize</code> methods on <code>Closure</code>.</p>
+</div>
+<div class="paragraph">
+<p>A problem with this approach (in fact recursion in general) is that you hit a stack overflow exception for larger values of <code>n</code>,
+e.g. <code>fib(500G)</code>. Groovy supports tail call elimination with the inclusion of the <code>TailRecursive</code> annotation.
+In this case the compiler injects an "unrolled" non-recursive version of the algorithm.
+In order for the "unrolling" to succeed, the algorithm needs to be re-worked so that at most one call to
+fib occurs in any return statement. Here is a version of the algorithm re-worked in this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TailRecursive
+static fib(n, a, b) {
+    if (n == 0) return a
+    if (n == 1) return b
+    fib(n - 1, b, a + b)
+}
+
+assert fib(10, 0, 1) == 55
+assert fib(50L, 0L, 1L) == 12586269025L
+assert fib(100G, 0G, 1G) == 354224848179261915075G
+assert fib(500G, 0G, 1G) == 139423224561697880139724382870407283950070256587697307264108962948325571622863290691557658876222521294125G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is slightly more complicated to understand than the original if you haven&#8217;t seen it before
+but now is both efficient and handles large values of <code>n</code>.
+We can compile statically for even faster speed like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TailRecursive
+@CompileStatic
+static fib(Number n, Number a, Number b) {
+    if (n == 0) return a
+    if (n == 1) return b
+    fib(n - 1, b, a + b)
+}
+
+assert fib(10, 0, 1) == 55
+assert fib(50L, 0L, 1L) == 12586269025L
+assert fib(100G, 0G, 1G) == 354224848179261915075G
+assert fib(500G, 0G, 1G) == 139423224561697880139724382870407283950070256587697307264108962948325571622863290691557658876222521294125G</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you are using a <code>Closure</code>, you would look at using the <code>trampoline</code> method on <code>Closure</code> to achieve a similar result.&lt;/p&gt;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_streams">Streams</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We saw the Stream based "one-liner" solution at the start of this blog post. Let&#8217;s adopt the duck-typing idioms we have used so far and define a fib method. It could look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fib(n) {
+    def zero = n.valueOf(0)
+    def one = n.valueOf(1)
+    Stream.iterate([zero, one], t -&gt; [t[1], t.sum()])
+    .skip(n.longValue())
+    .findFirst().get()[0]
+}
+
+assert fib(10) == 55
+assert fib(50L) == 12586269025L
+assert fib(100G) == 354224848179261915075G</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bytecode_and_ast_transforms">Bytecode and AST transforms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Finally, just so you know all your options, here is a version using the <a href="https://github.com/melix/groovy-bytecode-ast">@Bytecode AST transform</a>
+which lets you write JVM bytecode directly in your Groovy! Note well that this falls into the category of
+"<em>don&#8217;t ever ever do this</em>" but just so you know you can, it is included here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Bytecode
+int fib(int i) {
+    l0
+    iload 1
+    iconst_2
+    if_icmpgt l1
+    iconst_1
+    _goto l2
+    l1
+    frame SAME
+    aload 0
+    iload 1
+    iconst_2
+    isub
+    invokevirtual '.fib','(I)I'
+    aload 0
+    iload 1
+    iconst_1
+    isub
+    invokevirtual '.fib', '(I)I'
+    iadd
+    l2
+    frame same1,'I'
+    ireturn
+}
+
+assert fib(10) == 55</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please read the caveats for that transform before considering using it for anything but extreme situations.
+It&#8217;s meant more as a fun thing to try than something anyone would want to do in production.</p>
+</div>
+<div class="paragraph">
+<p>Have fun writing your own algorithms!</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
