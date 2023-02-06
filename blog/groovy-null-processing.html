@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, list, collection, guava, eclipse collections, commons collections, apache, null, Groovy truth'/><title>The Apache Groovy programming language - Blogs - Groovy Processing Nulls In Lists</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Processing Nulls In Lists</a></li><li><a href='#_libraries_covered' class='anchor-link'>Libraries covered</a></li><li><a href='#_mutating_a_list_to_remove_its_nulls' class='anchor-link'>Mutating a list to remove its nulls</a></li><li><a href='#_producing_a_new_list_without_nulls' class='anchor-link'>Producing a new list without nulls</a></li><li><a href='#_other_null_related_functionality' class='anchor-link'>Other null related functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Processing Nulls In Lists</h1><p>Author: <i>Paul King</i></p><p>Published: 2023-02-06</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This <a href="https://www.programmergirl.com/java-remove-nulls-from-list/">article</a> by <a href="https://www.programmergirl.com/about-me/">Shubhra Srivastava</a>
+looks at processing lists containing nulls in Java. Let&#8217;s look at doing the same in Groovy.
+Shubhra&#8217;s article covered both mutating the list in place and producing a new list,
+so we&#8217;ll cover both cases.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_libraries_covered">Libraries covered</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Shubhra&#8217;s article examined <em>"out-of-the-box"</em> Java and some other collections libraries.
+We&#8217;ll look at using those same libraries with Groovy, but we&#8217;ll cover Eclipse Collections too.</p>
+</div>
+<div class="paragraph">
+<p>In summary, we&#8217;ll cover:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><em>"Out-of-the-box"</em> <a href="https://groovy-lang.org/">Groovy</a> (which includes JDK functionality)</p>
+</li>
+<li>
+<p><a href="https://github.com/google/guava/wiki">Guava</a> which provides a number of extensions to the JDK collections ecosystem. In particular, it has immutable collections, new collection types like multisets and bidirectional maps and various powerful extensions and utilities.</p>
+</li>
+<li>
+<p><a href="https://commons.apache.org/proper/commons-collections/">Apache Commons Collections</a> which extends upon the JDK collections framework adding some new types like bidirectional maps and bags
+as well as providing many comparator and iterator implementations. The library was designed to fill
+gaps in the JDK offerings and while some of those gaps in the JDK have now been filled by the JDK
+itself, Commons Collections still contains much useful functionality.</p>
+</li>
+<li>
+<p><a href="https://www.eclipse.org/collections/">Eclipse Collections</a> which comes with many container types including
+immutable collections, primitive collections, bimaps, multimaps and bags as well as numerous utility
+methods. It focuses on reduced memory footprint and efficient containers. It might be particularly
+of interest if you need primitive collections, immutable collections or some more exotic collection
+types like bag or bidirectional maps.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mutating_a_list_to_remove_its_nulls">Mutating a list to remove its nulls</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_groovy">Groovy</h3>
+<div class="paragraph">
+<p>With Groovy, we can follow Java&#8217;s lead and use <code>removeIf</code> or use Groovy&#8217;s <code>removeAll</code>.
+In either case, we can use a method reference, closure syntax or lambda syntax
+to capture the desired non-null constraint.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var list = ['A', null, 'B', null, 'C']
+list.removeIf(Objects::isNull)
+assert list.size() == 3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var list = ['A', null, 'B', null, 'C']
+list.removeAll(s -&gt; s == null)
+assert list.size() == 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_guava">Guava</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var list = ['A', null, 'B', null, 'C']
+Iterables.removeIf(list, Predicates.isNull())
+assert list.size() == 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache_commons_collections">Apache Commons Collections</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var list = ['A', null, 'B', null, 'C']
+CollectionUtils.filter(list, PredicateUtils.notNullPredicate())
+assert list.size() == 3</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_eclipse_collections">Eclipse Collections</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var list = Lists.mutable.of('A', null, 'B', null, 'C')
+list.withoutAll([null])
+assert list.size() == 3</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_producing_a_new_list_without_nulls">Producing a new list without nulls</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_groovy_2">Groovy</h3>
+<div class="paragraph">
+<p>We can use Java streams as per the original article or avoid streams and use Groovy&#8217;s <code>findAll</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ['A', null, 'B'].stream().filter(Objects::nonNull).toList().size() == 2
+assert ['A', null, 'B'].findAll(Objects::nonNull).size() == 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this case, we can also use <code>findAll</code> and <code>grep</code> no-arg shortcuts.
+These shortcuts follow <a href="https://groovy-lang.org/semantics.html#the-groovy-truth">Groovy truth</a>
+which will remove nulls but also empty Strings and zeros. This may or may not be what we want.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ['A', null, 'B'].findAll().size() == 2
+assert ['A', null, 'B'].grep().size() == 2
+
+assert ['A', null, 'B', '', 0].findAll().size() == 2
+assert ['A', null, 'B', '', 0].grep().size() == 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy also has the <code>findResults</code> method which specifically looks
+for non-null results rather than applying Groovy truth:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ['A', null, 'B'].findResults{ it }.size() == 2
+assert ['A', null, 'B'].findResults().size() == 2             // <b class="conum">(1)</b>
+assert ['A', null, 'B', '', 0].findResults().size() == 4      // <b class="conum">(1)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The no-arg shortcut variants are available from Groovy 4.0.9 onwards.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_guava_2">Guava</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Iterables.filter(['A', null, 'B'], Predicates.notNull()).size() == 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache_commons_collections_2">Apache Commons Collections</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert CollectionUtils.select(['A', null, 'B'], PredicateUtils.notNullPredicate()).size() == 2</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_eclipse_collections_2">Eclipse Collections</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Lists.mutable.of('A', null, 'B').select(Predicates.notNull()).size() == 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_null_related_functionality">Other null related functionality</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before concluding, we should mention some other Groovy functionality related to null.
+Although not related to list processing, Groovy&#8217;s <code>@NullCheck</code> AST transform is useful
+to automatically add null checking into your own classes, methods, and constructors. For further details,
+see the <a href="https://docs.groovy-lang.org/latest/html/documentation/#xform-NullCheck">documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Java – Remove all nulls from a List (<a href="https://www.programmergirl.com/java-remove-nulls-from-list/">original</a> and <a href="https://www.javacodegeeks.com/2019/03/java-remove-nulls-from-list.html">javacodegeeks</a>)</p>
+</li>
+<li>
+<p>Eclipse Collections (<a href="https://www.eclipse.org/collections/">website</a> and <a href="https://github.com/eclipse/eclipse-collections">github site</a>)</p>
+</li>
+<li>
+<p>Guava (<a href="https://github.com/google/guava/wiki">user guide</a>)</p>
+</li>
+<li>
+<p>Apache Commons Collections (<a href="https://commons.apache.org/proper/commons-collections/">website</a>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Have fun processing nulls with Groovy!</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
