@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, machine learning, artificial intelligence, neural networks, tribuo, deep netts, encog, eclipse deepLearning4j, datascience, deeplearning'/><meta name='description' content='This post looks at classifying Iris flowers using traditional and neural net based approaches using Eclipse DeepLearning4j, Encog, Deep Netts and GraalVM.'/><title>The Apache Groovy programming language - Blogs - Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</h1><p>Author: <i>Paul King</i></p><p>Published: 2022-06-25</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/80b1adc8-7234-4046-a279-e272b0a0edd4" alt="iris flowers" width="200"></span>
+A classic data science <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">dataset</a> captures flower characteristics of Iris flowers.
+It captures the <em>width</em> and <em>length</em> of the <em>sepals</em> and <em>petals</em> for three <em>species</em> (<a href="https://en.wikipedia.org/wiki/Iris_setosa">Setosa</a>, <a href="https://en.wikipedia.org/wiki/Iris_versicolor">Versicolor</a>, and <a href="https://en.wikipedia.org/wiki/Iris_virginica">Virginica</a>).</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Iris">Iris project</a> in the <a href="https://github.com/paulk-asert/groovy-data-science">groovy-data-science repo</a> is dedicated to this example.
+It includes a number of Groovy scripts and a Jupyter/BeakerX notebook highlighting this example
+comparing and contrasting various libraries and various classification algorithms.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 77.7778%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Technologies/libraries covered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Data manipulation</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.cs.waikato.ac.nz/ml/weka/">Weka</a> <a href="https://tablesaw.tech/">Tablesaw</a> <a href="https://github.com/jeffheaton/encog-java-core">Encog</a> <a href="https://github.com/EdwardRaff/JSAT">JSAT</a> <a href="https://github.com/deeplearning4j/DataVec">Datavec</a> <a href="https://tribuo.org/">Tribuo</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Classification</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.cs.waikato.ac.nz/ml/weka/">Weka</a> <a href="http://haifengl.github.io/">Smile</a> <a href="https://github.com/jeffheaton/encog-java-core">Encog</a> <a href="https://tribuo.org/">Tribuo</a> <a href="https://github.com/EdwardRaff/JSAT">JSAT</a> <a href="https://deeplearning4j.org/">Deep Learning4J</a> <a href="https://www.deepnetts.com/blog/deep-netts-community-edition">Deep Netts</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Visualization</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://knowm.org/open-source/xchart/">XChart</a> <a href="https://jtablesaw.github.io/tablesaw/userguide/Introduction_to_Plotting.html">Tablesaw Plot.ly</a> <a href="https://openjfx.io/">JavaFX</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Main aspects/algorithms covered</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reading csv, dataframes, visualization, exploration, <a href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">naive bayes</a>, <a href="https://en.wikipedia.org/wiki/Logistic_regression">logistic regression</a>, <a href="https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm#k-NN_regression">knn regression</a>, <a href="https://en.wikipedia.org/wiki/Multinomial_logistic_regression">softmax regression</a>, <a href="https://en.wikipedia.org/wiki/Decision_tree_learning">decision trees</a>, <a href="https://en.wikipedia.org/wiki/Support-vector_machine">support vector machine</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Other aspects/algorithms covered</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Artificial_neural_network">neural networks</a>, <a href="https://en.wikipedia.org/wiki/Multilayer_perceptron">multilayer perceptron</a>, <a href="https://en.wikipedia.org/wiki/Principal_component_analysis">PCA</a></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Feel free to browse these other examples and the Jupyter/BeakerX notebook if you are interested in any of these additional techniques.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iris_beakerx.png" alt="Jupyter/BeakerX notebook image of the Iris problem"></span></p>
+</div>
+<div class="paragraph">
+<p>For this blog, let&#8217;s just look at the Deep Learning examples. We&#8217;ll look at solutions using Encog, Eclipse DeepLearning4J and Deep Netts (with standard Java and as a native image using GraalVM) but first a brief introduction.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deep_learning">Deep Learning</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Deep learning falls under the branches of <a href="https://en.wikipedia.org/wiki/Machine_learning">machine learning</a> and <a href="https://en.wikipedia.org/wiki/Artificial_intelligence">artificial intelligence</a>. It involves multiple layers (hence the "deep") of an <a href="https://en.wikipedia.org/wiki/Artificial_neural_network">artificial neural network</a>.
+There are lots of ways to configure such networks and the details are beyond the scope of this blog post,
+but we can give some basic details. We will have four input nodes corresponding to the measurements of our four characteristics.
+We will have three output nodes corresponding to each possible <em>class</em> (<em>species</em>). We will also have one or more additional layers in between.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/deep_network.png" alt="Iris neural net layers"></span></p>
+</div>
+<div class="paragraph">
+<p>Each node in this network mimics to some degree a neuron in the human brain. Again, we&#8217;ll simplify the details.
+Each node has multiple inputs, which are given a particular weight, as well as an activation function which will
+determine whether our node "fires". Training the model is a process which works out what the best weights should be.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/deep_node.png" alt="Neural net node"></span></p>
+</div>
+<div class="paragraph">
+<p>The math involved for converting inputs to output for any node isn&#8217;t too hard. We could write it ourselves (as shown <a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Mnist/src/main/groovy/MnistTrainer.groovy">here</a> using matrices
+and <a href="https://commons.apache.org/proper/commons-math/">Apache Commons Math</a> for a digit recognition example) but luckily we don&#8217;t have to.
+The libraries we are going to use do much of the work for us. They typically provide a fluent API which lets us specify,
+in a somewhat declarative way, the layers in our network.</p>
+</div>
+<div class="paragraph">
+<p>Just before exploring our examples, we should pre-warn folks that while we do time running the examples, no attempt was made to rigorously ensure that the examples were identical across the different technologies. The different technologies support slightly different ways to set up their respective network layers. The parameters were tweaked so that when run there was typically at most one or two errors in the validation. Also, the initial parameters for the runs can be set with random or pre-defined seeds. When random ones are used, each run will have slightly different errors. We&#8217;d need to do some additional alignment of examples and use a framework like <a href="https://github.com/openjdk/jmh">JMH</a> if we wanted to get a more rigorous time comparison between the technologies. Nevertheless, it should give a very rough guide as to the speed to the various technologies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_encog">Encog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.heatonresearch.com/encog/">Encog</a> is a pure Java machine learning framework that was created in 2008.
+There is also a C# port for .Net users. Encog is a simple framework that supports a number of advanced algorithms
+not found elsewhere but isn&#8217;t as widely used as other more recent frameworks.</p>
+</div>
+<div class="paragraph">
+<p>The complete source code for our Iris classification example using Encog is
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Iris/src/main/groovy/NNFF_Encog.groovy">here</a>,
+but the critical piece is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def model = new EncogModel(data).tap {
+    selectMethod(data, TYPE_FEEDFORWARD)
+    report = new ConsoleStatusReportable()
+    data.normalize()
+    holdBackValidation(0.3, true, 1001) // test with 30%
+    selectTrainingType(data)
+}
+
+def bestMethod = model.crossvalidate(5, true) // 5-fold cross-validation
+
+println "Training error: " + pretty(calculateRegressionError(bestMethod, model.trainingDataset))
+println "Validation error: " + pretty(calculateRegressionError(bestMethod, model.validationDataset))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we run the example, we see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_encog$ time groovy -cp "build/lib/*" IrisEncog.groovy
+1/5 : Fold #1
+1/5 : Fold #1/5: Iteration #1, Training Error: 1.43550735, Validation Error: 0.73302237
+1/5 : Fold #1/5: Iteration #2, Training Error: 0.78845427, Validation Error: 0.73302237
+...
+5/5 : Fold #5/5: Iteration #163, Training Error: 0.00086231, Validation Error: 0.00427126
+5/5 : Cross-validated score:0.10345818553910753
+Training error:  0.0009
+Validation error:  0.0991
+Prediction errors:
+predicted: Iris-virginica, actual: Iris-versicolor, normalized input: -0.0556, -0.4167,  0.3898,  0.2500
+Confusion matrix:            Iris-setosa     Iris-versicolor      Iris-virginica
+         Iris-setosa                  19                   0                   0
+     Iris-versicolor                   0                  15                   1
+      Iris-virginica                   0                   0                  10
+
+real	0m3.073s
+user	0m9.973s
+sys	0m0.367s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We won&#8217;t explain all the stats, but it basically says we have a pretty good model with low errors in prediction.
+If you see the green and purple points in the notebook image earlier in this blog, you&#8217;ll see there are some points
+which are going to be hard to predict correctly all the time. The confusion matrix shows that the model predicted
+one flower incorrectly on the validation dataset.</p>
+</div>
+<div class="paragraph">
+<p>One very nice aspect of this library is that it is a single jar dependency!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_eclipse_deeplearning4j">Eclipse DeepLearning4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://deeplearning4j.konduit.ai/">Eclipse DeepLearning4j</a> is a suite of tools for running deep learning on the JVM.
+It has support for scaling up to <a href="https://spark.apache.org/">Apache Spark</a> as well as some integration with python at a number of levels.
+It also provides integration to GPUs and C/++ libraries for native integration.</p>
+</div>
+<div class="paragraph">
+<p>The complete source code for our Iris classification example using DeepLearning4J is
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Iris/src/main/groovy/NNFF_Dl4j.groovy">here</a>,
+with the main part shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
+    .seed(seed)
+    .activation(Activation.TANH) // global activation
+    .weightInit(WeightInit.XAVIER)
+    .updater(new Sgd(0.1))
+    .l2(1e-4)
+    .list()
+    .layer(new DenseLayer.Builder().nIn(numInputs).nOut(3).build())
+    .layer(new DenseLayer.Builder().nIn(3).nOut(3).build())
+    .layer(new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+        .activation(Activation.SOFTMAX) // override activation with softmax for this layer
+        .nIn(3).nOut(numOutputs).build())
+    .build()
+
+def model = new MultiLayerNetwork(conf)
+model.init()
+
+model.listeners = new ScoreIterationListener(100)
+
+1000.times { model.fit(train) }
+
+def eval = new Evaluation(3)
+def output = model.output(test.features)
+eval.eval(test.labels, output)
+println eval.stats()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we run this example, we see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_dl4j$ time groovy -cp "build/lib/*" IrisDl4j.groovy
+[main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
+[main] INFO org.nd4j.nativeblas.NativeOpsHolder - Number of threads used for linear algebra: 4
+[main] INFO org.nd4j.nativeblas.Nd4jBlas - Number of threads used for OpenMP BLAS: 4
+[main] INFO org.nd4j.linalg.api.ops.executioner.DefaultOpExecutioner - Backend used: [CPU]; OS: [Linux]
+...
+[main] INFO org.deeplearning4j.optimize.listeners.ScoreIterationListener - Score at iteration 0 is 0.9707752535968273
+[main] INFO org.deeplearning4j.optimize.listeners.ScoreIterationListener - Score at iteration 100 is 0.3494968712782093
+...
+[main] INFO org.deeplearning4j.optimize.listeners.ScoreIterationListener - Score at iteration 900 is 0.03135504326480282
+
+========================Evaluation Metrics========================
+ # of classes:    3
+ Accuracy:        0.9778
+ Precision:       0.9778
+ Recall:          0.9744
+ F1 Score:        0.9752
+Precision, recall &amp; F1: macro-averaged (equally weighted avg. of 3 classes)
+
+=========================Confusion Matrix=========================
+  0  1  2
+----------
+ 18  0  0 | 0 = 0
+  0 14  0 | 1 = 1
+  0  1 12 | 2 = 2
+
+Confusion matrix format: Actual (rowClass) predicted as (columnClass) N times
+==================================================================
+
+real	0m5.856s
+user	0m25.638s
+sys	0m1.752s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again the stats tell us that the model is good. One error in the confusion matrix for our testing dataset.
+DeepLearning4J does have an impressive range of technologies that can be used to enhance performance in certain scenarios.
+For this example, I enabled AVX (Advanced Vector Extensions) support but didn&#8217;t try using the CUDA/GPU support nor
+make use of any Apache Spark integration. The GPU option might have sped up the application but given the size of the
+dataset and the amount of calculations needed to train our network, it probably wouldn&#8217;t have sped up much.
+For this little example, the overheads of putting the plumbing in place to access native C++ implementations and so forth,
+outweighed the gains. Those features generally would come into their own for much larger datasets or
+massive amounts of calculations; tasks like intensive video processing spring to mind.</p>
+</div>
+<div class="paragraph">
+<p>The downside of the impressive scaling options is the added complexity. The code was slightly more complex than the other technologies we look at in this blog based around certain assumptions in the API which would be needed if we wanted to make use of Spark integration even though we didn&#8217;t here. The good news is that once the work is done, if we did want to use Spark, that would now be relatively straight forward.</p>
+</div>
+<div class="paragraph">
+<p>The other increase in complexity is the number of jar files needed in the classpath. I went with the easy option of using the <code>nd4j-native-platform</code> dependency plus added the <code>org.nd4j:nd4j-native:1.0.0-M2:linux-x86_64-avx2</code> dependency for AVX support. This made my life easy but brought in over 170 jars including many for unneeded platforms. Having all those jars is great if users of other platforms want to also try the example, but it can be a little troublesome with certain tooling that breaks with long command lines on certain platforms. I could certainly do some more work to shrink those dependency lists if it became a real problem.</p>
+</div>
+<div class="paragraph">
+<p>(For the interested reader, the groovy-data-science repo has other DeepLearning4J examples. The <a href="https://www.cs.waikato.ac.nz/ml/weka/">Weka</a>
+library can wrap DeepLearning4J as shown for this Iris example <a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Iris/src/main/groovy/MLP_Weka.groovy">here</a>. There are also two variants of the digit recognition example we alluded to earlier using <a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Mnist/src/main/groovy/OneLayerMLP.groovy">one</a> and <a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Mnist/src/main/groovy/TwoLayerMLP.groovy">two</a> layer neural networks.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deep_netts">Deep Netts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.deepnetts.com/">Deep Netts</a> is a company offering a range of products and services related to deep learning.
+Here we are using the free open-source <a href="https://www.deepnetts.com/blog/deep-netts-community-edition">Deep Netts community edition</a>
+pure java deep learning library. It provides support for the Java Visual Recognition API
+(<a href="https://jcp.org/en/jsr/detail?id=381">JSR381</a>). The expert group from JSR381 released their final spec earlier this year, so hopefully we&#8217;ll see more compliant implementations soon.</p>
+</div>
+<div class="paragraph">
+<p>The complete source code for our Iris classification example using Deep Netts is
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Iris/src/main/groovy/NNFF_DeepNetts.groovy">here</a>
+and the important part is below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var splits = dataSet.split(0.7d, 0.3d)  // 70/30% split
+var train = splits[0]
+var test = splits[1]
+
+var neuralNet = FeedForwardNetwork.builder()
+    .addInputLayer(numInputs)
+    .addFullyConnectedLayer(5, ActivationType.TANH)
+    .addOutputLayer(numOutputs, ActivationType.SOFTMAX)
+    .lossFunction(LossType.CROSS_ENTROPY)
+    .randomSeed(456)
+    .build()
+
+neuralNet.trainer.with {
+    maxError = 0.04f
+    learningRate = 0.01f
+    momentum = 0.9f
+    optimizer = OptimizerType.MOMENTUM
+}
+
+neuralNet.train(train)
+
+new ClassifierEvaluator().with {
+    println "CLASSIFIER EVALUATION METRICS\n${evaluate(neuralNet, test)}"
+    println "CONFUSION MATRIX\n$confusionMatrix"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we run this command we see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ time groovy -cp "build/lib/*" Iris.groovy
+16:49:27.089 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+16:49:27.091 [main] INFO deepnetts.core.DeepNetts - TRAINING NEURAL NETWORK
+16:49:27.091 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+16:49:27.100 [main] INFO deepnetts.core.DeepNetts - Epoch:1, Time:6ms, TrainError:0.8584314, TrainErrorChange:0.8584314, TrainAccuracy: 0.5252525
+16:49:27.103 [main] INFO deepnetts.core.DeepNetts - Epoch:2, Time:3ms, TrainError:0.52278274, TrainErrorChange:-0.33564866, TrainAccuracy: 0.52820516
+...
+16:49:27.911 [main] INFO deepnetts.core.DeepNetts - Epoch:3031, Time:0ms, TrainError:0.029988592, TrainErrorChange:-0.015680967, TrainAccuracy: 1.0
+TRAINING COMPLETED
+16:49:27.911 [main] INFO deepnetts.core.DeepNetts - Total Training Time: 820ms
+16:49:27.911 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+CLASSIFIER EVALUATION METRICS
+Accuracy: 0.95681506 (How often is classifier correct in total)
+Precision: 0.974359 (How often is classifier correct when it gives positive prediction)
+F1Score: 0.974359 (Harmonic average (balance) of precision and recall)
+Recall: 0.974359 (When it is actually positive class, how often does it give positive prediction)
+
+CONFUSION MATRIX
+                          none    Iris-setosaIris-versicolor Iris-virginica
+           none              0              0              0              0
+    Iris-setosa              0             14              0              0
+Iris-versicolor              0              0             18              1
+ Iris-virginica              0              0              0             12
+
+real	0m3.160s
+user	0m10.156s
+sys	0m0.483s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is faster than DeepLearning4j and similar to Encog. This is to be expected given our small data set and isn&#8217;t indicative of performance for larger problems.</p>
+</div>
+<div class="paragraph">
+<p>Another plus is the dependency list. It isn&#8217;t quite the single jar situation as we saw with Encog but not far off.
+There is the Encog jar, the JSR381 VisRec API which is in a separate jar, and a handful of logging jars.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deep_netts_with_graalvm">Deep Netts with GraalVM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another technology we might want to consider if performance is important to us is <a href="https://www.graalvm.org/">GraalVM</a>. GraalVM is a high-performance JDK distribution designed to speed up the execution of applications written in Java and other JVM languages. We&#8217;ll look at creating a native version of our Iris Deep Netts application. We used GraalVM 22.1.0 Java 17 CE and Groovy 4.0.3. We&#8217;ll cover just the basic steps but there are other places for additional setup info and troubleshooting help like <a href="https://e.printstacktrace.blog/graalvm-and-groovy-how-to-start/">here</a>, <a href="https://github.com/wololock/gttp">here</a> and <a href="https://simply-how.com/fix-graalvm-native-image-compilation-issues">here</a>.</p>
+</div>
+<div class="paragraph">
+<p>Groovy has two natures. It&#8217;s dynamic nature supports adding methods at runtime through metaprogramming
+and interacting with method dispatch processing through missing method interception and other tricks.
+Some of these tricks make heavy use of reflection and dynamic class loading and cause problems for
+GraalVM which is trying to determine as much information as it can at compile time. Groovy&#8217;s static
+nature has a more limited set of metaprogramming capabilities but allows bytecode much closer to
+Java to be produced. Luckily, we aren&#8217;t relying on any dynamic Groovy tricks for our example.
+We&#8217;ll compile it up using static mode:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next we build our native application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ native-image  --report-unsupported-elements-at-runtime \
+   --initialize-at-run-time=groovy.grape.GrapeIvy,deepnetts.net.weights.RandomWeights \
+   --initialize-at-build-time --no-fallback  -H:ConfigurationFileDirectories=conf/  -cp ".:build/lib/*" Iris</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We told GraalVM to initialize <code>GrapeIvy</code> at runtime (to avoid needing Ivy jars in the classpath
+since Groovy will lazily load those classes only if we use <code>@Grab</code> statements).
+We also did the same for the <code>RandomWeights</code> class to avoid it being locked into a random seed fixed at compile time.</p>
+</div>
+<div class="paragraph">
+<p>Now we are ready to run our application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ time ./iris
+...
+CLASSIFIER EVALUATION METRICS
+Accuracy: 0.93460923 (How often is classifier correct in total)
+Precision: 0.96491224 (How often is classifier correct when it gives positive prediction)
+F1Score: 0.96491224 (Harmonic average (balance) of precision and recall)
+Recall: 0.96491224 (When it is actually positive class, how often does it give positive prediction)
+
+CONFUSION MATRIX
+                          none    Iris-setosaIris-versicolor Iris-virginica
+           none              0              0              0              0
+    Iris-setosa              0             21              0              0
+Iris-versicolor              0              0             20              2
+ Iris-virginica              0              0              0             17
+
+real    0m0.131s
+user    0m0.096s
+sys     0m0.029s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see here that the speed has dramatically increased. This is great, but we should note, that using GraalVM often involves some tricky investigation especially for Groovy which by default has its dynamic nature. There are a few features of Groovy which won&#8217;t be available when using Groovy&#8217;s static nature and some libraries might be problematical. As an example, Deep Netts has log4j2 as one of its dependencies. At the time of writing, there are still issues using log4j2 with GraalVM. We excluded the <code>log4j-core</code> dependency and used <code>log4j-to-slf4j</code> backed by <code>logback-classic</code> to sidestep this problem.</p>
+</div>
+<div class="paragraph">
+<p>(<strong>Update</strong>: I put the Deep Netts GraalVM <em>iris</em> application with some more detailed instructions into its own <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/IrisGraalVM">subproject</a>.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have seen a few different libraries for performing deep learning classification using Groovy.
+Each has its own strengths and weaknesses.
+There are certainly options to cater for folks wanting blinding fast startup speeds through to options which scale to massive computing farms in the cloud.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
