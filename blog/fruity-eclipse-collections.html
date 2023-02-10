@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='datascience, eclipse collections, groovy, kmeans, emoji, virtual threads, scala integration'/><meta name='description' content='This post looks at using KMeans to compare fruit nominated color with the colors used in its emoji.'/><title>The Apache Groovy programming language - Blogs - Fruity Eclipse Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Eclipse Collections</a></li><li><a href='#_eclipse_collections_fruit_salad' class='anchor-link'>Eclipse Collections Fruit Salad</a></li><li><a href='#_exploring_emoji_colors' class='anchor-link'>Exploring emoji colors</a></li><li><a href='#_putting_it_all_together' class='anchor-link'>Putting it all together</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Eclipse Collections</h1><p>Author: <i>Paul King</i></p><p>Published: 2022-10-13T11:05:54+00:00</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This blog post continues on to some degree from the
+<a href="https://blogs.apache.org/groovy/entry/deep-learning-and-eclipse-collections">previous post</a>,
+but instead of deep learning, we&#8217;ll look at clustering using k-means after first exploring some top methods of <a href="https://www.eclipse.org/collections/">Eclipse Collections</a> with fruit emoji examples.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_eclipse_collections_fruit_salad">Eclipse Collections Fruit Salad</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we&#8217;ll define a Fruit enum (it adds one additional fruit compared to the related
+<a href="https://github.com/eclipse/eclipse-collections-kata/tree/master/top-methods-kata-solutions">Eclipse Collections kata</a>):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/8d0d5468-f58a-445a-8e79-854c7815d861" alt="code for fruit enum"></span></p>
+</div>
+<div class="paragraph">
+<p>We can use this enum in the following examples which show off numerous common Eclipse Collections methods:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/c272dd74-9d35-49b7-8857-c7fccf1989f0" alt="exploring common eclipse collections methods"></span></p>
+</div>
+<div class="paragraph">
+<p>The last example calculates red fruit in parallel threads.
+As coded, it uses virtual threads when run on JDK19 with preview features enabled.
+You can follow the suggestion in the comment to run on other JDK versions or with normal threads.
+In addition to Eclipse Collections, we have the GPars library on our classpath.
+Here we are only using one method which is managing pool lifecycle for us.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exploring_emoji_colors">Exploring emoji colors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For some fun, let&#8217;s look at whether the nominated color of each fruit matches the color
+of the related emoji. As in the previous blog, we&#8217;ll use the slightly nicer
+<a href="https://fonts.google.com/noto/specimen/Noto+Color+Emoji?preview.text=%F0%9F%8D%8E%F0%9F%8D%91%F0%9F%8D%8C%F0%9F%8D%92%F0%9F%8D%8A%F0%9F%8D%87&amp;preview.text_type=custom">Noto Color Emoji</a>
+fonts for our fruit as shown here:
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/4e4f1abe-0775-442d-ba17-7488e3eeca49" alt="Noto Color Emoji"></span>
+We&#8217;ll use an Eclipse Collection <code>BiMap</code> to switch back and forth between the color names
+and java.awt colors:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Field public static COLOR_OF = BiMaps.immutable.ofAll([
+WHITE: WHITE, RED: RED, GREEN: GREEN, BLUE: BLUE,
+ORANGE: ORANGE, YELLOW: YELLOW, MAGENTA: MAGENTA
+])
+@Field public static NAME_OF = COLOR_OF.inverse()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We are also going to use some helper functions to switch between RGB and HSB color values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static hsb(int r, int g, int b) {
+    float[] hsb = new float[3]
+    RGBtoHSB(r, g, b, hsb)
+    hsb
+}
+
+static rgb(BufferedImage image, int x, int y) {
+    int rgb = image.getRGB(x, y)
+    int r = (rgb &gt;&gt; 16) &amp; 0xFF
+    int g = (rgb &gt;&gt; 8) &amp; 0xFF
+    int b = rgb &amp; 0xFF
+    [r, g, b]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The HSB color space represents colors in a spectrum from 0 to 360 degrees:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://nycdoe-cs4all.github.io/images/lessons/unit_1/3.2/circle.png" alt="Color Circle"></span>
+Image credit: <a href="https://nycdoe-cs4all.github.io/units/1/lessons/lesson_3.2" class="bare">https://nycdoe-cs4all.github.io/units/1/lessons/lesson_3.2</a></p>
+</div>
+<div class="paragraph">
+<p>We have two helper methods to assist with colors.
+The first picks out "<em>mostly black</em>" and "<em>mostly white</em>" colors while
+the second uses a switch expression to carve out some regions of the
+color space for our colors of interest:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static range(float[] hsb) {
+    if (hsb[1] &lt; 0.1 &amp;&amp; hsb[2] &gt; 0.9) return [0, WHITE]
+    if (hsb[2] &lt; 0.1) return [0, BLACK]
+    int deg = (hsb[0] * 360).round()
+    return [deg, range(deg)]
+}
+
+static range(int deg) {
+    switch (deg) {
+        case 0..&lt;16 -&gt; RED
+        case 16..&lt;35 -&gt; ORANGE
+        case 35..&lt;75 -&gt; YELLOW
+        case 75..&lt;160 -&gt; GREEN
+        case 160..&lt;250 -&gt; BLUE
+        case 250..&lt;330 -&gt; MAGENTA
+        default -&gt; RED
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the JDK doesn&#8217;t have a standard color of PURPLE, so we combine purple with magenta by choosing an appropriate broad spectrum for MAGENTA.</p>
+</div>
+<div class="paragraph">
+<p>We used a <a href="https://plotly.com/javascript/">Plotly</a> 3D interactive scatterplot
+(as supported by the <a href="https://jtablesaw.github.io/tablesaw/userguide/Introduction_to_Plotting">Tablesaw</a> Java dataframe and visualization library to visualize our emoji colors (as degrees on the color spectrum) vs the XY coordinates:
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/85b4c127-52a3-4cc6-a7fc-1e72aa49e8b8" alt="Color vs xy plot"></span></p>
+</div>
+<div class="paragraph">
+<p>We are going to try out 3 approaches for determining the predominant color of each emoji:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Most common color</strong>: We find the color spectrum value for each point and count up the number of points of each color. The color with the most points will be selected. This is simple and works in many scenarios but if an apple or cherry has 100 shades of red but only one shade of green for the stalk or a leaf, green may be selected.</p>
+</li>
+<li>
+<p><strong>Most common range</strong>: We group each point into a color range. The range with the most points will be selected.</p>
+</li>
+<li>
+<p><strong>Centroid of biggest cluster</strong>: We divide our emoji image into a grid of sub-images. We will perform k-means clustering of the RGB values for each point in the sub-image. This will cluster similar colored points together in a cluster. The cluster with the most points will be selected and its centroid will be chosen as the selected pre-dominant color. This approach has the affect of pixelating our sub-image by color. This approach is inspired by this <a href="https://medium.com/swlh/getting-dominant-colour-of-an-image-using-k-means-f7fdca880063">python article</a>.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_most_common_color">Most Common Color</h3>
+<div class="paragraph">
+<p>Ignoring the background white color, the most common color for our PEACH emoji is a shade of orange. The graph below shows the count of each color:
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/b9f82465-62e2-45c0-926f-634568381be8" alt="Color histogram for PEACH"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_most_common_range">Most Common Range</h3>
+<div class="paragraph">
+<p>If instead of counting each color, we group colors into their range and count the numbers in each range, we get the following graph for PEACH:
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/4ce2ac0e-87ac-4509-9fa8-10928419f4a0" alt="Range histogram for PEACH"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_k_means">K-Means</h3>
+<div class="paragraph">
+<p>K-Means is an algorithm for finding cluster centroids. For k=3, we would start by picking
+3 random points as our starting centroids.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6192d3b7-a3c7-4ce5-b0c0-a3286619dd12" alt="kmeans step 1"></span></p>
+</div>
+<div class="paragraph">
+<p>We allocate all points to their closest centroid:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/751eaac0-5ba2-448d-8f67-6ebf53613ac9" alt="kmeans step 2"></span></p>
+</div>
+<div class="paragraph">
+<p>Given this allocation, we re-calculate each centroid from all of its points:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/daa9530e-fc5d-458d-8029-a1fd8a62d521" alt="kmeans step 3"></span></p>
+</div>
+<div class="paragraph">
+<p>We repeat this process until either a stable centroid selection
+is found, or we have reached a certain number of iterations.
+We used the K-Means algorithm from
+<a href="https://commons.apache.org/proper/commons-math/userguide/ml.html#clustering">Apache Commons Math</a>.</p>
+</div>
+<div class="paragraph">
+<p>Here is the kind of result we would expect if run on the complete
+set of points for the PEACH emoji. The black dots are the centroids.
+It has found one green, one orange and one red centroid.
+The centroid with the most points allocated to it should be the
+most predominant color. (This is another interactive 3D scatterplot.)</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/f6bf5f7e-f384-4316-a1da-f8ec62ebae47" alt="RgbPeach3d"></span>
+We can plot the number of points allocated to each cluster as a
+bar chart. (We used a <a href="https://github.com/alexarchambault/plotly-scala">Scala plotting library</a>
+to show Groovy integration with Scala.)
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/9bfd0a6e-85a8-4615-b0d7-f719a9459ad3" alt="Peach colour centroid sizes"></span></p>
+</div>
+<div class="paragraph">
+<p>The code for drawing the above chart looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var trace = new Bar(intSeq([1, 2, 3]), intSeq(sizes))
+        .withMarker(new Marker().withColor(oneOrSeq(colors)))
+
+var traces = asScala([trace]).toSeq()
+
+var layout = new Layout()
+        .withTitle("Centroid sizes for $fruit")
+        .withShowlegend(false)
+        .withHeight(600)
+        .withWidth(800)
+
+Plotly.plot(path, traces, layout, defaultConfig, false, false, true)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_k_means_with_subimages">K-Means with subimages</h3>
+<div class="paragraph">
+<p>The approach we will take for our third option enhances K-Means.
+Instead of finding centroids for the whole image as the graphs just
+shown do, we divide the image into subimages and perform the K-Means
+on each subimage. Our overall pre-dominant color is determined to be
+the most common color predicated across all of our subimages.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_putting_it_all_together">Putting it all together</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the final code covering all three approaches (including printing some pretty images highlighting the third approach and the Plotly 3D scatter plots):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var results = Fruit.ALL.collect { fruit -&gt;
+    var file = getClass().classLoader.getResource("${fruit.name()}.png").file as File
+    var image = ImageIO.read(file)
+
+    var colors = [:].withDefault { 0 }
+    var ranges = [:].withDefault { 0 }
+    for (x in 0..&lt;image.width) {
+        for (y in 0..&lt;image.height) {
+            def (int r, int g, int b) = rgb(image, x, y)
+            float[] hsb = hsb(r, g, b)
+            def (deg, range) = range(hsb)
+            if (range != WHITE) { // ignore white background
+                ranges[range]++
+                colors[deg]++
+            }
+        }
+    }
+    var maxRange = ranges.max { e -&gt; e.value }.key
+    var maxColor = range(colors.max { e -&gt; e.value }.key)
+
+    int cols = 8, rows = 8
+    int grid = 5 // thickness of black "grid" between subimages
+    int stepX = image.width / cols
+    int stepY = image.height / rows
+    var splitImage = new BufferedImage(image.width + (cols - 1) * grid, image.height + (rows - 1) * grid, image.type)
+    var g2a = splitImage.createGraphics()
+    var pixelated = new BufferedImage(image.width + (cols - 1) * grid, image.height + (rows - 1) * grid, image.type)
+    var g2b = pixelated.createGraphics()
+
+    ranges = [:].withDefault { 0 }
+    for (i in 0..&lt;rows) {
+        for (j in 0..&lt;cols) {
+            def clusterer = new KMeansPlusPlusClusterer(5, 100)
+            List&lt;DoublePoint&gt; data = []
+            for (x in 0..&lt;stepX) {
+                for (y in 0..&lt;stepY) {
+                    def (int r, int g, int b) = rgb(image, stepX * j + x, stepY * i + y)
+                    var dp = new DoublePoint([r, g, b] as int[])
+                    var hsb = hsb(r, g, b)
+                    def (deg, col) = range(hsb)
+                    data &lt;&lt; dp
+                }
+            }
+            var centroids = clusterer.cluster(data)
+            var biggestCluster = centroids.max { ctrd -&gt; ctrd.points.size() }
+            var ctr = biggestCluster.center.point*.intValue()
+            var hsb = hsb(*ctr)
+            def (_, range) = range(hsb)
+            if (range != WHITE) ranges[range]++
+            g2a.drawImage(image, (stepX + grid) * j, (stepY + grid) * i, stepX * (j + 1) + grid * j, stepY * (i + 1) + grid * i,
+                    stepX * j, stepY * i, stepX * (j + 1), stepY * (i + 1), null)
+            g2b.color = new Color(*ctr)
+            g2b.fillRect((stepX + grid) * j, (stepY + grid) * i, stepX, stepY)
+        }
+    }
+    g2a.dispose()
+    g2b.dispose()
+
+    var swing = new SwingBuilder()
+    var maxCentroid = ranges.max { e -&gt; e.value }.key
+    swing.edt {
+        frame(title: 'Original vs Subimages vs K-Means',
+                defaultCloseOperation: DISPOSE_ON_CLOSE, pack: true, show: true) {
+            flowLayout()
+            label(icon: imageIcon(image))
+            label(icon: imageIcon(splitImage))
+            label(icon: imageIcon(pixelated))
+        }
+    }
+
+    [fruit, maxRange, maxColor, maxCentroid]
+}
+
+println "Fruit  Expected      By max color  By max range  By k-means"
+results.each { fruit, maxRange, maxColor, maxCentroid -&gt;
+    def colors = [fruit.color, maxColor, maxRange, maxCentroid].collect {
+        NAME_OF[it].padRight(14)
+    }.join().trim()
+    println "${fruit.emoji.padRight(6)} $colors"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here are the resulting images:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/442d7100-5023-43ce-a525-0db682fc7b60" alt="peach images"></span>
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/1fc50ff2-7881-4bd3-a8c7-a6283222d91d" alt="banana images"></span>
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6b35338d-be4b-40a4-81dc-e317a68fbb1e" alt="cherry images"></span>
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/d3ff8625-d429-4c7c-bfcd-531df53a8256" alt="orange images"></span>
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/1f1b755a-7dcf-4c53-b930-07c3ef8f0a2f" alt="grape images"></span>
+<span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/d166e557-2ba2-4058-9bde-fb8b682d4c4b" alt="apple images"></span></p>
+</div>
+<div class="paragraph">
+<p>And, here are the final results:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/fruit_emoji_color_prediction_results.png" alt="results"></span></p>
+</div>
+<div class="paragraph">
+<p>In our case, all three approaches yielded the same results.
+Results for other emojis may vary.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Repo with example code: <a href="https://github.com/paulk-asert/fruity-eclipse-collections" class="bare">https://github.com/paulk-asert/fruity-eclipse-collections</a></p>
+</li>
+<li>
+<p>Further examples of k-means clustering: <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Whiskey" class="bare">https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Whiskey</a></p>
+</li>
+<li>
+<p>Related slides for clustering: <a href="https://speakerdeck.com/paulk/groovy-data-science?slide=94" class="bare">https://speakerdeck.com/paulk/groovy-data-science?slide=94</a></p>
+</li>
+<li>
+<p>Eclipse collections homepage: <a href="https://www.eclipse.org/collections/" class="bare">https://www.eclipse.org/collections/</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
