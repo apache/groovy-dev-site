@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='deep learning, eclipse collections, groovy, emoji, deeplearning4j'/><meta name='description' content='This post uses Emojis and Eclipse Collections to process pet records. We then use deep learning to predict whether each emoji looks like a dog or cat.'/><title>The Apache Groovy programming language - Blogs - Deep Learning and Eclipse Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Deep Learning and Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Deep Learning and Eclipse Collections</h1><p>Published: 2022-10-11T10:41:58+00:00</p><hr/><div class="paragraph">
+<p>In previous blogs, we&#8217;ve covered <a href="https://blogs.apache.org/groovy/entry/deck-of-cards-with-groovy">Eclipse Collections</a> and <a href="https://blogs.apache.org/groovy/entry/detecting-objects-with-groovy-the">Deep Learning</a>. Recently, a couple of the highly recommended katas for Eclipse Collections have been revamped to include "pet" and "fruit" emojis for a bit of extra fun. What could be better than <em>Learning</em> Eclipse Collections?
+<em>Deep Learning</em> and Eclipse Collections of course!</p>
+</div>
+<div class="paragraph">
+<p>First, we create a <code>PetType</code> enum with the emoji as <code>toString</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">enum PetType {
+    CAT("🐱"),
+    DOG("🐶"),
+    HAMSTER("🐹"),
+    TURTLE("🐢"),
+    BIRD("🐦"),
+    SNAKE("🐍")
+
+    private final String emoji
+
+    PetType(String emoji) { this.emoji = emoji }
+
+    @Override
+    String toString() { emoji }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then a <code>Pet</code> record (with the <code>type</code> as the <code>toString</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Pet(PetType type, String name, int age) {
+    String toString() { type.toString() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly, we&#8217;ll create a <code>Person</code> record. We&#8217;ll also populate a <code>people</code> list as is done in the kata. The full details are in the <a href="https://github.com/paulk-asert/deep-learning-eclipse-collections">repo</a>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s use a GQuery expression to explore the pre-populated list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println GQ {
+    from p in people
+    select p.fullName, p.pets
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The result is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>+---------------+----------+
+| fullName      | pets     |
++---------------+----------+
+| Mary Smith    | [🐱]     |
+| Bob Smith     | [🐱, 🐶] |
+| Ted Smith     | [🐶]     |
+| Jake Snake    | [🐍]     |
+| Barry Bird    | [🐦]     |
+| Terry Turtle  | [🐢]     |
+| Harry Hamster | [🐹, 🐹] |
+| John Doe      | []       |
++---------------+----------+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s duplicate the assertion from the <code>getCountsByPetType</code> test in the original kata&#8217;s exercise3 which checks pet counts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var counts = people.countByEach(person -&gt; person.petTypes).collect(Object::toString)
+var expected = Bags.mutable.withOccurrences("🐱", 2, "🐶", 2, "🐹", 2).with("🐍").with("🐢").with("🐦")
+assert counts == expected</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we expect, it passes.</p>
+</div>
+<div class="paragraph">
+<p>Now, for a bit of fun, we will use a neural network trained to detect cat and dog images and apply it to our emojis. We&#8217;ll follow the process described <a href="http://ramok.tech/2018/01/03/java-image-cat-vs-dog-recognizer-with-deep-neural-networks/">here</a>. It uses DeepLearning4J to train and then use a model. The images used to train the model were real cat and dog images, not emojis, so we aren&#8217;t expecting our model to be super accurate.&lt;/p&gt;&lt;p&gt;The first attempt was to write the emojis into swing JLabel components and then save using a buffered image. This lead to poor looking images:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/pet_emoji_fonts.jpg" alt="PetAsFonts"></span></p>
+</div>
+<div class="paragraph">
+<p>And consequently, poor image inference. Recent JDK versions on some platforms might do better, but we gave up on this approach.</p>
+</div>
+<div class="paragraph">
+<p>Instead, emoji image files from the <a href="https://fonts.google.com/noto/specimen/Noto+Color+Emoji?preview.text=%F0%9F%98%BB%F0%9F%90%B6%F0%9F%90%B9%F0%9F%90%A2%F0%9F%90%A6%F0%9F%90%8D&amp;preview.text_type=custom">Noto Color Emoji</a> font were used and saved under the pet type in the <code>resources</code> folder. These look much nicer:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/pet_emoji.png" alt="Noto Color Emoji"></span></p>
+</div>
+<div class="paragraph">
+<p>Here is the code which makes use of those saved images to detect the animal types (note the use of type aliasing since we have two <code>PetType</code> classes; we rename one to <code>PT</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import ramo.klevis.ml.vg16.PetType as PT
+import ramo.klevis.ml.vg16.VG16ForCat
+
+var vg16ForCat = new VG16ForCat().tap{ loadModel() }
+var results = []
+people.each{ p -&gt;
+    results &lt;&lt; p.pets.collect { pet -&gt;
+        var file = new File("resources/${pet.type.name()}.png")
+        PT petType = vg16ForCat.detectCat(file, 0.675d)
+        var desc = switch(petType) {
+            case PT.CAT -&gt; 'is a cat'
+            case PT.DOG -&gt; 'is a dog'
+            default -&gt; 'is unknown'
+        }
+        "$pet.name $desc"
+    }
+}
+println results.flatten().join('\n')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the model exceeds the maximum allowable size for normal GitHub repos, so you should create it following the original repo <a href="https://github.com/klevis/CatAndDogRecognizer">instructions</a> and then store the resulting <code>model.zip</code> in the <code>resources</code> folder.</p>
+</div>
+<div class="paragraph">
+<p>When we run the script, we get the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
+...
+[main] INFO org.nd4j.linalg.api.ops.executioner.DefaultOpExecutioner - Blas vendor: [OPENBLAS]
+...
+==============================================================================================================
+VertexName (VertexType)                 nIn,nOut       TotalParams    ParamsShape                    Vertex Inputs
+==============================================================================================================
+input_1 (InputVertex)                   -,-            -              -                              -
+block1_conv1 (Frozen ConvolutionLayer)  3,64           1792           b:{1,64}, W:{64,3,3,3}         [input_1]
+block1_conv2 (Frozen ConvolutionLayer)  64,64          36928          b:{1,64}, W:{64,64,3,3}        [block1_conv1]
+block1_pool (Frozen SubsamplingLayer)   -,-            0              -                              [block1_conv2]
+block2_conv1 (Frozen ConvolutionLayer)  64,128         73856          b:{1,128}, W:{128,64,3,3}      [block1_pool]
+block2_conv2 (Frozen ConvolutionLayer)  128,128        147584         b:{1,128}, W:{128,128,3,3}     [block2_conv1]
+block2_pool (Frozen SubsamplingLayer)   -,-            0              -                              [block2_conv2]
+block3_conv1 (Frozen ConvolutionLayer)  128,256        295168         b:{1,256}, W:{256,128,3,3}     [block2_pool]
+block3_conv2 (Frozen ConvolutionLayer)  256,256        590080         b:{1,256}, W:{256,256,3,3}     [block3_conv1]
+block3_conv3 (Frozen ConvolutionLayer)  256,256        590080         b:{1,256}, W:{256,256,3,3}     [block3_conv2]
+block3_pool (Frozen SubsamplingLayer)   -,-            0              -                              [block3_conv3]
+block4_conv1 (Frozen ConvolutionLayer)  256,512        1180160        b:{1,512}, W:{512,256,3,3}     [block3_pool]
+block4_conv2 (Frozen ConvolutionLayer)  512,512        2359808        b:{1,512}, W:{512,512,3,3}     [block4_conv1]
+block4_conv3 (Frozen ConvolutionLayer)  512,512        2359808        b:{1,512}, W:{512,512,3,3}     [block4_conv2]
+block4_pool (Frozen SubsamplingLayer)   -,-            0              -                              [block4_conv3]
+block5_conv1 (Frozen ConvolutionLayer)  512,512        2359808        b:{1,512}, W:{512,512,3,3}     [block4_pool]
+block5_conv2 (Frozen ConvolutionLayer)  512,512        2359808        b:{1,512}, W:{512,512,3,3}     [block5_conv1]
+block5_conv3 (Frozen ConvolutionLayer)  512,512        2359808        b:{1,512}, W:{512,512,3,3}     [block5_conv2]
+block5_pool (Frozen SubsamplingLayer)   -,-            0              -                              [block5_conv3]
+flatten (PreprocessorVertex)            -,-            -              -                              [block5_pool]
+fc1 (Frozen DenseLayer)                 25088,4096     102764544      b:{1,4096}, W:{25088,4096}     [flatten]
+fc2 (Frozen DenseLayer)                 4096,4096      16781312       b:{1,4096}, W:{4096,4096}      [fc1]
+predictions (OutputLayer)               4096,2         8194           b:{1,2}, W:{4096,2}            [fc2]
+--------------------------------------------------------------------------------------------------------------
+            Total Parameters:  134268738
+        Trainable Parameters:  8194
+           Frozen Parameters:  134260544
+==============================================================================================================
+...
+Tabby is a cat
+Dolly is a cat
+Spot is a dog
+Spike is a dog
+Serpy is a cat
+Tweety is unknown
+Speedy is a dog
+Fuzzy is unknown
+Wuzzy is unknown</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we can see, it correctly predicted the cats (Tabby and Dolly) and dogs
+(Spot and Spike) but incorrectly thought a snake (Serpy) was a cat and a
+turtle (Speedy) was a dog. Given the lack of detail in the emoji images
+compared to the training images, this lack of accuracy isn&#8217;t unexpected.
+We could certainly use better images or train our model differently if
+we wanted better results, but it is fun to see our model not doing too
+badly even with emojis!</p>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
