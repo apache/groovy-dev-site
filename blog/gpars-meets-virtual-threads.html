@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, virtual threads, actors, dataflow, agents'/><meta name='description' content='Thi post looks at using GPars with virtual threads.'/><title>The Apache Groovy programming language - Blogs - GPars meets Virtual Threads</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>GPars meets Virtual Threads</a></li><li><a href='#_parallel_collections' class='anchor-link'>Parallel Collections</a></li><li><a href='#_agents' class='anchor-link'>Agents</a></li><li><a href='#_actors' class='anchor-link'>Actors</a></li><li><a href='#_dataflow' class='anchor-link'>Dataflow</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GPars meets Virtual Threads</h1><p>Published: 2022-06-15T11:28:56+00:00</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="img/gpars_logo.png" alt="gpars" width="150"></span>
+An exciting preview feature coming in JDK19 is Virtual Threads
+(<a href="https://openjdk.java.net/jeps/425">JEP 425</a>). In my experiments
+so far, virtual threads work well with my favourite Groovy parallel
+and concurrency library <a href="http://gpars.org/">GPars</a>. GPars has been
+around a while (since Java 5 and Groovy 1.8 days) but still has
+many useful features. Let&#8217;s have a look at a few examples.</p>
+</div>
+<div class="paragraph">
+<p>If you want to try these out, make sure you have a recent JDK19
+(currently EA) and enable <em>preview</em> features with your Groovy
+tooling.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parallel_collections">Parallel Collections</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First a refresher, to use the GPars parallel collections feature
+with normal threads, use the GParsPool.withPool method as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">withPool {
+    assert [1, 2, 3].collectParallel{ it ** 2 } == [1, 4, 9]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For any Java readers, don&#8217;t get confused with the <code>collectParallel</code>
+method name. Groovy&#8217;s <code>collect</code> method (naming inspired by
+Smalltalk) is the equivalent of Java&#8217;s <code>map</code> method. So, the
+equivalent Groovy code using the Java streams API would be
+something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert [1, 2, 3].parallelStream().map(n -&gt; n ** 2).collect(Collectors.toList()) == [1, 4, 9]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s bring virtual threads into the picture. Luckily,
+GPars parallel collection facilities provide a hook for using
+an <em>existing</em> custom executor service. This makes using virtual
+threads for such code easy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">withExistingPool(Executors.newVirtualThreadPerTaskExecutor()) {
+    assert [1, 2, 3].collectParallel{ it ** 2 } == [1, 4, 9]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Nice! But let&#8217;s move onto some areas examples which might be
+less familiar to Java developers.</p>
+</div>
+<div class="paragraph">
+<p>GPars has additional features for providing custom thread pools
+and the remaining examples rely on those features. The current
+version of GPars doesn&#8217;t have a <code>DefaultPool</code> constructor that
+takes a vanilla executor service, so, we&#8217;ll write our own class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AutoImplement
+class VirtualPool implements Pool {
+    private final ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()
+    int getPoolSize() { pool.poolSize }
+    void execute(Runnable task) { pool.execute(task) }
+    ExecutorService getExecutorService() { pool }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is essentially a delegate from the GPars <code>Pool</code> interface
+to the virtual threads executor service.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use this in the remaining examples.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_agents">Agents</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Agents provide a thread-safe non-blocking wrapper around an
+otherwise potentially mutable shared state object. They are
+inspired by agents in Clojure.</p>
+</div>
+<div class="paragraph">
+<p>In our case we&#8217;ll use an agent to "protect" a plain <code>ArrayList</code>.
+For this simple case, we could have used some synchronized list,
+but in general, agents eliminate the need to find thread-safe
+implementation classes or indeed care at all about the thread
+safety of the underlying wrapped object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def mutableState = []     // a non-synchronized mutable list
+def agent = new Agent(mutableState)
+
+agent.attachToThreadPool(new VirtualPool()) // omit line for normal threads
+
+agent { it &lt;&lt; 'Dave' }    // one thread updates list
+agent { it &lt;&lt; 'Joe' }     // another thread also updating
+assert agent.val.size() == 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_actors">Actors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Actors allow for a message passing-based concurrency model.
+The actor model ensures that at most one thread processes
+the actor&#8217;s body at any time. The GPars API and DSLs for actors
+are quite rich supporting many features. We&#8217;ll look at a simple
+example here.</p>
+</div>
+<div class="paragraph">
+<p>GPars manages actor thread pools in groups.
+Let&#8217;s create one backed by virtual threads:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def vgroup = new DefaultPGroup(new VirtualPool())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can write an encrypting and decrypting actor pair as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def decryptor = vgroup.actor {
+    loop {
+        react { String message -&gt;
+            reply message.reverse()
+        }
+    }
+}
+
+def console = vgroup.actor {
+    decryptor &lt;&lt; 'lellarap si yvoorG'
+    react {
+        println 'Decrypted message: ' + it
+    }
+}
+
+console.join() // output: Decrypted message: Groovy is parallel</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dataflow">Dataflow</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dataflow offers an inherently safe and robust declarative
+concurrency model. Dataflows are also managed via thread
+groups, so we&#8217;ll use <code>vgroup</code> which we created earlier.</p>
+</div>
+<div class="paragraph">
+<p>We have three logical tasks which can run in parallel and perform
+their work. The tasks need to exchange data and they do so using
+<em>dataflow variables</em>. Think of dataflow variables as one-shot
+channels safely and reliably transferring data from producers to
+their consumers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def df = new Dataflows()
+
+vgroup.task {
+    df.z = df.x + df.y
+}
+
+vgroup.task {
+    df.x = 10
+}
+
+vgroup.task {
+    df.y = 5
+}
+
+assert df.z == 15</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The dataflow framework works out how to schedule the individual
+tasks and ensures that a task&#8217;s input variables are ready when
+needed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick glimpse at using virtual threads with Groovy
+and GPars. It is very early days, so expect much more to emerge
+in this space once virtual threads are released in preview in
+production versions of JDK19 and eventually beyond a preview
+feature.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
