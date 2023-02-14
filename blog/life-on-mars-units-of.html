@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='domain specific languages, groovy, jsr385, units of measurement'/><meta name='description' content='This post looks at using the JSR 385 unit of measurement system and writing domain specific languages with examples including the Mars rover robot.'/><title>The Apache Groovy programming language - Blogs - Life on Mars</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>Life on Mars</a></li><li><a href='#_a_dynamic_dsl_for_controlling_a_mars_rover' class='anchor-link'>A dynamic DSL for controlling a Mars Rover</a></li><li><a href='#_a_type_rich_dsl_for_the_rover' class='anchor-link'>A type-rich DSL for the Rover</a></li><li><a href='#_adding_custom_type_checking' class='anchor-link'>Adding custom type checking</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Life on Mars</h1><p>Author: <i>Paul King</i></p><p>Published: 2022-08-13 06:31AM</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="img/duke_measure.png" alt="duke_measuring"></span>
+The Mars Climate Orbiter was launched in 1998 as part
+of a multi-faceted Mars exploration program.
+It was lost due to a trajectory calculation error when
+nearing Mars. An <a href="http://scholar.google.com/scholar?hl=en&amp;q=Stephenson+A%2C+LaPiana+L%2C+Mulville+D%2C+et+al.+Mars+climate+orbiter+mishap+investigation+board+phase+1+report%3B+1999.+https%3A%2F%2Fllis.nasa.gov.+Accessed+October+14%2C+2020" class="bare">http://scholar.google.com/scholar?hl=en&amp;q=Stephenson+A%2C+LaPiana+L%2C+Mulville+D%2C+et+al.+Mars+climate+orbiter+mishap+investigation+board+phase+1+report%3B+1999.+https%3A%2F%2Fllis.nasa.gov.+Accessed+October+14%2C+2020</a>.[investigation] attributed the
+failure to a measurement mismatch between two software systems:
+metric units were used by NASA and <a href="https://en.wikipedia.org/wiki/United_States_customary_units">US customary</a> units were used by spacecraft builder Lockheed Martin.
+<span class="image"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Mars_Climate_Orbiter_2.jpg/1280px-Mars_Climate_Orbiter_2.jpg" alt="Mars Climate Orbiter - image credit: wikipedia"></span></p>
+</div>
+<div class="paragraph">
+<p>If the system in question had been developed using a units of
+measurement system, perhaps the failure could have been avoided.</p>
+</div>
+<div class="paragraph">
+<p>All programming languages have types for representing numbers.
+As an example, we may have three integers, one representing a
+height, one a weight and one a temperature. We can write code
+to add those three integers together, but the result may have
+no useful meaning. We could start writing our own class
+hierarchies for each integer type, but it can quickly become
+cumbersome to use the resulting classes. Units of measurement
+systems attempt to provide a range of commonplace units, ways
+to construct quantities from those units and ways to manipulate
+them. Manipulation might involve performing numerical calculation
+or conversions. Goals of such systems include the ability to
+provide runtime and/or compile-time type safety. So, we should
+fail early when trying to perform the earlier mentioned addition
+of three unrelated quantities.</p>
+</div>
+<div class="paragraph">
+<p>Units of measurement systems aren&#8217;t new. There are existing
+systems in F# and Swift and Java has had several versions
+(and earlier attempts) around standardising such a system including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://jcp.org/en/jsr/detail?id=275">JSR 275</a>: Units Specification (rejected earlier attempt)</p>
+</li>
+<li>
+<p><a href="https://jcp.org/en/jsr/detail?id=363">JSR 363</a>: Units of Measurement API</p>
+</li>
+<li>
+<p><a href="https://jcp.org/en/jsr/detail?id=385">JSR 385</a>: Units of Measurement API 2.0</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are also existing Java libraries like
+<a href="http://jscience.org/">JScience</a> which have been developed, and
+<a href="https://objectcomputing.com/resources/publications/sett/june-2006-units-and-measures-with-jscience">shown early promise</a>,
+but now don&#8217;t seem to be actively maintained. While the
+<a href="https://onlinelibrary.wiley.com/doi/10.1002/spe.2926">jury is still out</a>
+about whether units of measurement systems will spread further into
+mainstream programming, now seems like a great time to check the
+status. The JSR 385 maintenance release was approved last year and
+the latest version of the reference implementation was released
+earlier this year.</p>
+</div>
+<div class="paragraph">
+<p>The first thing we need to do is bring in our dependencies (shown for <a href="https://gradle.org/">Gradle</a> - <a href="https://mvnrepository.com/artifact/tech.units/indriya/2.1.3">other options</a>).
+The main one is the reference implementation (it brings in the
+<code>javax.measure</code> API transitively):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'tech.units:indriya:2.1.3'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JSR 385 is extensible. We&#8217;ll also bring in some units from the
+<a href="https://cldr.unicode.org/translation/units">Unicode CLDR</a> units,
+e.g. <code>MILE</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation 'systems.uom:systems-unicode:2.1'
+implementation 'systems.uom:systems-quantity:2.1'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s follow on with the theme of visiting Mars. We can create
+variables for the mass and diameter of Mars as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var massₘ = Quantities.getQuantity(6.39E23, KILO(GRAM))
+var diameterₘ = Quantities.getQuantity(6_779, KILOMETER)
+println massₘ
+println diameterₘ</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JSR 385 has metric prefix qualifiers like <code>MICRO</code>,
+<code>MILLI</code>, <code>CENTI</code>, <code>KILO</code>, <code>MEGA</code>, <code>GIGA</code> and many more.
+The CLDR units also define some commonly used units like
+<code>KILOMETER</code>. We could choose either here.</p>
+</div>
+<div class="paragraph">
+<p>When we run this script, it has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>639000000000000000000000 kg
+6779 km</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we try to compare or add those two values, we&#8217;ll see an error.
+Groovy has both static and dynamic natures. Using dynamic code
+like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println massₘ &gt; diameterₘ</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll see a runtime error like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>javax.measure.IncommensurableException: km is not compatible with kg</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, with <code>TypeChecked</code> or <code>CompileStatic</code> in play for a statement like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println massₘ.add(diameterₘ)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;d see a compile-time error like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot call tech.units.indriya.ComparableQuantity#add(javax.measure.Quantity&lt;javax.measure.quantity.Mass&gt;)
+with arguments [tech.units.indriya.ComparableQuantity&lt;javax.measure.quantity.Length&gt;]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If for some strange reason we did want to compare or perform
+calculations between incommensurable types, we can explicitly
+get the value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert massₘ.value &gt; diameterₘ.value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This escape hatch takes off a layer of type safety but requires
+explicit work to do so. It is normally never the case that you
+would want to do this.</p>
+</div>
+<div class="paragraph">
+<p>JSR 385 also supports ranges and conversions. We can look at the
+minimum and maximum temperatures on Mars:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var minTemp = Quantities.getQuantity(-128, CELSIUS)
+var maxTemp = Quantities.getQuantity(70, FAHRENHEIT)
+println minTemp
+println minTemp.to(FAHRENHEIT)
+println maxTemp
+println maxTemp.to(CELSIUS)
+println QuantityRange.of(minTemp, maxTemp)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s quite a bit colder than Earth! When run,
+this script has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>-128 ℃
+-198.400 ((K*5)/9)+459.67
+70 ((K*5)/9)+459.67
+21.1111111111111111111111111111111 ℃
+min= -128 ℃, max= 70 ((K*5)/9)+459.67</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In case you&#8217;re wondering about the strange looking unit display
+for Fahrenheit temperatures, the definition of that unit that
+we are using, defines degrees Fahrenheit using a formula
+calculated from the temperature in degrees Kelvin.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;d see the same thing if using the <code>MILE</code> unit:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println diameterₘ.to(MILE)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which shows us that the diameter of Mars is a little over 4200 miles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>4212.275312176886980036586335798934 (m*1609344)/1000</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy has various features which allow methods to be (apparently)
+added to classes. We&#8217;ll use extension methods. This technique
+involves writing static methods in a helper class using certain
+conventions. The first parameter in all such methods is the target
+of the extension. Groovy code referencing instances of the target
+class have code that can call such a method as if it existed on
+the target class. In reality, the Groovy compiler or runtime
+funnels the call through the helper class. For us, it means we
+will have methods like <code>getMeters()</code> on the <code>Number</code> class which
+using Groovy&#8217;s shorthand&#8217;s for property notation allows for very
+compact quantity definitions like <code>5.meters</code>. We&#8217;ll also add some
+methods to allow Groovy&#8217;s normal operator overloading syntax to
+apply:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class UomExtensions {
+    static Quantity&lt;Length&gt; getCentimeters(Number num) { Quantities.getQuantity(num, CENTI(METRE)) }
+
+    static Quantity&lt;Length&gt; getMeters(Number num) { Quantities.getQuantity(num, METRE) }
+
+    static Quantity&lt;Length&gt; getKilometers(Number num) { Quantities.getQuantity(num, KILO(METRE)) }
+
+    static Quantity&lt;Length&gt; getCm(Number num) { getCentimeters(num) }
+
+    static Quantity&lt;Length&gt; getM(Number num) { getMeters(num) }
+
+    static Quantity&lt;Length&gt; getKm(Number num) { getKilometers(num) }
+
+    static Quantity&lt;Mass&gt; getKilograms(Number num) { Quantities.getQuantity(num, KILO(GRAM)) }
+
+    static Quantity&lt;Mass&gt; getKgs(Number num) { getKilograms(num) }
+
+    static Quantity&lt;Time&gt; getHours(Number num) { Quantities.getQuantity(num, HOUR) }
+
+    static Quantity&lt;Time&gt; getSeconds(Number num) { Quantities.getQuantity(num, SECOND) }
+
+    static Quantity&lt;Time&gt; getHr(Number num) { getHours(num) }
+
+    static Quantity&lt;Time&gt; getS(Number num) { getSeconds(num) }
+
+    static Quantity&lt;Speed&gt; div(Quantity&lt;Length&gt; q, Quantity&lt;Time&gt; divisor) { q.divide(divisor) as Quantity&lt;Speed&gt; }
+
+    static &lt;Q&gt; Quantity&lt;Q&gt; div(Quantity&lt;Q&gt; q, Number divisor) { q.divide(divisor) }
+
+    static &lt;Q&gt; Quantity&lt;Q&gt; plus(Quantity&lt;Q&gt; q, Quantity&lt;Q&gt; divisor) { q.add(divisor) }
+
+    static &lt;Q&gt; Quantity&lt;Q&gt; minus(Quantity&lt;Q&gt; q, Quantity&lt;Q&gt; divisor) { q.subtract(divisor) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that we have longer and shorter versions of many of
+the methods, e.g. <code>kg</code> and <code>kilogram</code>, <code>m</code> and <code>meter</code>.
+We didn&#8217;t need a method for <code>multiply</code> since it is
+already using the name Groovy expects.</p>
+</div>
+<div class="paragraph">
+<p>Now we can write very short definitions to declare
+or compare times and lengths:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def s = 1.s
+assert 1000.meters == 1.km &amp;&amp; 1.m == 100.cm</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also declare variables for acceleration due to
+gravity on Earth and Mars. Gravity is a lot less on Mars:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var gₘ = 3.7.m/s/s
+var gₑ = 9.8.m/s/s
+assert gₑ.toString() == '9.8 m/s²'
+assert gₑ &gt; gₘ</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also use the operator overloading in calculations
+(here showing that the Earth has a diameter that is between
+1.8 and 2 times bigger than that of Mars):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var diameterₑ = 12_742.kilometers
+assert diameterₘ + diameterₘ &gt; diameterₑ
+assert diameterₑ - diameterₘ &lt; diameterₘ
+assert diameterₘ * 1.8 &lt; diameterₑ</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Even though we have more compact expressions, the same data
+types are in play that we saw previously. They&#8217;re just a
+little nicer to type.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_dynamic_dsl_for_controlling_a_mars_rover">A dynamic DSL for controlling a Mars Rover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s now look at how you could write a little
+Domain-Specific-Language (DSL) to control a Mars rover robot.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mars_rover_selfie.jpg" alt="Mars rover selfie"></span></p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll write a <code>Direction</code> enum as part of
+our robot domain model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">enum Direction {
+    left, right, forward, backward
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are many ways to write DSLs in Groovy. We&#8217;ll use a little
+trick where the verbs are represented as keys in a map.
+Our DSL then looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def move(Direction dir) {
+    [by: { Quantity&lt;Length&gt; dist -&gt;
+        [at: { Quantity&lt;Speed&gt; speed -&gt;
+            println "robot moved $dir by $dist at $speed"
+        }]
+    }]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here the implementation is just going to print out a message
+indicating all of the values it is processing. The real robot
+would send signals to the rover&#8217;s robotic subsystems.</p>
+</div>
+<div class="paragraph">
+<p>Our script for controlling the rover now looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">move right by 2.m at 5.cm/s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which when run gives this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>robot moved right by 2 m at 5 cm/s</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As we saw earlier, this is backed by our JSR 385 types.
+We&#8217;ll certainly get fail-early runtime errors if there are
+any calculations involving mismatched types.</p>
+</div>
+<div class="paragraph">
+<p>If we enable static typing, some additional errors will be
+detected at compile but because of the very dynamic style
+of our DSL implementation, not all runtime errors are
+reflected by typing information. If we want, we can change
+our DSL implementation to use richer types and that will
+support better static typing checking. We&#8217;ll look at one
+way to do that next.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_type_rich_dsl_for_the_rover">A type-rich DSL for the Rover</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now, instead of using our nested map style we saw previously,
+we create several richly-typed helper classes and define our
+<code>move</code> method in terms of those classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class MoveHolder {
+    Direction dir
+    ByHolder by(Quantity&lt;Length&gt; dist) {
+        new ByHolder(dist: dist, dir: dir)
+    }
+}
+
+class ByHolder {
+    Quantity&lt;Length&gt; dist
+    Direction dir
+    void at(Quantity&lt;Speed&gt; speed) {
+        println "robot moved $dir by $dist at $speed"
+    }
+}
+
+static MoveHolder move(Direction dir) {
+    new MoveHolder(dir: dir)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While our DSL implementation has changed, the robot scripts
+remain the same:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">move right by 2.m at 5.cm/s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Indeed, if we use Groovy dynamic nature, we can still run the same
+script and will notice no change.</p>
+</div>
+<div class="paragraph">
+<p>If however, we enable static checking and have a script with
+an error like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">move forward by 2.kgs</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll now see a compile-time error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot call MoveHolder#by(javax.measure.Quantity&lt;javax.measure.quantity.Length&gt;) with arguments [javax.measure.Quantity&lt;javax.measure.quantity.Mass&gt;]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is great to get this additional earlier feedback on script
+errors, so you may wonder why we don&#8217;t write our DSL implementations
+like this all of the time? Actually, both the dynamic and static
+flavors of our DSL can be useful at different times. When
+prototyping our script DSL, deciding on all the nouns and
+verbs that we should be using to control our robot, the
+dynamic flavored style can be much quicker to write especially
+during early iterations which might evolve and change rapidly.
+Once the DSL language has been locked down, we can invest in
+adding the richer types. In the rover scenario, it might also
+be the case that the rover itself has limited power and so may
+not want to perform additional type checking steps. We might
+run all scripts through a type checker back at mission control
+before sending them through to the rover where they may be
+enacted in dynamic mode.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_custom_type_checking">Adding custom type checking</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There is one additional language feature of Groovy we haven&#8217;t
+mentioned. Groovy&#8217;s type checking mechanism is extensible, so
+we&#8217;ll have a look at using that feature here. The rover&#8217;s speed
+is <a href="https://mars.nasa.gov/mars2020/spacecraft/rover/wheels/">rather limited</a>, <em>"In the case of exploring Mars, however, speed isn&#8217;t the most relevant quality. It&#8217;s about the journey and the destinations along the way. The slow pace is energy-efficient…"</em>.
+Let&#8217;s look at limiting the speed to avoid unsafe or
+energy wasting movement.</p>
+</div>
+<div class="paragraph">
+<p>We could put early defensive checks in our DSL implementation to
+detect undesirable manoeuvres, but we can also use type checking
+extensions for certain kinds of errors. Groovy in fact has its
+own DSL for writing such extensions. That&#8217;s a topic for its own
+blog but here&#8217;s what the code looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">afterMethodCall { call -&gt;
+    def method = getTargetMethod(call)
+    if (method.name != 'at') return
+    if (call.arguments.size() != 1) return
+    def arg = call.arguments[0]
+    if (arg !instanceof BinaryExpression) return
+    def left = arg.leftExpression
+    if (left !instanceof PropertyExpression) return
+    def obj = left.objectExpression
+    if (obj !instanceof ConstantExpression) return
+    if (obj.value &gt; 5) {
+        addStaticTypeError("Speed of $obj.value is too fast!",call)
+        handled = true
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is only a partial implementation, it&#8217;s make numerous
+assumptions. We could remove those assumptions by adding
+more code but for now we&#8217;ll keep this simplified version.</p>
+</div>
+<div class="paragraph">
+<p>So, now the following script (with the above type checking extension applied) compiles fine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">move right by 2.m at 5.cm/s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But this script fails:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">move right by 2.m at 6.cm/s</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The error message is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Speed of 6 is too fast!</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.jcp.org/en/jsr/detail?id=385">JSR 385: Units of Measurement API 2.0</a></p>
+</li>
+<li>
+<p><a href="https://unitsofmeasurement.github.io/2017/taste_of_indriya.html">A Taste of Indriya</a></p>
+</li>
+<li>
+<p><a href="https://betterprogramming.pub/unit-and-measurement-in-swift-7c6be4a25586">Unit and Measurement in Swift</a></p>
+</li>
+<li>
+<p><a href="https://docs.microsoft.com/en-us/archive/blogs/andrewkennedy/">Units of Measure in F#</a></p>
+</li>
+<li>
+<p><a href="https://varkor.github.io/blog/2018/07/30/types-for-units-of-measure.html">Types for units of measure</a></p>
+</li>
+<li>
+<p><a href="https://www.slideshare.net/keilw/how-jsr-385-could-have-saved-the-mars-climate-orbiter-jfokus-2020">How JSR 385 could have Saved the Mars Climate Orbiter - JFokus 2020</a> (slide deck)</p>
+</li>
+<li>
+<p><a href="https://www.manning.com/books/groovy-in-action-second-edition">Groovy in Action</a> (in particular the DSL chapter)</p>
+</li>
+<li>
+<p><a href="https://objectcomputing.com/resources/publications/sett/june-2006-units-and-measures-with-jscience">Units and Measures with JScience</a></p>
+</li>
+<li>
+<p><a href="https://onlinelibrary.wiley.com/doi/10.1002/spe.2926">Unit of measurement libraries, their popularity and suitability</a></p>
+</li>
+<li>
+<p><a href="https://speakerdeck.com/glaforge/groovy-domain-specific-languages-techniques">Groovy Domain-Specific Languages techniques</a> (slide deck)</p>
+</li>
+<li>
+<p><a href="http://docs.groovy-lang.org/docs/latest/html/documentation/core-domain-specific-languages.html">Domain-Specific Languages</a> (Groovy documentation)</p>
+</li>
+<li>
+<p><a href="https://www.baeldung.com/javax-measure">Introduction to javax.measure</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/UomGroovy" class="bare">https://github.com/paulk-asert/UomGroovy</a> (repo)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at using the JSR 385 <code>javax.measure</code> API using
+Groovy and added some DSL examples to make using the API
+a little nicer.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
