@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, bytecode, byte buddy, proguardcore, asm, jvmadvent'/><title>The Apache Groovy programming language - Blogs - JVM Hello World with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='/blog/'>Blog index</a></li><li class='active'><a href='#doc'>JVM Hello World with Groovy</a></li><li><a href='#_proguardcore' class='anchor-link'>ProGuardCORE</a></li><li><a href='#_asm' class='anchor-link'>ASM</a></li><li><a href='#_byte_buddy' class='anchor-link'>Byte Buddy</a></li><li><a href='#_using_groovy_asts' class='anchor-link'>Using Groovy ASTs</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>JVM Hello World with Groovy</h1><p>Author: <i>Paul King</i></p><p>Published: 2022-12-22 02:24PM</p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>For those that haven&#8217;t seen it yet, the <a href="https://www.javaadvent.com/">JVM Advent</a> <a href="https://twitter.com/JavaAdvent">folks</a> posted a great <a href="https://www.javaadvent.com/2022/12/groovy-and-data-science.html">Groovy and Data Science blog post</a>
+several days ago as part of the 2022 JVM Advent series. If you have an interest
+in Data Science, we recommend you check that out before continuing with this post.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.javaadvent.com/2022/12/jvm-hello-world.html">Today&#8217;s post</a>
+in the JVM Advent series is looking at the world of bytecode libraries
+on the JVM. Let&#8217;s look at creating the same hello world example from that
+post using <a href="http://groovy-lang.org/index.html">Groovy</a> with the
+<a href="https://github.com/Guardsquare/proguard-core">ProGuardCORE</a>,
+<a href="https://asm.ow2.io/">ASM</a>, and <a href="https://bytebuddy.net/">Byte Buddy</a> libraries.</p>
+</div>
+<div class="paragraph">
+<p>First, we highly recommend you read the previously mentioned <a href="https://www.javaadvent.com/2022/12/jvm-hello-world.html">JVM Advent post</a> first for more background.
+After all, it&#8217;s easy to create a simple hello-world class file example directly
+as a Java source file (as that post shows) or as a Groovy source file like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println 'Hello world'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The examples shown in this blog post illustrate how you could create the equivalent
+class file using libraries which let you manipulate the generated bytecode directly.
+It&#8217;s a bit of a deep dive if you want to know more about JVM internals and can also
+be handy for numerous use cases like building tools or modifying Java classes on
+the fly. I suggest you read the websites for those libraries if you want further
+details or additional motivation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proguardcore">ProGuardCORE</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://github.com/Guardsquare/proguard-core">ProGuardCORE</a>
+library lets you read, analyze, modify, and write Java class files.
+Here&#8217;s how we could use it to write a hello-world class file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var name = 'HelloProGuardCORE'
+var superclass = 'java/lang/Object'
+var classBuilder = new ClassBuilder(CLASS_VERSION_1_8, PUBLIC, name, superclass).tap {
+    addMethod(PUBLIC | STATIC, 'main', '([Ljava/lang/String;)V', 100, builder -&gt;
+        builder
+            .getstatic('java/lang/System', 'out', 'Ljava/io/PrintStream;')
+            .ldc("Hello from $name")
+            .invokevirtual('java/io/PrintStream', 'println', '(Ljava/lang/String;)V')
+            .return_()
+    )
+}
+
+new File("${name}.class").withDataOutputStream { dos -&gt;
+    classBuilder.programClass.accept(new ProgramClassWriter(dos))
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is essentially the <em>"Groovified"</em> version of the example in the JVM Advent blog post. We are using the libraries <code>ClassBuilder</code> class, adding a method, then adding four bytecode statements as the body of the method. If you haven&#8217;t seen method and type descriptor syntax before, a few parts might seem a little strange, but you possibly won&#8217;t be surprised that it seems to be referencing a <code>System.out.println</code> call and passing it a constant String.</p>
+</div>
+<div class="paragraph">
+<p>When we run this script, a <code>HelloProGuardCORE</code> class file is produced. We can invoke that class file in the normal way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">$ java HelloProGuardCORE
+Hello from HelloProGuardCORE</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We encourage you to read the JVM Advent post or the library documentation
+if you want more details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_asm">ASM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://asm.ow2.io/">ASM</a> is an all-purpose Java bytecode manipulation and analysis framework.
+In fact, it&#8217;s the one that Groovy uses in its parser and some of its tools.
+Here is how to use it to generate more or less the same class as the previous example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var name = 'HelloASM'
+var superclass = 'java/lang/Object'
+var cw = new ClassWriter(0)
+cw.visit(V1_8, ACC_PUBLIC + ACC_SUPER, name, null, superclass, null)
+cw.visitMethod(ACC_PUBLIC + ACC_STATIC, 'main', '([Ljava/lang/String;)V', null, null).with {
+    visitCode()
+    visitFieldInsn(GETSTATIC, 'java/lang/System', 'out', 'Ljava/io/PrintStream;')
+    visitLdcInsn('Hello from ' + name)
+    visitMethodInsn(INVOKEVIRTUAL, 'java/io/PrintStream', 'println', '(Ljava/lang/String;)V', false)
+    visitInsn(RETURN)
+    visitMaxs(3, 3)
+    visitEnd()
+}
+cw.visitEnd()
+
+new File("${name}.class").withDataOutputStream { dos -&gt;
+    dos.write(cw.toByteArray())
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After running this script, a <code>HelloASM</code> class file is produced,
+and here is the output when running that class file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">$ java HelloASM
+Hello from HelloASM</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Parts of the code should look familiar to the previous example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_byte_buddy">Byte Buddy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://bytebuddy.net/">Byte Buddy</a> is a code generation and manipulation library
+for creating and modifying Java classes. Its strengths lie in its ability to
+create and modify classes dynamically. So, its power is perhaps not needed for
+our simple example. A nice aspect of this library however, is that it hides
+some of the low-level details like type and method descriptors behind its
+fluent API. Here is our example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var name = 'HelloByteBuddy'
+new ByteBuddy()
+    .subclass(Object)
+    .name(name)
+    .defineMethod('main', Void.TYPE, PUBLIC | STATIC)
+    .withParameter(String[])
+    .intercept(MethodCall.invoke(
+        PrintStream.getMethod('println', String))
+        .onField(System.getField('out'))
+        .with('Hello from ' + name))
+    .make()
+    .saveIn('.' as File)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Like the other scripts, this also produces a class file which we can
+invoke as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">$ java HelloByteBuddy
+Hello from HelloByteBuddy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That wraps up our examples using the three libraries, but we have one
+more fun alternative to cover!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_groovy_asts">Using Groovy ASTs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy is a very extensible language. It provides among other things,
+a compile-time metaprogramming mechanism called AST Transforms
+(Abstract Syntax Tree Transformations). This mechanism uses annotations
+to indicate to the compiler that special processing is required during
+compilation. A now somewhat outdated AST transform, <code>@Bytecode</code>,
+experimented with allowing you to write bytecode instructions directly
+in your Groovy code. Let&#8217;s look at using that AST transform here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic @POJO
+class HelloAST {
+    @Bytecode
+    static void main(args) {
+        getstatic 'java/lang/System.out', 'Ljava/io/PrintStream;'
+        ldc 'Hello from HelloAST'
+        invokevirtual 'java/io/PrintStream.println', '(Ljava/lang/String;)V'
+        return
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We are writing directly the instructions that the Java or Groovy compiler
+(with static compilation enabled) would produce. For this example, we don&#8217;t run
+the script to produce the class file, we just compile it using the Groovy compiler.</p>
+</div>
+<div class="paragraph">
+<p>We definitely don&#8217;t recommend relying on the <code>@Bytecode</code> AST transform for any
+production code, but it can be fun to play with. We&#8217;ve also used the <code>@CompileStatic</code>
+and <code>@POJO</code> AST transforms to tell the compiler that we aren&#8217;t using any Groovy
+dynamic features, so that it should write Java-like code whenever possible and
+avoid calling the Groovy runtime.</p>
+</div>
+<div class="paragraph">
+<p>We can examine the bytecode using javap and indeed it has bytecode similar to
+that produced by the other libraries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="ruby">public static void main(java.lang.String...);
+    descriptor: ([Ljava/lang/String;)V
+    flags: (0x0089) ACC_PUBLIC, ACC_STATIC, ACC_VARARGS
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #21                 // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #23                 // String Hello from HelloAST
+         5: invokevirtual #29                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0  args   Ljava/lang/Object;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because the code is not calling the Groovy runtime,
+we can invoke it directly without the Groovy jar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">$ java HelloAST
+Hello from HelloAST</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That wraps up our little tour of bytecode libraries.
+I hope you have learnt some additional JVM details!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/bytecode-fun">Github repo</a> of the above examples</p>
+</li>
+<li>
+<p>A <a href="https://openjdk.org/jeps/8280389">draft JEP</a> for what might become an official API for parsing, generating, and transforming Java class files</p>
+</li>
+<li>
+<p>Social media: <a href="https://twitter.com/ApacheGroovy">@ApacheGroovy</a> <a href="https://fosstodon.org/@ApacheGroovy">@<a href="mailto:ApacheGroovy@fosstodon.org">ApacheGroovy@fosstodon.org</a></a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
