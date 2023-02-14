@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Parsing JSON with Groovy</a></li><li><a href='#_batteries_included_experience' class='anchor-link'>Batteries included experience</a></li><li><a href='#_gradle' class='anchor-link'>Gradle</a></li><li><a href='#_maven' class='anchor-link'>Maven</a></li><li><a href='#_advanced_features' class='anchor-link'>Advanced features</a></li><li><a href='#_quick_performance_comparison' class='anchor-link'>Quick performance comparison</a></li><li><a href='#_summary' class='anchor-link'>Summary</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Parsing JSON with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-10 02:00PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Parsing JSON with Groovy</a></li><li><a href='#_batteries_included_experience' class='anchor-link'>Batteries included experience</a></li><li><a href='#_gradle' class='anchor-link'>Gradle</a></li><li><a href='#_maven' class='anchor-link'>Maven</a></li><li><a href='#_advanced_features' class='anchor-link'>Advanced features</a></li><li><a href='#_other_json_libraries' class='anchor-link'>Other JSON libraries</a></li><li><a href='#_integrated_query' class='anchor-link'>Integrated query</a></li><li><a href='#_quick_performance_comparison' class='anchor-link'>Quick performance comparison</a></li><li><a href='#_summary' class='anchor-link'>Summary</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Parsing JSON with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-10 02:00PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/e02078e2-6b0f-4086-a60c-e5f750910091" alt="json logo"></span>
@@ -332,8 +332,8 @@ instantiating your slurper.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
+<col style="width: 22.2222%;">
+<col style="width: 77.7778%;">
 </colgroup>
 <thead>
 <tr>
@@ -344,7 +344,7 @@ instantiating your slurper.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">CHAR_BUFFER</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Default, least surprise parser with eager parsing of ints, dates, etc.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default, least-surprise parser with eager parsing of ints, dates, etc.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">INDEX_OVERLAY</p></td>
@@ -378,9 +378,11 @@ assert json.person.pets == ['dog']</code></pre>
 for the <em>name</em> key and <em>"cat"</em> has been commented out.
 These changes wouldn&#8217;t be allowed by a strict JSON parser.</p>
 </div>
-<div class="paragraph">
-<p>Other JSON libraries</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_other_json_libraries">Other JSON libraries</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Groovy doesn&#8217;t require you to use the <code>groovy-json</code> classes.
 You can use your favourite Java library with Groovy.
@@ -412,9 +414,11 @@ def json = new ObjectMapper().readTree(text)
 assert json.person.pets*.asText() == ['dog', 'cat']</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Integrated query</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="_integrated_query">Integrated query</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Groovy 4 also supports language integrated query syntax, known as
 GINQ or GQuery. We can use that with JSON too.</p>
