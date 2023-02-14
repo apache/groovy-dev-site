@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='csv, data, deserialization, files, groovy, reading, records, data science, serialization, writing, opencsv, commons csv, jackson databind, cycling'/><meta name='description' content='This post looks at processing CSV files using OpenCSV, Commons CSV, and Jackson Databind libraries.'/><title>The Apache Groovy programming language - Blogs - Reading and Writing CSV files with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Reading and Writing CSV files with Groovy</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_commons_csv' class='anchor-link'>Commons CSV</a></li><li><a href='#_opencsv' class='anchor-link'>OpenCSV</a></li><li><a href='#_jackson_databind_csv' class='anchor-link'>Jackson Databind CSV</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Reading and Writing CSV files with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-25 02:26PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this post, we&#8217;ll look at reading and writing CSV
+files using Groovy.</p>
+</div>
+<div class="sect2">
+<h3 id="_arent_csv_files_just_text_files">Aren&#8217;t CSV files just text files?</h3>
+<div class="paragraph">
+<p>For simple cases, we can treat CSV files no differently than we
+would other text files. Suppose we have the following data that
+we would like to write to a CSV file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def data = [
+        ['place', 'firstname', 'lastname', 'team'],
+        ['1', 'Lorena', 'Wiebes', 'Team DSM'],
+        ['2', 'Marianne', 'Vos', 'Team Jumbo Visma'],
+        ['3', 'Lotte', 'Kopecky', 'Team SD Worx']
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy uses <code>File</code> or <code>Path</code> objects similar to Java.
+We&#8217;ll use a <code>File</code> object here and, for our purposes, we&#8217;ll
+just use a temporary file since we are just going to read it
+back in and check it against our data. Here is how to create
+a temporary file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def file = File.createTempFile('FemmesStage1Podium', '.csv')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Writing our CSV (in this simple example) is as simple as joining
+the data with commas and the lines with line separator character(s):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.text = data*.join(',').join(System.lineSeparator())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we "wrote" the entire file contents in one go but there
+are options for writing a line or character or byte at a time.</p>
+</div>
+<div class="paragraph">
+<p>Reading the data in is just as simple. We read the lines and
+split on commas:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert file.readLines()*.split(',') == data</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In general, we might want to further process the data.
+Groovy provides nice options for this too. Suppose we have
+the following existing CSV file:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/0128cd28-23e8-42ca-b408-c2eaf1c82d1c" alt="HommesOverall"></span></p>
+</div>
+<div class="paragraph">
+<p>We can read in the file and select various columns of interest
+with code like below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def file = new File('HommesStageWinners.csv')
+def rows = file.readLines().tail()*.split(',')
+int total = rows.size()
+Set names = rows.collect { it[1] + ' ' + it[2] }
+Set teams = rows*.getAt(3)
+Set countries = rows*.getAt(4)
+String result = "Across $total stages, ${names.size()} riders from " +
+        "${teams.size()} teams and ${countries.size()} countries won stages."
+assert result == 'Across 21 stages, 15 riders from 10 teams and 9 countries won stages.'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, the <code>tail()</code> method skips over the header line.
+Column 0 contains the stage number which we ignore.
+Column 1 contains the first name, column 2 the last name,
+column 3 the team, and column 4 the country of the rider.
+We store away the full names, teams and countries in sets
+to remove duplicates. We then create an overall result
+message using the size of those sets.</p>
+</div>
+<div class="paragraph">
+<p>While for this simple example, the coding was fairly simple,
+it isn&#8217;t recommended to hand process CSV files in this fashion.
+The details for CSV can quickly get messy. What if the values
+themselves contain commas or newlines? Perhaps we can surround in
+double quotes but then what if the value contains a double quote?
+And so forth. For this reason, CSV libraries are recommended.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll look at three shortly, but first let&#8217;s summarise some of
+the highlights of the tour by looking at multiple winners.
+Here is some code which summarises our CSV data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def byValueDesc = { -it.value }
+def bySize = { k, v -&gt; [k, v.size()] }
+def isMultiple = { it.value &gt; 1 }
+def multipleWins = { Closure select -&gt; rows
+    .groupBy(select)
+    .collectEntries(bySize)
+    .findAll(isMultiple)
+    .sort(byValueDesc)
+    .entrySet()
+    .join(', ')
+}
+println 'Multiple wins by country:\n' + multipleWins{ it[4] }
+println 'Multiple wins by rider:\n' + multipleWins{ it[1] + ' ' + it[2] }
+println 'Multiple wins by team:\n' + multipleWins{ it[3] }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This summary has nothing in particular to do with CSV files but
+is summarised in honour of the great riding during the tour!
+Here&#8217;s the output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/878dc821-991f-468c-823d-7672ddeccb98" alt="MultipleWins"></span></p>
+</div>
+<div class="paragraph">
+<p>Okay, now let&#8217;s look at our three CSV libraries.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commons_csv">Commons CSV</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://commons.apache.org/proper/commons-csv/">Apache Commons CSV</a> library makes writing and parsing CSV files easier.
+Here is the code for writing our CSV which makes use of the
+<code>CSVPrinter</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withWriter { w -&gt;
+    new CSVPrinter(w, CSVFormat.DEFAULT).printRecords(data)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And here is the code for reading it back in which uses
+the <code>RFC4180</code> parser factory singleton:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withReader { r -&gt;
+    assert RFC4180.parse(r).records*.toList() == data
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are other singleton factories for tab-separated values
+and other common formats and builders to let you set a whole
+variety of options like escape characters, quote options,
+whether to use an enum to define header names, and whether
+to ignore empty lines or nulls.</p>
+</div>
+<div class="paragraph">
+<p>For our more elaborate example, we have a tiny bit more work
+to do. We&#8217;ll use the builder to tell the parser to skip the
+header row. We could have chosen to use the <code>tail()</code> trick we
+used earlier, but we decided to use the parser features instead.
+The code would look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withReader { r -&gt;
+    def rows = RFC4180.builder()
+            .setHeader()
+            .setSkipHeaderRecord(true)
+            .build()
+            .parse(r)
+            .records
+    assert rows.size() == 21
+    assert rows.collect { it.firstname + ' ' + it.lastname }.toSet().size() == 15
+    assert rows*.team.toSet().size() == 10
+    assert rows*.country.toSet().size() == 9
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see here that we have used column names rather than
+column numbers during our processing. Using column names is
+another advantage of using the CSV library; it would be quite
+a lot of work to do that aspect by hand. Also note that,
+for simplicity, we didn&#8217;t create the entire <em>result</em> message
+as in the earlier example. Instead, we just checked the size
+of all the relevant sets that we calculated previously.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_opencsv">OpenCSV</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="http://opencsv.sourceforge.net/">OpenCSV</a> library handles
+the messy CSV details when needed but doesn&#8217;t get in the way
+for simple cases. For our first example, the <code>CSVReader</code> and
+<code>CSVWriter</code> classes will be suitable. Here is the code for
+writing our CSV file in the same way as earlier:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withWriter { w -&gt;
+    new CSVWriter(w).writeAll(data.collect{ it as String[] })
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And here is the code for reading data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withReader { r -&gt;
+    assert new CSVReader(r).readAll() == data
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we look at the produced file, it is already a little fancier
+than earlier with double quotes around all data:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/f226d423-3408-4aaa-ba3e-d835e6c894aa" alt="FemmesPodiumStage1"></span></p>
+</div>
+<div class="paragraph">
+<p>If we want to do more elaborate processing, the
+<code>CSVReaderHeaderAware</code> class is aware of the initial header
+row and its column names. Here is our more elaborate example
+which processed some of the data further:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withReader { r -&gt;
+    def rows = []
+    def reader = new CSVReaderHeaderAware(r)
+    while ((next = reader.readMap())) rows &lt;&lt; next
+    assert rows.size() == 21
+    assert rows.collect { it.firstname + ' ' + it.lastname }.toSet().size() == 15
+    assert rows*.team.toSet().size() == 10
+    assert rows*.country.toSet().size() == 9
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see here that we have again used column names rather
+than column numbers during our processing. For simplicity, we
+followed the same style as in the Commons CSV example and just
+checked the size of all the relevant sets that we calculated
+previously.</p>
+</div>
+<div class="paragraph">
+<p>OpenCSV also supports transforming CSV files into JavaBean
+instances. First, we define our target class (or annotate
+an existing domain class):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Cyclist {
+    @CsvBindByName(column = 'firstname')
+    String first
+    @CsvBindByName(column = 'lastname')
+    String last
+    @CsvBindByName
+    String team
+    @CsvBindByName
+    String country
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For two of the columns, we&#8217;ve indicated that the column name in
+the CSV file doesn&#8217;t match our class property. The annotation
+attribute caters for that scenario.</p>
+</div>
+<div class="paragraph">
+<p>Then, we can use this code to convert our CSV file into a list
+of domain objects:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withReader { r -&gt;
+    List&lt;Cyclist&gt; rows = new CsvToBeanBuilder(r).withType(Cyclist).build().parse()
+    assert rows.size() == 21
+    assert rows.collect { it.first + ' ' + it.last }.toSet().size() == 15
+    assert rows*.team.toSet().size() == 10
+    assert rows*.country.toSet().size() == 9
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenCSV has many options we didn&#8217;t show. When writing files you
+can specify the separator and quote characters, when reading CSV
+you can specify column positions, types, and validate data.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jackson_databind_csv">Jackson Databind CSV</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://github.com/FasterXML/jackson-databind">Jackson Databind</a> library supports the <a href="https://github.com/FasterXML/jackson-dataformats-text/tree/master/csv">CSV</a>
+format (as well as many others).</p>
+</div>
+<div class="paragraph">
+<p>Writing CSV files from existing data is simple as shown here
+for running example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">file.withWriter { w -&gt;
+    new CsvMapper().writeValue(w, data)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This writes the data into our temporary file as we saw with
+previous examples. One minor difference is that by default,
+just the values containing spaces will be double quoted but
+like the other libraries, there are many configuration options
+to tweak such settings.</p>
+</div>
+<div class="paragraph">
+<p>Reading the data can be achieved using the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def mapper = new CsvMapper().readerForListOf(String).with(CsvParser.Feature.WRAP_AS_ARRAY)
+file.withReader { r -&gt;
+    assert mapper.readValues(r).readAll() == data
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our more elaborate example is done in a similar way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def schema = CsvSchema.emptySchema().withHeader()
+def mapper = new CsvMapper().readerForMapOf(String).with(schema)
+file.withReader { r -&gt;
+    def rows = mapper.readValues(r).readAll()
+    assert rows.size() == 21
+    assert rows.collect { it.firstname + ' ' + it.lastname }.toSet().size() == 15
+    assert rows*.team.toSet().size() == 10
+    assert rows*.country.toSet().size() == 9
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we tell the library to make use of our header row and
+store each row of data in a map.</p>
+</div>
+<div class="paragraph">
+<p>Jackson Databind also supports writing to classes including
+JavaBeans as well as records. Let&#8217;s create a record to hold
+our cyclist information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@JsonCreator
+record Cyclist(
+        @JsonProperty('stage') int stage,
+        @JsonProperty('firstname') String first,
+        @JsonProperty('lastname') String last,
+        @JsonProperty('team') String team,
+        @JsonProperty('country') String country) {
+    String full() { "$first $last" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that again we can indicate where our record component names
+may not match the names used in the CSV file, we simply supply
+the alternate name when specifying the property. There are other
+options like indicating that a field is required or giving its
+column position, but we don&#8217;t need those options for our example.
+We&#8217;ve also added a <code>full()</code> helper method to return the full
+name of the cyclist.</p>
+</div>
+<div class="paragraph">
+<p>Groovy will use native records on platforms that support it
+(JDK16+) or emulated records on earlier platforms.</p>
+</div>
+<div class="paragraph">
+<p>Now we can write our code for record deserialization:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def schema = CsvSchema.emptySchema().withHeader()
+def mapper = new CsvMapper().readerFor(Cyclist).with(schema)
+file.withReader { r -&gt;
+    List&lt;Cyclist&gt; records = mapper.readValues(r).readAll()
+    assert records.size() == 21
+    assert records*.full().toSet().size() == 15
+    assert records*.team.toSet().size() == 10
+    assert records*.country.toSet().size() == 9
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at writing and reading CSV files to Strings and
+domain classes and records. We had a look at handling simple
+cases by hand and also looked at the OpenCSV, Commons CSV and
+Jackson Databind CSV libraries.</p>
+</div>
+<div class="paragraph">
+<p>Code for these examples:<br>
+<a href="https://github.com/paulk-asert/CsvGroovy" class="bare">https://github.com/paulk-asert/CsvGroovy</a></p>
+</div>
+<div class="paragraph">
+<p>Code for other examples of using Groovy for Data Science:<br>
+<a href="https://github.com/paulk-asert/groovy-data-science" class="bare">https://github.com/paulk-asert/groovy-data-science</a></p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
