@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, constraint programming, jacop, or-tools, choco, jsr331'/><title>The Apache Groovy programming language - Blogs - Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_cryptarithmetic_problems' class='anchor-link'>Cryptarithmetic Problems</a></li><li><a href='#_solving_with_brute_force' class='anchor-link'>Solving with Brute Force</a></li><li><a href='#_choco' class='anchor-link'>Choco</a></li><li><a href='#_jacop' class='anchor-link'>JaCoP</a></li><li><a href='#_or_tools' class='anchor-link'>OR-Tools</a></li><li><a href='#_choco_with_jsr331' class='anchor-link'>Choco with JSR331</a></li><li><a href='#_looking_at_other_languages' class='anchor-link'>Looking at other languages</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</h1><p><br/><span>Published: 2022-09-05 01:43PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When writing solutions to problems, we frequently strive to hide
+away implementation details. In Object-oriented (OO) programming,
+we might build a rich hierarchy of classes with carefully
+thought-out methods so that our final solution can be expressed
+in terms of simple nouns and verbs (methods and class instances)
+in our domain model. When applying functional programming idioms,
+we will strive to emphasise the relationship between inputs and
+outputs and hide away side effects and iterative steps.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Constraint_programming">Constraint programming</a> (within the same family as logic programming) also
+strives to hide away details. Instead of expressing an iterative
+implementation, it focuses on expressing declarative properties
+of a solution. A solver is responsible for working out the exact
+implementation steps.</p>
+</div>
+<div class="paragraph">
+<p>When using constraint programming, we develop a model consisting
+of <em>variables</em>, the <em>domain</em> of values each variable may hold,
+and additional <em>constraints</em> between the variables. A solver does
+all the work. It may employ heuristic searching, inference,
+propagation, symmetry and backtracking to find possible solutions.
+We may be able to (or want to, or need to) guide the solver as to
+which techniques and strategies it should use. Constraint
+programming has been used to solve various kinds of problems
+including scheduling problems, and excels at problems with
+combinatorial possibilities that are too irregular for other
+mathematical optimisations. Frequently used illustrative problems
+are Sudoku and Wordle solvers, <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">N-Queen problems</a>, and other
+kinds of puzzles. We&#8217;ll just look at cryptarithmetic puzzles.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cryptarithmetic_problems">Cryptarithmetic Problems</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Cryptarithmetic problems (also known as alphametics, verbal
+arithmetic, cryptarithm, and word addition) are a type of
+mathematical game where a mathematical equation is presented
+where digits in the equation are replaced by letters.
+Traditionally, each letter usually represents a unique number,
+and numbers don&#8217;t start with the digit zero. If we look at one
+<a href="https://en.wikipedia.org/wiki/Verbal_arithmetic">sample problem</a>:</p>
+</div>
+<table class="tableblock frame-none grid-rows" style="width: 30%;">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">G</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">=</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">U</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">T</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We can reason about what the solution can be by hand:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>T, O, U, and G must be all different (game rule)</p>
+</li>
+<li>
+<p>T, G, and O will be between 1 and 9, and U is between 0 and 9 (game rule)</p>
+</li>
+<li>
+<p>If we added the two biggest 2-digit numbers, (99 + 99) we&#8217;d get 198, so <em>O must be 1</em></p>
+</li>
+<li>
+<p>Looking at the right-most "units" column, 1 + 1 equals 2, so <em>T must be 2</em></p>
+</li>
+<li>
+<p>Looking at the "tens" column, we know there is a carry of 1 (since O is 1), and we know T is 2, so G must be 8 or 9. If G was 9, U would be 1, but it can&#8217;t be the same as O, so <em>G must be 8</em> and <em>U must be 0</em>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When solving by hand, we typically reason about
+individual columns and account for the "carry"to the
+next column. We&#8217;ll come back to this point later but
+first, let&#8217;s look at a slightly bigger problem:</p>
+</div>
+<table class="tableblock frame-none grid-rows" style="width: 40%;">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.667%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">S</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">D</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">+</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">R</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">=</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">M</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">O</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">E</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Y</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solving_with_brute_force">Solving with Brute Force</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This problem isn&#8217;t huge, so we can solve with brute force.
+We simply try all possible values for the letters in the puzzle:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">for (s in 1..9)
+  for (e in 0..9)
+    for (n in 0..9)
+      for (d in 0..9)
+        for (m in 1..9)
+          for (o in 0..9)
+            for (r in 0..9)
+              for (y in 0..9)
+                if ([s, e, n, d, m, o, r, y].toSet().size() == 8) {
+                  def send = 1000 * s + 100 * e + 10 * n + d
+                  def more = 1000 * m + 100 * o + 10 * r + e
+                  def money = 10000 * m + 1000 * o + 100 * n + 10 * e + y
+                  if (send + more == money) {
+                    println "s = $s, e = $e, n = $n, d = $d"
+                    println "m = $m, o = $o, r = $r, y = $y"
+                  }
+                }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This isn&#8217;t very efficient though. It calculates 81 million
+combinations for the variables before skipping all but 1.5
+million of them (since most won&#8217;t be unique). All up it might
+execute in the low tens of seconds.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, Groovy supports calculating permutations, so we
+can simplify our solution to a single for loop (with some tests
+to eliminate unhelpful iterations):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def digits = 0..9
+for (p in digits.permutations()) {
+    if (p[-1] &lt; p[-2]) continue
+    def (s, e, n, d, m, o, r, y) = p
+    if (s == 0 || m == 0) continue
+    def send = 1000 * s + 100 * e + 10 * n + d
+    def more = 1000 * m + 100 * o + 10 * r + e
+    def money = 10000 * m + 1000 * o + 100 * n + 10 * e + y
+    if (send + more == money) {
+        println "s = $s, e = $e, n = $n, d = $d"
+        println "m = $m, o = $o, r = $r, y = $y"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This has the advantage of only generating unique combinations.
+It will execute in seconds.</p>
+</div>
+<div class="paragraph">
+<p>Running either of these solutions yields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>s = 9, e = 5, n = 6, d = 7
+m = 1, o = 0, r = 8, y = 2</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_choco">Choco</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the code using the <a href="https://choco-solver.org/">Choco</a>
+library:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">new Model("SEND+MORE=MONEY").with {
+    def (S, M) = ['S', 'M'].collect { intVar(it, 1, 9) }
+    def (E, N, D, O, R, Y) = ['E', 'N', 'D', 'O', 'R', 'Y'].collect { intVar(it, 0, 9) }
+
+    allDifferent(S, E, N, D, M, O, R, Y).post()
+
+    IntVar[] ALL = [
+            S, E, N, D,
+            M, O, R, E,
+         M, O, N, E, Y ]
+    int[] COEFFS = [
+            1000,  100,  10,  1,
+            1000,  100,  10,  1,
+   -10000, -1000, -100, -10, -1 ]
+
+    scalar(ALL, COEFFS, "=", 0).post()
+
+    println solver.findSolution()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We define our variables and their bounds (domain).
+We use an <code>allDifferent</code> global constraint to specify the
+uniqueness requirement and a <code>scalar</code> constraint that
+ensures that our variables multiplied by their respective
+scalar coefficients equal 0. This lets us factor in whether
+the particular variable is representing the "units" column,
+the "10s" column, the "100s" column etc. This captures the
+"puzzle addition" constraint. We then ask the solver to find
+the solution. We could just as easily have asked for all
+solutions (if more than one existed).</p>
+</div>
+<div class="paragraph">
+<p>This is typical of how we solve such problems. We either
+define constraints directly between one or more variables
+or use whatever global constraints our library might support.
+If our library doesn&#8217;t support the constraint we need,
+we find a way to express it using multiple simpler constraints.</p>
+</div>
+<div class="paragraph">
+<p>The end result is that our code is more declarative than our
+brute force approaches, and the solution is found in tens of
+milliseconds. The solver has very efficient strategies for
+solving such puzzles.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jacop">JaCoP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can solve the same problem using <a href="https://github.com/radsz/jacop">JaCoP</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def store = new Store()
+def (S, M) = ['S', 'M'].collect { new IntVar(store, it, 1, 9) }
+def (E, N, D, O, R, Y) = ['E', 'N', 'D', 'O', 'R', 'Y'].collect { new IntVar(store, it, 0, 9) }
+var ctr = new Alldifferent(S, E, N, D, M, O, R, Y)
+store.impose(ctr)
+
+IntVar[] ALL = [
+                S,   E,   N,   D,
+                M,   O,   R,   E,
+           M,   O,   N,   E,   Y ]
+int[] COEFFS = [
+             1000,  100,  10,  1,
+             1000,  100,  10,  1,
+    -10000, -1000, -100, -10, -1 ]
+var lin = new LinearInt(ALL, COEFFS, "==", 0)
+store.impose(lin)
+
+var label = new DepthFirstSearch()
+var select = new InputOrderSelect(store, ALL, new IndomainMin())
+label.labeling(store, select)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are some slight differences in this API, but nearly
+everything has a one-to-one correspondence to what we saw earlier.
+We are explicitly selecting search strategies and selection
+strategies here whereas with Choco, defaults were chosen for us.
+In both cases, explicit creation of such classes allows the
+strategies to be altered for particular scenarios if needed.</p>
+</div>
+<div class="paragraph">
+<p>When run, the output looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Labeling has finished with return value of true
+DFS1: DFS([S = 9, E = 5, N = 6, D = 7, M = 1, O = 0, R = 8, Y = 2], InputOrder, (org.jacop.search.IndomainMin@45394b31))</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see here the code is very similar as is the execution time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_or_tools">OR-Tools</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can repeat the solution using
+<a href="https://developers.google.com/optimization/cp">OR-Tools</a>.
+Here is the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Loader.loadNativeLibraries()
+
+new Solver('Send+More=Money').with {
+    def s = makeIntVar(1, 9, 's')
+    def e = makeIntVar(0, 9, 'e')
+    def n = makeIntVar(0, 9, 'n')
+    def d = makeIntVar(0, 9, 'd')
+    def m = makeIntVar(1, 9, 'm')
+    def o = makeIntVar(0, 9, 'o')
+    def r = makeIntVar(0, 9, 'r')
+    def y = makeIntVar(0, 9, 'y')
+
+    IntVar[] all = [s, e, n, d, m, o, r, y]
+    IntVar[] scalar = [s, e, n, d, m, o, r, e, m, o, n, e, y]
+    int[] coeffs = [
+                 1000,  100,  10,  1,  //  S E N D +
+                 1000,  100,  10,  1,  //  M O R E =
+        -10000, -1000, -100, -10, -1   //  M O N E Y
+    ]
+
+    addConstraint(makeScalProdEquality(scalar, coeffs, 0))
+    addConstraint(makeAllDifferent(all))
+
+    def db = makePhase(all, INT_VAR_DEFAULT, INT_VALUE_DEFAULT)
+    newSearch(db)
+    while (nextSolution()) {
+        println all.join(' ')
+    }
+    endSearch()
+
+    // Statistics
+    println "Solutions: ${solutions()}"
+    println "Failures: ${failures()}"
+    println "Branches: ${branches()}"
+    println "Wall time: ${wallTime()}ms"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has this output when run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>s(9) e(5) n(6) d(7) m(1) o(0) r(8) y(2)
+Solutions: 1
+Failures: 5
+Branches: 10
+Wall time: 60ms</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OR-Tools is written in C++ but has interfaces for numerous
+languages including Java - which is perfect for Groovy use.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_choco_with_jsr331">Choco with JSR331</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is great to have multiple libraries to pick from but having a
+standard API can help switching between such libraries. This is
+where JSR331 comes in. It defines a standard API for interacting
+with constraint solvers and linear solves. Here we use a
+<a href="https://openrules.com/jsr331/JSR331.UserManual.pdf">JSR331 implementation</a> backed by an earlier version of the Choco library. The code looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import javax.constraints.*
+
+ProblemFactory.newProblem('SEND+MORE=MONEY').with {
+    def (S, M) = ['S', 'M'].collect { variable(it, 1, 9) }
+    def (E, N, D, O, R, Y) = ['E', 'N', 'D', 'O', 'R', 'Y'].collect { variable(it, 0, 9) }
+
+    postAllDifferent(S, E, N, D, M, O, R, Y)
+
+    Var[] ALL = [
+            S, E, N, D,
+            M, O, R, E,
+            M, O, N, E, Y]
+    int[] COEFFS = [
+            1000, 100, 10, 1,
+            1000, 100, 10, 1,
+            -10000, -1000, -100, -10, -1]
+
+    post(COEFFS, ALL, '=', 0)
+
+    def solver = getSolver()
+    def solution = solver.findSolution()
+    println solution ?: 'No solution'
+    solver.logStats()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is quite similar to earlier examples but now exclusively uses
+the JSR331 classes in the javax.constraint package. There are
+implementations of those classes backed by several implementations.
+So, indeed it would be possible to swap between them. When run,
+the output is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Solution #1:
+ S[9] M[1] E[5] N[6] D[7] O[0] R[8] Y[2]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Having said that, at the time of writing, JSR331 popularity
+doesn&#8217;t appear to be on the rise. Most folks using constraint
+programming libraries seem to be using the direct library classes.
+Indeed, the version of the Choco implementation used by the JSR331
+implementation is over 10 years old.</p>
+</div>
+<div class="paragraph">
+<p>The scalar product global constraint we have used in the previous
+examples is very powerful and probably would be our first choice
+for this problem. We can, however, model constraint programming
+problems in multiple ways, so let&#8217;s look at a solution that avoids
+that global constraint.</p>
+</div>
+<div class="paragraph">
+<p>Instead, we will develop a model that mirrors how we reasoned
+about the original <code>TO + GO = OUT</code> problem that we
+solved by hand. For that, we just considered a column at a time
+and accounted for the carry. We&#8217;ll explicitly introduce variables
+to hold the carry (0 if no carry, or 1 if there is a carry) into
+our model. Then we&#8217;ll express the mathematical constraints that
+are applicable for each column.</p>
+</div>
+<div class="paragraph">
+<p>Here is the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">new Model("SEND+MORE=MONEY").with {
+    def (S, M) = ['S', 'M'].collect { intVar(it, 1, 9) }
+    def (E, N, D, O, R, Y) = ['E', 'N', 'D', 'O', 'R', 'Y'].collect { intVar(it, 0, 9) }
+    def C = (0..3).collect{ intVar("C$it", 0, 9) }
+
+    allDifferent(S, E, N, D, M, O, R, Y).post()
+    C[3]              .eq(M).post()                         //  C3 C2 C1 C0
+    C[2].add(S).add(M).eq(O.add(C[3].mul(10))).post()       //      S  E  N  D
+    C[1].add(E).add(O).eq(N.add(C[2].mul(10))).post()       //      M  O  R  E
+    C[0].add(N).add(R).eq(E.add(C[1].mul(10))).post()       //   -------------
+             D .add(E).eq(Y.add(C[0].mul(10))).post()       //   M  O  N  E  Y
+
+    println solver.findSolution()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that there is now no scalar product global constraint
+any more but instead the constraints for each column.</p>
+</div>
+<div class="paragraph">
+<p>When run, the output looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Solution: S=9, M=1, E=5, N=6, D=7, O=0, R=8, Y=2, C0=1, C1=1, C2=0, C3=1, sum_exp_1=9,
+sum_exp_2=10, (C3*10)=10, sum_exp_3=10, sum_exp_4=6, sum_exp_5=6, (C2*10)=0, sum_exp_6=6,
+sum_exp_7=7, sum_exp_8=15, (C1*10)=10, sum_exp_9=15, sum_exp_10=12, (C0*10)=10, sum_exp_11=12,</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that as we were defining our constraints for each
+column, subexpressions were being created in the model which
+are reflected in the solution. They are if you like, temporary
+calculations along the way to getting the answer - or more
+accurately a snapshot of ever-changing temporary calculations.
+They don&#8217;t form part of the answer that interests us, so we would
+be free to just print out the part of the solution which interests
+us if we wanted.</p>
+</div>
+<div class="paragraph">
+<p>The previous example has lots of calls to <code>add</code> and <code>mul</code> methods.
+We can create a little bit of a DSL to provide some syntactic
+sugar to our previous examples to allow use of Groovy&#8217;s operator
+overloading, support ranges when specifying the domain of a
+variable, and a few other niceties. Our code becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">model("SEND+MORE=MONEY") {
+    def (S, M) = ['S', 'M'].collect { intVar(it, 1..9) }
+    def (E, N, D, O, R, Y) = ['E', 'N', 'D', 'O', 'R', 'Y'].collect { intVar(it, 0..9) }
+    def C = intVarArray(4, 0..1)
+
+    [allDifferent(S, E, N, D, M, O, R, Y),      //  C3 C2 C1 C0
+     C[3]         .eq(M),                       //      S  E  N  D
+    (C[2] + S + M).eq(O + C[3] * 10),           //      M  O  R  E
+    (C[1] + E + O).eq(N + C[2] * 10),           //   -------------
+    (C[0] + N + R).eq(E + C[1] * 10),           //   M  O  N  E  Y
+           (D + E).eq(Y + C[0] * 10)]*.post()
+
+    println solver.findSolution()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has the same output as previously.</p>
+</div>
+<div class="paragraph">
+<p>You might wonder how the solver finds the solution.
+You can watch the variables in the debugger and use
+tools like <a href="https://github.com/chocoteam/choco-cpviz">choco-cpviz</a>
+but it is a quite convoluted process until you are used to it.
+We&#8217;ll try to give you a flavor of what is going on here.
+Basically, there will be various steps of pruning wherever
+possible and branching with possible backtracking. Below are
+some snapshots for our example above.</p>
+</div>
+<div class="paragraph">
+<p>To start with, we have nearly 90 light green squares which
+represents our problem search space. We walk our way through
+the rules looking for ways to prune the search space:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/bdb17727-caee-473c-b450-3ec60e74e13b" alt="choco_step1"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/171a4583-806a-4c1b-9557-892d87e5670c" alt="choco_step2"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6807b9ad-8390-45ec-ad58-10dd1346bf45" alt="choco_step3"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/b2b2221a-60fa-4d9a-9fa1-16ddb213fcce" alt="choco_step4"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6303ed53-ff6c-4572-b70d-52b299d4fff7" alt="choco_step5.png"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/658ff512-433f-452a-9a81-904449dfb623" alt="choco_step6"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/f81d5630-ede4-4b75-9e74-b73b81be0b21" alt="choco_step7"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/8de231cc-c0da-4170-845a-6653b84779b9" alt="choco_step8"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/46227911-c406-4234-88d1-fe1f9ac9c517" alt="choco_step9"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/31060d5c-6716-4efe-8f99-910c1771ef28" alt="choco_step10"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/4b9324d7-2bf3-48c9-af8b-b35872aaf5cf" alt="choco_step11"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/71197695-f379-4777-9ed5-ddae1577ee3d" alt="choco_step12"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6ff23a4e-b444-4794-bc79-e6591582bff9" alt="choco_step13"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/6262d9bc-7f14-4b8f-a952-18668c6f1340" alt="choco_step14.png"></span></p>
+</div>
+<div class="paragraph">
+<p>As we are locking in the value of variables, we can substitute
+them into and simplify our constraints. When we reapply them,
+they will be quicker to evaluate and may reveal more information.</p>
+</div>
+<div class="paragraph">
+<p>At this point we only have 2 of our variables locked down but our
+search space is nearly half what we started with, and we have
+simplified some of our constraints. We would continue branching
+and solving at this point until we find our solution or determine
+that no solution is possible.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_looking_at_other_languages">Looking at other languages</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://github.com/paulk-asert/groovy-constraint-programming">example repo</a> also contains solutions for this problem in other
+languages, so you can compare and contrast, including
+<a href="https://clojure.org/">Clojure</a>,
+Haskell (<a href="https://github.com/Frege/frege">Frege</a>),
+<a href="https://www.java.com/">Java</a>,
+JavaScript (<a href="https://docs.oracle.com/javase/10/nashorn/">Nashorn</a>),
+Ruby (<a href="https://www.jruby.org/">JRuby</a>),
+Python (<a href="https://www.jython.org/">Jython</a>),
+<a href="https://kotlinlang.org/">Kotlin</a>,
+Lua (<a href="https://github.com/luaj/luaj">Luaj</a>),
+Prolog (<a href="http://apice.unibo.it/xwiki/bin/view/Tuprolog/">tuprolog</a>),
+and <a href="https://www.scala-lang.org/">Scala</a>.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://blogs.apache.org/groovy/mediaresource/a1fc3f0b-3997-4e91-987a-51a5423581e4" alt="slides"></span></p>
+</div>
+<div class="paragraph">
+<p>To wrap up, let&#8217;s look at solving a few more examples (using
+Choco). We&#8217;ll solve some of the examples from an interesting
+blog on the <a href="https://pballew.blogspot.com/2015/02/some-history-notes-about-alphametrics.html">history of Cryptarithmetic problems</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>ABCD * 4 = DCBA</code></p>
+</li>
+<li>
+<p><code>AA + BB + CC = ABC</code></p>
+</li>
+<li>
+<p><code>HALF + HALF = WHOLE</code></p>
+</li>
+<li>
+<p><code>HALF + FIFTH + TENTH + TENTH + TENTH = WHOLE</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here is the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">new Model("ABCD*4=DCBA").with {
+    def (A, D) = ['A', 'D'].collect { intVar(it, 1, 9) }
+    def (B, C) = ['B', 'C'].collect { intVar(it, 0, 9) }
+    def R = (0..2).collect { intVar(0, 9) }
+
+    allDifferent(A, B, C, D).post()
+    R[2].add(A.mul(4)).eq(D).post()
+    R[1].add(B.mul(4)).eq(C.add(R[2].mul(10))).post()
+    R[0].add(C.mul(4)).eq(B.add(R[1].mul(10))).post()
+    D.mul(4).eq(A.add(R[0].mul(10))).post()
+    solver.findAllSolutions().each {
+        println "$name: ${pretty(it, [A, B, C, D, ' * 4 = ', D, C, B, A])}\n$it\n"
+    }
+}
+
+new Model("AA+BB+CC=ABC").with {
+    def (A, B, C) = ['A', 'B', 'C'].collect { intVar(it, 1, 9) }
+    allDifferent(A, B, C).post()
+    A.mul(11).add(B.mul(11).add(C.mul(11))).eq(A.mul(100).add(B.mul(10)).add(C)).post()
+    solver.findAllSolutions().each {
+        println "$name: ${pretty(it, [A, A, ' + ', B, B, ' + ', C, C, ' = ', A, B, C])}\n$it\n"
+    }
+}
+
+new Model("HALF+HALF=WHOLE").with {
+    def (H, W) = ['H', 'W'].collect { intVar(it, 1, 9) }
+    def (A, E, F, L, O) = ['A', 'E', 'F', 'L', 'O'].collect { intVar(it, 0, 9) }
+    allDifferent(H, W, A, E, F, L, O).post()
+    IntVar[] ALL = [
+            H, A, L, F,
+            W, H, O, L, E]
+    int[] COEFFS = [
+            2000, 200, 20, 2,
+            -10000, -1000, -100, -10, -1]
+    scalar(ALL, COEFFS, "=", 0).post()
+    solver.findAllSolutions().each {
+        println "$name: ${pretty(it, [H, A, L, F, ' + ', H, A, L, F, ' = ', W, H, O, L, E])}\n$it\n"
+    }
+}
+
+new Model("HALF+FIFTH+TENTH+TENTH+TENTH=WHOLE").with {
+    def (H, F, T, W) = ['H', 'F', 'T', 'W'].collect { intVar(it, 1, 9) }
+    def (A, L, I, E, N, O) = ['A', 'L', 'I', 'E', 'N', 'O'].collect { intVar(it, 0, 9) }
+    allDifferent(H, F, T, W, A, L, I, E, N, O).post()
+    IntVar[] ALL = [
+            H, A, L, F,
+            F, I, F, T, H,
+            T, E, N, T, H,
+            T, E, N, T, H,
+            T, E, N, T, H,
+            W, H, O, L, E]
+    int[] COEFFS = [
+            1000, 100, 10, 1,
+            10000, 1000, 100, 10, 1,
+            10000, 1000, 100, 10, 1,
+            10000, 1000, 100, 10, 1,
+            10000, 1000, 100, 10, 1,
+            -10000, -1000, -100, -10, -1]
+    scalar(ALL, COEFFS, "=", 0).post()
+    solver.findAllSolutions().each {
+        def parts = [H, A, L, F, '+', F, I, F, T, H, '+', T, E, N, T, H, '+',
+                     T, E, N, T, H, '+', T, E, N, T, H, '=', W, H, O, L, E]
+        println "$name: ${pretty(it, parts)}\n$it\n"
+    }
+}
+
+// helper method to print solutions
+def pretty(model, parts) {
+    parts.collect { p -&gt; p instanceof IntVar ? model.getIntVal(p) : p }.join()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ABCD*4=DCBA: 2178 * 4 = 8712
+Solution: A=2, D=8, B=1, C=7, IV_1=3, IV_2=3, IV_3=0, (A*4)=8, sum_exp_4=8, (B*4)=4, …,
+
+AA+BB+CC=ABC: 11 + 99 + 88 = 198
+Solution: A=1, B=9, C=8, (A*11)=11, (B*11)=99, (C*11)=88, …,
+
+HALF+HALF=WHOLE: 9604 + 9604 = 19208
+Solution: H=9, W=1, A=6, E=8, F=4, L=0, O=2,
+
+HALF+HALF=WHOLE: 9703 + 9703 = 19406
+Solution: H=9, W=1, A=7, E=6, F=3, L=0, O=4,
+
+HALF+HALF=WHOLE: 9802 + 9802 = 19604
+Solution: H=9, W=1, A=8, E=4, F=2, L=0, O=6,
+
+HALF+FIFTH+TENTH+TENTH+TENTH=WHOLE: 6701+14126+25326+25326+25326=96805
+Solution: H=6, F=1, T=2, W=9, A=7, L=0, I=4, E=5, N=3, O=8,</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You should see the common patterns used for solving these puzzles.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/radsz/jacop">JaCoP</a> Java Constraint Programming solver</p>
+</li>
+<li>
+<p><a href="https://choco-solver.org/">Choco</a> open source library for constraint programming</p>
+</li>
+<li>
+<p><a href="https://developers.google.com/optimization/cp">OR-Tools</a> constraint optimization</p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Verbal_arithmetic">Verbal arithmetic</a> problems described (wikipedia)</p>
+</li>
+<li>
+<p><a href="https://www.jcp.org/en/jsr/detail?id=331">JSR331</a> Constraint Programming API</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-constraint-programming/tree/master/subprojects/SendMoreMoney">Github repo</a> containing sample code</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at using Groovy and a few constraint programming
+libraries to solve a cryptarithmetic puzzles. Why not try solving
+some of your own puzzles.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
