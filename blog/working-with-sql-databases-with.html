@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='graalvm, groovy, jvm, native, sql, h2'/><meta name='description' content='This post looks at a simple H2 database application. It shows how to create a native version of the application using GraalVM.'/><title>The Apache Groovy programming language - Blogs - Working with SQL databases with Groovy and GraalVM</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Working with SQL databases with Groovy and GraalVM</a></li><li><a href='#_native_metadata' class='anchor-link'>Native Metadata</a></li><li><a href='#_working_with_sql_in_groovy' class='anchor-link'>Working with SQL in Groovy</a></li><li><a href='#_configuring_our_native_build' class='anchor-link'>Configuring our native build</a></li><li><a href='#_checking_the_native_image_speed' class='anchor-link'>Checking the native image speed</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Working with SQL databases with Groovy and GraalVM</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-29 02:07PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>During the week, there was an interesting
+<a href="https://www.youtube.com/watch?v=rpZJz4qbhCU">video</a> and
+<a href="https://medium.com/graalvm/graalvm-22-2-smaller-jdk-size-improved-memory-usage-better-library-support-and-more-cb34b5b68ec0">blog post</a> on the latest
+<a href="https://www.graalvm.org/">GraalVM</a> 22.2 Release.
+The release has numerous new features and improvements including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>smaller native executables</p>
+</li>
+<li>
+<p>the ability to generate heap dumps in native executables</p>
+</li>
+<li>
+<p>experimental native image debugging within IntelliJ IDEA</p>
+</li>
+<li>
+<p>the ability to embed a Software Bill of Materials (SBOM) into the executable for improved security (when using GraalVM Enterprise)</p>
+</li>
+<li>
+<p>native metadata integration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This blog looks at the last of these.
+We&#8217;ll use the running example of the
+<a href="https://www.h2database.com/html/main.html">H2 database</a>
+which the video discusses.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_native_metadata">Native Metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For anyone who has used GraalVM, they will know that frequently
+certain information must be given to the native compiler. Certain
+classes can be initialized at build time, others should be
+initialized at runtime. If accessing certain kinds of resources,
+knowledge of those resources must be given to the compiler. Parts
+of the application which might be invoked through reflection or
+involve serialization, might not be deemed reachable and won&#8217;t
+automatically be included by the compiler.</p>
+</div>
+<div class="paragraph">
+<p>Each library that is being used within an application will have
+its own set of classes and resources which will commonly need to
+dealt with by anyone using that library. The Native Metadata
+repository keeps a shared copy of this information on a
+per-library basis. Once someone has populated the metadata,
+other projects using the same library can get that information
+automatically. We&#8217;ll look more at metadata integration shortly,
+but first, let&#8217;s look at our database application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_working_with_sql_in_groovy">Working with SQL in Groovy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The application creates and then populates a <code>customer</code> database
+with four customers. It then prints them out:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.sql.Sql
+import groovy.transform.CompileStatic
+
+@CompileStatic
+class H2Demo {
+    static void main(args) {
+        Sql.withInstance('jdbc:h2:./data/test') { sql -&gt;
+            sql.execute 'DROP TABLE IF EXISTS customers'
+            sql.execute 'CREATE TABLE customers(id INTEGER AUTO_INCREMENT, name VARCHAR)'
+            for (cust in ['Lord Archimonde', 'Arthur', 'Gilbert', 'Grug']) {
+                sql.executeInsert "INSERT INTO customers(name) VALUES $cust"
+            }
+            println sql.rows('SELECT * FROM customers').join('\n')
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>Sql</code> class makes this relatively easy. The <code>withInstance</code>
+method will create a database connection and close it down when
+finished with. The <code>executeInsert</code> method is using a Groovy
+interpolated String (GString) which creates a prepared statement
+under the covers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuring_our_native_build">Configuring our native build</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is our build file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">plugins {
+    id 'application'
+    id 'groovy'
+    id 'org.graalvm.buildtools.native'
+}
+
+application {
+    mainClass = 'H2Demo'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+   implementation 'com.h2database:h2:2.1.210'
+   implementation 'org.apache.groovy:groovy:4.0.4'
+   implementation 'org.apache.groovy:groovy-sql:4.0.4'
+}
+
+graalvmNative {
+    agent {
+        defaultMode = 'standard'
+    }
+    metadataRepository {
+        enabled = true
+    }
+    binaries {
+        main {
+            buildArgs.addAll(
+//                    '-H:IncludeSBOM=cyclonedx',
+                    '--report-unsupported-elements-at-runtime',
+                    '--initialize-at-run-time=groovy.grape.GrapeIvy,org.h2.store.fs.niomem.FileNioMemData',
+                    '--initialize-at-build-time',
+                    '--no-fallback',
+            )
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We make use of the graalvm native build plugin. We define our
+dependencies of Groovy and H2. We can also supply any needed
+parameters to the native compiler. Importantly, we enable
+integration with the metadata repository.</p>
+</div>
+<div class="paragraph">
+<p>When we run the build, it will automatically create
+the native app for us:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/groovy-graalvm-h2$ ./gradlew clean nativeRun
+...
+&gt; Task :nativeCompile
+[native-image-plugin] Using executable path: /extra/devtools/graalvm-ce-java17-22.2.0/bin/native-image
+====================================================================================================
+GraalVM Native Image: Generating 'H2Demo' (executable)...
+====================================================================================================
+...
+[1/7] Initializing...                                                                                    (5.3s @ 0.26GB)
+ Version info: 'GraalVM 22.2.0 Java 17 CE'
+ Java version info: '17.0.4+8-jvmci-22.2-b06'
+ C compiler: gcc (linux, x86_64, 11.2.0)
+ Garbage collector: Serial GC
+ 1 user-specific feature(s)
+ - com.oracle.svm.polyglot.groovy.GroovyIndyInterfaceFeature
+[2/7] Performing analysis...  [************]                                                            (51.7s @ 1.82GB)
+  10,597 (90.60%) of 11,697 classes reachable
+  17,002 (64.13%) of 26,510 fields reachable
+  58,165 (63.45%) of 91,666 methods reachable
+     393 classes,   100 fields, and 2,057 methods registered for reflection
+      65 classes,    74 fields, and    55 methods registered for JNI access
+       4 native libraries: dl, pthread, rt, z
+[3/7] Building universe...                                                                               (8.0s @ 4.02GB)
+[4/7] Parsing methods...      [**]                                                                       (4.8s @ 3.85GB)
+[5/7] Inlining methods...     [***]                                                                      (3.0s @ 1.72GB)
+[6/7] Compiling methods...    [******]                                                                  (38.0s @ 3.63GB)
+[7/7] Creating image...                                                                                  (5.9s @ 1.70GB)
+  26.65MB (46.64%) for code area:    38,890 compilation units
+  28.04MB (49.05%) for image heap:  359,812 objects and 66 resources
+   2.46MB ( 4.31%) for other data
+  57.15MB in total
+----------------------------------------------------------------------------------------------------
+Top 10 packages in code area:                               Top 10 object types in image heap:
+   1.48MB sun.security.ssl                                     5.85MB byte[] for code metadata
+   1.06MB java.util                                            2.82MB java.lang.String
+ 979.43KB java.lang.invoke                                     2.78MB java.lang.Class
+ 758.29KB org.apache.groovy.parser.antlr4                      2.47MB byte[] for general heap data
+ 723.92KB com.sun.crypto.provider                              2.04MB byte[] for java.lang.String
+ 588.57KB org.h2.table                                       910.68KB com.oracle.svm.core.hub.DynamicHubCompanion
+ 582.06KB org.h2.command                                     764.95KB java.util.HashMap$Node
+ 494.23KB org.codehaus.groovy.classgen                       761.53KB java.lang.Object[]
+ 476.03KB c.s.org.apache.xerces.internal.impl.xs.traversers  715.65KB byte[] for embedded resources
+ 468.69KB java.lang                                          584.75KB java.util.HashMap$Node[]
+  18.87MB for 370 more packages                                8.28MB for 2535 more object types
+----------------------------------------------------------------------------------------------------
+                        3.9s (3.2% of total time) in 30 GCs | Peak RSS: 6.22GB | CPU load: 6.48
+----------------------------------------------------------------------------------------------------
+Produced artifacts:
+ /extra/projects/groovy-graalvm-h2/build/native/nativeCompile/H2Demo (executable)
+ /extra/projects/groovy-graalvm-h2/build/native/nativeCompile/H2Demo.build_artifacts.txt (txt)
+=====================================================================================================
+Finished generating 'H2Demo' in 2m 1s.
+    [native-image-plugin] Native Image written to: /extra/projects/groovy-graalvm-h2/build/native/nativeCompile
+
+&gt; Task :nativeRun
+[ID:1, NAME:Lord Archimonde]
+[ID:2, NAME:Arthur]
+[ID:3, NAME:Gilbert]
+[ID:4, NAME:Grug]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_checking_the_native_image_speed">Checking the native image speed</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can also check the speed once the native image is built:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/groovy-graalvm-h2$ time build/native/nativeCompile/H2Demo
+[ID:1, NAME:Lord Archimonde]
+[ID:2, NAME:Arthur]
+[ID:3, NAME:Gilbert]
+[ID:4, NAME:Grug]
+
+real	0m0.027s
+user	0m0.010s
+sys	0m0.011s</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Check out the full source code from the repo:<br>
+<a href="https://github.com/paulk-asert/groovy-graalvm-h2" class="bare">https://github.com/paulk-asert/groovy-graalvm-h2</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at a simple H2 database application and the steps
+involved in creating a native application with Groovy and GraalVM.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
