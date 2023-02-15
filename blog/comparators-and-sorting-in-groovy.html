@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='comparators, functional, gquery, ginq, groovy, lambdas, record, sorting'/><title>The Apache Groovy programming language - Blogs - Comparators and Sorting in Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='comparators, functional, gquery, ginq, groovy, lambdas, record, sorting'/><meta name='description' content='This post looks at Groovy functionality for making your classes comparable and/or sortable.'/><title>The Apache Groovy programming language - Blogs - Comparators and Sorting in Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,17 +53,26 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Comparators and Sorting in Groovy</a></li><li><a href='#_the_java_comparator_story_recap' class='anchor-link'>The Java comparator story recap</a></li><li><a href='#_the_groovy_comparator_story' class='anchor-link'>The Groovy comparator story</a></li><li><a href='#_mixing_in_some_language_integrated_queries' class='anchor-link'>Mixing in some language integrated queries</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Comparators and Sorting in Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-21 03:51PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Comparators and Sorting in Groovy</a></li><li><a href='#_the_java_comparator_story_recap' class='anchor-link'>The Java comparator story recap</a></li><li><a href='#_the_groovy_comparator_story' class='anchor-link'>The Groovy comparator story</a></li><li><a href='#_mixing_in_some_language_integrated_queries' class='anchor-link'>Mixing in some language integrated queries</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Comparators and Sorting in Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-21 03:51PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://blogs.apache.org/groovy/mediaresource/2eb621f3-0419-437e-950b-0c9e5e15804e" alt="Cher" width="179" height="179"></span>
-This blog post is inspired by the Comparator examples in the excellent <em>Collections Refuelled</em> <a href="https://www.youtube.com/watch?v=q6zF3vf114M&amp;t=13s">talk</a> and <a href="https://blogs.oracle.com/java/post/collections-refueled">blog</a> by Stuart Marks. That blog, from 2017, highlights improvements in the Java collections library in Java 8 and 9 including numerous Comparator improvements. It is now 5 years old but still highly recommended for anyone using the Java collections library.</p>
+This blog post is inspired by the Comparator examples in the excellent
+<em>Collections Refuelled</em> <a href="https://www.youtube.com/watch?v=q6zF3vf114M&amp;t=13s">talk</a> and <a href="https://blogs.oracle.com/java/post/collections-refueled">blog</a>
+by Stuart Marks. That blog, from 2017, highlights improvements in the Java
+Collections library in Java 8 and 9 including numerous Comparator improvements.
+It is now 5 years old but still highly recommended for anyone using the Java
+Collections library.</p>
 </div>
 <div class="paragraph">
-<p>Rather than have a <code>Student</code> class as per the original blog example, we&#8217;ll have a <code>Celebrity</code> class (and later record) which has the same <code>first</code> and <code>last</code> name fields and an additional <code>age</code> field. We&#8217;ll compare initially by <code>last</code> name with nulls before non-nulls and then by <code>first</code> name and lastly by <code>age</code>.</p>
+<p>Rather than have a <code>Student</code> class as per the original blog example, we&#8217;ll have
+a <code>Celebrity</code> class (and later record) which has the same <code>first</code> and <code>last</code>
+name fields and an additional <code>age</code> field. We&#8217;ll compare initially by <code>last</code>
+name with nulls before non-nulls and then by <code>first</code> name and lastly by <code>age</code>.</p>
 </div>
 <div class="paragraph">
-<p>As with the original blog, we&#8217;ll cater for nulls, e.g. a celebrity known by a single name.</p>
+<p>As with the original blog, we&#8217;ll cater for nulls,
+e.g.&nbsp;a celebrity known by a single name.</p>
 </div>
 </div>
 </div>
@@ -127,10 +136,14 @@ Our <code>Celebrity</code> class if we wrote it in Java would look something lik
 </div>
 </div>
 <div class="paragraph">
-<p>It would look much nicer as a Java record (JDK16+) but we&#8217;ll keep with the spirit of the original blog example for now. This is fairly standard boilerplate and in fact was mostly generated by IntelliJ IDEA. The only slightly interesting aspect is that we tweaked the <code>toString</code> method to not display null last names.</p>
+<p>It would look much nicer as a Java record (JDK16+) but we&#8217;ll keep with the spirit
+of the original blog example for now. This is fairly standard boilerplate and in
+fact was mostly generated by IntelliJ IDEA. The only slightly interesting aspect
+is that we tweaked the <code>toString</code> method to not display null last names.</p>
 </div>
 <div class="paragraph">
-<p>On JDK 8 with the old-style comparator coding, a main application which created and sorted some celebrities might look like this:</p>
+<p>On JDK 8 with the old-style comparator coding, a main application which created
+and sorted some celebrities might look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -212,17 +225,18 @@ public class Main {
 </div>
 </div>
 <div class="paragraph">
-<p>The original blog also points out the convenience factory methods from JDK9 for list
-creation which you might be tempted to consider here. For our case, we will be sorting
-in place, so the immutable lists returned by those methods won&#8217;t help us here but
-<code>Arrays.asList</code> isn&#8217;t much longer than <code>List.of</code> and works well for this example.</p>
+<p>The original blog also points out the convenience factory methods from JDK9 for
+list creation which you might be tempted to consider here. For our case, we will
+be sorting in place, so the immutable lists returned by those methods won&#8217;t help
+us here but <code>Arrays.asList</code> isn&#8217;t much longer than <code>List.of</code> and works well for
+this example.</p>
 </div>
 <div class="paragraph">
-<p>As well as being much shorter, the <code>comparing</code> and <code>thenComparing</code> methods and built-in
-comparators like <code>nullsFirst</code> and <code>naturalOrdering</code> allow for far simpler composability.
-The sort within array list is also more efficient than the sort that would have been used
-with the <code>Collections.sort</code> method on earlier JDKs. The output when running the example
-is the same as previously.</p>
+<p>As well as being much shorter, the <code>comparing</code> and <code>thenComparing</code> methods
+and built-in comparators like <code>nullsFirst</code> and <code>naturalOrdering</code> allow for far
+simpler composability. The sort within array list is also more efficient than
+the sort that would have been used with the <code>Collections.sort</code> method on earlier
+JDKs. The output when running the example is the same as previously.</p>
 </div>
 </div>
 </div>
@@ -231,7 +245,10 @@ is the same as previously.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="img/groovy_logo.png" alt="Groovy logo" width="180" height="90"></span>
-At about the same time that Java was evolving its comparator story Groovy added some complementary features to tackle many of the same problems. We&#8217;ll look at some of those features and also how the JDK improvements we saw above features can be used instead if preferred.</p>
+At about the same time that Java was evolving its comparator story, Groovy
+added some complementary features to tackle many of the same problems.
+We&#8217;ll look at some of those features and also how the JDK improvements we
+saw above features can be used instead if preferred.</p>
 </div>
 <div class="paragraph">
 <p>First off, let&#8217;s create a Groovy <code>Celebrity</code> record:</p>
@@ -258,18 +275,19 @@ record Celebrity(String first, String last = null, int age) {}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The record definition is nice and concise. It would look good in recent Java versions too.
-A nice aspect of the Groovy solution is that it will provide emulated records on earlier
-JDKs, and it also has some nice declarative transforms to tweak the record definition.
-We could leave off the <code>@ToString</code> annotation, and we&#8217;d get a standard record-style
-<code>toString</code>. Or we could add a <code>toString</code> method to our record definition similar to
-what was done in the Java example. Using <code>@ToString</code> allows us to remove null last
-names from the <code>toString</code> in a declarative way. We&#8217;ll cover the <code>@Sortable</code>
+<p>The record definition is nice and concise. It would look good in recent Java
+versions too. A nice aspect of the Groovy solution is that it will provide
+emulated records on earlier JDKs, and it also has some nice declarative
+transforms to tweak the record definition. We could leave off the <code>@ToString</code>
+annotation, and we&#8217;d get a standard record-style <code>toString</code>. Or we could add
+a <code>toString</code> method to our record definition similar to what was done in
+the Java example. Using <code>@ToString</code> allows us to remove null last names
+from the <code>toString</code> in a declarative way. We&#8217;ll cover the <code>@Sortable</code>
 annotation a little later.</p>
 </div>
 <div class="paragraph">
-<p>First off, Groovy&#8217;s spaceship operator <code>&lt;=&gt;</code> allows us to write a nice compact version
-of the "tedious" code in the first Java version. It looks like this:</p>
+<p>First off, Groovy&#8217;s spaceship operator <code>&lt;&#8658;</code> allows us to write a nice compact
+version of the "tedious" code in the first Java version. It looks like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -293,7 +311,8 @@ Celebrity(first:Cher, last:Wang, age:63)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;d have a tiny bit more work to do if we wanted nulls last but the defaults work well for the example at hand.</p>
+<p>We&#8217;d have a tiny bit more work to do if we wanted nulls last but the defaults
+work well for the example at hand.</p>
 </div>
 <div class="paragraph">
 <p>We can alternatively, make use of the "new in JDK8" methods mentioned earlier:</p>
@@ -305,18 +324,20 @@ Celebrity(first:Cher, last:Wang, age:63)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>But this is where we should come back and further explain the <code>@Sortable</code> annotation.
-That annotation is associated with an Abstract Syntax Tree (AST) transformation,
-or just &lt;i&gt;transform&lt;/i&gt; for short, which provides us with an automatic <code>compareTo</code> method
-that takes into account the record&#8217;s properties (and likewise if it was a class).
-Since we provided an <code>includes</code> annotation attribute and provided a list of property names,
-the order of those names determines the priority of the properties used in the comparator.
-We could equally include just some of the names in that list or alternatively provide a
-<code>excludes</code> annotation attribute and just mention that properties we don&#8217;t want included.</p>
+<p>But this is where we should come back and further explain the <code>@Sortable</code>
+annotation. That annotation is associated with an Abstract Syntax Tree (AST)
+transformation, or just <em>transform</em> for short, which provides us with an
+automatic <code>compareTo</code> method that takes into account the record&#8217;s properties
+(and likewise if it was a class). Since we provided an <code>includes</code> annotation
+attribute and provided a list of property names, the order of those names
+determines the priority of the properties used in the comparator.
+We could equally include just some of the names in that list or alternatively
+provide a <code>excludes</code> annotation attribute and just mention that properties we
+don&#8217;t want included.</p>
 </div>
 <div class="paragraph">
-<p>It also adds <code>Comparable&lt;Celebrity&gt;</code> to the list of implemented
-interfaces for our record. So, what does all this mean? It means we can just write:</p>
+<p>It also adds <code>Comparable&lt;Celebrity&gt;</code> to the list of implemented interfaces
+for our record. So, what does all this mean? It means we can just write:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -370,7 +391,7 @@ Celebrity(first:Cher, age:76)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If you are a fan of functional style programming, you might consider using <code>List.of</code> to define the original list and then only <code>toSorted</code> method calls in further processing.&lt;/p&gt;</p>
+<p>If you are a fan of functional style programming, you might consider using <code>List.of</code> to define the original list and then only <code>toSorted</code> method calls in further processing.</p>
 </div>
 </div>
 </div>
@@ -379,8 +400,8 @@ Celebrity(first:Cher, age:76)</pre>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Groovy also has a GQuery (aka GINQ) capability which provides a SQL inspired DSL
-for working with collections. We can use GQueries to examine and order our collection.
-Here is an example:</p>
+for working with collections. We can use GQueries to examine and order our
+collection. Here is an example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -471,7 +492,9 @@ Here is an example:</p>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We have seen a little example of using comparators in Groovy. All the great JDK capabilities are available as well as the spaceship operator, the <code>sort</code> and <code>toSorted</code> methods, and the <code>@Sortable</code> AST transformation.</p>
+<p>We have seen a little example of using comparators in Groovy. All the great JDK
+capabilities are available as well as the spaceship operator, the <code>sort</code> and
+<code>toSorted</code> methods, and the <code>@Sortable</code> AST transformation.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>

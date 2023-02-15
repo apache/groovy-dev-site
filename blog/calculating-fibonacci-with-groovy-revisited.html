@@ -160,7 +160,7 @@ you can call one of the <code>memoize</code> methods on <code>Closure</code>.</p
 </div>
 <div class="paragraph">
 <p>A problem with this approach (in fact recursion in general) is that you hit a stack overflow exception for larger values of <code>n</code>,
-e.g. <code>fib(500G)</code>. Groovy supports tail call elimination with the inclusion of the <code>TailRecursive</code> annotation.
+e.g.&nbsp;`fib(500G)<code>. Groovy supports tail call elimination with the inclusion of the `TailRecursive</code> annotation.
 In this case the compiler injects an "unrolled" non-recursive version of the algorithm.
 In order for the "unrolling" to succeed, the algorithm needs to be re-worked so that at most one call to
 fib occurs in any return statement. Here is a version of the algorithm re-worked in this way:</p>
@@ -202,7 +202,7 @@ assert fib(500G, 0G, 1G) == 1394232245616978801397243828704072839500702565876973
 </div>
 </div>
 <div class="paragraph">
-<p>If you are using a <code>Closure</code>, you would look at using the <code>trampoline</code> method on <code>Closure</code> to achieve a similar result.&lt;/p&gt;</p>
+<p>If you are using a <code>Closure</code>, you would look at using the <code>trampoline</code> method on <code>Closure</code> to achieve a similar result.</p>
 </div>
 </div>
 </div>
