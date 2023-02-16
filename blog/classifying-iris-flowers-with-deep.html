@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy and GraalVM</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-06-25 10:52AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-06-25 10:52AM (Last updated: 2022-06-27 11:16AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="200"></span>
@@ -175,7 +175,7 @@ println "Validation error: " + pretty(calculateRegressionError(bestMethod, model
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_encog$ time groovy -cp "build/lib/*" IrisEncog.groovy
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" IrisEncog.groovy
 1/5 : Fold #1
 1/5 : Fold #1/5: Iteration #1, Training Error: 1.43550735, Validation Error: 0.73302237
 1/5 : Fold #1/5: Iteration #2, Training Error: 0.78845427, Validation Error: 0.73302237
@@ -254,7 +254,7 @@ println eval.stats()</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_dl4j$ time groovy -cp "build/lib/*" IrisDl4j.groovy
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" IrisDl4j.groovy
 [main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
 [main] INFO org.nd4j.nativeblas.NativeOpsHolder - Number of threads used for linear algebra: 4
 [main] INFO org.nd4j.nativeblas.Nd4jBlas - Number of threads used for OpenMP BLAS: 4
@@ -271,7 +271,7 @@ println eval.stats()</code></pre>
  Precision:       0.9778
  Recall:          0.9744
  F1 Score:        0.9752
-Precision, recall &amp; F1: macro-averaged (equally weighted avg. of 3 classes)
+Precision, recall & F1: macro-averaged (equally weighted avg. of 3 classes)
 
 =========================Confusion Matrix=========================
   0  1  2
@@ -358,7 +358,7 @@ new ClassifierEvaluator().with {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ time groovy -cp "build/lib/*" Iris.groovy
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" Iris.groovy
 16:49:27.089 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
 16:49:27.091 [main] INFO deepnetts.core.DeepNetts - TRAINING NEURAL NETWORK
 16:49:27.091 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
@@ -413,7 +413,7 @@ We&#8217;ll compile it up using static mode:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</code></pre>
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -421,7 +421,7 @@ We&#8217;ll compile it up using static mode:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ native-image  --report-unsupported-elements-at-runtime \
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ native-image  --report-unsupported-elements-at-runtime \
    --initialize-at-run-time=groovy.grape.GrapeIvy,deepnetts.net.weights.RandomWeights \
    --initialize-at-build-time --no-fallback  -H:ConfigurationFileDirectories=conf/  -cp ".:build/lib/*" Iris</code></pre>
 </div>
@@ -436,7 +436,7 @@ We also did the same for the <code>RandomWeights</code> class to avoid it being 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="shell">paulk@pop-os:/extra/projects/iris_graalvm$ time ./iris
+<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time ./iris
 ...
 CLASSIFIER EVALUATION METRICS
 Accuracy: 0.93460923 (How often is classifier correct in total)
