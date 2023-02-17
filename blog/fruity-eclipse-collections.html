@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Eclipse Collections</a></li><li><a href='#_eclipse_collections_fruit_salad' class='anchor-link'>Eclipse Collections Fruit Salad</a></li><li><a href='#_exploring_emoji_colors' class='anchor-link'>Exploring emoji colors</a></li><li><a href='#_putting_it_all_together' class='anchor-link'>Putting it all together</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Eclipse Collections</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-10-13 11:05AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Eclipse Collections</a></li><li><a href='#_eclipse_collections_fruit_salad' class='anchor-link'>Eclipse Collections Fruit Salad</a></li><li><a href='#_exploring_emoji_colors' class='anchor-link'>Exploring emoji colors</a></li><li><a href='#_putting_it_all_together' class='anchor-link'>Putting it all together</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Eclipse Collections</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-10-13 11:05AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog post continues on the theme of using fruit emoji from the
@@ -152,16 +152,20 @@ Here we are only using one method which is managing pool lifecycle for us.</p>
 <p>For some fun, let&#8217;s look at whether the nominated color of each fruit matches the color
 of the related emoji. As in the previous blog, we&#8217;ll use the slightly nicer
 <a href="https://fonts.google.com/noto/specimen/Noto+Color+Emoji?preview.text=%F0%9F%8D%8E%F0%9F%8D%91%F0%9F%8D%8C%F0%9F%8D%92%F0%9F%8D%8A%F0%9F%8D%87&amp;preview.text_type=custom">Noto Color Emoji</a>
-fonts for our fruit as shown here:
-<span class="image"><img src="img/fruit_emoji.png" alt="Noto Color Emoji"></span>
-We&#8217;ll use an Eclipse Collection <code>BiMap</code> to switch back and forth between the color names
+fonts for our fruit as shown here:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/fruit_emoji.png" alt="Noto Color Emoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use an Eclipse Collection <code>BiMap</code> to switch back and forth between the color names
 and java.awt colors:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">@Field public static COLOR_OF = BiMaps.immutable.ofAll([
-WHITE: WHITE, RED: RED, GREEN: GREEN, BLUE: BLUE,
-ORANGE: ORANGE, YELLOW: YELLOW, MAGENTA: MAGENTA
+    WHITE: WHITE, RED: RED, GREEN: GREEN, BLUE: BLUE,
+    ORANGE: ORANGE, YELLOW: YELLOW, MAGENTA: MAGENTA
 ])
 @Field public static NAME_OF = COLOR_OF.inverse()</code></pre>
 </div>
@@ -190,8 +194,8 @@ static rgb(BufferedImage image, int x, int y) {
 <p>The HSB color space represents colors in a spectrum from 0 to 360 degrees:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://nycdoe-cs4all.github.io/images/lessons/unit_1/3.2/circle.png" alt="Color Circle"></span>
-Image credit: <a href="https://nycdoe-cs4all.github.io/units/1/lessons/lesson_3.2" class="bare">https://nycdoe-cs4all.github.io/units/1/lessons/lesson_3.2</a></p>
+<div class="title">Image credit: https://nycdoe-cs4all.github.io/units/1/lessons/lesson_3.2</div>
+<p><span class="image"><img src="https://nycdoe-cs4all.github.io/images/lessons/unit_1/3.2/circle.png" alt="Color Circle"></span></p>
 </div>
 <div class="paragraph">
 <p>We have two helper methods to assist with colors.

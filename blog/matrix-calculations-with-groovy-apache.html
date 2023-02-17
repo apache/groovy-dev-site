@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='#_fibonacci' class='anchor-link'>Fibonacci</a></li><li><a href='#_leslie_matrices' class='anchor-link'>Leslie Matrices</a></li><li><a href='#_encryption_with_matrices' class='anchor-link'>Encryption with matrices</a></li><li><a href='#_shape_manipulation' class='anchor-link'>Shape manipulation</a></li><li><a href='#_language_and_tool_extensibility' class='anchor-link'>Language and tool extensibility</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-08-18 01:41PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='#_fibonacci' class='anchor-link'>Fibonacci</a></li><li><a href='#_leslie_matrices' class='anchor-link'>Leslie Matrices</a></li><li><a href='#_encryption_with_matrices' class='anchor-link'>Encryption with matrices</a></li><li><a href='#_shape_manipulation' class='anchor-link'>Shape manipulation</a></li><li><a href='#_language_and_tool_extensibility' class='anchor-link'>Language and tool extensibility</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-08-18 01:41PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blogs looks at performing matrix calculations with Groovy
@@ -95,7 +95,7 @@ be in one year? The sequence goes like this:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We can solve this problem using matrices. If we multiply the matrix <span class="image"><img src="img/FibMatrix.png" alt="fibonacci matrix"></span> by itself n times we get <span class="image"><img src="img/FibMatrixN.png" alt="fib n matrix"></span>.
+<p>We can solve this problem using matrices. If we multiply the matrix <span class="image"><img src="img/FibMatrix.png" alt="fibonacci matrix" width="43"></span> by itself n times we get <span class="image"><img src="img/FibMatrixN.png" alt="fib n matrix" width="82"></span>.
 This is an operation known as matrix exponentiation.
 Let&#8217;s explore this problem using four of the most popular
 and maintained matrix libraries.</p>
@@ -228,12 +228,12 @@ numerous other numerical and related types).</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>...
+<pre><span class="maroon">...
 [main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
 ...
 [main] INFO org.nd4j.linalg.cpu.nativecpu.CpuNDArrayFactory - Binary level Generic x86 optimization level AVX/AVX2
 [main] INFO org.nd4j.linalg.api.ops.executioner.DefaultOpExecutioner - Blas vendor: [OPENBLAS]
-...
+...</span>
 [[         3,         2],
  [         2,         1]]
 [[       233,       144],
@@ -379,7 +379,7 @@ printf "Vector:    %6.2f ms\n", (t3 - t2)/1000_000</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>WARNING: Using incubator modules: jdk.incubator.vector
+<pre><span class="maroon">WARNING: Using incubator modules: jdk.incubator.vector</span>
 Simple: 116.34 ms
 Optimized: 34.91 ms
 Vector: 21.94 ms</pre>
@@ -763,50 +763,48 @@ summary of some common methods in the libraries:</p>
 <col style="width: 20%;">
 <col style="width: 20%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Groovy operator</th>
-<th class="tableblock halign-left valign-top">+</th>
-<th class="tableblock halign-left valign-top">-</th>
-<th class="tableblock halign-left valign-top">*</th>
-<th class="tableblock halign-left valign-top">**</th>
-</tr>
-</thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy method</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">plus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">minus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">multiply</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">power</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>Groovy operator&nbsp;</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>+</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>-</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>*</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>**</em></strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Commons math</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">subtract</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">multiply</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">power</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>Groovy method</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>plus</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>minus</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>multiply</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="blue"><em>power</em></strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EJML</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">plus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">minus</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mult</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="aqua"><em>Commons math</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>add</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subtract</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multiply</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>power</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="aqua"><em>EJML</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>plus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mult</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nd4j</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">sub</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">mmul</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="aqua"><em>Nd4j</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>add</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sub</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>mmul</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ojAlgo</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">subtract</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">multiply</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">power</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong class="aqua"><em>ojAlgo</em></strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>add</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subtract</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multiply</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>power</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -865,11 +863,13 @@ an output transform which renders any matrix result using a
 jlatexmath library. So instead of seeing
 <code>Array2DRowRealMatrix{{13.0,8.0},{8.0,5.0}}</code>, they will see
 a graphical rendition of the matrix. So, the final end-user
-experience when using the GroovyConsole looks like this:
-<span class="image"><img src="img/GroovyConsoleOutputTransformsMatrix.png" alt="matrix output transforms in groovy console"></span></p>
+experience when using the GroovyConsole looks like this:</p>
 </div>
 <div class="paragraph">
-<p>When using in Jupyter style environments, other pretty outpu
+<p><span class="image"><img src="img/GroovyConsoleOutputTransformsMatrix.png" alt="matrix output transforms in groovy console"></span></p>
+</div>
+<div class="paragraph">
+<p>When using in Jupyter style environments, other pretty output
 styles may be supported.</p>
 </div>
 </div>

@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Life on Mars: Units of Measurement systems, Groovy, and domain specific languages (DSLs)</a></li><li><a href='#_a_dynamic_dsl_for_controlling_a_mars_rover' class='anchor-link'>A dynamic DSL for controlling a Mars Rover</a></li><li><a href='#_a_type_rich_dsl_for_the_rover' class='anchor-link'>A type-rich DSL for the Rover</a></li><li><a href='#_adding_custom_type_checking' class='anchor-link'>Adding custom type checking</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Life on Mars: Units of Measurement systems, Groovy, and domain specific languages (DSLs)</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-08-13 06:31AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Life on Mars: Units of Measurement systems, Groovy, and domain specific languages (DSLs)</a></li><li><a href='#_units_of_measurement_systems' class='anchor-link'>Units of measurement systems</a></li><li><a href='#_jsr_385_units_of_measurement_api_2_0' class='anchor-link'>JSR 385: Units of Measurement API 2.0</a></li><li><a href='#_adding_some_metaprogramming' class='anchor-link'>Adding some metaprogramming</a></li><li><a href='#_a_dynamic_dsl_for_controlling_a_mars_rover' class='anchor-link'>A dynamic DSL for controlling a Mars Rover</a></li><li><a href='#_a_type_rich_dsl_for_the_rover' class='anchor-link'>A type-rich DSL for the Rover</a></li><li><a href='#_adding_custom_type_checking' class='anchor-link'>Adding custom type checking</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Life on Mars: Units of Measurement systems, Groovy, and domain specific languages (DSLs)</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-08-13 06:31AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="img/duke_measure.png" alt="duke_measuring"></span>
@@ -69,6 +69,11 @@ metric units were used by NASA and <a href="https://en.wikipedia.org/wiki/United
 <p>If the system in question had been developed using a units of
 measurement system, perhaps the failure could have been avoided.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_units_of_measurement_systems">Units of measurement systems</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>All programming languages have types for representing numbers.
 As an example, we may have three integers, one representing a
@@ -115,6 +120,11 @@ status. The JSR 385 maintenance release was approved last year and
 the latest version of the reference implementation was released
 earlier this year.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jsr_385_units_of_measurement_api_2_0">JSR 385: Units of Measurement API 2.0</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The first thing we need to do is bring in our dependencies (shown for <a href="https://gradle.org/">Gradle</a> - <a href="https://mvnrepository.com/artifact/tech.units/indriya/2.1.3">other options</a>).
 The main one is the reference implementation (it brings in the
@@ -178,7 +188,7 @@ like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>javax.measure.IncommensurableException: km is not compatible with kg</pre>
+<pre><span class="maroon">javax.measure.IncommensurableException: km is not compatible with kg</span></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -194,8 +204,8 @@ like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[Static type checking] - Cannot call tech.units.indriya.ComparableQuantity#add(javax.measure.Quantity&lt;javax.measure.quantity.Mass&gt;)
-with arguments [tech.units.indriya.ComparableQuantity&lt;javax.measure.quantity.Length&gt;]</pre>
+<pre><span class="maroon">[Static type checking] - Cannot call tech.units.indriya.ComparableQuantity#add(javax.measure.Quantity<javax.measure.quantity.Mass>)
+with arguments [tech.units.indriya.ComparableQuantity<javax.measure.quantity.Length>]</span></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -263,6 +273,11 @@ calculated from the temperature in degrees Kelvin.</p>
 <pre>4212.275312176886980036586335798934 (m*1609344)/1000</pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_some_metaprogramming">Adding some metaprogramming</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Groovy has various features which allow methods to be (apparently)
 added to classes. We&#8217;ll use extension methods. This technique
@@ -494,7 +509,7 @@ an error like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[Static type checking] - Cannot call MoveHolder#by(javax.measure.Quantity&lt;javax.measure.quantity.Length&gt;) with arguments [javax.measure.Quantity&lt;javax.measure.quantity.Mass&gt;]</pre>
+<pre><span class="maroon">[Static type checking] - Cannot call MoveHolder#by(javax.measure.Quantity<javax.measure.quantity.Length>) with arguments [javax.measure.Quantity<javax.measure.quantity.Mass>]</span></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -554,9 +569,9 @@ blog but here&#8217;s what the code looks like:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>This is only a partial implementation, it&#8217;s make numerous
+<p>This is only a partial implementation, it makes numerous
 assumptions. We could remove those assumptions by adding
-more code but for now we&#8217;ll keep this simplified version.</p>
+more code, but for now we&#8217;ll keep this simplified version.</p>
 </div>
 <div class="paragraph">
 <p>So, now the following script (with the above type checking extension applied) compiles fine:</p>
@@ -579,7 +594,7 @@ more code but for now we&#8217;ll keep this simplified version.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[Static type checking] - Speed of 6 is too fast!</pre>
+<pre><span class="maroon">[Static type checking] - Speed of 6 is too fast!</span></pre>
 </div>
 </div>
 </div>
