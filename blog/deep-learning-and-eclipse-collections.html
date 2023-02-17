@@ -53,7 +53,9 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Deep Learning and Eclipse Collections</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Deep Learning and Eclipse Collections</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-10-11 10:41AM</span></p><hr/><div class="paragraph">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Deep Learning and Eclipse Collections</a></li><li><a href='#_setting_up_our_model_and_data' class='anchor-link'>Setting up our model and data</a></li><li><a href='#_applying_deep_learning' class='anchor-link'>Applying deep learning</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Deep Learning and Eclipse Collections</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-10-11 10:41AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p>In previous blogs, we&#8217;ve covered
 <a href="https://groovy.apache.org/blog/deck-of-cards-with-groovy">Eclipse Collections</a> and
 <a href="https://groovy.apache.org/blog/detecting-objects-with-groovy-the">Deep Learning</a>.
@@ -61,6 +63,11 @@ Recently, a couple of the highly recommended katas for Eclipse Collections have 
 revamped to include "pet" and "fruit" emojis for a bit of extra fun. What could be better
 than <em>Learning</em> Eclipse Collections?<em>Deep Learning</em> and Eclipse Collections of course!</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_up_our_model_and_data">Setting up our model and data</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>First, we create a <code>PetType</code> enum with the emoji as <code>toString</code>:</p>
 </div>
@@ -139,8 +146,13 @@ assert counts == expected</code></pre>
 <div class="paragraph">
 <p>As we expect, it passes.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_applying_deep_learning">Applying deep learning</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Now, for a bit of fun, we will use a neural network trained to detect cat and dog images and apply it to our emojis. We&#8217;ll follow the process described <a href="http://ramok.tech/2018/01/03/java-image-cat-vs-dog-recognizer-with-deep-neural-networks/">here</a>. It uses DeepLearning4J to train and then use a model. The images used to train the model were real cat and dog images, not emojis, so we aren&#8217;t expecting our model to be super accurate.</p>
+<p>Now, for a bit of fun, we will use a neural network trained to detect cat and dog images and apply it to our emojis. We&#8217;ll follow the process described <a href="http://ramok.tech/2018/01/03/java-image-cat-vs-dog-recognizer-with-deep-neural-networks/">here</a>. It uses <a href="https://deeplearning4j.konduit.ai/">Eclipse DeepLearning4j</a> to train and then use a model. The images used to train the model were real cat and dog images, not emojis, so we aren&#8217;t expecting our model to be super accurate.</p>
 </div>
 <div class="paragraph">
 <p>The first attempt was to write the emojis into swing JLabel components and then save using a buffered image. This lead to poor looking images:</p>
@@ -190,13 +202,13 @@ println results.flatten().join('\n')</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code>[main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
+<pre><span class="maroon">[main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
 ...
 [main] INFO org.nd4j.linalg.api.ops.executioner.DefaultOpExecutioner - Blas vendor: [OPENBLAS]
 ...
-==============================================================================================================
+==========================================================================================
 VertexName (VertexType)                 nIn,nOut       TotalParams    ParamsShape                    Vertex Inputs
-==============================================================================================================
+==========================================================================================
 input_1 (InputVertex)                   -,-            -              -                              -
 block1_conv1 (Frozen ConvolutionLayer)  3,64           1792           b:{1,64}, W:{64,3,3,3}         [input_1]
 block1_conv2 (Frozen ConvolutionLayer)  64,64          36928          b:{1,64}, W:{64,64,3,3}        [block1_conv1]
@@ -220,12 +232,12 @@ flatten (PreprocessorVertex)            -,-            -              -         
 fc1 (Frozen DenseLayer)                 25088,4096     102764544      b:{1,4096}, W:{25088,4096}     [flatten]
 fc2 (Frozen DenseLayer)                 4096,4096      16781312       b:{1,4096}, W:{4096,4096}      [fc1]
 predictions (OutputLayer)               4096,2         8194           b:{1,2}, W:{4096,2}            [fc2]
---------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------
             Total Parameters:  134268738
         Trainable Parameters:  8194
            Frozen Parameters:  134260544
-==============================================================================================================
-...
+==========================================================================================
+...</span>
 Tabby is a cat
 Dolly is a cat
 Spot is a dog
@@ -234,7 +246,7 @@ Serpy is a cat
 Tweety is unknown
 Speedy is a dog
 Fuzzy is unknown
-Wuzzy is unknown</code></pre>
+Wuzzy is unknown</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -245,6 +257,8 @@ compared to the training images, this lack of accuracy isn&#8217;t unexpected.
 We could certainly use better images or train our model differently if
 we wanted better results, but it is fun to see our model not doing too
 badly even with emojis!</p>
+</div>
+</div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
