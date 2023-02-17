@@ -312,12 +312,11 @@ surefire plugin will use that by default and not find our test.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[INFO] -------------------------------------------------------
-[INFO]  T E S T S
-[INFO] -------------------------------------------------------
-[INFO] Running JsonTest
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.36 s - in JsonTest
-Advanced features</pre>
+<pre>[<span class="blue">INFO</span>] ------------------------------------------------------
+[<span class="blue">INFO</span>]  T E S T S
+[<span class="blue">INFO</span>] ------------------------------------------------------
+[<span class="blue">INFO</span>] Running JsonTest
+[<span class="blue">INFO</span>] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.36 s - in JsonTest</pre>
 </div>
 </div>
 </div>
@@ -430,7 +429,7 @@ prices (per 100g) and the concentration of vitamin C (per 100g):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">{
+<pre class="prettyprint highlight"><code data-lang="json">{
     "prices": [
         {"name": "Kakuda plum",      "price": 13},
         {"name": "Camu camu",        "price": 25},
@@ -461,13 +460,13 @@ when we go shopping. Our GQuery processing looks like this:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def jsonFile = new File('fruit.json')
 def json = new JsonSlurper().parse(jsonFile)
-assert GQ {
+assert GQL {
     from p in json.prices
     join c in json.vitC on c.name == p.name
     orderby c.conc / p.price in desc
     limit 2
     select p.name
-}.toList() == ['Kakuda plum', 'Kiwifruit']</code></pre>
+} == ['Kakuda plum', 'Kiwifruit']</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -498,6 +497,7 @@ was made using GraalVM. It&#8217;s timings are included too.</p>
 real    0m1.365s
 user    0m4.157s
 sys     0m0.145s
+
 $ time groovy GroovyJsonCharacterSource.groovy
 real    0m1.447s
 user    0m4.472s

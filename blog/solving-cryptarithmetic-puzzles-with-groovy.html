@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_cryptarithmetic_problems' class='anchor-link'>Cryptarithmetic Problems</a></li><li><a href='#_solving_with_brute_force' class='anchor-link'>Solving with Brute Force</a></li><li><a href='#_choco' class='anchor-link'>Choco</a></li><li><a href='#_jacop' class='anchor-link'>JaCoP</a></li><li><a href='#_or_tools' class='anchor-link'>OR-Tools</a></li><li><a href='#_choco_with_jsr331' class='anchor-link'>Choco with JSR331</a></li><li><a href='#_looking_at_other_languages' class='anchor-link'>Looking at other languages</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-09-05 01:43PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_cryptarithmetic_problems' class='anchor-link'>Cryptarithmetic Problems</a></li><li><a href='#_solving_with_brute_force' class='anchor-link'>Solving with Brute Force</a></li><li><a href='#_using_constraint_programming' class='anchor-link'>Using Constraint Programming</a></li><li><a href='#_choco' class='anchor-link'>Choco</a></li><li><a href='#_jacop' class='anchor-link'>JaCoP</a></li><li><a href='#_or_tools' class='anchor-link'>OR-Tools</a></li><li><a href='#_choco_with_jsr331' class='anchor-link'>Choco with JSR331</a></li><li><a href='#_looking_at_other_languages' class='anchor-link'>Looking at other languages</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-09-05 01:43PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -264,6 +264,22 @@ It will execute in seconds.</p>
 <pre>s = 9, e = 5, n = 6, d = 7
 m = 1, o = 0, r = 8, y = 2</pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_constraint_programming">Using Constraint Programming</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the brute force approaches, we had a condition which checked any
+potential candidate answer to see if it was a correct solution. We had
+to be very explicit in how we wanted the potential candidates to be
+created. For constraint programming, we instead define variables to
+represent the problem, any known bounds on those variables, and we
+specify any other known properties of the solution, which in our case
+will be something similar to the condition we had to check if the
+answer was correct previously. Let&#8217;s examine how to do that with
+three libraries, one with a variation.</p>
 </div>
 </div>
 </div>
@@ -500,6 +516,8 @@ programming libraries seem to be using the direct library classes.
 Indeed, the version of the Choco implementation used by the JSR331
 implementation is over 10 years old.</p>
 </div>
+<div class="sect2">
+<h3 id="_incorporating_carry">Incorporating Carry</h3>
 <div class="paragraph">
 <p>The scalar product global constraint we have used in the previous
 examples is very powerful and probably would be our first choice
@@ -561,6 +579,9 @@ They don&#8217;t form part of the answer that interests us, so we would
 be free to just print out the part of the solution which interests
 us if we wanted.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_creating_a_dsl">Creating a DSL</h3>
 <div class="paragraph">
 <p>The previous example has lots of calls to <code>add</code> and <code>mul</code> methods.
 We can create a little bit of a DSL to provide some syntactic
@@ -657,6 +678,7 @@ search space is nearly half what we started with, and we have
 simplified some of our constraints. We would continue branching
 and solving at this point until we find our solution or determine
 that no solution is possible.</p>
+</div>
 </div>
 </div>
 </div>

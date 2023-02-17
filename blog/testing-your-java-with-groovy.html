@@ -56,7 +56,8 @@
                         </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li><li><a href='#_the_system_under_test' class='anchor-link'>The system under test</a></li><li><a href='#_testing_with_spock' class='anchor-link'>Testing with Spock</a></li><li><a href='#_mutation_testing_with_pitest' class='anchor-link'>Mutation testing with Pitest</a></li><li><a href='#_using_property_based_testing' class='anchor-link'>Using Property-based Testing</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-15 08:26AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>This blog post covers a common scenario seen in the Groovy community which is
+<p><span class="image right"><img src="img/spock_logo.png" alt="spock logo" width="100"></span>
+This blog post covers a common scenario seen in the Groovy community which is
 projects which use Java for their production code and Groovy for their tests.
 This can be a low risk way for Java shops to try out and become more familiar
 with Groovy. We&#8217;ll write our initial tests using the
@@ -137,7 +138,7 @@ hasn&#8217;t covered all lines of code:</p>
     where:
     a | b | c | d
     2 | 5 | 3 | 8
-    5 | 2 | 3 | 8
+    <strong>5 | 2 | 3 | 8</strong>
 }</code></pre>
 </div>
 </div>
@@ -161,7 +162,7 @@ Let&#8217;s add one more testcase:</p>
     a | b | c | d
     2 | 5 | 3 | 8
     5 | 2 | 3 | 8
-    5 | 4 | 1 | 9
+    <strong>5 | 4 | 1 | 9</strong>
 }</code></pre>
 </div>
 </div>
@@ -186,7 +187,7 @@ Before we do, we&#8217;ll add one more testcase:</p>
     2 | 5 | 3 | 8
     5 | 2 | 3 | 8
     5 | 4 | 1 | 9
-    3 | 2 | 6 | 9
+    <strong>3 | 2 | 6 | 9</strong>
 }</code></pre>
 </div>
 </div>
