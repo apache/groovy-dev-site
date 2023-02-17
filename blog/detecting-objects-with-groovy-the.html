@@ -202,19 +202,21 @@ dependencies {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="sh">paulk@pop-os:/extra/projects/groovy-data-science$ ./gradlew DLMXNet:run
-&gt; Task :DeepLearningMxnet:run
-Downloading: 100% |████████████████████████████████████████| dog-ssd.jpg
-Loading:     100% |████████████████████████████████████████|
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/groovy-data-science</span>$ ./gradlew DLMXNet:run
+> Task :DeepLearningMxnet:run
+Downloading: 100% |<span class="olive">████████████████████████████████████████</span>| dog-ssd.jpg
+Loading:     100% |<span class="olive">████████████████████████████████████████</span>|
 ...
-class: "car", probability: 0.99991, bounds: [x=0.611, y=0.137, width=0.293, height=0.160]
-class: "bicycle", probability: 0.95385, bounds: [x=0.162, y=0.207, width=0.594, height=0.588]
-class: "dog", probability: 0.93752, bounds: [x=0.168, y=0.350, width=0.274, height=0.593]</code></pre>
+class: <strong class="green">"car"</strong>, probability: <strong>0.99991</strong>, bounds: [x=0.611, y=0.137, width=0.293, height=0.160]
+class: <strong class="green">"bicycle"</strong>, probability: <strong>0.95385</strong>, bounds: [x=0.162, y=0.207, width=0.594, height=0.588]
+class: <strong class="green">"dog"</strong>, probability: <strong>0.93752</strong>, bounds: [x=0.168, y=0.350, width=0.274, height=0.593]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The displayed image looks like this:
-<span class="image"><img src="img/detected_objects.png" alt="Detected objects" width="468"></span></p>
+<p>The displayed image looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/detected_objects.png" alt="Detected objects" width="468"></span></p>
 </div>
 </div>
 </div>
@@ -231,7 +233,11 @@ class: "dog", probability: 0.93752, bounds: [x=0.168, y=0.350, width=0.274, heig
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We have examined using Apache Groovy, DLJ and Apache MXNet to detect objects within an image. We&#8217;ve used a model based on a rich deep learning model, but we didn&#8217;t need to get into the details of the model or its neural network layers. DLJ and Apache MXNet did the hard lifting for us. Groovy provided a simple coding experience for building our application.</p>
+<p>We have examined using Apache Groovy, DLJ and Apache MXNet to detect objects
+within an image. We&#8217;ve used a model based on a rich deep learning model, but we
+didn&#8217;t need to get into the details of the model or its neural network layers.
+DLJ and Apache MXNet did the hard lifting for us. Groovy provided a simple coding
+experience for building our application.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>

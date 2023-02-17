@@ -175,7 +175,7 @@ println "Validation error: " + pretty(calculateRegressionError(bestMethod, model
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" IrisEncog.groovy
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time groovy -cp "build/lib/*" IrisEncog.groovy
 1/5 : Fold #1
 1/5 : Fold #1/5: Iteration #1, Training Error: 1.43550735, Validation Error: 0.73302237
 1/5 : Fold #1/5: Iteration #2, Training Error: 0.78845427, Validation Error: 0.73302237
@@ -193,7 +193,7 @@ Confusion matrix:            Iris-setosa     Iris-versicolor      Iris-virginica
 
 real	0m3.073s
 user	0m9.973s
-sys	0m0.367s</code></pre>
+sys	0m0.367s</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -254,7 +254,7 @@ println eval.stats()</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" IrisDl4j.groovy
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time groovy -cp "build/lib/*" IrisDl4j.groovy
 [main] INFO org.nd4j.linalg.factory.Nd4jBackend - Loaded [CpuBackend] backend
 [main] INFO org.nd4j.nativeblas.NativeOpsHolder - Number of threads used for linear algebra: 4
 [main] INFO org.nd4j.nativeblas.Nd4jBlas - Number of threads used for OpenMP BLAS: 4
@@ -285,7 +285,7 @@ Confusion matrix format: Actual (rowClass) predicted as (columnClass) N times
 
 real	0m5.856s
 user	0m25.638s
-sys	0m1.752s</code></pre>
+sys	0m1.752s</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -358,7 +358,7 @@ new ClassifierEvaluator().with {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time groovy -cp "build/lib/*" Iris.groovy
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time groovy -cp "build/lib/*" Iris.groovy
 16:49:27.089 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
 16:49:27.091 [main] INFO deepnetts.core.DeepNetts - TRAINING NEURAL NETWORK
 16:49:27.091 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
@@ -384,7 +384,7 @@ Iris-versicolor              0              0             18              1
 
 real	0m3.160s
 user	0m10.156s
-sys	0m0.483s</code></pre>
+sys	0m0.483s</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -413,7 +413,7 @@ We&#8217;ll compile it up using static mode:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</code></pre>
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -421,9 +421,9 @@ We&#8217;ll compile it up using static mode:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ native-image  --report-unsupported-elements-at-runtime \
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ native-image  --report-unsupported-elements-at-runtime \
    --initialize-at-run-time=groovy.grape.GrapeIvy,deepnetts.net.weights.RandomWeights \
-   --initialize-at-build-time --no-fallback  -H:ConfigurationFileDirectories=conf/  -cp ".:build/lib/*" Iris</code></pre>
+   --initialize-at-build-time --no-fallback  -H:ConfigurationFileDirectories=conf/  -cp ".:build/lib/*" Iris</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -436,7 +436,7 @@ We also did the same for the <code>RandomWeights</code> class to avoid it being 
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code><strong class="lime">paulk@pop-os</strong>:<strong class="blue">/extra/projects/iris_encog</strong>$ time ./iris
+<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time ./iris
 ...
 CLASSIFIER EVALUATION METRICS
 Accuracy: 0.93460923 (How often is classifier correct in total)
@@ -453,7 +453,7 @@ Iris-versicolor              0              0             20              2
 
 real    0m0.131s
 user    0m0.096s
-sys     0m0.029s</code></pre>
+sys     0m0.029s</pre>
 </div>
 </div>
 <div class="paragraph">
