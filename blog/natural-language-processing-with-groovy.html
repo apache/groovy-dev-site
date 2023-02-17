@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, natural language processing, spark nlp, apache opennlp, corenlp, nlp4j, tensorflow, djl, smile, datumbox'/><meta name='description' content='This post looks at numerous common natural language processing tasks using Groovy and a range of NLP libraries.'/><title>The Apache Groovy programming language - Blogs - Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='#_language_detection' class='anchor-link'>Language Detection</a></li><li><a href='#_parts_of_speech' class='anchor-link'>Parts of Speech</a></li><li><a href='#_entity_detection' class='anchor-link'>Entity Detection</a></li><li><a href='#_scaling_entity_detection' class='anchor-link'>Scaling Entity Detection</a></li><li><a href='#_sentence_detection' class='anchor-link'>Sentence Detection</a></li><li><a href='#_relationship_extraction_with_triples' class='anchor-link'>Relationship Extraction with Triples</a></li><li><a href='#_sentiment_analysis' class='anchor-link'>Sentiment Analysis</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-08-07 07:34AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Natural Language Processing is certainly a large and sometimes complex topic with
+many aspects. Some of those aspects deserve entire blogs in their own right.
+For this blog, we will briefly look at a few simple use cases illustrating
+where you might be able to use NLP technology in your own project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_language_detection">Language Detection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Knowing what language some text represents can be a critical first step to subsequent
+processing. Let&#8217;s look at how to predict the language using a pre-built model and
+<a href="https://opennlp.apache.org/">Apache OpenNLP</a>. Here, <code>ResourceHelper</code> is a utility class used to download and cache the model. The first run may take a little while as it downloads the model. Subsequent runs should be fast. Here we are using a well-known model referenced in the OpenNLP documentation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def helper = new ResourceHelper('https://dlcdn.apache.org/opennlp/models/langdetect/1.8.3/')
+def model = new LanguageDetectorModel(helper.load('langdetect-183'))
+def detector = new LanguageDetectorME(model)
+
+[ spa: 'Bienvenido a Madrid', fra: 'Bienvenue à Paris',
+  dan: 'Velkommen til København', bul: 'Добре дошли в София'
+].each { k, v -&gt;
+    assert detector.predictLanguage(v).lang == k
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>LanguageDetectorME</code> class lets us predict the language. In general, the predictor
+may not be accurate on small samples of text, but it was good enough for our example.
+We&#8217;ve used the language code as the key in our map, and we check that against the
+predicted language.</p>
+</div>
+<div class="paragraph">
+<p>A more complex scenario is training your own model. Let&#8217;s look at how to do that with
+<a href="https://www.datumbox.com/machine-learning-framework/">Datumbox</a>.
+Datumbox has a
+<a href="https://github.com/datumbox/datumbox-framework-zoo">pre-trained models zoo</a>
+but its language detection model didn&#8217;t seem to work well for the small
+snippets in the next example, so we&#8217;ll train our own model.
+First, we&#8217;ll define our datasets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def datasets = [
+    English: getClass().classLoader.getResource("training.language.en.txt").toURI(),
+    French: getClass().classLoader.getResource("training.language.fr.txt").toURI(),
+    German: getClass().classLoader.getResource("training.language.de.txt").toURI(),
+    Spanish: getClass().classLoader.getResource("training.language.es.txt").toURI(),
+    Indonesian: getClass().classLoader.getResource("training.language.id.txt").toURI()
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>de</code> training dataset comes from the
+<a href="https://github.com/datumbox/NaiveBayesClassifier/tree/master/resources/datasets/training.language.de.txt">Datumbox examples</a>. The training datasets for the other
+languages are from <a href="https://www.kaggle.com/zarajamshaid/language-identification-datasst">Kaggle</a>.</p>
+</div>
+<div class="paragraph">
+<p>We set up the training parameters needed by our algorithm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def trainingParams = new TextClassifier.TrainingParameters(
+    numericalScalerTrainingParameters: null,
+    featureSelectorTrainingParametersList: [new ChisquareSelect.TrainingParameters()],
+    textExtractorParameters: new NgramsExtractor.Parameters(),
+    modelerTrainingParameters: new MultinomialNaiveBayes.TrainingParameters()
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use a Naïve Bayes model with Chisquare feature selection.</p>
+</div>
+<div class="paragraph">
+<p>Next we create our algorithm, train it with our training dataset, and then validate it
+against the training dataset. We&#8217;d normally want to split the data into training and
+testing datasets, to give us a more accurate statistic of the accuracy of our model.
+But for simplicity, while still illustrating the API, we&#8217;ll train and validate with
+our entire dataset:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def config = Configuration.configuration
+def classifier = MLBuilder.create(trainingParams, config)
+classifier.fit(datasets)
+def metrics = classifier.validate(datasets)
+println "Classifier Accuracy (using training data): $metrics.accuracy"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, we see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Classifier Accuracy (using training data): 0.9975609756097561</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our test dataset will consist of some hard-coded illustrative phrases. Let&#8217;s use our model to predict the language for each phrase:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">[   'Bienvenido a Madrid', 'Bienvenue à Paris', 'Welcome to London',
+    'Willkommen in Berlin', 'Selamat Datang di Jakarta'
+].each { txt -&gt;
+    def r = classifier.predict(txt)
+    def predicted = r.YPredicted
+    def probability = sprintf '%4.2f', r.YPredictedProbabilities.get(predicted)
+    println "Classifying: '$txt',  Predicted: $predicted,  Probability: $probability"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, it has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Classifying: 'Bienvenido a Madrid',&amp;nbsp; Predicted: Spanish,&amp;nbsp; Probability: 0.83
+Classifying: 'Bienvenue à Paris',&amp;nbsp; Predicted: French,&amp;nbsp; Probability: 0.71
+Classifying: 'Welcome to London',&amp;nbsp; Predicted: English,&amp;nbsp; Probability: 1.00
+Classifying: 'Willkommen in Berlin',&amp;nbsp; Predicted: German,&amp;nbsp; Probability: 0.84
+Classifying: 'Selamat Datang di Jakarta',&amp;nbsp; Predicted: Indonesian,&amp;nbsp; Probability: 1.00</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Given these phrases are very short, it is nice to get them all correct,
+and the probabilities all seem reasonable for this scenario.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parts_of_speech">Parts of Speech</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Parts of speech (POS) analysers examine each part of a sentence (the words and
+potentially punctuation) in terms of the role they play in a sentence. A typical
+analyser will assign or annotate words with their role like identifying nouns,
+verbs, adjectives and so forth. This can be a key early step for tools like the
+voice assistants from Amazon, Apple and Google.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll start by looking at a perhaps lesser known library Nlp4j before looking at
+some others. In fact, there are multiple Nlp4j libraries. We&#8217;ll use the one from
+<a href="https://nlp4j.org/">nlp4j.org</a>, which seems to be the most active and recently updated.</p>
+</div>
+<div class="paragraph">
+<p>This library uses the <a href="https://stanfordnlp.github.io/CoreNLP/">Stanford CoreNLP</a>
+library under the covers for its English POS functionality. The library has the
+concept of documents, and annotators that work on documents. Once annotated,
+we can print out all of the discovered words and their annotations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var doc = new DefaultDocument()
+doc.putAttribute('text', 'I eat sushi with chopsticks.')
+var ann = new StanfordPosAnnotator()
+ann.setProperty('target', 'text')
+ann.annotate(doc)
+println doc.keywords.collect{  k -&gt; "${k.facet - 'word.'}(${k.str})" }.join(' ')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, we see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>PRP(I) VBP(eat) NN(sushi) IN(with) NNS(chopsticks) .(.)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The annotations, also known as tags or facets, for this example are as follows:</p>
+</div>
+<table class="tableblock frame-all grid-all stripes-even stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PRP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Personal pronoun</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VBP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Present tense verb</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Noun, singular</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preposition</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NNS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Noun, plural</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The documentation for the libraries we are using give a more complete list of such
+annotations.</p>
+</div>
+<div class="paragraph">
+<p>A nice aspect of this library is support for other languages, in particular, Japanese.
+The code is very similar but uses a different annotator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">doc = new DefaultDocument()
+doc.putAttribute('text', '私は学校に行きました。')
+ann = new KuromojiAnnotator()
+ann.setProperty('target', 'text')
+ann.annotate(doc)
+println doc.keywords.collect{ k -&gt; "${k.facet}(${k.str})" }.join(' ')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, we see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>名詞(私) 助詞(は) 名詞(学校) 助詞(に) 動詞(行き) 助動詞(まし) 助動詞(た) 記号(。)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before progressing, we&#8217;ll highlight the result visualization capabilities of the
+GroovyConsole. This feature lets us write a small Groovy script which converts
+results to any swing component. In our case we&#8217;ll convert lists of annotated strings
+to a <code>JLabel</code> component containing HTML including colored annotation boxes.
+The details aren&#8217;t included here but can be found in the
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessing/src/main/resources/OutputTransforms.groovy">repo</a>.
+We need to copy that file into our <code>~/.groovy</code> folder and then enable script
+visualization as shown here:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/groovyconsole_enable_visualization.png" alt="How to enable visualization in the groovyconsole"></span></p>
+</div>
+<div class="paragraph">
+<p>Then we should see the following when running the script:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/groovyconsole_showing_visutalization.png" alt="natural language processing in the groovyconsole with visualization"></span></p>
+</div>
+<div class="paragraph">
+<p>The visualization is purely optional but adds a nice touch. If using Groovy in
+notebook environments like Jupyter/BeakerX, there might be visualization tools
+in those environments too.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at a larger example using the <a href="https://haifengl.github.io/">Smile</a> library.</p>
+</div>
+<div class="paragraph">
+<p>First, the sentences that we&#8217;ll examine:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def sentences = [
+    'Paul has two sisters, Maree and Christine.',
+    'No wise fish would go anywhere without a porpoise',
+    'His bark was much worse than his bite',
+    'Turn on the lights to the main bedroom',
+    "Light 'em all up",
+    'Make it dark downstairs'
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A couple of those sentences might seem a little strange, but they are selected
+to show off quite a few of the different POS tags.</p>
+</div>
+<div class="paragraph">
+<p>Smile has a tokenizer class which splits a sentence into words. It handles numerous
+cases like contractions and abbreviations ("e.g.", "'tis", "won&#8217;t").
+Smile also has a POS class based on the hidden Markov model and a built-in
+model is used for that class. Here is our code using those classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def tokenizer = new SimpleTokenizer(true)
+sentences.each {
+    def tokens = Arrays.stream(tokenizer.split(it)).toArray(String[]::new)
+    def tags = HMMPOSTagger.default.tag(tokens)*.toString()
+    println tokens.indices.collect{tags[it] == tokens[it] ? tags[it] : "${tags[it]}(${tokens[it]})" }.join(' ')
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We run the tokenizer for each sentence. Each token is then displayed directly
+or with its tag if it has one.</p>
+</div>
+<div class="paragraph">
+<p>Running the script gives this visualization:</p>
+</div>
+<table style="background-color: white; margin: 5px; border: 1px solid gray"><tbody><tr><td style="padding: 5px;">
+ <table><tbody><tr><td style="padding: 5px; text-align: center; "><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Paul</span><br>
+ <span style="color:white;">NNP</span></div></td><td style="padding: 5px; text-align: center;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">has</span><br>
+ <span style="color:white;">VBZ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#DF401C;">
+ <span style="background-color:white; color:#DF401C;">two</span><br>
+ <span style="color:white;">CD</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">sisters</span><br>
+ <span style="color:white;">NNS</span></div></td><td style="text-align: center; padding: 5px;">, </td><td style="padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Maree</span><br>
+ <span style="color:white;">NNP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">and</span><br>
+ <span style="color:white;">CC</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Christine</span><br>
+ <span style="color:white;">NNP</span></div></td><td style="text-align: center; padding: 5px;">.</td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#895C9F;">
+ <span style="background-color:white; color:#895C9F;">No</span><br>
+ <span style="color:white;">DT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">wise</span><br>
+ <span style="color:white;">JJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">fish</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#FC5F00;">
+ <span style="background-color:white; color:#FC5F00;">would</span><br>
+ <span style="color:white;">MD</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">go</span><br>
+ <span style="color:white;">VB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">anywhere</span><br>
+ <span style="color:white;">RB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">without</span><br>
+ <span style="color:white;">IN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#895C9F;">
+ <span style="background-color:white; color:#895C9F;">a</span><br>
+ <span style="color:white;">DT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">porpoise</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#CD853F;">
+ <span style="background-color:white; color:#CD853F;">His</span><br>
+ <span style="color:white;">PRP$</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">bark</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#8B4513;">
+ <span style="background-color:white; color:#8B4513;">was</span><br>
+ <span style="color:white;">VBD</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">much</span><br>
+ <span style="color:white;">RB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#57411B;">
+ <span style="background-color:white; color:#57411B;">worse</span><br>
+ <span style="color:white;">JJR</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">than</span><br>
+ <span style="color:white;">IN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#CD853F;">
+ <span style="background-color:white; color:#CD853F;">his</span><br>
+ <span style="color:white;">PRP$</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">bite</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">Turn</span><br>
+ <span style="color:white;">VB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">on</span><br>
+ <span style="color:white;">IN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#895C9F;">
+ <span style="background-color:white; color:#895C9F;">the</span><br>
+ <span style="color:white;">DT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">lights</span><br>
+ <span style="color:white;">NNS</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">to</span><br>
+ <span style="color:white;">TO</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#895C9F;">
+ <span style="background-color:white; color:#895C9F;">the</span><br>
+ <span style="color:white;">DT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">main</span><br>
+ <span style="color:white;">JJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">bedroom</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Light</span><br>
+ <span style="color:white;">NNP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">'em</span><br>
+ <span style="color:white;">PRP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">all</span><br>
+ <span style="color:white;">RB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">up</span><br>
+ <span style="color:white;">RB</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">Make</span><br>
+ <span style="color:white;">VB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">it</span><br>
+ <span style="color:white;">PRP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">dark</span><br>
+ <span style="color:white;">JJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">downstairs</span><br>
+ <span style="color:white;">NN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+ </td></tr></tbody></table>
+<div class="paragraph">
+<p>[Note: the scripts in the repo just print to stdout which is perfect when using the
+command-line or IDEs. The visualization in the GoovyConsole kicks in only for the
+actual result. So, if you are following along at home and wanting to use the
+GroovyConsole, you&#8217;d change the <code>each</code> to <code>collect</code> and remove the <code>println</code>,
+and you should be good for visualization.]</p>
+</div>
+<div class="paragraph">
+<p>The OpenNLP code is very similar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def tokenizer = SimpleTokenizer.INSTANCE
+sentences.each {
+    String[] tokens = tokenizer.tokenize(it)
+    def posTagger = new POSTaggerME('en')
+    String[] tags = posTagger.tag(tokens)
+    println tokens.indices.collect{tags[it] == tokens[it] ? tags[it] : "${tags[it]}(${tokens[it]})" }.join(' ')
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>OpenNLP allows you to supply your own POS model but downloads a default
+one if none is specified.</p>
+</div>
+<div class="paragraph">
+<p>When the script is run, it has this visualization:</p>
+</div>
+<table style="background-color: white; margin:5px; border: 1px solid gray;"><tbody><tr><td style="padding: 5px;">
+ <table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Paul</span><br>
+ <span style="color:white;">PROPN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">has</span><br>
+ <span style="color:white;">VERB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#DF401C;">
+ <span style="background-color:white; color:#DF401C;">two</span><br>
+ <span style="color:white;">NUM</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">sisters</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">,</span><br>
+ <span style="color:white;">PUNCT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Maree</span><br>
+ <span style="color:white;">PROPN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#895C9F;">
+ <span style="background-color:white; color:#895C9F;">and</span><br>
+ <span style="color:white;">CCONJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Christine</span><br>
+ <span style="color:white;">PROPN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">.</span><br>
+ <span style="color:white;">PUNCT</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">No</span><br>
+ <span style="color:white;">DET</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">wise</span><br>
+ <span style="color:white;">ADJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">fish</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#FC5F00;">
+ <span style="background-color:white; color:#FC5F00;">would</span><br>
+ <span style="color:white;">AUX</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">go</span><br>
+ <span style="color:white;">VERB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">anywhere</span><br>
+ <span style="color:white;">ADV</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">without</span><br>
+ <span style="color:white;">ADP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">a</span><br>
+ <span style="color:white;">DET</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">porpoise</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">His</span><br>
+ <span style="color:white;">PRON</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">bark</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#FC5F00;">
+ <span style="background-color:white; color:#FC5F00;">was</span><br>
+ <span style="color:white;">AUX</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">much</span><br>
+ <span style="color:white;">ADV</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">worse</span><br>
+ <span style="color:white;">ADJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">than</span><br>
+ <span style="color:white;">ADP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">his</span><br>
+ <span style="color:white;">PRON</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">bite</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">Turn</span><br>
+ <span style="color:white;">VERB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">on</span><br>
+ <span style="color:white;">ADP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">the</span><br>
+ <span style="color:white;">DET</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">lights</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">to</span><br>
+ <span style="color:white;">ADP</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6AA4;">
+ <span style="background-color:white; color:#5B6AA4;">the</span><br>
+ <span style="color:white;">DET</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">main</span><br>
+ <span style="color:white;">ADJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">bedroom</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">Light</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">'</span><br>
+ <span style="color:white;">PUNCT</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">em</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#561B06;">
+ <span style="background-color:white; color:#561B06;">all</span><br>
+ <span style="color:white;">ADV</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#32CD32;">
+ <span style="background-color:white; color:#32CD32;">up</span><br>
+ <span style="color:white;">ADP</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+<table><tbody><tr><td style="padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">Make</span><br>
+ <span style="color:white;">VERB</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0000CD;">
+ <span style="background-color:white; color:#0000CD;">it</span><br>
+ <span style="color:white;">PRON</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#5B6633;">
+ <span style="background-color:white; color:#5B6633;">dark</span><br>
+ <span style="color:white;">ADJ</span></div></td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">downstairs</span><br>
+ <span style="color:white;">NOUN</span></div></td><td style="text-align: center; padding: 5px;"></td></tr></tbody></table>
+ </td></tr></tbody></table>
+<div class="paragraph">
+<p>The observant reader may have noticed some slight differences in the tags used in
+this library. They are essentially the same but using slightly different names.
+This is something to be aware of when swapping between POS libraries or models.
+Make sure you look up the documentation for the library/model you are using to
+understand the available tag types.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_entity_detection">Entity Detection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Named entity recognition (NER), seeks to identity and classify named entities in text.
+Categories of interest might be persons, organizations, locations dates, etc.
+It is another technology used in many fields of NLP.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll start with our sentences to analyse:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">String[] sentences = [
+    "A commit by Daniel Sun on December 6, 2020 improved Groovy 4's language integrated query.",
+    "A commit by Daniel on Sun., December 6, 2020 improved Groovy 4's language integrated query.",
+    'The Groovy in Action book by Dierk Koenig et. al. is a bargain at $50, or indeed any price.',
+    'The conference wrapped up yesterday at 5:30 p.m. in Copenhagen, Denmark.',
+    'I saw Ms. May Smith waving to June Jones.',
+    'The parcel was passed from May to June.',
+    'The Mona Lisa by Leonardo da Vinci has been on display in the Louvre, Paris since 1797.'
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use some well-known models, we&#8217;ll focus on the <em>person</em>, <em>money</em>, <em>date</em>, <em>time</em>, and <em>location</em> models:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def base = 'http://opennlp.sourceforge.net/models-1.5'
+def modelNames = ['person', 'money', 'date', 'time', 'location']
+def finders = modelNames.collect { model -&gt;
+    new NameFinderME(DownloadUtil.downloadModel(new URL("$base/en-ner-${model}.bin"), TokenNameFinderModel))
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll now tokenize our sentences:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def tokenizer = SimpleTokenizer.INSTANCE
+sentences.each { sentence -&gt;
+    String[] tokens = tokenizer.tokenize(sentence)
+    Span[] tokenSpans = tokenizer.tokenizePos(sentence)
+    def entityText = [:]
+    def entityPos = [:]
+    finders.indices.each {fi -&gt;
+        // could be made smarter by looking at probabilities and overlapping spans
+        Span[] spans = finders[fi].find(tokens)
+        spans.each{span -&gt;
+            def se = span.start..&lt;span.end
+            def pos = (tokenSpans[se.from].start)..&lt;(tokenSpans[se.to].end)
+            entityPos[span.start] = pos
+            entityText[span.start] = "$span.type(${sentence[pos]})"
+        }
+    }
+    entityPos.keySet().sort().reverseEach {
+        def pos = entityPos[it]
+        def (from, to) = [pos.from, pos.to + 1]
+        sentence = sentence[0..&lt;from] + entityText[it] + sentence[to..-1]
+    }
+    println sentence
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And when visualized, shows this:</p>
+</div>
+<table style="border:1px solid grey; margin:5px; background-color:white"><tbody><tr><td>
+ <table style="margin:5px;"><tbody><tr><td style="padding:5px;">A commit by </td><td style="text-align:center;"><div style="padding:5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Daniel Sun</span><br>
+ <span style="color:white;">person</span></div></td><td style="text-align: center; padding:5px;">on </td><td style="text-align:center;"><div style="padding:5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">December 6, 2020</span><br>
+ <span style="color:white;">date</span></div></td><td style="text-align: center; padding:5px;">improved Groovy 4's language integrated query.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="text-align: center; padding:5px;">A commit by </td><td style="text-align: center;"><div style="padding:5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Daniel</span><br>
+ <span style="color:white;">person</span></div></td><td style="text-align:center; padding:5px;">on Sun., </td><td style="text-align:center;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">December 6, 2020</span><br>
+ <span style="color:white;">date</span></div></td><td style="text-align: center; padding:5px;">improved Groovy 4's language integrated query.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="text-align: center; padding:5px;">The Groovy in Action book by </td><td style="text-align: center;"><div style="padding:5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Dierk Koenig</span><br>
+ <span style="color:white;">person</span></div></td><td style="text-align: center; padding:5px;">et. al. is a bargain at </td><td style="text-align:center;"><div style="padding:5px; background-color:#DF401C;">
+ <span style="background-color:white; color:#DF401C;">$50</span><br>
+ <span style="color:white;">money</span></div></td><td style="text-align: center; padding:5px;">, or indeed any price.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="text-align: center; padding:5px;">The conference wrapped up </td><td style="text-align: center;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">yesterday</span><br>
+ <span style="color:white;">date</span></div></td><td style="text-align: center; padding:5px;">at </td><td style="text-align:center;"><div style="padding:5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">5:30 p.m.</span><br>
+ <span style="color:white;">time</span></div></td><td style="text-align: center; padding:5px;">in </td><td style="text-align: center;"><div style="padding:5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">Copenhagen</span><br>
+ <span style="color:white;">location</span></div></td><td style="padding:5px;">, </td><td style="text-align:center;"><div style="padding: 5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">Denmark</span><br>
+ <span style="color:white;">location</span></div></td><td style="padding:5px;">.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="padding:5px;">I saw Ms. </td><td style="text-align:center;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">May Smith</span><br>
+ <span style="color:white;">person</span></div></td><td style="text-align: center; padding:5px;">waving to </td><td style="text-align:center;"><div style="padding:5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">June Jones</span><br>
+ <span style="color:white;">person</span></div></td><td style="text-align: center; padding:5px;">.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="padding:5px;">The parcel was passed from </td><td style="text-align:center;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">May to June</span><br>
+ <span style="color:white;">date</span></div></td><td style="padding:5px;">.</td></tr></tbody></table>
+<table style="margin:5px;"><tbody><tr><td style="padding:5px;">The Mona Lisa by </td><td style="text-align:center;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Leonardo da Vinci</span><br>
+ <span style="color:white;">person</span></div></td><td style="padding:5px;">has been on display in the Louvre, </td><td style="text-align:center;"><div style="padding:5px; background-color:#C54AA8;">
+ <span style="background-color:white; color:#C54AA8;">Paris</span><br>
+ <span style="color:white;">location</span></div></td><td style="text-align:center; padding:5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">since 1797</span><br>
+ <span style="color:white;">date</span></div></td><td>.</td></tr></tbody></table>
+ </td></tr></tbody></table>
+<div class="paragraph">
+<p>We can see here that most examples have been categorized as we might expect.
+We&#8217;d have to improve our model for it to do a better job on the <em>"May to June"</em>
+example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scaling_entity_detection">Scaling Entity Detection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can also run our named entity detection algorithms on platforms like
+<a href="http://nlp.johnsnowlabs.com/">Spark NLP</a> which adds NLP functionality to
+<a href="https://spark.apache.org/">Apache Spark</a>. We&#8217;ll use
+<a href="https://nlp.johnsnowlabs.com/2020/01/22/glove_100d.html">glove_100d</a>
+embeddings and the
+<a href="https://nlp.johnsnowlabs.com/2020/02/03/onto_100_en.html">onto_100</a> NER model.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var assembler = new DocumentAssembler(inputCol: 'text', outputCol: 'document', cleanupMode: 'disabled')
+
+var tokenizer = new Tokenizer(inputCols: ['document'] as String[], outputCol: 'token')
+
+var embeddings = WordEmbeddingsModel.pretrained('glove_100d').tap {
+    inputCols = ['document', 'token'] as String[]
+    outputCol = 'embeddings'
+}
+
+var model = NerDLModel.pretrained('onto_100', 'en').tap {
+    inputCols = ['document', 'token', 'embeddings'] as String[]
+    outputCol ='ner'
+}
+
+var converter = new NerConverter(inputCols: ['document', 'token', 'ner'] as String[], outputCol: 'ner_chunk')
+
+var pipeline = new Pipeline(stages: [assembler, tokenizer, embeddings, model, converter] as PipelineStage[])
+
+var spark = SparkNLP.start(false, false, '16G', '', '', '')
+
+var text = [
+    "The Mona Lisa is a 16th century oil painting created by Leonardo. It's held at the Louvre in Paris."
+]
+var data = spark.createDataset(text, Encoders.STRING()).toDF('text')
+
+var pipelineModel = pipeline.fit(data)
+
+var transformed = pipelineModel.transform(data)
+transformed.show()
+
+use(SparkCategory) {
+    transformed.collectAsList().each { row -&gt;
+        def res =  row.text
+        def chunks = row.ner_chunk.reverseIterator()
+        while (chunks.hasNext()) {
+            def chunk = chunks.next()
+            int begin = chunk.begin
+            int end = chunk.end
+            def entity = chunk.metadata.get('entity').get()
+            res = res[0..&lt;begin] + "$entity($chunk.result)" + res[end&lt;..-1]
+        }
+        println res
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We won&#8217;t go into all of the details here. In summary, the code sets up a pipeline
+that transforms our input sentences, via a series of steps, into chunks, where
+each chunk corresponds to a detected entity. Each chunk has a start and ending
+position, and an associated tag type.</p>
+</div>
+<div class="paragraph">
+<p>This may not seem like it is much different to our earlier examples, but if we had
+large volumes of data, and we were running in a large cluster, the work could be
+spread across worker nodes within the cluster.</p>
+</div>
+<div class="paragraph">
+<p>Here we have used a utility <code>SparkCategory</code> class which makes accessing the
+information in Spark <code>Row</code> instances a little nicer in terms of Groovy shorthand
+syntax. We can use <code>row.text</code> instead of <code>row.get(row.fieldIndex('text'))</code>.
+Here is the code for this utility class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class SparkCategory {
+    static get(Row r, String field) { r.get(r.fieldIndex(field)) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If doing more than this simple example, the use of <code>SparkCategory</code> could
+be made implicit through various standard Groovy techniques.</p>
+</div>
+<div class="paragraph">
+<p>When we run our script, we see the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>22/08/07 12:31:39 INFO SparkContext: Running Spark version 3.3.0
+...
+glove_100d download started this may take some time.
+Approximate size to download 145.3 MB
+...
+onto_100 download started this may take some time.
+Approximate size to download 13.5 MB
+...
++--------------------+--------------------+--------------------+--------------------+--------------------+--------------------+
+|                text|            document|               token|          embeddings|                 ner|           ner_chunk|
++--------------------+--------------------+--------------------+--------------------+--------------------+--------------------+
+|The Mona Lisa is ...|[{document, 0, 98...|[{token, 0, 2, Th...|[{word_embeddings...|[{named_entity, 0...|[{chunk, 0, 12, T...|
++--------------------+--------------------+--------------------+--------------------+--------------------+--------------------+
+PERSON(The Mona Lisa) is a DATE(16th century) oil painting created by PERSON(Leonardo). It's held at the FAC(Louvre) in GPE(Paris).</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The result has the following visualization:</p>
+</div>
+<table style="border:1px solid grey; margin:5px; background-color:white;"><tbody><tr><td style="text-align: center; padding: 5px;">
+ <table style="margin:5px;"><tbody><tr><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">The Mona Lisa</span><br>
+ <span style="color:white;">PERSON</span></div></td><td style="text-align: center; padding: 5px;">is a </td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#2B5F19;">
+ <span style="background-color:white; color:#2B5F19;">16th century</span><br>
+ <span style="color:white;">DATE</span></div></td><td style="text-align: center; padding: 5px;">oil painting created by </td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#0088FF;">
+ <span style="background-color:white; color:#0088FF;">Leonardo</span><br>
+ <span style="color:white;">PERSON</span></div></td><td style="text-align: center; padding: 5px;">. It's held at the </td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#DF401C;">
+ <span style="background-color:white; color:#DF401C;">Louvre</span><br>
+ <span style="color:white;">FAC</span></div></td><td style="text-align: center; padding: 5px;">in </td><td style="text-align: center; padding: 5px;"><div style="padding: 5px; background-color:#A4772B;">
+ <span style="background-color:white; color:#A4772B;">Paris</span><br>
+ <span style="color:white;">GPE</span></div></td><td style="text-align: center; padding: 5px;">.</td></tr></tbody></table>
+ </td></tr></tbody></table>
+<div class="paragraph">
+<p>Here FAC is facility (buildings, airports, highways, bridges, etc.) and
+GPE is Geo-Political Entity (countries, cities, states, etc.).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sentence_detection">Sentence Detection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Detecting sentences in text might seem a simple concept at first
+but there are numerous special cases.</p>
+</div>
+<div class="paragraph">
+<p>Consider the following text:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def text = '''
+The most referenced scientific paper of all time is "Protein measurement with the
+Folin phenol reagent" by Lowry, O. H., Rosebrough, N. J., Farr, A. L. &amp; Randall,
+R. J. and was published in the J. BioChem. in 1951. It describes a method for
+measuring the amount of protein (even as small as 0.2 γ, were γ is the specific
+weight) in solutions and has been cited over 300,000 times and can be found here:
+https://www.jbc.org/content/193/1/265.full.pdf. Dr. Lowry completed
+two doctoral degrees under an M.D.-Ph.D. program from the University of Chicago
+before moving to Harvard under A. Baird Hastings. He was also the H.O.D of
+Pharmacology at Washington University in St. Louis for 29 years.
+'''</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are full stops at the end of each sentence (though in general, it could
+also be other punctuation like exclamation marks and question marks). There are
+also full stops and decimal points in abbreviations, URLs, decimal numbers and
+so forth. Sentence detection algorithms might have some special hard-coded cases,
+like "Dr.", "Ms.", or in an emoticon, and may also use some heuristics.
+In general, they might also be trained with examples like above.</p>
+</div>
+<div class="paragraph">
+<p>Here is some code for OpenNLP for detecting sentences in the above:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def helper = new ResourceHelper('http://opennlp.sourceforge.net/models-1.5')
+def model = new SentenceModel(helper.load('en-sent'))
+def detector = new SentenceDetectorME(model)
+def sentences = detector.sentDetect(text)
+assert text.count('.') == 28
+assert sentences.size() == 4
+println "Found ${sentences.size()} sentences:\n" + sentences.join('\n\n')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><span class="maroon">Downloading en-sent</span>
+Found 4 sentences:
+The most referenced scientific paper of all time is "Protein measurement with the
+Folin phenol reagent" by Lowry, O. H., Rosebrough, N. J., Farr, A. L. &amp; Randall,
+R. J. and was published in the J. BioChem. in 1951.
+
+It describes a method for
+measuring the amount of protein (even as small as 0.2 γ, were γ is the specific
+weight) in solutions and has been cited over 300,000 times and can be found here:
+https://www.jbc.org/content/193/1/265.full.pdf.
+
+Dr. Lowry completed
+two doctoral degrees under an M.D.-Ph.D. program from the University of Chicago
+before moving to Harvard under A. Baird Hastings.
+
+He was also the H.O.D of
+Pharmacology at Washington University in St. Louis for 29 years.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see here, it handled all of the tricky cases in the example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_relationship_extraction_with_triples">Relationship Extraction with Triples</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next step after detecting named entities and the various parts of speech
+of certain words is to explore relationships between them. This is often done
+in the form of <em>subject-predicate-object</em> triplets. In our earlier NER example,
+for the sentence <em>"The conference wrapped up yesterday at 5:30 p.m. in Copenhagen, Denmark."</em>, we found various date, time and location named entities.</p>
+</div>
+<div class="paragraph">
+<p>We can extract triples using the <a href="https://github.com/uma-pi1/minie">MinIE library</a>
+(which in turns uses the Standford CoreNLP library) with the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def parser = CoreNLPUtils.StanfordDepNNParser()
+sentences.each { sentence -&gt;
+    def minie = new MinIE(sentence, parser, MinIE.Mode.SAFE)
+
+    println "\nInput sentence: $sentence"
+    println '============================='
+    println 'Extractions:'
+    for (ap in minie.propositions) {
+        println "\tTriple: $ap.tripleAsString"
+        def attr = ap.attribution.attributionPhrase ? ap.attribution.toStringCompact() : 'NONE'
+        println "\tFactuality: $ap.factualityAsString\tAttribution: $attr"
+        println '\t----------'
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output for the previously mentioned sentence is shown below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Input sentence: The conference wrapped up yesterday at 5:30 p.m. in Copenhagen, Denmark.
+=============================
+Extractions:
+        Triple: "conference"    "wrapped up yesterday at"       "5:30 p.m."
+        Factuality: (+,CT)      Attribution: NONE
+        ----------
+        Triple: "conference"    "wrapped up yesterday in"       "Copenhagen"
+        Factuality: (+,CT)      Attribution: NONE
+        ----------
+        Triple: "conference"    "wrapped up"    "yesterday"
+        Factuality: (+,CT)      Attribution: NONE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can now piece together the relationships between the earlier entities we detected.</p>
+</div>
+<div class="paragraph">
+<p>There was also a problematic case amongst the earlier NER examples,
+<em>"The parcel was passed from May to June."</em>.
+Using the previous model, detected <em>"May to June"</em> as a <em>date</em>.
+Let&#8217;s explore that using CoreNLP&#8217;s triple extraction directly.
+We won&#8217;t show the source code here but CoreNLP supports
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessing/src/main/groovy/DetectTriplesPOS_CoreNLP.groovy">simple</a> and
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessing/src/main/groovy/DetectTriplesAnnotation_CoreNLP.groovy">more powerful</a>
+approaches to solving this problem. The output for the sentence in
+question using the more powerful technique is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Sentence #7: The parcel was passed from May to June.
+root(ROOT-0, passed-4)
+det(parcel-2, The-1)
+nsubj:pass(passed-4, parcel-2)
+aux:pass(passed-4, was-3)
+case(May-6, from-5)
+obl:from(passed-4, May-6)
+case(June-8, to-7)
+obl:to(passed-4, June-8)
+punct(passed-4, .-9)
+
+Triples:
+1.0 parcel was passed
+1.0 parcel was passed to June
+1.0 parcel was passed from May to June
+1.0 parcel was passed from May</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that this has done a better job of piecing together what entities we have and their relationships.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sentiment_analysis">Sentiment Analysis</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sentiment analysis is a NLP technique used to determine whether data is positive,
+negative, or neutral. Standford CoreNLP has default models it uses for this purpose:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def doc = new Document('''
+StanfordNLP is fantastic!
+Groovy is great fun!
+Math can be hard!
+''')
+for (sent in doc.sentences()) {
+    println "${sent.toString().padRight(40)} ${sent.sentiment()}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><span class="maroon">[main] INFO edu.stanford.nlp.parser.common.ParserGrammar - Loading parser from serialized file edu/stanford/nlp/models/lexparser/englishPCFG.ser.gz ... done [0.6 sec].
+[main] INFO edu.stanford.nlp.sentiment.SentimentModel - Loading sentiment model edu/stanford/nlp/models/sentiment/sentiment.ser.gz ... done [0.1 sec].</span>
+StanfordNLP is fantastic!                POSITIVE
+Groovy is great fun!                     VERY_POSITIVE
+Math can be hard!                        NEUTRAL</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also train our own. Let&#8217;s start with two datasets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def datasets = [
+    positive: getClass().classLoader.getResource("rt-polarity.pos").toURI(),
+    negative: getClass().classLoader.getResource("rt-polarity.neg").toURI()
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll first use Datumbox which, as we saw earlier,
+requires training parameters for our algorithm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def trainingParams = new TextClassifier.TrainingParameters(
+    numericalScalerTrainingParameters: null,
+    featureSelectorTrainingParametersList: [new ChisquareSelect.TrainingParameters()],
+    textExtractorParameters: new NgramsExtractor.Parameters(),
+    modelerTrainingParameters: new MultinomialNaiveBayes.TrainingParameters()
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We now create our algorithm, train it with or training dataset,
+and for illustrative purposes validate against the training dataset:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def config = Configuration.configuration
+TextClassifier classifier = MLBuilder.create(trainingParams, config)
+classifier.fit(datasets)
+def metrics = classifier.validate(datasets)
+println "Classifier Accuracy (using training data): $metrics.accuracy"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><span class="maroon">[main] INFO com.datumbox.framework.core.common.dataobjects.Dataframe$Builder - Dataset Parsing positive class
+[main] INFO com.datumbox.framework.core.common.dataobjects.Dataframe$Builder - Dataset Parsing negative class
+...</span>
+Classifier Accuracy (using training data): 0.8275959103273615</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can test our model against several sentences:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">['Datumbox is divine!', 'Groovy is great fun!', 'Math can be hard!'].each {
+    def r = classifier.predict(it)
+    def predicted = r.YPredicted
+    def probability = sprintf '%4.2f', r.YPredictedProbabilities.get(predicted)
+    println "Classifing: '$it',  Predicted: $predicted,  Probability: $probability"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><span class="maroon">...
+[main] INFO com.datumbox.framework.applications.nlp.TextClassifier - predict()
+...</span>
+Classifing: 'Datumbox is divine!', Predicted: positive, Probability: 0.83
+Classifing: 'Groovy is great fun!', Predicted: positive, Probability: 0.80
+Classifing: 'Math can be hard!', Predicted: negative, Probability: 0.95</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can do the same thing but with OpenNLP. First, we collect our input data.
+OpenNLP is expecting it in a single dataset with tagged examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def trainingCollection = datasets.collect { k, v -&gt;
+    new File(v).readLines().collect{"$k $it".toString() }
+}.sum()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we&#8217;ll train two models. One uses <em>naïve bayes</em>, the other <em>maxent</em>.
+We train up both variants.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def variants = [
+        Maxent    : new TrainingParameters(),
+        NaiveBayes: new TrainingParameters((CUTOFF_PARAM): '0', (ALGORITHM_PARAM): NAIVE_BAYES_VALUE)
+]
+def models = [:]
+variants.each{ key, trainingParams -&gt;
+    def trainingStream = new CollectionObjectStream(trainingCollection)
+    def sampleStream = new DocumentSampleStream(trainingStream)
+    println "\nTraining using $key"
+    models[key] = DocumentCategorizerME.train('en', sampleStream, trainingParams, new DoccatFactory())
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we run sentiment predictions on our sample sentences using both variants:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def w = sentences*.size().max()
+
+variants.each { key, params -&gt;
+    def categorizer = new DocumentCategorizerME(models[key])
+    println "\nAnalyzing using $key"
+    sentences.each {
+        def result = categorizer.categorize(it.split('[ !]'))
+        def category = categorizer.getBestCategory(result)
+        def prob = sprintf '%4.2f', result[categorizer.getIndex(category)]
+        println "${it.padRight(w)} $category ($prob)}"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we run this we get:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Training using Maxent …done.
+…
+
+Training using NaiveBayes …done.
+…
+
+Analyzing using Maxent
+OpenNLP is fantastic! positive (0.64)}
+Groovy is great fun! positive (0.74)}
+Math can be hard! negative (0.61)}
+
+Analyzing using NaiveBayes
+OpenNLP is fantastic! positive (0.72)}
+Groovy is great fun! positive (0.81)}
+Math can be hard! negative (0.72)}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The models here appear to have lower probability levels compared to the model we
+trained for Datumbox. We could try tweaking the training parameters further if this
+was a problem. We&#8217;d probably also need a bigger testing set to convince ourselves
+of the relative merits of each model. Some models can be over-trained on small
+datasets and perform very well with data similar to their training datasets but
+perform much worse for other data.</p>
+</div>
+<div class="paragraph">
+<p>This example is inspired from the <a href="https://github.com/deepjavalibrary/djl/blob/master/examples/src/main/java/ai/djl/examples/inference/UniversalSentenceEncoder.java">UniversalSentenceEncoder</a> example in the
+<a href="https://github.com/deepjavalibrary/djl/tree/master/examples">DJL examples module</a>.
+It looks at using the universal sentence encoder model from
+<a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects">TensorFlow Hub</a>
+via the <a href="https://djl.ai/">DeepJavaLibrary</a> (DJL) api.</p>
+</div>
+<div class="paragraph">
+<p>First we define a translator. The <code>Translator</code> interface allow us to specify pre
+and post-processing functionality.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class MyTranslator implements NoBatchifyTranslator&lt;String[], double[][]&gt; {
+    @Override
+    NDList processInput(TranslatorContext ctx, String[] raw) {
+        var factory = ctx.NDManager
+        var inputs = new NDList(raw.collect(factory::create))
+        new NDList(NDArrays.stack(inputs))
+    }
+
+    @Override
+    double[][] processOutput(TranslatorContext ctx, NDList list) {
+        long numOutputs = list.singletonOrThrow().shape.get(0)
+        NDList result = []
+        for (i in 0..&lt;numOutputs) {
+            result &lt;&lt; list.singletonOrThrow().get(i)
+        }
+        result*.toFloatArray() as double[][]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we manually pack our input sentences into the required n-dimensional data types,
+and extract our output calculations into a 2D double array.</p>
+</div>
+<div class="paragraph">
+<p>Next, we create our <code>predict</code> method by first defining the criteria for our prediction
+algorithm. We are going to use our translator, use the TensorFlow engine, use a
+predefined sentence encoder model from the TensorFlow Hub, and indicate that we
+are creating a text embedding application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def predict(String[] inputs) {
+    String modelUrl = "https://storage.googleapis.com/tfhub-modules/google/universal-sentence-encoder/4.tar.gz"
+
+    Criteria&lt;String[], double[][]&gt; criteria =
+        Criteria.builder()
+            .optApplication(Application.NLP.TEXT_EMBEDDING)
+            .setTypes(String[], double[][])
+            .optModelUrls(modelUrl)
+            .optTranslator(new MyTranslator())
+            .optEngine("TensorFlow")
+            .optProgress(new ProgressBar())
+            .build()
+    try (var model = criteria.loadModel()
+         var predictor = model.newPredictor()) {
+        predictor.predict(inputs)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s define our input strings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">String[] inputs = [
+    "Cycling is low impact and great for cardio",
+    "Swimming is low impact and good for fitness",
+    "Palates is good for fitness and flexibility",
+    "Weights are good for strength and fitness",
+    "Orchids can be tricky to grow",
+    "Sunflowers are fun to grow",
+    "Radishes are easy to grow",
+    "The taste of radishes grows on you after a while",
+]
+var k = inputs.size()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we&#8217;ll use our predictor method to calculate the embeddings for each sentence.
+We&#8217;ll print out the embeddings and also calculate the dot product of the embeddings.
+The dot product (the same as the inner product for this case) reveals how related
+the sentences are.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var embeddings = predict(inputs)
+
+var z = new double[k][k]
+for (i in 0..&lt;k) {
+    println "Embedding for: ${inputs[i]}\n${embeddings[i]}"
+    for (j in 0..&lt;k) {
+        z[i][j] = dot(embeddings[i], embeddings[j])
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, we&#8217;ll use the <code>Heatmap</code> class from Smile to present a nice display
+highlighting what the data reveals:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">new Heatmap(inputs, inputs, z, Palette.heat(20).reverse()).canvas().with {
+    title = 'Semantic textual similarity'
+    setAxisLabels('', '')
+    window()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output shows us the embeddings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Loading:     100% |========================================|
+<span class="maroon">2022-08-07 17:10:43.212697: ... This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2
+...
+2022-08-07 17:10:52.589396: ... SavedModel load for tags { serve }; Status: success: OK...
+...</span>
+Embedding for: Cycling is low impact and great for cardio
+[-0.02865048497915268, 0.02069241739809513, 0.010843578726053238, -0.04450441896915436, ...]
+...
+Embedding for: The taste of radishes grows on you after a while
+[0.015841705724596977, -0.03129228577017784, 0.01183396577835083, 0.022753292694687843, ...]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The embeddings are an indication of similarity.
+Two sentences with similar meaning typically have similar embeddings.</p>
+</div>
+<div class="paragraph">
+<p>The displayed graphic is shown below:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/sentence_encodings_smile_heatmap.png" alt="Heatmap plot of sentence encodings"></span></p>
+</div>
+<div class="paragraph">
+<p>This graphic shows that our first four sentences are somewhat related, as are
+the last four sentences, but that there is minimal relationship between those
+two groups.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Further examples can be found in the related repos:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessing" class="bare">https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessing</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/LanguageProcessingSparkNLP" class="bare">https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/LanguageProcessingSparkNLP</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/LanguageProcessingDjl" class="bare">https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/LanguageProcessingDjl</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have look at a range of NLP examples using various NLP libraries.
+Hopefully you can see some cases where you could use additional
+NLP technologies in some of your own applications.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
