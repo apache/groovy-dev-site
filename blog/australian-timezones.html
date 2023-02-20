@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, datetime, timezone, date'/><meta name='description' content='Inspired by a recent update related to Antarctic timezones, this post looks at some interesting Australian time zone facts.'/><title>The Apache Groovy programming language - Blogs - Australian Time Zones</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Australian Time Zones</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groundhog-day'>Groundhog Day</a></li><li><a href='./groovy-dates-and-times-cheat'>Groovy Dates And Times Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Australian Time Zones</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-02-20 08:00PM</span></p><hr/><div class="paragraph">
+<p><a href="https://kenkousen.substack.com/">Ken Kousen</a> posted another
+<a href="https://t.co/VM4f4lpM7a">Tales from the jar side</a> episode
+covering among other things, time zones in Antarctica.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://external-preview.redd.it/16_JjhwH0lSETAc7LMNvulifXMrs-43lWIs_nr2OPIs.jpg?width=960&amp;crop=smart&amp;auto=webp&amp;v=enabled&amp;s=7fe189e9ed24d481d3445fad245bd6ae18ee5740" alt="Research stations and timezones in Antarctica"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s replicate his example in Groovy before looking at time zones
+more broadly in Australia. Why Australia? Well, that&#8217;s where I&#8217;m from but also
+there&#8217;s a reference in Ken&#8217;s article to one of the facts we&#8217;ll look at. First, here
+is the equivalent of Ken&#8217;s exploration at the South Pole:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><strong class="lime">Groovy Shell</strong> (4.0.9, JVM: 17.0.2)
+Type ':help' or ':h' for help.
+-------------------------------------------------------------------------------
+groovy:000> import java.time.*
+===> java.time.*
+groovy:000> southPole = ZoneId.of('Antarctica/South_Pole')
+===> Antarctica/South_Pole
+groovy:000> dst = southPole.rules.isDaylightSavings(Instant.now())
+===> true
+groovy:000> "The South Pole ${dst ? 'IS' : 'IS NOT'} currently on DST"
+===> The South Pole IS currently on DST
+groovy:000></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Without wanting to give away Ken&#8217;s punch line, the South Pole,
+in particular, the Amundsen-Scott station, is currently on daylight saving time.
+Read <a href="https://t.co/VM4f4lpM7a">his article</a>
+or attend one of Ken&#8217;s talks if you wonder why that might be strange!</p>
+</div>
+<div class="paragraph">
+<p>Speaking of strange, Ken also mentioned another strange fact related
+to Australian timezones. Australia has a zone, Eucla, with a 45-minute offset.
+And that&#8217;s not the only interesting fact!</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at all Australian timezones, including Eucla, and the three
+Antarctic research stations, Casey, Davis, and Mawson
+(seen on the right of the above map).</p>
+</div>
+<div class="paragraph">
+<p>Before we dive into coding, let&#8217;s look at the timezones we&#8217;re interested in:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 27.2727%;">
+<col style="width: 18.1818%;">
+<col style="width: 45.4546%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Abbreviation</th>
+<th class="tableblock halign-left valign-top">Time zone name</th>
+<th class="tableblock halign-left valign-top">Offset</th>
+<th class="tableblock halign-left valign-top">Where used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/acdt">ACDT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Central Daylight Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +10:30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Summer:</em> South Australia, Broken Hill/Yancowinna County in New South Wales</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/acst">ACST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Central Standard Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +9:30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Winter:</em> South Australia, Broken Hill/Yancowinna County in New South Wales<br>
+<em>All year:</em> Northern Territory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/act-australia">ACT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Central Time</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Often used as an abbreviation for places which switch between ACDT/ACST</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zone/australia/eucla">ACWST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Central Western Standard Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +8:45</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Eucla</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/aedt">AEDT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Eastern Daylight Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Summer:</em> Australian Capital Territory, New South Wales except Broken Hill/Yancowinna County in New South Wales, Tasmania, Victoria<br>
+<em>All year:</em> Macquarie Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/aest">AEST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Eastern Standard Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Winter:</em> Australian Capital Territory, New South Wales except Broken Hill/Yancowinna County in New South Wales, Tasmania, Victoria<br>
+<em>All year:</em> Queensland, Coral Sea Islands</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/aet">AET</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Eastern Time</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Often used as an abbreviation for places in either AEDT or AEST (or switching between them)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/awdt">AWDT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Western Daylight Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Not currently in use</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/awst">AWST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Australian Western Standard Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Western Australia, Ashmore and Cartier Islands</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/cct">CCT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cocos Islands Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +6:30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cocos (Keeling) Islands</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/cxt">CXT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Christmas Island Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Christmas Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/lhdt">LHDT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lord Howe Daylight Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Summer:</em> Lord Howe Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/lhst">LHST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lord Howe Standard Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +10:30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Winter:</em> Lord Howe Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/nfdt">NFDT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Norfolk Daylight Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Summer:</em> Norfolk Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/nft">NFT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Norfolk Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Winter:</em> Norfolk Island</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/tft">TFT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">French Southern and Antarctic Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Heard and McDonald Islands</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/cast">CAST</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Casey Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>Winter:</em> UTC +8<br>
+<em>Summer:</em> UTC +11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Casey Antarctic Station</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/davt">DAVT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Davis Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Davis Antarctic Station</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.timeanddate.com/time/zones/mawt">MAWT</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mawson Time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">UTC +5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mawson Antarctic Station</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Most countries have whole number zone offsets, but you
+should notice that Australia has many 30-minute offsets too.
+Ken mentioned that 45-minute offsets are even rarer (3 in the world).
+Let&#8217;s look at Australia&#8217;s contribution to that exclusive club:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var eucla = ZoneId.of('Australia/Eucla')
+println eucla.rules.getStandardOffset(now)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This has the following result:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>+08:45</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Why such a strange offset? Well, Eucla sits on the Nullarbor plain,
+about halfway between Perth and Adelaide, and close to the state border.
+It was once home to a telegram station and
+<a href="http://www.drivemelbournetoperth.com.au/time-zones-across-nullarbor.html#:~:text=To%20sort%20this%20issue%20out,time%20zone%20of%2045%20minutes">the story goes</a> that to minimise confusion between the West Australian and
+South Australian workers who sat side-by-side sorting telegrams,
+they set the time zone to exactly halfway between their respective state
+timezones. Western Australia and South Australia are (excluding daylight saving)
+an hour and 30 minutes apart, so halfway between results in the 45-minute offset!</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/perth_eucla_adelaide.png" alt="Perth to Adelaide via Eucla"></span></p>
+</div>
+<div class="paragraph">
+<p>Incidentally, if you want to see
+the longest straight section of railway in the world (478 km, 297 mi),
+or the longest straight section of tarred road in Australia (146 km, 91 mi),
+then the Nullarbor plain is the place to be, but otherwise it&#8217;s not high
+on most folks tourist attractions must-see list.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Highway_sign%2C_Nullarbor%2C_2017_%2802%29.jpg/1920px-Highway_sign%2C_Nullarbor%2C_2017_%2802%29.jpg" alt="Nullarbor plain" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>Another obscure timezone fact related to the Nullarbor.
+When the Indian Pacific train travels between
+Kalgoorlie, Western Australia and Port Augusta, South Australia,
+it has its own time known as
+<a href="https://en.wikipedia.org/wiki/Time_in_Australia#:~:text=The%20Indian%20Pacific%20train%20has,the%20eastern%20and%20southern%20states">"Train Time"</a> (UTC+09:00).
+We won&#8217;t follow this unofficial timezone in our later exploration,
+but it would add another to our list if we wanted to include it too!</p>
+</div>
+<div class="paragraph">
+<p>Another strange timezone fact applies to the pristine
+<a href="https://lordhoweisland.info/">Lord Howe Island</a>.
+Lord Howe Island is a little over 600 km out from the north coast of New South Wales.
+That&#8217;s about 1/4 of the way to New Zealand! Being that far East of the mainland,
+it rightly has a timezone 30 minutes earlier than the mainland.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://www.thesenior.com.au/images/transform/v1/crop/frm/ezJUJGp6GbYvhKygBYtWTb/90dd6397-e247-4c3f-aacf-bd15b7cf8586.jpg/r0_31_600_371_w1200_h678_fmax.jpg" alt="Lord Howe Island"></span></p>
+</div>
+<div class="paragraph">
+<p>Apparently, some years back,
+<a href="https://www.atlasobscura.com/places/lord-howe-islands-time#:~:text=The%20reason%20for%20this%20unique,UTC%20%2B10%3A00%20clock">the governor wanted to have a timezone coinciding
+with the mainland</a>, for at least part of the year, so they held a referendum
+and voted in a 30-minute daylight saving time during Summer.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check this phenomenon:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var lordHowe = ZoneId.of('Australia/Lord_Howe')
+assert lordHowe.rules.getDaylightSavings(now).toMinutes() == 30</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another Island timezone anomaly applies to Heron Island, 72 km (45 mi) off the
+coast of Gladstone in Queensland. It has two time zones: the island resort follows
+daylight saving time all year round, whereas "the Marine Research Centre and the Parks and Wildlife office on the island remain on Eastern Standard Time.</p>
+</div>
+<div class="paragraph">
+<p>Finally, let&#8217;s collect all the different offsets applicable to Australia:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var ids = ['Australia/Tasmania', 'Antarctica/Davis',
+   'Australia/ACT', 'Australia/Eucla', 'Australia/North', 'Australia/Yancowinna',
+   'Australia/Victoria', 'Australia/Adelaide', 'Antarctica/Mawson', 'Antarctica/Casey',
+   'Australia/Queensland', 'Australia/Lord_Howe', 'Australia/NSW', 'Australia/South',
+   'Australia/West', 'Indian/Christmas', 'Indian/Cocos', 'Pacific/Norfolk']
+Set offsets = []
+for (id in ids) {
+    var rules = ZoneId.of(id).rules
+    offsets &lt;&lt; rules.getStandardOffset(now) // non daylight saving offset
+    offsets &lt;&lt; rules.getOffset(now)         // daylight saving offset when run in Summer
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s check that there are 10 different offsets we need to deal with in
+Australian territories, with 4 being the less usual <em>not-on-the-hour</em> offsets.
+Then, we&#8217;ll print out the offsets.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert offsets.size() == 10
+assert offsets*.toString().count{ !it.endsWith(':00')} == 4
+println offsets</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The two assertions pass and the final println has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[+10:00, +11:00, +07:00, +08:45, +09:30, +10:30, +05:00, +08:00, +06:30, +12:00]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Just one final timezone obscurity to wrap up.</p>
+</div>
+<div class="paragraph">
+<p>The Queensland-New South Wales border actually cuts Gold Coast Airport almost
+precisely in half, including the runway. Technically, flights departing in the summer
+months leave the terminal in one time zone and take off from the ground in another.
+This has the potential to severely muck up the airlines <em>departed-on-time</em> statistics!
+Thankfully the airport chooses to operate exclusively on Queensland time to avoid
+any potential confusion.</p>
+</div>
+<div class="paragraph">
+<p>Incidentally, if you love to celebrate New Year&#8217;s Eve, Gold Coast might be the
+perfect destination. You can party and watch fireworks in Tweed Heads before heading
+just 10s of metres North to count down to midnight all over again, just one hour later.</p>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
