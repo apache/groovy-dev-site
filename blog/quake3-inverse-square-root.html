@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy'/><meta name='description' content='Inspired by a recent tweet, this blog looks at the fast inverse square root algorithm made famous in Quake III Arena.'/><title>The Apache Groovy programming language - Blogs - Quake III Arena and the fast inverse square root algorithm</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Quake III Arena and the fast inverse square root algorithm</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_java_float_implementations' class='anchor-link'>Java Float implementations</a></li><li><a href='#_java_double_implementations' class='anchor-link'>Java Double implementations</a></li><li><a href='#_groovy_float_implementations' class='anchor-link'>Groovy Float implementations</a></li><li><a href='#_groovy_double_implementations' class='anchor-link'>Groovy Double implementations</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_analysis' class='anchor-link'>Analysis</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Quake III Arena and the fast inverse square root algorithm</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-02-28 12:05AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In 1999, <a href="https://www.idsoftware.com/">id Software</a> released
+<a href="https://en.wikipedia.org/wiki/Quake_III_Arena">Quake III Arena</a>,
+a multiplayer first-person shooter.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://cdn.80.lv/api/upload/content/b4/images/612db4a5b4d6c/widen_1840x0.jpeg" alt="Quake III" width="460"></span></p>
+</div>
+<div class="paragraph">
+<p>When the game&#8217;s source code was released to the world,
+it contained a previously unknown algorithm called the
+<a href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Fast Inverse Square Root</a>.
+We don&#8217;t plan to explain the algorithm in depth but its significance at the time
+is that it provided a very good approximation to the equation
+\$f(x) = 1/sqrt(x)\$
+which is used for vector normalization and other math behind the game which is used extensively for numerous graphical aspects including 3D shading.
+The fast algorithm was 3-4 times faster at calculating the answer than using the
+traditional math libraries and the results were within &lt; 0.2%.</p>
+</div>
+<div class="paragraph">
+<p>Here is the code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">float Q_rsqrt( float number )
+{
+	long i;
+	float x2, y;
+	const float threehalfs = 1.5F;
+
+	x2 = number * 0.5F;
+	y  = number;
+	i  = * ( long * ) &amp;y;                       // evil floating point bit level hacking
+	i  = 0x5f3759df - ( i &gt;&gt; 1 );               // what the f☼⁕k?
+	y  = * ( float * ) &amp;i;
+	y  = y * ( threehalfs - ( x2 * y * y ) );   // 1st iteration
+//	y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+
+	return y;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Why does it look strange? There are numerous parts which you wouldn&#8217;t expect
+to be part of a square root calculation. There&#8217;s some tricks for converting
+to and from float and long IEEE 754 32-bit representations, a "magic" constant,
+some bit shifting, and a touch of Newton&#8217;s method throw in for good measure.</p>
+</div>
+<div class="paragraph">
+<p>The details have been explained in some detail in numerous blogs, e.g.
+<a href="https://suraj.sh/fast-square-root-approximation/">Fast Square Root Approximation</a>
+and
+<a href="https://betterexplained.com/articles/understanding-quakes-fast-inverse-square-root/">Understanding Quake’s Fast Inverse Square Root</a>,
+and videos, e.g.
+<a href="https://www.youtube.com/watch?v=p8u_k2LIZyo">Fast Inverse Square Root — A Quake III Algorithm</a> and
+<a href="https://80.lv/articles/quake-iii-arena-s-unknown-algorithm-explained/">Quake III Arena&#8217;s Unknown Algorithm Explained</a>.
+There are even sites which show the algorithm for
+<a href="https://github.com/itchyny/fastinvsqrt">numerous languages</a> (including Groovy).</p>
+</div>
+<div class="paragraph">
+<p>Not long after the game&#8217;s release, Intel added
+<a href="https://c9x.me/x86/html/file_module_x86_id_301.html">SQRTSS</a> and
+<a href="https://c9x.me/x86/html/file_module_x86_id_283.html">RSQRTSS</a>
+instructions to x86 processors.
+Here is one of the JDK enhancements to provide
+<a href="https://bugs.openjdk.org/browse/JDK-6452568">SQRTSS support for float Math.sqrt()</a>.
+There are later blogs which explain that, due to these and other hardware advances,
+the algorithm is now mostly only relevant for historical folklore reasons, e.g.
+<a href="https://levelup.gitconnected.com/death-of-quake-3s-inverse-square-root-hack-32fd2eadd7b7">Death of Quake 3’s Inverse Square Root Hack</a> and
+<a href="https://www.linkedin.com/pulse/fast-inverse-square-root-still-armin-kassemi-langroodi/">Is Fast Inverse Square Root still Fast?</a>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at a few alternatives for calculating the inverse square root
+including two variants of the fast inverse square root algorithm.
+We&#8217;ll do this for Java and Groovy, and look at both <code>float</code> and <code>double</code> implementations. We could go further and try different numbers of iterations
+of the Newton&#8217;s method correction, but we&#8217;ll leave that as an exercise for the reader. 😊</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_float_implementations">Java Float implementations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are numerous places to see Java examples of the algorithm
+and numerous ways you could run a microbenchmark. We are using
+code somewhat similar to this
+<a href="https://gist.github.com/ClickerMonkey/adc35fece77eff67dfc3">gist</a>.
+We could have been more elaborate and used
+<a href="https://github.com/openjdk/jmh">jmh</a>, but we aren&#8217;t
+trying to do a comprehensive performance analysis here,
+we just want some rough ballpark numbers. Perhaps that is
+the topic for a subsequent blog.</p>
+</div>
+<div class="paragraph">
+<p>As with all microbenchmarks, you should exercise extreme caution
+before applying too much weight to the results. The numbers will be
+different  on different machines, with different Java and Groovy
+versions and so forth. We used Groovy 4.0.8 and Java 17.0.2.</p>
+</div>
+<div class="paragraph">
+<p>We start with the most obvious implementation which is
+to use the <code>Math.sqrt</code> method which takes and returns a <code>double</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public static float invsqrt0(float x) {                   // Java
+    return 1.0f / (float)Math.sqrt(x);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compared to the C implementation above,
+Java doesn&#8217;t have the bit casting trick, but it does have its own
+methods for getting at the bit representation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public static float invsqrt1(float x) {                   // Java
+    float xhalf = 0.5f * x;
+    int i = Float.floatToIntBits(x);
+    i = 0x5f3759df - (i &gt;&gt; 1);
+    x = Float.intBitsToFloat(i);
+    x = x * (1.5f - (xhalf * x * x));
+    return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As an alternative, we can use a byte buffer to mangle the bits back and forth:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static ByteBuffer buf = ByteBuffer.allocateDirect(4);      // Java
+
+public static float invsqrt2(float x) {
+    float xhalf = 0.5f * x;
+    int i = buf.putFloat(0, x).getInt(0);
+    i = 0x5f3759df - (i &gt;&gt; 1);
+    x = buf.putInt(0, i).getFloat(0);
+    x = x * (1.5f - (xhalf * x * x));
+    return x;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_double_implementations">Java Double implementations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Again, we&#8217;ll start with the obvious implementation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public static double invsqrt0(double x) {                   // Java
+    return 1.0d / Math.sqrt(x);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, using the built-in methods for getting at the bit representation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public static double invsqrt1(double x) {                   // Java
+    double xhalf = 0.5d * x;
+    long i = Double.doubleToLongBits(x);
+    i = 0x5fe6ec85e7de30daL - (i &gt;&gt; 1);
+    x = Double.longBitsToDouble(i);
+    x *= (1.5d - xhalf * x * x);
+    return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code resembles the float version but the "magic" constant has
+changed for doubles.</p>
+</div>
+<div class="paragraph">
+<p>The byte buffer alternative:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static ByteBuffer buf = ByteBuffer.allocateDirect(8);      // Java
+
+public static double invsqrt2(double x) {
+    double xhalf = 0.5d * x;
+    long i = buf.putDouble(0, x).getLong(0);
+    //long i = Double.doubleToLongBits(x);
+    i = 0x5fe6ec85e7de30daL - (i &gt;&gt; 1);
+    x = buf.putLong(0, i).getDouble(0);
+    x *= (1.5d - xhalf * x * x);
+    return x;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also for comparison try the <code>Math.pow</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public static double invsqrt3(double x) {                   // Java
+    return Math.pow(x, -0.5d);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(We could have done this for <code>float</code> too but it doesn&#8217;t add much to our analysis
+since it would call through to this double method anyway.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_float_implementations">Groovy Float implementations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All these examples are compiled with static compilation enabled.
+We want speed and aren&#8217;t doing any metaprogramming, so we don&#8217;t
+need Groovy&#8217;s dynamic capabilities.</p>
+</div>
+<div class="paragraph">
+<p>Our code looks similar to Java for the obvious case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static float invsqrt0(float x) {
+    1.0f / Math.sqrt(x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, the code is similar to Java for the fast algorithm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static float invsqrt1(float x) {
+    float xhalf = 0.5f * x
+    int i = Float.floatToIntBits(x)
+    i = 0x5f3759df - (i &gt;&gt; 1)
+    x = Float.intBitsToFloat(i)
+    x *= 1.5f - (xhalf * x * x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And again with the byte buffer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">private static ByteBuffer buf = ByteBuffer.allocateDirect(8)
+
+static float invsqrt2(float x) {
+    float xhalf = 0.5f * x
+    int i = buf.putDouble(0, x).getInt(0)
+    i = 0x5f3759df - (i &gt;&gt; 1)
+    x = buf.putInt(0, i).getDouble(0)
+    x *= 1.5f - (xhalf * x * x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also try Groovy&#8217;s <code>**</code> operator (<code>power</code> method):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static float invsqrt4(float x) {
+    (x ** -0.5).floatValue()
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_double_implementations">Groovy Double implementations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The standard method should look familiar by now:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static double invsqrt0(double x) {
+    1.0d / Math.sqrt(x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fast algorithm:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static double invsqrt1(double x) {
+    double xhalf = 0.5d * x
+    long i = Double.doubleToLongBits(x)
+    i = 0x5fe6ec85e7de30daL - (i &gt;&gt; 1)
+    x = Double.longBitsToDouble(i)
+    x *= (1.5d - xhalf * x * x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Incorporating the byte buffer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">private static ByteBuffer buf = ByteBuffer.allocateDirect(8)
+
+static double invsqrt2(double x) {
+    double xhalf = 0.5d * x
+    long i = buf.putDouble(0, x).getLong(0)
+    i = 0x5fe6ec85e7de30daL - (i &gt;&gt; 1)
+    x = buf.putLong(0, i).getDouble(0)
+    x *= (1.5d - xhalf * x * x)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using <code>Math.pow</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static double invsqrt3(double x) {
+    Math.pow(x, -0.5d)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>**</code> operator (<code>power</code> method) again:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static double invsqrt4(double x) {
+    (x ** -0.5).doubleValue()
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_results">Results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are the results of executing the above methods.
+We used a harness similar to the previously mentioned
+<a href="https://gist.github.com/ClickerMonkey/adc35fece77eff67dfc3">gist</a>,
+but found the inverse square root of 100_000 random numbers
+instead of 10_000, and we used 1000 iterations in the timing loop
+and found the average execution time per 100_000 calculations.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6669%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Algorithm vs Implementation<br>
+(times m/s)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java Double</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy Float</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy Double</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Math.sqrt</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.216</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.254</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.359</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.245</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fast inverse square root</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.230</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.236</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.357</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.127</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fast inverse square root with byte buffer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.337</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.364</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.486</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.187</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Math.pow(x, -0.5d)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.949</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.997</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">x ** -0.5</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.737</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.807</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_analysis">Analysis</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For all the examples, using the byte buffer was always slower than the original
+algorithm, so we can rule that out as an optimization. We can also rule out using
+the <code>Math.pow</code> method. It is much slower than <code>Math.sqrt</code>. Interesting though,
+Groovy&#8217;s <code>**</code> operator (<code>power</code> method) while still a slower option was
+significantly better than the JDK library <code>pow</code> implementation.</p>
+</div>
+<div class="paragraph">
+<p>The Java fast algorithm was slower for float and only marginally faster
+for doubles. It seems unlikely in most scenarios that taking on the extra
+code complexity is worth the small gain in performance.</p>
+</div>
+<div class="paragraph">
+<p>The Groovy float implementations are a little slower. This is due to Groovy
+doing most of the calculations using doubles and converting back to floats
+in between steps. That is an area for possible optimization in the future.</p>
+</div>
+<div class="paragraph">
+<p>The Groovy double implementations are at least as fast as Java.
+Interesting, the fast algorithms seem to be even faster in Groovy.
+These do seem worthwhile investigating further if you really need the speed,
+but given the extra precision of doubles, you might want to run extra
+Newton method iterations and those iterations might eat into any time saving.</p>
+</div>
+<div class="paragraph">
+<p>For interest, the errors for the fast algorithm for the random numbers
+was very close to 6E-5 for all implementations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ve done a little microbenchmark using Java and Groovy for the
+fast inverse square root algorithm. The result?
+You probably don&#8217;t need to ever worry about the fast inverse
+square root algorithm anymore! But if you really have the need,
+it is still relatively fast, but you should benchmark your application
+and see if it really helps.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Fast_inverse_square_root">Fast inverse square root on Wikipedia</a></p>
+</li>
+<li>
+<p><a href="https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9">History behind the algorithm</a></p>
+</li>
+<li>
+<p><a href="http://www.lomont.org/papers/2003/InvSqrt.pdf">Fast Inverse Square Root paper</a></p>
+</li>
+<li>
+<p><a href="https://www.slideshare.net/maksym_zavershynskyi/fast-inverse-square-root">Behind the Performance of Quake 3 Engine: Fast Inverse Square Root</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
