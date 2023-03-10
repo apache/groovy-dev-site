@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, windows installer, release'/><meta name='description' content='Groovy 3.0.0-beta-2 Windows Installer Release Announcement.'/><title>The Apache Groovy programming language - Blogs - Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, natural language processing, nlp, nlpcraft'/><meta name='description' content='This blog looks at using Apache NLPCraft from Groovy.'/><title>The Apache Groovy programming language - Blogs - Converting natural language into actions with NLPCraft and Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,16 +53,130 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-2-windows'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-4-windows'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-4-0-3-released'>Groovy 4.0.3 Released</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./gmavenplus-1-6-2-released'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-2-5-7-released'>Groovy 2.5.7 Released</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</h1><p><span>Author: <i>Remko Popma</i></span><br/><span>Published: 2019-07-15 10:30AM</span></p><hr/><div class="paragraph">
-<p>The Windows installer for Groovy 3.0.0-beta-2 is now available from Bintray:
-<a href="https://bintray.com/groovy/Distributions/download_file?file_path=groovy-3.0.0-beta-2-installer.exe" class="bare">https://bintray.com/groovy/Distributions/download_file?file_path=groovy-3.0.0-beta-2-installer.exe</a></p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This blog looks at using
+<a href="https://nlpcraft.apache.org/index.html">Apache NLPCraft</a>
+with Groovy.</p>
 </div>
 <div class="paragraph">
-<p>I&#8217;ve again included a preview of an msi built with WiX, which I&#8217;m seeking feedback on:
-<a href="https://bintray.com/groovy/Distributions/download_file?file_path=groovy-3.0.0-beta-2+%28preview+installer%29.msi" class="bare">https://bintray.com/groovy/Distributions/download_file?file_path=groovy-3.0.0-beta-2+%28preview+installer%29.msi</a></p>
+<p>Apache NLPCraft (incubating) is a library for converting
+natural language into actions.
+It is designed around an advanced Intent Definition Language (IDL) for
+defining natural language <em>intents</em> and a fully deterministic intent
+matching algorithm.</p>
 </div>
 <div class="paragraph">
-<p>Be aware that you need to fully uninstall the NSIS based Groovy installation before installing with an MSI installer.</p>
+<p>The
+<a href="https://github.com/paulk-asert/groovy-data-science">groovy-data-science</a>
+GitHub repo has an example using the previous 0.9.0 version of Apache NLPCraft.
+The earlier version supported Java, Scala2, Kotlin and Groovy.
+The
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessingNLPCraft/src/main/groovy/Lights.groovy">example</a> in the
+<a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/LanguageProcessingNLPCraft/">LanguageProcessingNLPCraft</a> project showed how
+to interact with models in all 4 of those languages.</p>
+</div>
+<div class="paragraph">
+<p>The project recently announced the release of version
+<a href="https://nlpcraft.apache.org/relnotes/release-notes-1.0.0.html">1.0.0</a>
+which represents a deep refactoring over 18 months.
+The new version offers many enhancements and supports Scala3 for its models.
+If you are going to be using NLPCraft extensively, then Scala3
+is probably your best choice as programming language. Having said that,
+since we are on the JVM, certain integration steps aren&#8217;t too hard.
+We&#8217;ll show using Groovy as the client language.</p>
+</div>
+<div class="paragraph">
+<p>First, a bit of background about the example.
+We are trying to determine the intent behind English language
+commands to turn lights on and off in a house.
+We define a model using a combination of
+<a href="https://nlpcraft.apache.org/examples/light_switch.html#model">YAML</a>
+and
+<a href="https://nlpcraft.apache.org/examples/light_switch.html#code">Scala3 code</a>.
+The key thing to note is that the model is made up of a number of action
+keywords and locations. If these are matched, the lightswitch (<code>ls</code>) intent
+is triggered.
+Actions and locations will become more obvious soon in our example.</p>
+</div>
+<div class="paragraph">
+<p>Our example uses an English language model but NLPCraft can support any language.
+They provide the lightswitch model also in
+<a href="https://nlpcraft.apache.org/examples/light_switch_fr.html">French</a> and other languages.</p>
+</div>
+<div class="paragraph">
+<p>We also need to add NLPCraft dependencies: <code>org.apache.nlpcraft:nlpcraft:1.0.0</code>
+and <code>org.apache.nlpcraft:nlpcraft-example-lightswitch:1.0.0</code> (for a pre-compiled model). You can use <code>@Grab</code> statements in your script or add the dependencies to your build file.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Depending on the Groovy version and modules you are using, if you see exceptions
+complaining about Jackson databind versions, simply exclude the Jackson versions
+Groovy is referencing. They are more recent than what Scala is expecting.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Finally, here is the Groovy code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import org.apache.nlpcraft.*
+import org.apache.nlpcraft.examples.lightswitch.LightSwitchModel
+import scala.util.Using
+import static scala.collection.immutable.HashMap$.MODULE$ as ScalaMap
+
+var data = ScalaMap.empty()  // no optional data
+var user = 'someUserId'
+var expectedIntent = 'ls'    // from model
+
+var phrases = [
+    'Turn on the lights in the master bedroom',
+    'Please, no lights!',
+    'Turn up the illumination in garage and 1st floor'
+]
+
+new NCModelClient(new LightSwitchModel()).withCloseable { client -&gt;
+    phrases.each { phrase -&gt;
+        var result = client.ask(phrase, user, data)
+        println result.body
+        assert result.intentId.get() == expectedIntent
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we are just going to print the result returned by the callback
+in the model class. Typically, we&#8217;d instead have HomeKit, Arduino or
+some other kind of integration at this point. We&#8217;ll also check that
+the <code>ls</code> intent was triggered.</p>
+</div>
+<div class="paragraph">
+<p>When we run this script, our assertions pass, and the output is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Lights are [on] in [master bedroom].
+Lights are [off] in [entire house].
+Lights are [on] in [1st floor, garage].</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://nlpcraft.apache.org/index.html">Apache NLPCraft website</a></p>
+</div>
+</div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
