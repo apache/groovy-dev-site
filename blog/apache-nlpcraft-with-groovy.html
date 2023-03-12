@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_controlling_house_light_switches' class='anchor-link'>Controlling house light switches</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog looks at using
@@ -87,6 +87,11 @@ is probably your best choice as programming language. Having said that,
 since we are on the JVM, certain integration steps aren&#8217;t too hard.
 We&#8217;ll show using Groovy as the client language.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_controlling_house_light_switches">Controlling house light switches</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://original.accentuate.io/556263801041/1636542278424/Lighting-Automation-Mob.jpg" alt="House lighting (source: accentuate.io)" width="200"></span>
 First, a bit of background about the example.
@@ -133,7 +138,6 @@ Groovy is referencing. They are more recent than what Scala is expecting.
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">import org.apache.nlpcraft.*
 import org.apache.nlpcraft.examples.lightswitch.LightSwitchModel
-import scala.util.Using
 import static scala.collection.immutable.HashMap$.MODULE$ as ScalaMap
 
 var data = ScalaMap.empty()  // no optional data
