@@ -197,10 +197,20 @@ for YAML processing.
 We also need the <code>groovy-yaml</code> module on the Groovy side if not already there.</p>
 </div>
 <div class="paragraph">
-<p>The model defines two intents. THe <code>intent2</code> intent should be triggered
-if a match is found for a city location, otherwise <code>intent1</code> will be triggered
-if it looks like you are asking for the time without a city and this
+<p>The model defines two intents:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>intent2</code> should be triggered
+if a match is found for a city location.</p>
+</li>
+<li>
+<p><code>intent1</code> will be triggered
+if it looks like you are asking for the time without a city; this
 corresponds to finding the local time.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Here is the Groovy client code:</p>
