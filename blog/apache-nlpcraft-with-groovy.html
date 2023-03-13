@@ -236,7 +236,7 @@ new NCModelClient(new TimeModel()).withCloseable { client -&gt;
     phrases.each { phrase, expected -&gt;
         var result = client.ask(phrase, user, data)
         assert result.intentId.get() == expected
-        def body = new YamlSlurper().parseText(result.body)
+        var body = new YamlSlurper().parseText(result.body)
         body.with{ println "$city, $country: $localTime" }
     }
 }</code></pre>
