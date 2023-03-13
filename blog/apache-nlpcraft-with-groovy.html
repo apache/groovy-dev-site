@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_controlling_house_light_switches' class='anchor-link'>Controlling house light switches</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_controlling_house_light_switches' class='anchor-link'>Controlling house light switches</a></li><li><a href='#_asking_for_the_time' class='anchor-link'>Asking for the time</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog looks at using
@@ -93,7 +93,7 @@ We&#8217;ll show using Groovy as the client language.</p>
 <h2 id="_controlling_house_light_switches">Controlling house light switches</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image right"><img src="https://original.accentuate.io/556263801041/1636542278424/Lighting-Automation-Mob.jpg" alt="House lighting (source: accentuate.io)" width="200"></span>
+<p><span class="image right"><img src="https://original.accentuate.io/556263801041/1636542278424/Lighting-Automation-Mob.jpg" alt="House lighting (source: accentuate.io)" width="180"></span>
 First, a bit of background about the example.
 We are trying to determine the intent behind English language
 commands to turn lights on and off in a house.
@@ -136,7 +136,7 @@ Groovy is referencing. They are more recent than what Scala is expecting.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">import org.apache.nlpcraft.*
+<pre class="prettyprint highlight"><code data-lang="groovy">import org.apache.nlpcraft.NCModelClient
 import org.apache.nlpcraft.examples.lightswitch.LightSwitchModel
 import static scala.collection.immutable.HashMap$.MODULE$ as ScalaMap
 
@@ -173,6 +173,75 @@ the <code>ls</code> intent was triggered.</p>
 <pre>Lights are [on] in [master bedroom].
 Lights are [off] in [entire house].
 Lights are [on] in [1st floor, garage].</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_asking_for_the_time">Asking for the time</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="http://www.liquidcrystal.co.nz/wp-content/uploads/2018/12/kaltor.jpg" alt="Robot watch" width="150"></span>
+Let&#8217;s now look at the NLPCraft <code>time</code> <a href="https://nlpcraft.apache.org/examples/time.html">example</a>.
+It&#8217;s a very simple world time bot implementation.</p>
+</div>
+<div class="paragraph">
+<p>The model is again defined as a combination of
+<a href="https://nlpcraft.apache.org/examples/time.html#model">YAML</a>
+and
+<a href="https://nlpcraft.apache.org/examples/time.html#code">Scala3 code</a>.
+A pre-compiled version is available as
+<code>org.apache.nlpcraft:nlpcraft-example-time:1.0.0</code> from Maven central.
+We used a locally built version with <code>DefaultScalaModule</code> enabled
+for YAML processing.
+We also need the <code>groovy-yaml</code> module on the Groovy side if not already there.</p>
+</div>
+<div class="paragraph">
+<p>The model defines two intents. A match with <code>intent2</code> should be triggered
+if a match is found for a city location, otherwise <code>intent1</code> will be triggered
+if it looks like you are asking for the time without a city and this
+corresponds to finding the local time.</p>
+</div>
+<div class="paragraph">
+<p>Here is the Groovy client code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.yaml.YamlSlurper
+import org.apache.nlpcraft.NCModelClient
+import org.apache.nlpcraft.examples.time.TimeModel
+import static scala.collection.immutable.HashMap$.MODULE$ as ScalaMap
+
+var data = ScalaMap.empty()  // no optional data
+var user = 'someUserId'
+var phrases = [
+    "What time is it now in New York City?"                 : 'intent2',
+    "What's the current time in Singapore?"                 : 'intent2',
+    "Show me time of the day in London."                    : 'intent2',
+    "Can you please give me Tokyo's current date and time." : 'intent2',
+    "What's the local time?"                                : 'intent1'
+]
+
+new NCModelClient(new TimeModel()).withCloseable { client -&gt;
+    phrases.each { phrase, expected -&gt;
+        var result = client.ask(phrase, user, data)
+        assert result.intentId.get() == expected
+        def body = new YamlSlurper().parseText(result.body)
+        body.with{ println "$city, $country: $localTime" }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, all our assertions pass, and here is the output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>New york city, United states: 12 Mar. 2023, 10:09:41 pm
+Singapore, Singapore: 13 Mar. 2023, 10:09:41 am
+London, United kingdom: 13 Mar. 2023, 2:09:41 am
+Tokyo, Japan: 13 Mar. 2023, 11:09:41 am
+Brisbane, Australia: 13 Mar. 2023, 12:09:42 pm</pre>
 </div>
 </div>
 </div>
