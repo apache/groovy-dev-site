@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_controlling_house_light_switches' class='anchor-link'>Controlling house light switches</a></li><li><a href='#_asking_for_the_time' class='anchor-link'>Asking for the time</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Converting natural language into actions with NLPCraft and Groovy</a></li><li><a href='#_controlling_house_light_switches' class='anchor-link'>Controlling house light switches</a></li><li><a href='#_asking_for_the_time' class='anchor-link'>Asking for the time</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Converting natural language into actions with NLPCraft and Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-10 07:22PM (Last updated: 2023-03-13 01:32PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog looks at using
@@ -181,7 +181,7 @@ Lights are [on] in [1st floor, garage].</pre>
 <h2 id="_asking_for_the_time">Asking for the time</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image right"><img src="http://www.liquidcrystal.co.nz/wp-content/uploads/2018/12/kaltor.jpg" alt="Robot watch" width="150"></span>
+<p><span class="image right"><img src="http://www.liquidcrystal.co.nz/wp-content/uploads/2018/12/kaltor.jpg" alt="Robot watch (source: liquidcrystal.co.nz)" width="150"></span>
 Let&#8217;s now look at the NLPCraft <code>time</code> <a href="https://nlpcraft.apache.org/examples/time.html">example</a>.
 It&#8217;s a very simple world time bot implementation.</p>
 </div>
@@ -197,7 +197,7 @@ for YAML processing.
 We also need the <code>groovy-yaml</code> module on the Groovy side if not already there.</p>
 </div>
 <div class="paragraph">
-<p>The model defines two intents. A match with <code>intent2</code> should be triggered
+<p>The model defines two intents. THe <code>intent2</code> intent should be triggered
 if a match is found for a city location, otherwise <code>intent1</code> will be triggered
 if it looks like you are asking for the time without a city and this
 corresponds to finding the local time.</p>
@@ -251,6 +251,14 @@ Brisbane, Australia: 13 Mar. 2023, 12:09:42 pm</pre>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://nlpcraft.apache.org/index.html">Apache NLPCraft website</a></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>13/Mar/2023</strong>: Added the time example.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
