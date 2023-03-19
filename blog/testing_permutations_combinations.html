@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, combinations, permutations, testing, junit, spock, jqwik, allpairs'/><meta name='description' content='This blog looks at testing with Groovy using Combinations and Permutations.'/><title>The Apache Groovy programming language - Blogs - Groovy Testing with Combinations and Permutations</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Testing with Combinations and Permutations</a></li><li><a href='#_chronicle_test_framework' class='anchor-link'>Chronicle Test Framework</a></li><li><a href='#_scenarios_for_testing' class='anchor-link'>Scenarios for testing</a></li><li><a href='#_scenario_1_with_the_chronicle_test_framework' class='anchor-link'>Scenario 1 with the Chronicle Test Framework</a></li><li><a href='#_scenario_2_with_the_chronicle_test_framework' class='anchor-link'>Scenario 2 with the Chronicle Test Framework</a></li><li><a href='#_scenario_1_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 1 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_2_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 2 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_1_with_data_driven_testing_and_junit5' class='anchor-link'>Scenario 1 with Data-driven testing and JUnit5</a></li><li><a href='#_scenario_1_with_spock' class='anchor-link'>Scenario 1 with Spock</a></li><li><a href='#_allpairs' class='anchor-link'>AllPairs</a></li><li><a href='#_jqwik' class='anchor-link'>Jqwik</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Testing with Combinations and Permutations</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-19 05:23PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This post is inspired by the recent <a href="https://foojay.io/today/">foojay.io</a> post
+<a href="https://foojay.io/today/exhaustive-junit5-testing-with-combinations-permutations-and-products/">Exhaustive JUnit5 Testing with Combinations, Permutations and Products</a>
+by
+<a href="https://foojay.io/today/author/per-minborg/">Per Minborg</a>
+which looks at how we might do more exhaustive testing with a focus on using the
+<a href="https://github.com/OpenHFT/Chronicle-Test-Framework">Chronicle Test Framework</a>.
+Let&#8217;s look at using that framework, and others, with Groovy. For fun, we&#8217;ll throw in
+a bit of <a href="https://www.pairwise.org/">pairwise testing</a> and
+<a href="https://jqwik.net/property-based-testing.html">property-based testing</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_chronicle_test_framework">Chronicle Test Framework</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The
+<a href="https://github.com/OpenHFT/Chronicle-Test-Framework">Chronicle Test Framework</a>
+is a library for use with JUnit
+which supports easy testing of combinations and permutations of
+data or actions. It is probably easiest to explain how it might work using an example.
+The previously mentioned blog has an example showing how to count the permutations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void numberOfPermutations() {
+    assert Combination.of(1, 2, 3, 4, 5, 6)
+        .flatMap(Permutation::of)
+        .peek{ println it }
+        .count() == 1957
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We tweaked it slightly with the <code>peek</code> to print out the permutations.
+The output looks like this (with a couple of sections elided for brevity):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[]
+[1]
+[2]
+[3]
+[4]
+[5]
+[6]
+[1, 2]
+[2, 1]
+[1, 3]
+...
+[5, 6]
+[6, 5]
+[1, 2, 3]
+[1, 3, 2]
+...
+[6, 5, 4, 3, 1, 2]
+[6, 5, 4, 3, 2, 1]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we have a testing scenario needing lists of numbers, the above generated
+lists might be perfect, and we don&#8217;t need to create 1957 individual manual tests,
+which would be a laborious and fragile alternative!</p>
+</div>
+<div class="paragraph">
+<p>We should note that Groovy has some nice combination and permutation capabilities built in.
+Groovy, doesn&#8217;t by default include the empty case in its permutations, but it&#8217;s easy enough to add in
+ourselves. Here is one way to write the above test in Groovy without requiring any additional dependencies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void numberOfPermutations() {
+    var perms = (1..6).subsequences()*.permutations().sum() &lt;&lt; []
+    assert perms.size() == 1957
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll see more examples of the Chronicle Test Framework and Groovy&#8217;s in-built capabilities later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenarios_for_testing">Scenarios for testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For further background, we encourage you to read the
+<a href="https://foojay.io/today/exhaustive-junit5-testing-with-combinations-permutations-and-products/">original post</a>.
+We&#8217;ll use the same two scenarios involving testing sequences of
+operations on lists to ensure that the lists behave in the same way.
+The two scenarios (though we&#8217;ll mainly focus on the first one) are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>We&#8217;ll compare the <code>LinkedList</code> and <code>ArrayList</code> classes, performing
+a series of mutating operations like <code>clear</code>, <code>add</code> and <code>remove</code> on both classes
+and check we get the same result.</p>
+</li>
+<li>
+<p>We&#8217;ll expand the first scenario to cover a wider range of lists
+also including <code>CopyOnWriteArrayList</code>, <code>Stack</code>, and <code>Vector</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_1_with_the_chronicle_test_framework">Scenario 1 with the Chronicle Test Framework</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We start by creating a predicate to test for <em>odd</em> numbers,
+since one of our operations requires it.
+Then we create a list of the operations we want to perform on our lists.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final Predicate&lt;Integer&gt; ODD = n -&gt; n % 2 == 1
+
+final OPERATIONS = [
+    NamedConsumer.of(List::clear, "clear()"),
+    NamedConsumer.of(list -&gt; list.add(1), "add(1)"),
+    NamedConsumer.of(list -&gt; list.removeElement(1), "remove(1)"),
+    NamedConsumer.of(list -&gt; list.addAll(Arrays.asList(2, 3, 4, 5)), "addAll(2,3,4,5)"),
+    NamedConsumer.of(list -&gt; list.removeIf(ODD), "removeIf(ODD)")
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is very similar to the Java versions shown in the previous blog but
+has one minor change. We used Groovy&#8217;s <code>removeElement</code> method which is
+an alias for <code>remove</code>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Java has two overloaded <code>remove</code> methods, one for
+removing the first element (if found) from a list, the other removing the
+element at a particular index. When dealing with lists of integers, you sometimes (as the original blog shows)
+need to use casting to disambiguate between these two variants.
+Groovy also works with the same casting trick but also provides <code>removeElement</code> and
+<code>remoteAt</code> aliases as an alternative choice to remove the ambiguity. We&#8217;ll see
+examples of <code>removeAt</code> a little later.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now we can define our test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TestFactory
+Stream&lt;DynamicTest&gt; validate() {
+    DynamicTest.stream(Combination.of(OPERATIONS)
+        .flatMap(Permutation::of),
+        FormatHelper::toString,
+        operations -&gt; {
+            ArrayList first = []
+            LinkedList second = []
+            operations.forEach { op -&gt;
+                op.accept(first)
+                op.accept(second)
+            }
+            assert first == second
+        })
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This generates test cases for all permutations of our operations.
+For each test case, we check that once we have applied all operations in the current permutation,
+that the two lists have the same contents.</p>
+</div>
+<div class="paragraph">
+<p>If you were wondering why we used <code>NamedConsumer</code> when defining the <code>OPERATIONS</code> earlier,
+it is to do with supporting friendly test names when the test is run with various JUnit5-aware test runners.
+Here are the first 9 of the 326 tests shown when run in <a href="https://www.jetbrains.com/idea/">Intellij IDEA</a>:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ListDemoTest.png" alt="Result of running the test"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_2_with_the_chronicle_test_framework">Scenario 2 with the Chronicle Test Framework</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For this scenario, we want to compare results between more list types.
+Again, we could manually create additional variants of the above tests
+to cater for the comparison between additional list types, but why not
+generate those variants without extra manual work.</p>
+</div>
+<div class="paragraph">
+<p>To do this, we create a list of factories for generating our lists of interest:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final CONSTRUCTORS = [
+    ArrayList, LinkedList, CopyOnWriteArrayList, Stack, Vector
+].collect(clazz -&gt; clazz::new as Supplier)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can now create a test just like the original blog which runs
+all permutations of the operations on all lists and then checks for each list combination
+that the resulting lists are equal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TestFactory
+Stream&lt;DynamicTest&gt; validateMany() {
+    DynamicTest.stream(Combination.of(OPERATIONS)
+        .flatMap(Permutation::of),
+        FormatHelper::toString,
+        operations -&gt; {
+            var lists = CONSTRUCTORS.stream()
+                .map(Supplier::get)
+                .toList()
+
+            operations.forEach(lists::forEach)
+
+            Combination.of(lists)
+                .filter(set -&gt; set.size() == 2)
+                .map(ArrayList::new)
+                .forEach { p1, p2 -&gt; assert p1 == p2 }
+        })
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can check that our different list combinations are being correctly produced with a test like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void numberOfPairCombinations() {
+    assert Combination.of(CONSTRUCTORS)
+        .filter(l -&gt; l.size() == 2)
+        .peek { println it*.get()*.class*.simpleName }
+        .count() == 10
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that there are 10 pairs with the following types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[ArrayList, LinkedList]
+[ArrayList, CopyOnWriteArrayList]
+[ArrayList, Stack]
+[ArrayList, Vector]
+[LinkedList, CopyOnWriteArrayList]
+[LinkedList, Stack]
+[LinkedList, Vector]
+[CopyOnWriteArrayList, Stack]
+[CopyOnWriteArrayList, Vector]
+[Stack, Vector]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point, the original blog goes on to warn about the problem of potentially exponentially
+large numbers of test cases when calculating permutations across many dimensions or cases.
+We&#8217;ll come back to that shortly, but let&#8217;s first look at similar tests for these two scenarios
+using vanilla Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_1_with_vanilla_groovy_and_junit5">Scenario 1 with vanilla Groovy and JUnit5</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We create our list of operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final OPERATIONS = [
+    List::clear,
+    { list -&gt; list.add(1) },
+    { list -&gt; list.removeElement(1) },
+    { list -&gt; list.addAll(Arrays.asList(2, 3, 4, 5)) },
+    { list -&gt; list.removeIf(ODD) }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we use Groovy&#8217;s <code>eachPermutation</code> method to go through the different permutations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void validate() {
+    OPERATIONS.eachPermutation { opList -&gt;
+        ArrayList first = []
+        LinkedList second = []
+        opList.each { op -&gt;
+            op(first)
+            op(second)
+        }
+        assert first == second
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_2_with_vanilla_groovy_and_junit5">Scenario 2 with vanilla Groovy and JUnit5</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using the same definition for <code>OPERATIONS</code> and <code>CONSTRUCTORS</code> as previously,
+we can write our test as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void validateMany() {
+    OPERATIONS.eachPermutation { opList -&gt;
+        def pairs = CONSTRUCTORS*.get().subsequences().findAll { it.size() == 2 }
+        pairs.each { first, second -&gt;
+            opList.each { op -&gt;
+                op(first)
+                op(second)
+            }
+            assert first == second
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can double-check the list types in a similar way to before:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void numberOfPairCombinations() {
+    assert (1..5).subsequences()
+        .findAll(l -&gt; l.size() == 2)
+        .size() == 10
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, there are 10 pair combinations.</p>
+</div>
+<div class="paragraph">
+<p>The Groovy versions require no additional dependencies but there is one difference.
+The pretty formatting of nested results is missing. The JUnit5 run in Intellij
+will look like the following:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ListDemoGroovyTest.png" alt="Result of test run"></span></p>
+</div>
+<div class="paragraph">
+<p>We can&#8217;t drill down into the different test subcases within the <code>validate</code> and <code>validateMany</code> tests.
+Let&#8217;s incorporate that capability with vanilla Groovy and Spock. We&#8217;ll just show the approach for
+Scenario 1, but the same technique could be used for Scenario 2 if we wanted.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_1_with_data_driven_testing_and_junit5">Scenario 1 with Data-driven testing and JUnit5</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we&#8217;ll change our list of operations to a map with the key being the
+<em>name</em> we saw earlier when we used <code>NamedConsumer</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final OPERATIONS = [
+    'clear()'        : List::clear,
+    'add(1)'         : { list -&gt; list.add(1) },
+    'remove(1)'      : { list -&gt; list.removeElement(1) },
+    'addAll(2,3,4,5)': { list -&gt; list.addAll(Arrays.asList(2, 3, 4, 5)) },
+    'removeIf(ODD)'  : { list -&gt; list.removeIf(ODD) }
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we&#8217;ll create a helper method to generate our permutations
+including both the friendly name and the operation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Stream&lt;Arguments&gt; operationPermutations() {
+    OPERATIONS.entrySet().permutations().collect(e -&gt; Arguments.of(e.key, e.value)).stream()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With these in place, we can change the test to use JUnit5&#8217;s data-driven
+<code>ParameterizedTest</code> capability:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ParameterizedTest(name = "{index} {0}")
+@MethodSource("operationPermutations")
+void validate(List&lt;String&gt; names, List&lt;Closure&gt; operations) {
+    ArrayList first = []
+    LinkedList second = []
+    operations.each { op -&gt;
+        op(first)
+        op(second)
+    }
+    assert first == second
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ListDemoDataDrivenGroovyTest.png" alt="Result of running test"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scenario_1_with_spock">Scenario 1 with Spock</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We also want to illustrate another useful framework, the
+<a href="https://spockframework.org/">Spock testing framework</a>, which
+also supports
+<a href="https://spockframework.org/spock/docs/2.3/data_driven_testing.html">Data driven testing</a>.</p>
+</div>
+<div class="paragraph">
+<p>Spock supports a number of different test styles.
+Here we are using the <em>given</em>, <em>when</em>, <em>then</em> style
+with the <em>where</em> clause for data-driven testing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def "[#iterationIndex] #names"(List&lt;String&gt; names, List&lt;Closure&gt; operations) {
+    given:
+    ArrayList first = []
+    LinkedList second = []
+
+    when:
+    operations.each { op -&gt;
+        op(first)
+        op(second)
+    }
+
+    then:
+    first == second
+
+    where:
+    entries &lt;&lt; OPERATIONS.entrySet().permutations()
+    (names, operations) = entries.collect{ [it.key, it.value] }.transpose()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, it has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ListDemoDataDrivenSpockSpec.png" alt="Result of running test"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now cover some additional topics.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_allpairs">AllPairs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The "final warning" in the original post was to be wary of the potential explosion in test
+cases that might come about when using combinations and permutations.</p>
+</div>
+<div class="paragraph">
+<p>The concept of <a href="https://www.pairwise.org/">pairwise testing</a> is a technique designed to
+help limit this explosion in cases. It relies on the fact that many bugs surface when
+two features interact badly. If we have a test involving five features, then perhaps
+we don&#8217;t need every combination of all five features. It is perhaps easier to see with an example.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s add a few more operations and then split them into three classes:
+<em>grow</em>, <em>shrink</em> and <em>read</em> operations.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final GROW_OPS = [
+    'add(1)': { list -&gt; list.add(1) },
+    'addAll([2, 3, 4, 5])': { list -&gt; list.addAll([2, 3, 4, 5]) },
+    'maybe add(1)': { list -&gt; if (new Random().nextBoolean()) list.add(1) },
+].entrySet().toList()
+
+final SHRINK_OPS = [
+    'clear()': List::clear,
+    'remove(1)': { list -&gt; list.removeElement(1) },
+    'removeIf(ODD)': { list -&gt; list.removeIf(ODD) }
+].entrySet().toList()
+
+final READ_OPS = [
+    'isEmpty()': List::isEmpty,
+    'size()': List::size,
+    'contains(1)': { list -&gt; list.contains(1) },
+].entrySet().toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We want test cases which perform a <em>grow</em> operation, followed by a <em>shrink</em> operation,
+and then a <em>read</em> operation.
+If we wanted to cover all possible combinations, we&#8217;d need 27 test cases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert [ADD_OPS, REMOVE_OPS, READ_OPS].combinations().size() == 27</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Numerous all-pairs libraries exist for numerous languages.
+We&#8217;ll use the
+<a href="https://github.com/pavelicii/allpairs4j">AllPairs4J</a> library for Java.</p>
+</div>
+<div class="paragraph">
+<p>This library has a builder where we specify the parameters of interest
+and it then generates the pair-wise combinations. We do a similar test
+as before for each of the combinations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Test
+void validate() {
+    var allPairs = new AllPairs.AllPairsBuilder()
+        .withTestCombinationSize(2)
+        .withParameter(new Parameter("Add op", ADD_OPS))
+        .withParameter(new Parameter("Remove op", REMOVE_OPS))
+        .withParameter(new Parameter("Read op", READ_OPS))
+        .build()
+    allPairs.eachWithIndex { namedOps, index -&gt;
+        print "$index: "
+        ArrayList first = []
+        LinkedList second = []
+        var log = []
+        namedOps.each{ k, v -&gt;
+            log &lt;&lt; "$k=$v.key"
+            var op = v.value
+            op(first)
+            op(second)
+        }
+        println log.join(', ')
+        assert first == second
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We used <code>withTestCombinationSize(2)</code> to create pair-wise combinations
+but the library supports n-wise if we need it. We also used a simple
+hand-built log to make it easier to understand what is going on,
+but we could have hooked into the data-driven integration points
+we saw earlier with JUnit5 and Spock if we wanted.</p>
+</div>
+<div class="paragraph">
+<p>When we run this test, it has the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1: Add op=add(1), Remove op=clear(), Read op=isEmpty()
+2: Add op=maybe add(1), Remove op=remove(1), Read op=isEmpty()
+3: Add op=addAll([2, 3, 4, 5]), Remove op=removeIf(ODD), Read op=isEmpty()
+4: Add op=addAll([2, 3, 4, 5]), Remove op=remove(1), Read op=size()
+5: Add op=maybe add(1), Remove op=clear(), Read op=size()
+6: Add op=add(1), Remove op=removeIf(ODD), Read op=size()
+7: Add op=add(1), Remove op=remove(1), Read op=contains(1)
+8: Add op=maybe add(1), Remove op=removeIf(ODD), Read op=contains(1)
+9: Add op=addAll([2, 3, 4, 5]), Remove op=clear(), Read op=contains(1)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can see that only 9 tests were produced instead of the 27 combinations needed
+for exhaustive testing. To understand what is going on, we need to examine
+the output further.</p>
+</div>
+<div class="paragraph">
+<p>If we look only at the <code>add(1)</code> <em>Add operation</em>,
+we&#8217;ll see that all three <em>Remove operations</em>,
+and all three <em>Read operations</em> are covered in tests:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1: <strong class="lime">Add op=add(1)</strong>, <strong class="red">Remove op=clear()</strong>, <strong class="blue">Read op=isEmpty()</strong>
+2: Add op=maybe add(1), Remove op=remove(1), Read op=isEmpty()
+3: Add op=addAll([2, 3, 4, 5]), Remove op=removeIf(ODD), Read op=isEmpty()
+4: Add op=addAll([2, 3, 4, 5]), Remove op=remove(1), Read op=size()
+5: Add op=maybe add(1), Remove op=clear(), Read op=size()
+6: <strong class="lime">Add op=add(1)</strong>, <strong class="red">Remove op=removeIf(ODD)</strong>, <strong class="blue">Read op=size()</strong>
+7: <strong class="lime">Add op=add(1)</strong>, <strong class="red">Remove op=remove(1)</strong>, <strong class="blue">Read op=contains(1)</strong>
+8: Add op=maybe add(1), Remove op=removeIf(ODD), Read op=contains(1)
+9: Add op=addAll([2, 3, 4, 5]), Remove op=clear(), Read op=contains(1)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we look only at the <code>maybe add(1)</code> <em>Add operation</em>,
+we&#8217;ll see that all three <em>Remove operations</em>,
+and all three <em>Read operations</em> are covered:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1: Add op=add(1), Remove op=clear(), Read op=isEmpty()
+2: <strong class="lime">Add op=maybe add(1)</strong>, <strong class="red">Remove op=remove(1)</strong>, <strong class="blue">Read op=isEmpty()</strong>
+3: Add op=addAll([2, 3, 4, 5]), Remove op=removeIf(ODD), Read op=isEmpty()
+4: Add op=addAll([2, 3, 4, 5]), Remove op=remove(1), Read op=size()
+5: <strong class="lime">Add op=maybe add(1)</strong>, <strong class="red">Remove op=clear()</strong>, <strong class="blue">Read op=size()</strong>
+6: Add op=add(1), Remove op=removeIf(ODD), Read op=size()
+7: Add op=add(1), Remove op=remove(1), Read op=contains(1)
+8: <strong class="lime">Add op=maybe add(1)</strong>, <strong class="red">Remove op=removeIf(ODD)</strong>, <strong class="blue">Read op=contains(1)</strong>
+9: Add op=addAll([2, 3, 4, 5]), Remove op=clear(), Read op=contains(1)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we look only at the <code>addAll([2, 3, 4, 5])</code> <em>Add operation</em>,
+we&#8217;ll again see that all three <em>Remove operations</em>,
+and all three <em>Read operations</em> are covered:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1: Add op=add(1), Remove op=clear(), Read op=isEmpty()
+2: Add op=maybe add(1), Remove op=remove(1), Read op=isEmpty()
+3: <strong class="lime">Add op=addAll([2, 3, 4, 5])</strong>, <strong class="red">Remove op=removeIf(ODD)</strong>, <strong class="blue">Read op=isEmpty()</strong>
+4: <strong class="lime">Add op=addAll([2, 3, 4, 5])</strong>, <strong class="red">Remove op=remove(1)</strong>, <strong class="blue">Read op=size()</strong>
+5: Add op=maybe add(1), Remove op=clear(), Read op=size()
+6: Add op=add(1), Remove op=removeIf(ODD), Read op=size()
+7: Add op=add(1), Remove op=remove(1), Read op=contains(1)
+8: Add op=maybe add(1), Remove op=removeIf(ODD), Read op=contains(1)
+9: <strong class="lime">Add op=addAll([2, 3, 4, 5])</strong>, <strong class="red">Remove op=clear()</strong>, <strong class="blue">Read op=contains(1)</strong></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You might wonder, have we reduced our chances of finding bugs by reducing our number of tests
+from 27 to 9? If a bug is due to the bad interaction of two features, then no, we still have
+all the cases covered. That won&#8217;t always be true, since obscure bugs might be the result of
+more than two features interacting. Hence why the library supports n-wise testing.
+In essence, this technique lets you balance the explosion of combinatorial testing
+versus the chance of discovering more obscure bugs.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s do a quick cross-check to gain some confidence in our 9 test cases.</p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll tweak the test to capture exceptions and print out our hand-crafted log at that point.
+This is just one way we could handle such exceptions occurring:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">namedOps.each{ k, v -&gt;
+    try {
+        log &lt;&lt; "$k=$v.key"
+        var op = v.value
+        op(first)
+        op(second)
+    } catch(ex) {
+        println 'Failed on last op of: ' + log.join(', ')
+        throw ex
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s deliberately introduce a bug. We&#8217;ll replace our second <em>shrink</em> operation
+with one that tries to remove the element at index 0 (assuming there is at least one element):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final SHRINK_OPS = [
+    'clear()': List::clear,
+//    'remove(1)': { list -&gt; list.removeElement(1) },  // <b class="conum">(1)</b>
+    'removeAt(0)': { list -&gt; list.removeAt(0) },       // <b class="conum">(2)</b>
+    'removeIf(ODD)': { list -&gt; list.removeIf(ODD) }
+].entrySet().toList()</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Comment out this operation</p>
+</li>
+<li>
+<p>Add in this problematic operation</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Now, when we run the test we see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; Task :test FAILED
+0: Grow op=add(1), Shrink op=clear(), Read op=isEmpty()
+1: Grow op=addAll([2, 3, 4, 5]), Shrink op=removeAt(0), Read op=isEmpty()
+2: Grow op=maybe add(1), Shrink op=removeIf(ODD), Read op=isEmpty()
+3: Failed on last op of: Grow op=maybe add(1), Shrink op=removeAt(0)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we can see that cases 0, 1 and 2 succeeded.
+For case 3, the grow operation, which adds an element randomly half the time, must not have
+added anything, and the subsequent attempt to remove the first failed.
+So, even with our small number of test cases, this "bug" was detected.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jqwik">Jqwik</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our final example looks at
+<a href="https://jqwik.net/property-based-testing.html">property-based testing</a>
+and the
+<a href="https://jqwik.net/">jqwik</a>
+library.</p>
+</div>
+<div class="paragraph">
+<p>Property-based testing tools also try to do more testing than what can
+be easily done (and maintained) with manual tests,
+but they don&#8217;t focus on fully-exhaustive testing per se.
+Instead, they focus on generating random test inputs and then checking that certain properties hold.</p>
+</div>
+<div class="paragraph">
+<p>Frameworks which support <em>stateful</em> property-based testing also allow you to
+generate random commands that we can issue on a stateful system
+and then check that certain properties hold.</p>
+</div>
+<div class="paragraph">
+<p>We are going to use jqwik&#8217;s
+<a href="https://jqwik.net/docs/current/user-guide.html#stateful-testing">stateful testing</a>
+capabilities in this way.</p>
+</div>
+<div class="paragraph">
+<p>We start with a similar map of operations (and friendly names) as we&#8217;ve seen before:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"> final OPERATIONS = [
+    'clear()'        : List::clear,
+    'add(1)'         : { list -&gt; list.add(1) },
+    'remove(1)'      : { list -&gt; list.removeElement(1) },
+    'addAll(2,3,4,5)': { list -&gt; list.addAll(Arrays.asList(2, 3, 4, 5)) },
+    'removeIf(ODD)'  : { list -&gt; list.removeIf(ODD) }
+].entrySet().toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The stateful testing functionality in jqwik
+has the concept of action chains which describe how stateful objects
+are transformed. In our case, we randomly select one of our operations,
+using a jqwik generated random index.
+We apply the selected operation
+to two lists, and check that the lists contain the same values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class MutateAction implements Action.Independent&lt;Tuple2&lt;List, List&gt;&gt; {
+    Arbitrary&lt;Transformer&lt;Tuple2&lt;List, List&gt;&gt;&gt; transformer() {
+        var indexValues = Arbitraries.integers().between(0, OPERATIONS.size()-1)
+        indexValues.map(index -&gt;
+            Transformer.mutate(OPERATIONS[index].key) { list1, list2 -&gt;
+                var op = OPERATIONS[index].value
+                op(list1)
+                op(list2)
+                assert list1 == list2
+            })
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We now specify that we want up to 6 operations in our action chain,
+and that we&#8217;ll start with an ArrayList and a LinkedList
+both containing a single element, the Integer 1:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Provide
+Arbitrary&lt;ActionChain&gt; myListActions() {
+    ActionChain.startWith{ Tuple2.tuple([1] as ArrayList, [1] as LinkedList) }
+        .withAction(new MutateAction())
+        .withMaxTransformations(6)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Provide</code> annotation indicates that this method can be used to provide inputs
+to tests needing a chain of actions.</p>
+</div>
+<div class="paragraph">
+<p>Finally, we add our test. For jqwik, this is done using the <code>@Property</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Property(seed='100001')
+void confirmSimilarListBehavior(@ForAll("myListActions") ActionChain chain) {
+    chain.run()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>seed</em> annotation attribute is optional and can be used to obtain repeatable tests.</p>
+</div>
+<div class="paragraph">
+<p>When we run this test, we&#8217;ll see that jqwik produced 1000 different sequences of operations
+and they all passed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>                              |-----------------------jqwik-----------------------
+tries = 1000                  | # of calls to property
+checks = 1000                 | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 100001                 | random seed to reproduce generated values</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Like before, we can deliberately break our code to convince ourselves
+that our tests are doing their job. Let&#8217;s re-introduce the problematic <code>removeAt</code>
+operation that we used with all-pairs testing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final OPERATIONS = [
+        'clear()'        : List::clear,
+        'add(1)'         : { list -&gt; list.add(1) },
+//        'remove(1)'      : { list -&gt; list.removeElement(1) }, // <b class="conum">(1)</b>
+        'removeAt(0)'    : { list -&gt; list.removeAt(0) },        // <b class="conum">(2)</b>
+        'addAll(2,3,4,5)': { list -&gt; list.addAll(Arrays.asList(2, 3, 4, 5)) },
+        'removeIf(ODD)'  : { list -&gt; list.removeIf(ODD) }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Commented out</p>
+</li>
+<li>
+<p>Added operation which can potentially break</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When we re-run our tests we see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ListDemoDataDrivenJqwikTest:confirmSimilarListBehavior =
+  org.opentest4j.AssertionFailedError:
+    Run failed after the following actions: [
+        clear()
+        removeAt(0)
+    ]
+    final state: [[], []]
+    Index 0 out of bounds for length 0
+
+                              |-----------------------jqwik-----------------------
+tries = 4                     | # of calls to property
+checks = 4                    | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 100001                 | random seed to reproduce generated values
+...
+
+  Original Error
+  --------------
+  org.opentest4j.AssertionFailedError:
+    Run failed after the following actions: [
+        addAll(2,3,4,5)
+        add(1)
+        clear()
+        removeAt(0)
+    ]
+    final state: [[], []]
+    Index 0 out of bounds for length 0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are a few pieces to unpack in this output:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>It produced a "shrunk" sequence exhibiting the error, consisting of the <code>clear()</code> and <code>removeAt(0)</code> operations. This is an expected error.</p>
+</li>
+<li>
+<p>It ran 3 successful other random sequences before failing during the 4th check.</p>
+</li>
+<li>
+<p>The generated sequence before shrinking was <code>addAll(2,3,4,5)</code>, <code>add(1)</code>, <code>clear()</code>, and <code>removeAt(0)</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Original blog (<a href="https://foojay.io/today/exhaustive-junit5-testing-with-combinations-permutations-and-products/">foojay.io</a>)</p>
+</li>
+<li>
+<p>Chronicle Test Framework (<a href="https://github.com/OpenHFT/Chronicle-Test-Framework">GitHub</a>)</p>
+</li>
+<li>
+<p>AllPairs4J (<a href="https://github.com/pavelicii/allpairs4j">GitHub</a>)</p>
+</li>
+<li>
+<p>Spock testing framework (<a href="https://spockframework.org/">website</a>)</p>
+</li>
+<li>
+<p>jqwik (<a href="https://jqwik.net/">website</a>)</p>
+</li>
+<li>
+<p>Testing With Groovy Slides:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://speakerdeck.com/paulk/make-your-testing-groovy?slide=87">All Combinations</a></p>
+</li>
+<li>
+<p><a href="https://speakerdeck.com/paulk/make-your-testing-groovy?slide=89">All Pairs</a></p>
+</li>
+<li>
+<p><a href="https://speakerdeck.com/paulk/property-based-testing">Property-based testing</a></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
