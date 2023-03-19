@@ -812,18 +812,16 @@ capabilities in this way.</p>
 <p>The stateful testing functionality in jqwik
 has the concept of action chains which describe how stateful objects
 are transformed. In our case, we randomly select one of our operations,
-using a jqwik generated random index.
-We apply the selected operation
+then apply the selected operation
 to two lists, and check that the lists contain the same values:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">class MutateAction implements Action.Independent&lt;Tuple2&lt;List, List&gt;&gt; {
     Arbitrary&lt;Transformer&lt;Tuple2&lt;List, List&gt;&gt;&gt; transformer() {
-        var indexValues = Arbitraries.integers().between(0, OPERATIONS.size()-1)
-        indexValues.map(index -&gt;
-            Transformer.mutate(OPERATIONS[index].key) { list1, list2 -&gt;
-                var op = OPERATIONS[index].value
+        Arbitraries.of(OPERATIONS).map(operation -&gt;
+            Transformer.mutate(operation.key) { list1, list2 -&gt;
+                var op = operation.value
                 op(list1)
                 op(list2)
                 assert list1 == list2
