@@ -541,7 +541,7 @@ two features interact badly. If we have a test involving five features, then per
 we don&#8217;t need every combination of all five features. It is perhaps easier to see with an example.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s add a few more operations and then split them into three classes:
+<p>Let&#8217;s add a few more operations and then split them into three groups:
 <em>grow</em>, <em>shrink</em> and <em>read</em> operations.</p>
 </div>
 <div class="listingblock">
@@ -763,7 +763,7 @@ with one that tries to remove the element at index 0 (assuming there is at least
 <div class="paragraph">
 <p>Here we can see that cases 0, 1 and 2 succeeded.
 For case 3, the grow operation, which adds an element randomly half the time, must not have
-added anything, and the subsequent attempt to remove the first failed.
+added anything, and the subsequent attempt to remove the first element failed.
 So, even with our small number of test cases, this "bug" was detected.</p>
 </div>
 </div>
