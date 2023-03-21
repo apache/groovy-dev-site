@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Testing with Combinations and Permutations</a></li><li><a href='#_chronicle_test_framework' class='anchor-link'>Chronicle Test Framework</a></li><li><a href='#_scenarios_for_testing' class='anchor-link'>Scenarios for testing</a></li><li><a href='#_scenario_1_with_the_chronicle_test_framework' class='anchor-link'>Scenario 1 with the Chronicle Test Framework</a></li><li><a href='#_scenario_2_with_the_chronicle_test_framework' class='anchor-link'>Scenario 2 with the Chronicle Test Framework</a></li><li><a href='#_scenario_1_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 1 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_2_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 2 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_1_with_data_driven_testing_and_junit5' class='anchor-link'>Scenario 1 with Data-driven testing and JUnit5</a></li><li><a href='#_scenario_1_with_spock' class='anchor-link'>Scenario 1 with Spock</a></li><li><a href='#_allpairs' class='anchor-link'>AllPairs</a></li><li><a href='#_jqwik' class='anchor-link'>Jqwik</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Testing with Combinations and Permutations</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-19 05:23PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Testing with Combinations and Permutations</a></li><li><a href='#_chronicle_test_framework' class='anchor-link'>Chronicle Test Framework</a></li><li><a href='#_scenarios_for_testing' class='anchor-link'>Scenarios for testing</a></li><li><a href='#_scenario_1_with_the_chronicle_test_framework' class='anchor-link'>Scenario 1 with the Chronicle Test Framework</a></li><li><a href='#_scenario_2_with_the_chronicle_test_framework' class='anchor-link'>Scenario 2 with the Chronicle Test Framework</a></li><li><a href='#_scenario_1_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 1 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_2_with_vanilla_groovy_and_junit5' class='anchor-link'>Scenario 2 with vanilla Groovy and JUnit5</a></li><li><a href='#_scenario_1_with_data_driven_testing_and_junit5' class='anchor-link'>Scenario 1 with Data-driven testing and JUnit5</a></li><li><a href='#_scenario_1_with_spock' class='anchor-link'>Scenario 1 with Spock</a></li><li><a href='#_allpairs' class='anchor-link'>AllPairs</a></li><li><a href='#_jqwik' class='anchor-link'>Jqwik</a></li><li><a href='#_usage_from_java' class='anchor-link'>Usage from Java</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Testing with Combinations and Permutations</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-03-19 05:23PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This post is inspired by the recent <a href="https://foojay.io/today/">foojay.io</a> post
@@ -961,6 +961,61 @@ seed = 100001                 | random seed to reproduce generated values
 <p>The generated sequence before shrinking was <code>addAll(2,3,4,5)</code>, <code>add(1)</code>, <code>clear()</code>, and <code>removeAt(0)</code>.</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_usage_from_java">Usage from Java</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can also use Groovy&#8217;s permutation and combination functionality from Java as the following tests show:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test                                                         // Java
+public void combinations() {
+    String[] letters = {"A", "B"};
+    Integer[] numbers = {1, 2};
+    Object[] collections = {letters, numbers};
+    var expected = List.of(
+        List.of("A", 1),
+        List.of("B", 1),
+        List.of("A", 2),
+        List.of("B", 2)
+    );
+    var combos = GroovyCollections.combinations(collections);
+    assertEquals(expected, combos);
+}
+
+@Test
+public void subsequences() {
+    var numbers = List.of(1, 2, 3);
+    var expected = Set.of(
+        List.of(1), List.of(2), List.of(3),
+        List.of(1, 2), List.of(1, 3), List.of(2, 3),
+        List.of(1, 2, 3)
+    );
+    var result = GroovyCollections.subsequences(numbers);
+    assertEquals(expected, result);
+}
+
+@Test
+public void permutations() {
+    var numbers = List.of(1, 2, 3);
+    var gen = new PermutationGenerator&lt;&gt;(numbers);
+    var result = new HashSet&lt;&gt;();
+    while (gen.hasNext()) {
+        List&lt;Integer&gt; next = gen.next();
+        result.add(next);
+    }
+    var expected = Set.of(
+        List.of(1, 2, 3), List.of(1, 3, 2),
+        List.of(2, 1, 3), List.of(2, 3, 1),
+        List.of(3, 1, 2), List.of(3, 2, 1)
+    );
+    assertEquals(expected, result);
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
