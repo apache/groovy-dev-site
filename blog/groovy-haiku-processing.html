@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, eclipse collections, streams'/><meta name='description' content='This blog looks at processing some creative writing looking at various properties of the letters within the text.'/><title>The Apache Groovy programming language - Blogs - Groovy Haiku processing</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Haiku processing</a></li><li><a href='#_example_1_finding_the_distinct_letters' class='anchor-link'>Example 1: Finding the distinct letters</a></li><li><a href='#_example_2_splitting_letters_into_unique_and_duplicate_partitions' class='anchor-link'>Example 2: Splitting letters into unique and duplicate partitions</a></li><li><a href='#_example_3_finding_the_top_used_letters' class='anchor-link'>Example 3: Finding the top used letters</a></li><li><a href='#_example_3_other_variations' class='anchor-link'>Example 3: Other variations</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./calculating-fibonacci-with-groovy-revisited'>Calculating Fibonacci with Groovy revisited</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Haiku processing</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-11-07 07:22PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This blog looks at some Groovy solutions for the examples in the
+<a href="https://medium.com/javarevisited/haiku-for-java-using-text-blocks-6b7862ccd067">Haiku for Java using Text Blocks</a> post by <a href="https://twitter.com/TheDonRaab">Donald Raab</a>. In his example,
+he is making use of Java text blocks, but Groovy already supports similar functionality
+with its multi-line strings, so we won&#8217;t elaborate further on that aspect.</p>
+</div>
+<div class="paragraph">
+<p>Here is some of Donald&#8217;s creative writing:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*zcMH0Q37PFrGS4bC2EHqiw.png" alt="text of Donald Raab&#8217;s haikus"></span></p>
+</div>
+<div class="paragraph">
+<p>In his examples, he processes those examples in various ways. We&#8217;ll look at doing the same
+examples using Groovy.</p>
+</div>
+<div class="paragraph">
+<p>There has also been an excellent follow-on discussion of these examples in a recent
+<a href="https://www.youtube.com/watch?v=wW7uzc61tZ8">JEP Café video</a> by
+<a href="https://twitter.com/JosePaumard">José Paumard</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you want more background about the examples, we highly recommend reading Donald&#8217;s
+<a href="https://medium.com/javarevisited/haiku-for-java-using-text-blocks-6b7862ccd067">blog</a>
+or watching José&#8217;s
+<a href="https://www.youtube.com/watch?v=wW7uzc61tZ8">video</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_1_finding_the_distinct_letters">Example 1: Finding the distinct letters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this example, we want to see all the individual letters used in the haiku text.
+We will disregard any punctuation characters and convert all letters to lowercase
+since we don&#8217;t care about the distinction of case.</p>
+</div>
+<div class="paragraph">
+<p>Here is the Groovy code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints().toArray()
+    .findAll(Character::isAlphabetic)
+    .collect(Character::toLowerCase)
+    .toUnique()
+    .collect(Character::toString)
+    .join() == 'breakingthoupvmwcdflsy'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We made a slight change compared to what is in the blog and video.
+We used <code>codePoints()</code> instead of <code>chars()</code>.
+While Donald&#8217;s current haiku text doesn&#8217;t contain any surrogate pairs,
+we might as well be ready to handle any if they appear in the future.
+You can see here that the following smiley face emoji is encoded
+with two characters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert "😃".codePoints().mapToObj(Character::toString).toList()[0].size() == 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And we are sure it&#8217;s only a matter of time before such symbols start appearing
+more frequently in someone&#8217;s haiku.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_2_splitting_letters_into_unique_and_duplicate_partitions">Example 2: Splitting letters into unique and duplicate partitions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In the next example, we want to count the number of occurrences of each letter
+and distinguish between letters which are duplicated multiple times and any
+letters which might occur only once.</p>
+</div>
+<div class="paragraph">
+<p>We are going to use a map to store letters seen (the key)
+and the number of times they occur (the value).
+We&#8217;ll create a condition which is true for the map entries
+which are seen only once.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var uniqueAndDuplicatePartitions = e -&gt; e.value == 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We use Groovy&#8217;s <code>countBy</code> method to create our map and then the <code>split</code>
+method with our previous condition. This partitions the map into the unique
+and duplicate sets.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints().toArray()
+    .findAll(Character::isAlphabetic)
+    .collect(Character::toLowerCase)
+    .collect(Character::toString)
+    .countBy{ it }
+    .split(uniqueAndDuplicatePartitions)
+    *.size() == [0, 22]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we check the sizes of the two sets, we discover that no letters occur only once
+and that all letters are duplicated.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_3_finding_the_top_used_letters">Example 3: Finding the top used letters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our final example is a variant of the previous example.
+Instead of just finding unique and duplicate characters,
+we want to find the three most frequently occurring letters.</p>
+</div>
+<div class="paragraph">
+<p>Like before, we need a condition. This time, once
+that we will use for sorting (in reverse order):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var byCountDescending = e -&gt; -e.value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we just sort using our condition and take the first 3.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints().toArray()
+    .findAll(Character::isAlphabetic)
+    .collect(Character::toLowerCase)
+    .collect(Character::toString)
+    .countBy{ it }
+    .sort(byCountDescending)
+    .take(3) == [e:94, t:65, i:62]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_3_other_variations">Example 3: Other variations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We can also use Eclipse Collections for this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var top3 = Strings.asCodePoints(haiku)
+    .select(Character::isAlphabetic)
+    .collectInt(Character::toLowerCase)
+    .collect(Character::toString)
+    .toBag()
+    .topOccurrences(3)
+
+[e:94, t:65, i:62].eachWithIndex{ k, v, i -&gt;
+    assert top3[i] == PrimitiveTuples.pair(k, v)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the <code>Bag</code> and its <code>topOccurrences</code> method have done much of the hard work for us.
+In fact, this solution also has a behavioral difference in the presence of ties which
+we&#8217;ll come back to later.</p>
+</div>
+<div class="paragraph">
+<p>We can of course use the Stream API as is done in both the blog and video.
+Here is the Groovy equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints()
+        .filter(Character::isAlphabetic)
+        .map(Character::toLowerCase)
+        .mapToObj(Character::toString)
+        .collect(Collectors.groupingBy(
+                Function.identity(),
+                Collectors.counting()
+        ))
+        .entrySet()
+        .stream()
+        .sorted(Map.Entry.comparingByValue().reversed())
+        .limit(3)
+        .toList()
+        .collectEntries() == [e:94, t:65, i:62]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The video makes the point that the above code is quite technical in nature in
+that you need to keep track of how we are using the map to model our problem
+domain in order to understand what each processing step is doing.</p>
+</div>
+<div class="paragraph">
+<p>It suggests using records to better capture a little domain model
+and make our code more intuitive. Let&#8217;s look at doing the same thing on Groovy.</p>
+</div>
+<div class="paragraph">
+<p>Here are three records that we will use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Letter(int codePoint) {
+    Letter(int codePoint) {
+        this.codePoint = Character.toLowerCase(codePoint)
+    }
+}
+
+record LetterCount(int count) implements Comparable&lt;LetterCount&gt; {
+    int compareTo(LetterCount other) {
+        Integer.compare(this.count, other.count)
+    }
+}
+
+record LetterByCount(Letter letter, LetterCount count) {
+    LetterByCount(Letter letter, Integer count) {
+        this(letter, new LetterCount(count))
+    }
+    static Comparator&lt;? super LetterByCount&gt; comparingByCount() {
+        Comparator.comparing(LetterByCount::count)
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now our <em>collecting</em> and <em>sorting</em> steps are in terms of our domain model,
+and it is a little easier to understand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints().toArray()
+    .findAll(Character::isAlphabetic)
+    .collect(Letter::new)
+    .countBy{ it }
+    .collect(LetterByCount::new)
+    .toSorted(LetterByCount.comparingByCount().reversed())
+    .take(3)
+    *.letter
+    *.codePoint
+    .collect(Character::toString) == ['e', 't', 'i']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The video also goes into an interesting difference with the Eclipse Collections
+version. The <code>topOccurrences</code> method from the bag class handles ties and in
+the case of a tie returns both occurrences. There aren&#8217;t any ties in the top
+3 occurrences, nor indeed the top 14, but if you call <code>topOccurrences(15)</code>,
+then 16 occurrences are returned. We can follow the suggestion in the video
+which gives us the following Groovy code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var byCountReversed = e -&gt; -e.key
+assert haiku.codePoints().toArray()
+    .findAll(Character::isAlphabetic)
+    .collect(Character::toLowerCase)
+    .collect(Character::toString)
+    .countBy{ it }
+    .groupBy{ k, v -&gt; v }
+    .sort(byCountReversed)
+    .take(15)
+    *.value.sum()*.key == ['e', 't', 'i', 'a',
+                           'o', 'n', 's', 'r',
+                           'h', 'd', 'w', 'l',
+                           'u', 'm', 'p', 'c']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We are essentially doing two <em>grouping</em> statements, the first as part of <code>countBy</code>
+and then a subsequent <code>groupBy</code> on values. As we can see, if we look at the top
+15 occurrences, 16 values are returned.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Referenced sites:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.youtube.com/watch?v=wW7uzc61tZ8" class="bare">https://www.youtube.com/watch?v=wW7uzc61tZ8</a></p>
+</div>
+<div class="paragraph">
+<p><a href="https://medium.com/javarevisited/haiku-for-java-using-text-blocks-6b7862ccd067" class="bare">https://medium.com/javarevisited/haiku-for-java-using-text-blocks-6b7862ccd067</a></p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
