@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, records, AST transforms'/><meta name='description' content='This blog looks at Groovy records.'/><title>The Apache Groovy programming language - Blogs - Groovy Records</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Records</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_optional_enhancements' class='anchor-link'>Optional enhancements</a></li><li><a href='#_internal_details' class='anchor-link'>Internal details</a></li><li><a href='#_declarative_customisation_of_records' class='anchor-link'>Declarative customisation of records</a></li><li><a href='#_emulated_records' class='anchor-link'>Emulated records</a></li><li><a href='#_using_records_with_other_ast_transforms' class='anchor-link'>Using records with other AST transforms</a></li><li><a href='#_related_functionality_for_reducing_boilerplate_code' class='anchor-link'>Related functionality for reducing boilerplate code</a></li><li><a href='#_summary' class='anchor-link'>Summary</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Records</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-04-02 08:22PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A common scenario when programming is the need to group together a bunch
+of related properties. You may be able to use arrays, some form of tuples, or maps
+to group such properties. Some languages might support constructs like structs.
+In Java, grouping such properties into a class is a natural fit.
+Unfortunately, creating such classes, once you add in all the expected
+methods and behaviors, can involve considerable boilerplate code.</p>
+</div>
+<div class="paragraph">
+<p>Starting with JDK16 (with previews from JDK14), Java introduced <em>records</em> as a compact
+form for declaring "<em>data</em>" classes. Such classes hold "data" and (almost) nothing else.
+Java chose the very common scenario of holding <em>immutable</em> data.
+With this context, and following a few restrictions, it becomes a relatively easy
+task for the Java compiler to generate much of the boilerplate for such classes.</p>
+</div>
+<div class="paragraph">
+<p>This blog looks at Groovy&#8217;s record implementation. Groovy supports the
+same features as Java but adds some additional enhancements and customisation.
+Groovy&#8217;s implementation builds upon existing techniques, like compile-time metaprogramming
+(aka AST transforms), that are used to reduce boilerplate for other scenarios.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, let&#8217;s look at what creating a record looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The properties we are grouping, are called <em>components</em>.
+In this case two integers, <code>x</code> and <code>y</code>, and a string <code>color</code>.</p>
+</div>
+<div class="paragraph">
+<p>Using it is similar to how we&#8217;d use a traditionally defined <code>Point</code> class
+which had a constructor with the same parameters as our record definition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var bluePointAtOrigin = new Point(0, 0, 'Blue')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We might want to check the value of one of our point&#8217;s components:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert bluePointAtOrigin.color() == 'Blue'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also print out the point (which calls its <code>toString()</code> method):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println bluePointAtOrigin</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which would have this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Point[x=0, y=0, color=Blue]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All the features of Java records are supported.
+One example is compact constructors.
+If we wanted the color to not be left blank, we could add a check using
+the compact constructors form, giving an alternative definition such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(int x, int y, String color) {
+    Point { assert !color.blank }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More formally, a record is a class that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Is implicitly final (so can&#8217;t be extended)</p>
+</li>
+<li>
+<p>Has a private final field for each component, e.g. <code>color</code></p>
+</li>
+<li>
+<p>Has an accessor method for each component of the same name, e.g. <code>color()</code></p>
+</li>
+<li>
+<p>Has a default <code>Point(int, int, String)</code> constructor</p>
+</li>
+<li>
+<p>Has a default serialVersionUID of <code>0L</code> and special serialization code</p>
+</li>
+<li>
+<p>Has implicit <code>toString()</code>, <code>equals()</code> and <code>hashCode()</code> methods</p>
+</li>
+<li>
+<p>Implicitly extends the <code>java.lang.Record</code> class (so can&#8217;t extend
+another class but may implement one or more interfaces)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_optional_enhancements">Optional enhancements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy records by default have an additional named-argument style constructor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var greenPointAtOrigin = new Point(x:0, y:0, color:'Green')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, Groovy records also have generated <code>getAt</code>, <code>size</code>, <code>toList</code>, and
+<code>toMap</code> methods. The <code>getAt</code> method provides Groovy&#8217;s normal array-like indexing.
+The <code>size</code> method returns the number of components.
+The <code>toList</code> method returns the component values.
+The <code>toMap</code> method returns the component values along with the component name.
+Here are examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert bluePointAtOrigin.size() == 3
+assert bluePointAtOrigin[2] == 'Blue'
+assert bluePointAtOrigin.toList() == [0, 0, 'Blue']
+assert bluePointAtOrigin.toMap() == [x:0, y:0, color:'Blue']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>getAt</code> method also enables destructuring through the multi-assignment
+statement as this example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (x, y, c) = bluePointAtOrigin
+assert "$x $y $c" == '0 0 Blue'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Shortly, we&#8217;ll look at <code>copyWith</code> which is useful for creating one record from another
+record of the same type. The <code>toMap</code> can be handy when creating a record from a different type as shown here. In our example, we surmise that in the same month as realising a book,
+we might want to release an article about the book for marketing purposes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Book(String name, String author, YearMonth published) {}
+
+record Article(String name, String author, YearMonth published, String publisher) {}
+
+def b = new Book('Groovy in Action', 'Dierk &amp; Paul', YearMonth.of(2015, 06))
+def a = new Article(*:b.toMap(), publisher: 'InfoQ')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These optional enhancements can be turned off if not required by setting
+various annotation attributes of the same name to <code>false</code> on the <code>RecordOptions</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p>Two other methods, <code>copyWith</code> and <code>components</code>, aren&#8217;t enabled by default
+but can be enabled by setting the respectively named annotation attributes to <code>true</code>
+as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@RecordOptions(components = true, copyWith = true)
+record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>copyWith</code> method can be used as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var redPointAtOrigin = bluePointAtOrigin.copyWith(color: 'Red')
+assert redPointAtOrigin.toString() == 'Point[x=0, y=0, color=Red]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is similar to Kotlin&#8217;s <code>copy</code> method for data classes.</p>
+</div>
+<div class="paragraph">
+<p>The <code>components</code> method returns a typed tuple. This is especially useful
+when type checking is enabled like in this method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked
+String description(Point p) {
+    p.components().with{ "${v3.toUpperCase()} point at ($v1,$v2)" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that the 3rd element in the tuple has type <code>String</code>,
+so we can call the <code>toUpperCase</code> method.</p>
+</div>
+<div class="paragraph">
+<p>We can use this method as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert description(redPointAtOrigin) == 'RED point at (0,0)'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is Groovy&#8217;s equivalent to Kotlin&#8217;s <code>componentN</code> methods for data classes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_internal_details">Internal details</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Some of the details in this section aren&#8217;t essential to know
+but can be useful to understand how to customise record definitions.</p>
+</div>
+<div class="paragraph">
+<p>When we write a record declaration like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is equivalent to the following traditional declaration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@RecordType
+class Point {
+    int x
+    int y
+    String color
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You will almost never write records in this form but if you have some legacy tools
+which don&#8217;t yet understand record syntax, it might prove useful.</p>
+</div>
+<div class="paragraph">
+<p>The <code>RecordType</code> annotation is what is known as a meta-annotation (also sometimes called
+an annotation collector). This means that it is an annotation made of other annotations.
+Without going into the details, essentially, the compiler expands the above annotation
+into the following (and <code>RecordBase</code> further calls into <code>ToString</code> and <code>EqualsAndHashCode</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@RecordBase
+@RecordOptions
+@TupleConstructor(namedVariant = true, force = true, defaultsMode = AUTO)
+@PropertyOptions
+@KnownImmutable
+@POJO
+@CompileStatic
+class Point {
+    int x
+    int y
+    String color
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What this means is that if you don&#8217;t like the generated code you would normally
+get with a record, you have several places where you can change
+the behavior in a declarative fashion. We&#8217;ll cover that next.</p>
+</div>
+<div class="paragraph">
+<p>Just be careful though, if you are creating a native record and try to change
+something that would violate the JDKs assumptions about records,
+you will likely get a compiler error.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_declarative_customisation_of_records">Declarative customisation of records</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We looked earlier at ensuring that we don&#8217;t provide an empty <code>color</code>
+by using the compact constructor form. We have several other alternatives
+we could use. If we want to check that <code>color</code> isn&#8217;t null or the empty
+string, we could use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TupleConstructor(pre={ assert color })
+record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, to also rule out a color of only blank spaces, and also disable the
+named-argument style constructor, we could use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TupleConstructor(pre={ assert color &amp;&amp; !color.blank }, namedVariant=false)
+record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also change the <code>toString()</code> method with a declarative style:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ToString(excludes = 'color', cache = true)
+record Point(int x, int y, String color) { }
+assert new Point(0, 0, 'Gold').toString() == 'Point(0, 0)'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we are excluding the <code>color</code> component from the toString value
+and also caching the result for subsequent calls to toString.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_emulated_records">Emulated records</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy also provides emulated records for JDK8+.
+Emulated records are classes that don&#8217;t include a record attribute in the class file,
+nor offer special record serialization, nor extend the <code>java.lang.Record</code>
+class, but will follow all the other record conventions. This means that
+you can use the <code>record</code> shorthand even if you are still stuck on JDK8 or JDK11.</p>
+</div>
+<div class="paragraph">
+<p>By default, emulated records are provided for JDK8-15 and
+native records for JDK16+. You can force the compiler to
+always target emulated or native records using the <code>mode</code>
+annotation attribute of <code>RecordOptions</code>. If you specify the
+<code>NATIVE</code> mode and are on an earlier JDK or are targeting
+an earlier bytecode version, you will receive a compiler error.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_records_with_other_ast_transforms">Using records with other AST transforms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We saw that we could customize the generated code by using variations of
+the annotations which make up the <code>RecordType</code> meta-annotation.
+We can also use most of the normal AST transforms available in Groovy.
+Here are just a few examples:</p>
+</div>
+<div class="paragraph">
+<p>We saw earlier a <code>description</code> method that took a <code>Point</code> as parameter.
+While we generally want records to be data only, that&#8217;s the kind of method that
+makes sense to place inside the record. We can do so as follows and make use of
+<code>Memoized</code> to cache the result:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(int x, int y, String color) {
+    @Memoized
+    String description() {
+        "${color.toUpperCase()} point at ($x,$y)"
+    }
+}
+
+var pinkPointAtOrigin = new Point(x:0, y:0, color:'Pink')
+assert pinkPointAtOrigin.description() == 'PINK point at (0,0)'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have also yet another way to check for blank colors by using
+the design-by-contract functionality of <code>groovy-contracts</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ color &amp;&amp; !color.blank })
+record Point(int x, int y, String color) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also make records which are easily sortable as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Sortable
+record Point(int x, int y, String color) { }
+
+var points = [
+    new Point(0, 100, 'red'),
+    new Point(10, 10, 'blue'),
+    new Point(100, 0, 'green'),
+]
+
+println points.toSorted(Point.comparatorByX())
+println points.toSorted(Point.comparatorByY())
+println points.toSorted(Point.comparatorByColor())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Point[x=0, y=100, color=red], Point[x=10, y=10, color=blue], Point[x=100, y=0, color=green]]
+[Point[x=100, y=0, color=green], Point[x=10, y=10, color=blue], Point[x=0, y=100, color=red]]
+[Point[x=10, y=10, color=blue], Point[x=100, y=0, color=green], Point[x=0, y=100, color=red]]</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_related_functionality_for_reducing_boilerplate_code">Related functionality for reducing boilerplate code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While records represent a big jump in reducing boilerplate in the Java world,
+we should point out the Groovy has many features for reducing boilerplate
+beyond just records. Groovy already has a feature very much like records,
+the <code>@Immutable</code> transform. This offers much of the boilerplate reduction
+of records but follows JavaBean conventions.</p>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t want immutability, you can use <code>@Canonical</code>, or you can just
+mix in the appropriate transforms from <code>@ToString</code>, <code>@EqualsAndHashCode</code>,
+<code>@TupleConstructor</code>, <code>@MapConstructor</code> and so forth.</p>
+</div>
+<div class="paragraph">
+<p>Here is a summary of the main transforms and the provided functionality:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/record_like_functionality.png" alt="record like functionality"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s wrap up our introduction to records with a summary of functionality:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/record_feature_summary.png" alt="TodoScreenshot"></span></p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
