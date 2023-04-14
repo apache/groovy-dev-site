@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, virtual threads, actors, dataflow, agents'/><meta name='description' content='Thi post looks at using GPars with virtual threads.'/><title>The Apache Groovy programming language - Blogs - GPars meets Virtual Threads</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, virtual threads, actors, dataflow, agents'/><meta name='description' content='This post looks at using GPars with virtual threads.'/><title>The Apache Groovy programming language - Blogs - GPars meets Virtual Threads</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,21 +53,28 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>GPars meets Virtual Threads</a></li><li><a href='#_parallel_collections' class='anchor-link'>Parallel Collections</a></li><li><a href='#_agents' class='anchor-link'>Agents</a></li><li><a href='#_actors' class='anchor-link'>Actors</a></li><li><a href='#_dataflow' class='anchor-link'>Dataflow</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GPars meets Virtual Threads</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-06-15 11:28AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>GPars meets Virtual Threads</a></li><li><a href='#_parallel_collections' class='anchor-link'>Parallel Collections</a></li><li><a href='#_agents' class='anchor-link'>Agents</a></li><li><a href='#_actors' class='anchor-link'>Actors</a></li><li><a href='#_dataflow' class='anchor-link'>Dataflow</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GPars meets Virtual Threads</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-06-15 11:28AM (Last updated: 2023-04-14 06:23PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="img/gpars_logo.png" alt="gpars" width="150"></span>
-An exciting preview feature coming in JDK19 is Virtual Threads
-(<a href="https://openjdk.java.net/jeps/425">JEP 425</a>). In my experiments
-so far, virtual threads work well with my favourite Groovy parallel
+An exciting feature coming in JDK21 is Virtual Threads
+(<a href="https://openjdk.java.net/jeps/444">JEP 444</a>).
+It has been previewed in JDK19 (<a href="https://openjdk.java.net/jeps/425">JEP 425</a>)
+and JDK20 (<a href="https://openjdk.java.net/jeps/436">JEP 436</a>) but JDK21 will be the first version
+that the feature is available without using Java&#8217;s preview switch.
+The examples in this blog were tested with Groovy 4.0.11 using JDK version 21-ea+18-1480
+(and using JDK19 with preview features enabled).</p>
+</div>
+<div class="paragraph">
+<p>Virtual threads work well with my favourite Groovy parallel
 and concurrency library <a href="http://gpars.org/">GPars</a>. GPars has been
 around a while (since Java 5 and Groovy 1.8 days) but still has
 many useful features. Let&#8217;s have a look at a few examples.</p>
 </div>
 <div class="paragraph">
-<p>If you want to try these out, make sure you have a recent JDK19
-(currently EA) and enable <em>preview</em> features with your Groovy
-tooling.</p>
+<p>If you want to try these out, use the latest JDK21ea version which has virtual
+thread support as standard. Or use a recent JDK19-20 version
+and enable <em>preview</em> features with your Groovy tooling.</p>
 </div>
 </div>
 </div>
@@ -75,13 +82,22 @@ tooling.</p>
 <h2 id="_parallel_collections">Parallel Collections</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>First a refresher, to use the GPars parallel collections feature
-with normal threads, use the GParsPool.withPool method as follows:</p>
+<p>First a refresher, we&#8217;ll first look at using the GPars parallel collections feature
+with normal threads. Let&#8217;s start with a list of numbers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var nums = [1, 2, 3]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To calculate the list of squares of our original numbers in
+parallel with normal threads, we use the <code>GParsPool.withPool</code> method as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">withPool {
-    assert [1, 2, 3].collectParallel{ it ** 2 } == [1, 4, 9]
+    assert nums.collectParallel{ it ** 2 } == [1, 4, 9]
 }</code></pre>
 </div>
 </div>
@@ -94,7 +110,7 @@ something like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">assert [1, 2, 3].parallelStream().map(n -&gt; n ** 2).collect(Collectors.toList()) == [1, 4, 9]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">assert nums.parallelStream().map(n -&gt; n ** 2).collect(Collectors.toList()) == [1, 4, 9]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -106,19 +122,22 @@ threads for such code easy:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">withExistingPool(Executors.newVirtualThreadPerTaskExecutor()) {
-    assert [1, 2, 3].collectParallel{ it ** 2 } == [1, 4, 9]
+    assert nums.collectParallel{ it ** 2 } == [1, 4, 9]
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Nice! But let&#8217;s move onto some areas examples which might be
+<p>Nice! Using virtual threads is very simple!</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s move onto some examples which might be
 less familiar to Java developers.</p>
 </div>
 <div class="paragraph">
 <p>GPars has additional features for providing custom thread pools
 and the remaining examples rely on those features. The current
 version of GPars doesn&#8217;t have a <code>DefaultPool</code> constructor that
-takes a vanilla executor service, so, we&#8217;ll write our own class:</p>
+takes a vanilla executor service; so, we&#8217;ll write our own class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -157,8 +176,8 @@ safety of the underlying wrapped object.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def mutableState = []     // a non-synchronized mutable list
-def agent = new Agent(mutableState)
+<pre class="prettyprint highlight"><code data-lang="groovy">var mutableState = []     // a non-synchronized mutable list
+var agent = new Agent(mutableState)
 
 agent.attachToThreadPool(new VirtualPool()) // omit line for normal threads
 
@@ -185,7 +204,7 @@ Let&#8217;s create one backed by virtual threads:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def vgroup = new DefaultPGroup(new VirtualPool())</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">var vgroup = new DefaultPGroup(new VirtualPool())</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -193,7 +212,7 @@ Let&#8217;s create one backed by virtual threads:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def decryptor = vgroup.actor {
+<pre class="prettyprint highlight"><code data-lang="groovy">var decryptor = vgroup.actor {
     loop {
         react { String message -&gt;
             reply message.reverse()
@@ -201,7 +220,7 @@ Let&#8217;s create one backed by virtual threads:</p>
     }
 }
 
-def console = vgroup.actor {
+var console = vgroup.actor {
     decryptor &lt;&lt; 'lellarap si yvoorG'
     react {
         println 'Decrypted message: ' + it
@@ -222,6 +241,14 @@ concurrency model. Dataflows are also managed via thread
 groups, so we&#8217;ll use <code>vgroup</code> which we created earlier.</p>
 </div>
 <div class="paragraph">
+<p>For the sake of an example, we&#8217;ll create a scenario where two
+tasks are producing some results and a third task is adding the results
+of the other tasks.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/gpars_dataflow.png" alt="gpars dataflow"></span></p>
+</div>
+<div class="paragraph">
 <p>We have three logical tasks which can run in parallel and perform
 their work. The tasks need to exchange data and they do so using
 <em>dataflow variables</em>. Think of dataflow variables as one-shot
@@ -230,25 +257,29 @@ their consumers.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def df = new Dataflows()
+<pre class="prettyprint highlight"><code data-lang="groovy">var df = new Dataflows()
 
-vgroup.task {
-    df.z = df.x + df.y
-}
+vgroup.with {
+    task {
+        df.z = df.x + df.y
+    }
 
-vgroup.task {
-    df.x = 10
-}
+    task {
+        df.x = 10
+    }
 
-vgroup.task {
-    df.y = 5
-}
+    task {
+        df.y = 5
+    }
 
-assert df.z == 15</code></pre>
+    assert df.z == 15
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The dataflow framework works out how to schedule the individual
+<p>This code is declarative in style. We can specify the three tasks in any order.
+We aren&#8217;t giving any indication of which tasks should occur first.
+The dataflow framework works out how to schedule the individual
 tasks and ensures that a task&#8217;s input variables are ready when
 needed.</p>
 </div>
@@ -259,10 +290,8 @@ needed.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have had a quick glimpse at using virtual threads with Groovy
-and GPars. It is very early days, so expect much more to emerge
-in this space once virtual threads are released in preview in
-production versions of JDK19 and eventually beyond a preview
-feature.</p>
+and GPars. It is still early days with virtual threads, so expect
+much more to emerge as JDK21 becomes more mainstream.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
