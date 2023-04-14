@@ -130,7 +130,25 @@ threads for such code easy:</p>
 <p>Nice! Using virtual threads is very simple!</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s move onto some examples which might be
+<p>Let&#8217;s look at one more example, the <a href="https://en.wikipedia.org/wiki/Fizz_buzz">FizzBuzz</a> example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var result = withExistingPool(Executors.newVirtualThreadPerTaskExecutor()) {
+    (1..15).collectParallel {
+        switch(it) {
+            case { it % 15 == 0 } -&gt; 'FizzBuzz'
+            case { it % 5 == 0 } -&gt; 'Buzz'
+            case { it % 3 == 0 } -&gt; 'Fizz'
+            default -&gt; it
+        }
+    }.join(',')
+}
+assert result == '1,2,Fizz,4,Buzz,Fizz,7,8,Fizz,Buzz,11,Fizz,13,14,FizzBuzz'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s move onto some examples which might be
 less familiar to Java developers.</p>
 </div>
 <div class="paragraph">
