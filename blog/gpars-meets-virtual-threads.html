@@ -117,12 +117,31 @@ something like:</p>
 <p>Now, let&#8217;s bring virtual threads into the picture. Luckily,
 GPars parallel collection facilities provide a hook for using
 an <em>existing</em> custom executor service. This makes using virtual
-threads for such code easy:</p>
+threads for such code easy. First we create our pool (backed by virtual threads):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">withExistingPool(Executors.newVirtualThreadPerTaskExecutor()) {
+<pre class="prettyprint highlight"><code data-lang="groovy">var vtPool = Executors.newVirtualThreadPerTaskExecutor()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, we can use it as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">withExistingPool(vtPool) {
     assert nums.collectParallel{ it ** 2 } == [1, 4, 9]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or we can use one of the other many <em>'*Parallel'</em> methods, in this case <code>findAllParallel</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var isEven = n -&gt; n % 2 == 0
+withExistingPool(vtPool) {
+    assert (1..9).findAllParallel(isEven) == (2..8).step(2)
 }</code></pre>
 </div>
 </div>
@@ -134,7 +153,7 @@ threads for such code easy:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var result = withExistingPool(Executors.newVirtualThreadPerTaskExecutor()) {
+<pre class="prettyprint highlight"><code data-lang="groovy">var result = withExistingPool(vtPool) {
     (1..15).collectParallel {
         switch(it) {
             case { it % 15 == 0 } -&gt; 'FizzBuzz'
