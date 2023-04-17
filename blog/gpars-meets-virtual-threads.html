@@ -110,7 +110,7 @@ something like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">assert nums.parallelStream().map(n -&gt; n ** 2).collect(Collectors.toList()) == [1, 4, 9]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">assert nums.parallelStream().map(n -&gt; n ** 2).toList() == [1, 4, 9]</code></pre>
 </div>
 </div>
 <div class="paragraph">
