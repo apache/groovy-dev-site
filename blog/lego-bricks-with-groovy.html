@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, eclipse collections, lego'/><meta name='description' content='This post compares Groovy built-in capabilities to Java and Eclipse Collections.'/><title>The Apache Groovy programming language - Blogs - Lego Bricks with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='http://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='http://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='http://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Lego Bricks with Groovy</a></li><li><a href='#_basic_collection_processing' class='anchor-link'>Basic Collection Processing</a></li><li><a href='#_our_example_domain' class='anchor-link'>Our example domain</a></li><li><a href='#_some_bricks_to_play_with' class='anchor-link'>Some bricks to play with</a></li><li><a href='#_using_each_do' class='anchor-link'>Using <code>each</code> ("Do")</a></li><li><a href='#_using_findall_filter' class='anchor-link'>Using <code>findAll</code> ("Filter")</a></li><li><a href='#_using_split_also_filter' class='anchor-link'>Using <code>split</code> (also "Filter")</a></li><li><a href='#_using_collect_transform' class='anchor-link'>Using <code>collect</code> ("Transform")</a></li><li><a href='#_using_find_find' class='anchor-link'>Using <code>find</code> ("Find")</a></li><li><a href='#_using_any_and_every_test' class='anchor-link'>Using <code>any</code> and <code>every</code> ("Test")</a></li><li><a href='#_using_count_count' class='anchor-link'>Using <code>count</code> ("Count")</a></li><li><a href='#_a_mosaic_of_bricks' class='anchor-link'>A mosaic of bricks</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Lego Bricks with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-04-25 11:28PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://twitter.com/TheDonRaab">Donald Raab</a> has continued has interesting
+series on learning <a href="https://www.eclipse.org/collections/">Eclipse Collections</a>.
+His latest blog post, <a href="https://donraab.medium.com/getting-started-with-eclipse-collections-part-4-a72eb23cce0e">part 4</a>, looks at <em>processing information in collections</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_basic_collection_processing">Basic Collection Processing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Donald has a useful comparison table of operations for basic
+collection processing. We&#8217;ll add a Groovy column:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operation</th>
+<th class="tableblock halign-left valign-top">Eclipse Collections</th>
+<th class="tableblock halign-left valign-top">Java Streams</th>
+<th class="tableblock halign-left valign-top">Groovy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Do</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>forEach</code><br>
+(or <code>each</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>forEach</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>each</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>select</code> (include)<br>
+<code>reject</code> (exclude)<br>
+<code>partition</code> (both)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>filter</code><br>
+<code>filter</code> (negated predicate)<br>
+<code>Collectors.partitioningBy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findAll</code><br>
+<code>findAll</code> (negated predicate)<br>
+<code>split</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collect</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collect</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Find</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>detect</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>filter().findFirst().orElse(null)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>find</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>anySatisfy</code><br>
+<code>allSatisfy</code><br>
+<code>nonSatisfy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>anyMatch</code><br>
+<code>allMatch</code><br>
+<code>noneMatch</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>any</code><br>
+<code>every</code><br>
+<code>every</code> (negated predicate)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Count</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>filter().count()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>count</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>While Groovy has built-in collection processing capabilities, it also works
+well with Eclipse Collections and Java Streams.
+So, the first two columns are equally valid when using Groovy too.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_our_example_domain">Our example domain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We are going to follow one of the examples, that of Lego bricks, in Donald&#8217;s post.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll simplify the example slightly for our purposes and for this post, ignore the different
+block types.</p>
+</div>
+<div class="paragraph">
+<p>So, we&#8217;ll start with a color enum. We are just interested in representing simple blocks and
+use the colored dots to represent the top view of that block:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">enum Color {
+    RED("🔴"),
+    YELLOW("🟡"),
+    BLUE("🔵"),
+    GREEN("🟢"),
+    WHITE("⚪️"),
+    BLACK("⚫️")
+
+    final String circle
+
+    Color(String circle) {
+        this.circle = circle
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll have a similar record for dimensions (but include a <code>toString()</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Dimensions(int width, int length) {
+    String toString() { "$length X $width" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, our lego brick record just combines the color and dimensions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record LegoBrick(Color color, Dimensions dimensions) {
+    LegoBrick(Color color, int width, int length) {
+        this(color, new Dimensions(width, length))
+    }
+
+    static generateMultipleSizedBricks(int count, Set&lt;Color&gt; colors, Set&lt;Dimensions&gt; sizes) {
+        [[colors, sizes].combinations() * count]*.collect{
+            Color c, Dimensions d -&gt; new LegoBrick(c, d)
+        }.sum()
+    }
+
+    String toString() {
+        ([color.circle * dimensions.length] * dimensions.width).join('\n')
+    }
+
+    int length() {
+        dimensions.length()
+    }
+
+    int width() {
+        dimensions.width()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While we don&#8217;t use it in this post, we created an additional constructor
+for making it easier to create bricks of certain sizes.
+There&#8217;s also a factory method for putting together collections of bricks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_some_bricks_to_play_with">Some bricks to play with</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The first thing we do in our test script is set up some bricks to use
+in the remaining examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Set sizes = [[1, 2], [2, 2], [1, 3], [2, 3], [2, 4]].collect {
+    h, w -&gt; new Dimensions(h, w)
+}
+Set colors = Color.values()
+var bricks = LegoBrick.generateMultipleSizedBricks(5, colors, sizes)
+assert bricks.size() == 150</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The type of brick is determined by its color and size.
+There are FIVE different sizes, and SIX colors.
+There are FIVE of each type in the collection.
+Which makes a total of 150 bricks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_each_do">Using <code>each</code> ("Do")</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Set seen = []
+bricks.shuffled().each {
+    if (seen.add(it.dimensions)) {
+        println "$it ($it.dimensions)"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We shuffle the bricks and them process them one by one.
+If we see a brick of a size we haven&#8217;t seen before we output it, and its size.</p>
+</div>
+<div class="paragraph">
+<p>The output will be similar to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>🔴🔴 (2 X 1)
+🔵🔵🔵 (3 X 1)
+⚫️⚫️⚫️
+⚫️⚫️⚫️ (3 X 2)
+🔴🔴
+🔴🔴 (2 X 2)
+⚪️⚪️⚪️⚪️
+⚪️⚪️⚪️⚪️ (4 X 2)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Due to the shuffling, you might see different colors or a different order for the sizes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_findall_filter">Using <code>findAll</code> ("Filter")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s now find the unique sizes for red bricks that are of width two (and we&#8217;ll sort them by length):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var redWidthTwo = bricks.findAll(b -&gt; b.width() == 2 &amp;&amp; b.color == RED)
+        .toSet()
+        .sort(LegoBrick::length)
+assert redWidthTwo.join(',\n') == '''\
+🔴🔴
+🔴🔴,
+🔴🔴🔴
+🔴🔴🔴,
+🔴🔴🔴🔴
+🔴🔴🔴🔴'''</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_split_also_filter">Using <code>split</code> (also "Filter")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s find the bricks of length 4 or more (and we&#8217;ll find just the
+unique variations and sort them by color):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (selected, rejected) = bricks.findAll(b -&gt; b.length() &gt; 3)
+        .toSet()
+        .sort(LegoBrick::color)
+        .split { b -&gt;
+            switch (b.color) {
+                case GREEN, WHITE, YELLOW -&gt; true
+                case BLUE, RED, BLACK -&gt; false
+            }
+        }
+
+assert selected.join(',\n') == '''
+    🟡🟡🟡🟡
+    🟡🟡🟡🟡,
+    🟢🟢🟢🟢
+    🟢🟢🟢🟢,
+    ⚪️⚪️⚪️⚪️
+    ⚪️⚪️⚪️⚪️
+'''.stripIndent().trim()
+assert rejected.join(',\n') == '''
+    🔴🔴🔴🔴
+    🔴🔴🔴🔴,
+    🔵🔵🔵🔵
+    🔵🔵🔵🔵,
+    ⚫️⚫️⚫️⚫️
+    ⚫️⚫️⚫️⚫️
+'''.stripIndent().trim()</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_collect_transform">Using <code>collect</code> ("Transform")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s transform each brick into the toString for its dimensions and then find the unique values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Set dims = bricks.collect(b -&gt; b.dimensions.toString()).toUnique()
+assert dims == ['2 X 1', '2 X 2', '3 X 1', '3 X 2', '4 X 2'] as Set</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_find_find">Using <code>find</code> ("Find")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s shuffle the bricks again (no cheating here!) and then find the first
+green brick of width and length 2:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var greenTwoByTwo = bricks.shuffled().find {
+    b -&gt; b.width() == b.length() &amp;&amp; b.color == GREEN
+}
+assert greenTwoByTwo.toString() == '🟢🟢\n🟢🟢'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_any_and_every_test">Using <code>any</code> and <code>every</code> ("Test")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s check that there are no 1 x 1 (or some kind of 0 size bricks).
+Either the width or length must be strictly greater than 1.
+Also, let&#8217;s check there is some brick where the width is the same as the length
+(recall <code>greenTwoByTwo</code> as just one example).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert bricks.every { b -&gt; b.width() &gt; 1 || b.length() &gt; 1 }
+assert bricks.any { b -&gt; b.width() == b.length() }</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_count_count">Using <code>count</code> ("Count")</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s count how many green bricks there are,
+and how many have length of 4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert bricks.count { b -&gt; b.color == GREEN } == 25
+assert bricks.count { b -&gt; b.length() == 4 } == 30</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_mosaic_of_bricks">A mosaic of bricks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In our final example, we took a mosaic of bricks from (1 x 1)
+and larger sizes and put them together. We took the toString
+and to save space (and bring a moment of suspense) we compressed it
+and encoded it in chunked base64. Your challenge, should you choose
+to accept it, is to decode the brick mosaic from its compressed
+representation. Here is some code that might help:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var encodedCompressedLegoMosaic = '''
+eJztmj1uwzAMhfdcvkunLN3duUDPkwskRwiCoKljm9Tjn0gZBmLCkmmB+h5NyUZOl/P39fdjOJse
+gLs9VQhCYW9fnz/pQRw6HDpUsA8R/o5nT1Ywxs7B6M+5v/Mf1O6Af5HMFzVDsU/Eudhu0R4q61+/
+IN5rupOFelHe6bApnHrYHOlZXamQw4ylLjkKwMONQl8g6RUSuGBHinc09ir1Zn3iAnqNmKrjdsRt
+r/Qs5pspxNv09RRLMJdaNX88s912jcTIyJi853+/eQrTfJBGGVziZ12RHSG+a6TuxasWvoRwPYZh
+t/vZUsnlO/3M8/R09ca+UshSkknSCPIL/7nWUMFBRPAtTPhoKSKgU0PXIIEWdCC6LbxlYxSnxguK
+VVIdUqMea7J4EcKXCERLPgZ8wcF9pNp3EsMim10wL0+LGPjuLFkMHQ7kKYlCJkx2HyWC9ODp++qx
+bSWvetaX67fIFg7Npvv6oOHdIoB/oPD5UkRGvHkL33T80KaDGnkYo8zC2VC5K8JdoETKW2+QlpJf
+j6WWxpV6gRMO4j4nJH8DqYLcZOtGlJjGB70HVXmJ62fVsSlYO8NVoMyirA4+k3KF9OwpQzL0PWP2
+nz91abD/we3DHmIUsqQYd3YE/rA=
+'''.trim()
+var os = new ByteArrayOutputStream()
+
+try (var ios = new InflaterOutputStream(os)) {
+    ios.write(encodedCompressedLegoMosaic.decodeBase64())
+}
+println os.toString()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is left as an exercise for the reader.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick look at some of the basic collection processing
+functionality. We&#8217;ve really only touched the surface. Take a look at
+an earlier blog post giving a Groovy list processing
+<a href="https://groovy.apache.org/blog/groovy-list-processing-cheat-sheet">cheat sheet</a>
+if you want to see a whole lot more methods.
+Also, we highly recommend you try out all of the Eclipse Collections
+examples in Donald&#8217;s original post using Groovy.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='http://groovy-lang.org/learn.html'>Learn</a></li><li><a href='http://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='http://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='http://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='http://groovy-lang.org/security.html'>Security</a></li><li><a href='http://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='http://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='http://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='http://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='http://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='http://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='http://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
