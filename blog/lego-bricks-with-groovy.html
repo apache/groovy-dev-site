@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Lego Bricks with Groovy</a></li><li><a href='#_basic_collection_processing' class='anchor-link'>Basic Collection Processing</a></li><li><a href='#_our_example_domain' class='anchor-link'>Our example domain</a></li><li><a href='#_some_bricks_to_play_with' class='anchor-link'>Some bricks to play with</a></li><li><a href='#_using_each_do' class='anchor-link'>Using <code>each</code> ("Do")</a></li><li><a href='#_using_findall_filter' class='anchor-link'>Using <code>findAll</code> ("Filter")</a></li><li><a href='#_using_split_also_filter' class='anchor-link'>Using <code>split</code> (also "Filter")</a></li><li><a href='#_using_collect_transform' class='anchor-link'>Using <code>collect</code> ("Transform")</a></li><li><a href='#_using_find_find' class='anchor-link'>Using <code>find</code> ("Find")</a></li><li><a href='#_using_any_and_every_test' class='anchor-link'>Using <code>any</code> and <code>every</code> ("Test")</a></li><li><a href='#_using_count_count' class='anchor-link'>Using <code>count</code> ("Count")</a></li><li><a href='#_a_mosaic_of_bricks' class='anchor-link'>A mosaic of bricks</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Lego Bricks with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-04-25 11:28PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Lego Bricks with Groovy</a></li><li><a href='#_basic_collection_processing' class='anchor-link'>Basic Collection Processing</a></li><li><a href='#_our_example_domain' class='anchor-link'>Our example domain</a></li><li><a href='#_some_bricks_to_play_with' class='anchor-link'>Some bricks to play with</a></li><li><a href='#_using_each_do' class='anchor-link'>Using <code>each</code> ("Do")</a></li><li><a href='#_using_findall_filter' class='anchor-link'>Using <code>findAll</code> ("Filter")</a></li><li><a href='#_using_split_also_filter' class='anchor-link'>Using <code>split</code> (also "Filter")</a></li><li><a href='#_using_collect_transform' class='anchor-link'>Using <code>collect</code> ("Transform")</a></li><li><a href='#_using_find_find' class='anchor-link'>Using <code>find</code> ("Find")</a></li><li><a href='#_using_any_and_every_test' class='anchor-link'>Using <code>any</code> and <code>every</code> ("Test")</a></li><li><a href='#_using_count_count' class='anchor-link'>Using <code>count</code> ("Count")</a></li><li><a href='#_a_mosaic_of_bricks' class='anchor-link'>A mosaic of bricks</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Lego Bricks with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-04-25 11:28PM (Last updated: 2023-04-27 10:42PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://twitter.com/TheDonRaab">Donald Raab</a> has continued has interesting
@@ -137,8 +137,13 @@ collection processing. We&#8217;ll add a Groovy column:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>While Groovy has built-in collection processing capabilities, it also works
-well with Eclipse Collections and Java Streams.
+<p>We highly recommend reading Donald&#8217;s blog post to give more
+context for these categories.</p>
+</div>
+<div class="paragraph">
+<p>Also note that while Groovy has built-in collection processing capabilities
+(the third column),
+it also <em>works well with Eclipse Collections and Java Streams</em>.
 So, the first two columns are equally valid when using Groovy too.</p>
 </div>
 </div>
@@ -155,7 +160,7 @@ block types.</p>
 </div>
 <div class="paragraph">
 <p>So, we&#8217;ll start with a color enum. We are just interested in representing simple blocks and
-use the colored dots to represent the top view of that block:</p>
+use the colored dots to represent the top view of a block:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -176,7 +181,8 @@ use the colored dots to represent the top view of that block:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll have a similar record for dimensions (but include a <code>toString()</code>:</p>
+<p>We&#8217;ll have a similar record to Donald&#8217;s post for dimensions
+(but include a <code>toString()</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -383,7 +389,7 @@ assert greenTwoByTwo.toString() == '🟢🟢\n🟢🟢'</code></pre>
 <p>Let&#8217;s check that there are no 1 x 1 (or some kind of 0 size bricks).
 Either the width or length must be strictly greater than 1.
 Also, let&#8217;s check there is some brick where the width is the same as the length
-(recall <code>greenTwoByTwo</code> as just one example).</p>
+(recall our earlier <code>greenTwoByTwo</code> as just one example).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -432,16 +438,23 @@ bSWvetaX67fIFg7Npvv6oOHdIoB/oPD5UkRGvHkL33T80KaDGnkYo8zC2VC5K8JdoETKW2+QlpJf
 j6WWxpV6gRMO4j4nJH8DqYLcZOtGlJjGB70HVXmJ62fVsSlYO8NVoMyirA4+k3KF9OwpQzL0PWP2
 nz91abD/we3DHmIUsqQYd3YE/rA=
 '''.trim()
+
 var os = new ByteArrayOutputStream()
 
 try (var ios = new InflaterOutputStream(os)) {
     ios.write(encodedCompressedLegoMosaic.decodeBase64())
 }
-println os.toString()</code></pre>
+println os</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The output is left as an exercise for the reader.</p>
+<p>The output is left as an exercise for the reader (but
+if you try on a terminal, you should have at least a
+72 x 36 layout, and use a terminal that supports unicode).</p>
+</div>
+<div class="paragraph">
+<p>Spoiler alert: if you don&#8217;t want to run the script yourself, try it
+<a href="https://groovyconsole.appspot.com/edit/4889700582031360?execute">here</a>.</p>
 </div>
 </div>
 </div>
@@ -449,7 +462,7 @@ println os.toString()</code></pre>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We have had a quick look at some of the basic collection processing
+<p>We have had a quick look at some of Groovy&#8217;s basic collection processing
 functionality. We&#8217;ve really only touched the surface. Take a look at
 an earlier blog post giving a Groovy list processing
 <a href="https://groovy.apache.org/blog/groovy-list-processing-cheat-sheet">cheat sheet</a>
