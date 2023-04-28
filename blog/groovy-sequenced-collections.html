@@ -190,8 +190,10 @@ for collections, arrays and numerous other classes.</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code>, <code>Deque</code>, <code>Set</code>, array</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[0]</code> or <code>aggregate.first()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[-1]</code> or <code>aggregate.last()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[0]</code> or<br>
+<code>aggregate.first()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[-1]</code> or<br>
+<code>aggregate.last()</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -357,12 +359,19 @@ Groovy does offer the <code>leftShift</code> operator (<code>&lt;&lt;</code>) as
 <p>Another area tackled by JEP-431 is improved consistency for
 working with a collection in reverse order.
 Groovy already offers some enhancements for this scenario
-with <code>reverseEach</code> and <code>asReversed</code> extension methods.
-These methods aren&#8217;t available for all sets, e.g. not for <code>LinkedHashSet</code>
-but only <code>NavigableSet</code> instances. Also, the <code>asReversed</code> method
-creates a new collection rather than a view that is provided by
-JEP-431s <code>reversed()</code> method. There are times when the latter might be preferred.
-So, all in all, this functionality provided by JEP-431 is most welcome.</p>
+with <code>reverse</code>, <code>reverseEach</code> and <code>asReversed</code> extension methods.
+The functionality isn&#8217;t universal however and sometimes catches folks out.
+The <code>reverse</code> method isn&#8217;t available for maps and sets. You need to
+use e.g. the set&#8217;s iterator. Also, the standard <code>reverse</code> produces
+a new collection (or array) and there is an optional boolean parameter
+which makes the method a mutating operation - reversing itself in-place.
+This is in contrast to <code>reversed()</code> from JEP-431 and <code>asReversed()</code>
+which return a view.
+Also, the <code>reverseEach</code> and <code>asReversed</code> are only provided for
+<code>NavigableSet</code> instances.</p>
+</div>
+<div class="paragraph">
+<p>So, all in all, this functionality provided by JEP-431 is most welcome.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -417,15 +426,18 @@ So, all in all, this functionality provided by JEP-431 is most welcome.</p>
 list.reverseEach { result &lt;&lt; it }
 assert result == [3, 2, 1]
 assert list.asReversed() == [3, 2, 1]
+assert list.reverse() == [3, 2, 1]
 assert list.reversed() == [3, 2, 1]                        // NEW
 
 result = []
 deque.reverseEach { result &lt;&lt; it }
 assert result == [3, 2, 1]
 assert deque.asReversed() == [3, 2, 1]
+assert deque.reverse() == [3, 2, 1]
 assert deque.reversed() == [3, 2, 1]                       // NEW
 
 result = []
+assert set.iterator().reverse().toList() == [3, 2, 1]
 assert set.reversed() == [3, 2, 1] as Set                  // NEW
 
 result = []
