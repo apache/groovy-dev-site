@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, jep431, collections'/><meta name='description' content='This post looks at Groovy support for sequenced collections.'/><title>The Apache Groovy programming language - Blogs - Groovy and Sequenced Collections (JEP-431)</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy and Sequenced Collections (JEP-431)</a></li><li><a href='#_sequenced_collections_summary' class='anchor-link'>Sequenced Collections Summary</a></li><li><a href='#_accessing_the_first_and_last_element' class='anchor-link'>Accessing the first and last element</a></li><li><a href='#_removing_first_or_last_elements' class='anchor-link'>Removing first or last elements</a></li><li><a href='#_adding_elements_to_the_frontend' class='anchor-link'>Adding elements to the front/end</a></li><li><a href='#_working_with_reversed_collections' class='anchor-link'>Working with reversed collections</a></li><li><a href='#_additional_references' class='anchor-link'>Additional References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy and Sequenced Collections (JEP-431)</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-04-29 09:00AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>An exciting feature coming in JDK21 is
+<a href="https://openjdk.org/jeps/431">Sequenced Collections</a>
+which provide improved processing for collections which have
+a defined encounter order. Additional details about the new
+functionality can be found in the <a href="#_additional_references">Additional References</a> section later.</p>
+</div>
+<div class="paragraph">
+<p>Since Groovy is designed to work very closely with the JDK libraries,
+once JDK21 is released, Groovy will get the new functionality "for free".
+Groovy however has its own solutions to some of the problems which JEP-431
+addresses, so this post looks at the existing functionality (which you can use with older JDKs)
+and the new functionality you can use once JDK21 is generally available,
+and you upgrade to that JDK version.</p>
+</div>
+<div class="paragraph">
+<p>The examples in this post use JDK21ea Build 20 (2023/4/27) and Groovy 4.0.11.
+While EA builds come with numerous disclaimers warning that changes or removal
+of functionality might occur before general release,
+we&#8217;d expect the examples to work for subsequent releases.
+We&#8217;ll post an update if anything changes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sequenced_collections_summary">Sequenced Collections Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sequenced Collections adds three new interfaces: <code>SequencedSet</code>,
+<code>SequencedCollection</code>, and <code>SequencedMap</code>. Each interface adds
+some new methods which we&#8217;ll encounter in later examples.
+In the rest of this post, we&#8217;ll explain the new sequenced collections functionality
+by looking at various scenarios you might face when processing collections.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_the_first_and_last_element">Accessing the first and last element</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_jdk_before_jep_431">JDK before JEP-431</h3>
+<div class="paragraph">
+<p>Something as simple as accessing the first and last elements
+for various collection types isn&#8217;t consistent or as easy as might be expected (hence JEP-431).
+Here are some examples of the JDK API calls you would use for this scenario:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Collection Type</th>
+<th class="tableblock halign-left valign-top">First element</th>
+<th class="tableblock halign-left valign-top">Last element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list.get(0)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list.get(list.size()-1)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deque</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deque.getFirst()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deque.getLast()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.iterator().next()</code> or<br>
+<code>set.stream().findFirst().get()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">requires iterating through the set</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SortedSet</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.first()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.last()</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_jdk_after_jep_431">JDK after JEP-431</h3>
+<div class="paragraph">
+<p>After JEP-431, this improves greatly:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Collection Type</th>
+<th class="tableblock halign-left valign-top">First element</th>
+<th class="tableblock halign-left valign-top">Last element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code>, <code>Deque</code>, <code>Set</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collection.getFirst()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collection.getLast()</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_groovy_before_jep_431">Groovy before JEP-431</h3>
+<div class="paragraph">
+<p>Groovy provides extension methods, <code>first()</code> and <code>last()</code>, for arrays and any <code>Iterable</code>, with
+various optimised versions when it makes sense. The <em>subscript</em> operator
+is provided for any class having a <code>getAt</code> method. There are built-in implementations
+for collections, arrays and numerous other classes.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aggregate Type</th>
+<th class="tableblock halign-left valign-top">First element</th>
+<th class="tableblock halign-left valign-top">Last element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code>, <code>Deque</code>, <code>Set</code>, array</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[0]</code> or <code>aggregate.first()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>aggregate[-1]</code> or <code>aggregate.last()</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Groovy also provides <em>take</em> extension methods which could be used here. You could use
+<code>list.take(1)</code> to get a list containing just the first element of the original list,
+and <code>takeRight(1)</code> for a list containing just the last element. These work across
+all the different aggregate types too.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy_after_jep_431">Groovy after JEP-431</h3>
+<div class="paragraph">
+<p>No special support is yet added for JEP-431.
+So Groovy functionality will be existing functionality
+plus the new JDK functionality.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aggregate Type</th>
+<th class="tableblock halign-left valign-top">First element</th>
+<th class="tableblock halign-left valign-top">Last element</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">array</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>array[0]</code><br>
+<code>array.first()</code><br></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>array[-1]</code><br>
+<code>array.last()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code>, <code>Deque</code>, <code>Set</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collection[0]</code><br>
+<code>collection.first()</code><br>
+<code>collection.getFirst()</code><br>
+<code>collection.first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collection[-1]</code><br>
+<code>collection.last()</code><br>
+<code>collection.getLast()</code><br>
+<code>collection.last</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For now, Groovy&#8217;s approach provides uniformity also across arrays (and potentially other classes).
+Folks should not feel any urgent pressure to use JEP-431 functionality for this scenario
+with an important caveat. Over time, additional collection types may emerge which might
+provide more efficient implementations for <code>getFirst()</code> or <code>getLast()</code> in which case it would
+be beneficial to use those methods.</p>
+</div>
+<div class="paragraph">
+<p>Future Groovy versions may provide specialised sequenced collections support.
+The <code>first()</code> and <code>last()</code> extension methods may be implemented in terms
+of <code>getFirst()</code> and <code>getLast()</code>.
+We might also extend sequenced collection methods to arrays (and maybe other classes),
+though it isn&#8217;t a high priority for now.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples">Examples</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">List list = [1, 2, 3]
+assert list.get(0) == 1
+assert list[0] == 1
+assert list.first() == 1
+assert list.getFirst() == 1                                // NEW
+assert list.first == 1                                     // NEW
+
+assert list.get(list.size() - 1) == 3
+assert list[-1] == 3
+assert list.last() == 3
+assert list.getLast() == 3                                 // NEW
+assert list.last == 3                                      // NEW
+
+LinkedList deque = [1, 2, 3]
+assert deque[0] == 1
+assert deque.first() == 1
+assert deque.getFirst() == 1                               // NEW
+assert deque.first == 1                                    // NEW
+
+assert deque[-1] == 3
+assert deque.last() == 3
+assert deque.getLast() == 3                                // NEW
+assert deque.last == 3                                     // NEW
+
+LinkedHashSet set = [1, 2, 3]
+assert set.iterator().next() == 1
+assert set[0] == 1
+assert set.first() == 1
+assert set.getFirst() == 1                                 // NEW
+assert set.first == 1                                      // NEW
+
+assert set[-1] == 3
+assert list.last() == 3
+assert set.getLast() == 3                                  // NEW
+assert set.last == 3                                       // NEW
+
+TreeSet sortedSet = [2, 4, 1, 3]
+assert sortedSet[0] == 1
+assert sortedSet.first() == 1
+assert sortedSet.getFirst() == 1                           // NEW
+assert sortedSet.first == 1                                // NEW
+
+assert sortedSet[-1] == 4
+assert sortedSet.last() == 4
+assert sortedSet.getLast() == 4                            // NEW
+assert sortedSet.last == 4                                 // NEW
+
+Integer[] array = [1, 2, 3]
+assert array[0] == 1
+assert array.first() == 1
+assert array[-1] == 3
+assert array.last() == 3</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_removing_first_or_last_elements">Removing first or last elements</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need to mutate a collection, removing the first or last element,
+Groovy doesn&#8217;t offer consistent extension methods across all the aggregate types.
+You can use the JDK <code>remove(0)</code> method from <code>List</code> to remove the first element from the list (and Groovy also provides a nice <code>removeAt(0)</code> alias).
+Groovy also provides <code>removeLast()</code> for lists.
+Given this, the <code>removeFirst()</code> and <code>removeLast()</code>
+methods from <code>SequencedCollection</code> are a nice addition.</p>
+</div>
+<div class="paragraph">
+<p>If you want to create a new aggregate which is the same as the original
+but with the first (or last) element removed, Groovy provides
+<code>tail()</code> and <code>drop(1)</code> (or <code>init()</code> and <code>dropRight(1)</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_adding_elements_to_the_frontend">Adding elements to the front/end</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need to mutate a collection, adding elements at the front or end,
+Groovy doesn&#8217;t offer consistent extension methods across all the aggregate types.
+You&#8217;d normally use <code>add(element)</code> or <code>add(0, element)</code> for lists.
+So the <code>addFirst()</code> and <code>addLast()</code>
+methods from <code>SequencedCollection</code> are a nice addition.
+Groovy does offer the <code>leftShift</code> operator (<code>&lt;&lt;</code>) as another way to append to the end of a list.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_working_with_reversed_collections">Working with reversed collections</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another area tackled by JEP-431 is improved consistency for
+working with a collection in reverse order.
+Groovy already offers some enhancements for this scenario
+with <code>reverseEach</code> and <code>asReversed</code> extension methods.
+These methods aren&#8217;t available for all sets, e.g. not for <code>LinkedHashSet</code>
+but only <code>NavigableSet</code> instances. Also, the <code>asReversed</code> method
+creates a new collection rather than a view that is provided by
+JEP-431s <code>reversed()</code> method. There are times when the latter might be preferred.
+So, all in all, this functionality provided by JEP-431 is most welcome.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Collection Type</th>
+<th class="tableblock halign-left valign-top">Before JEP-431</th>
+<th class="tableblock halign-left valign-top">After JEP-431</th>
+<th class="tableblock halign-left valign-top">Groovy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">use <code>list.listIterator(list.size()).previous()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list.reversed()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list.reverseEach</code><br>
+<code>list.asReversed()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deque</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">use <code>deque.descendingIterator()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deque.reversed()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deque.reverseEach</code><br>
+<code>deque.asReversed()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NavigableSet</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">use <code>set.descendingSet()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.reversed()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.reverseEach</code><br>
+<code>set.asReversed()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>set.reversed()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="_examples_2">Examples</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var result = []
+list.reverseEach { result &lt;&lt; it }
+assert result == [3, 2, 1]
+assert list.asReversed() == [3, 2, 1]
+assert list.reversed() == [3, 2, 1]                        // NEW
+
+result = []
+deque.reverseEach { result &lt;&lt; it }
+assert result == [3, 2, 1]
+assert deque.asReversed() == [3, 2, 1]
+assert deque.reversed() == [3, 2, 1]                       // NEW
+
+result = []
+assert set.reversed() == [3, 2, 1] as Set                  // NEW
+
+result = []
+sortedSet.reverseEach { result &lt;&lt; it }
+assert result == [4, 3, 2, 1]
+assert sortedSet.asReversed() == [4, 3, 2, 1] as Set
+assert sortedSet.reversed() == [4, 3, 2, 1] as Set         // NEW
+
+var map = [a: 1, b: 2]
+result = []
+map.reverseEach { k, v -&gt; result &lt;&lt; [k, v] }
+assert result == [['b', 2], ['a', 1]]
+assert map.reversed() == [b:2, a:1]                        // NEW</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_additional_references">Additional References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjdk.org/jeps/431">JEP-431 Proposal</a></p>
+</li>
+<li>
+<p><a href="https://www.infoworld.com/article/3689880/jdk-21-the-new-features-in-java-21.html">Summary of features coming in JDK21</a> (Paul Krill on Infoworld)</p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=9G_0el3RWPE">Inside Java Newscast #45</a> (with Nicolai)</p>
+</li>
+<li>
+<p><a href="https://inside.java/2023/04/25/podcast-031/">Inside Java Podcast Episode 31</a> (Ana-Maria Mihalceanu with Stuart Marks)</p>
+</li>
+<li>
+<p><a href="https://www.infoq.com/news/2023/03/collections-framework-makeover/" class="bare">https://www.infoq.com/news/2023/03/collections-framework-makeover/</a> (A N M Bazlur Rahman on InfoQ)</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-list-processing-cheat-sheet">Groovy list processing cheat sheet</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick look at using JEP-431 functionality with Groovy.
+While Groovy already offers some of the functionality which JEP-431 provides,
+it certainly looks like a nice addition to the JDK.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
