@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, records, java, scala, kotlin, lombok'/><meta name='description' content='This post looks at the performance of some of the generated methods in Groovy records.'/><title>The Apache Groovy programming language - Blogs - Groovy Record Performance</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Record Performance</a></li><li><a href='#_our_domain' class='anchor-link'>Our domain</a></li><li><a href='#_performance_of_hashcode' class='anchor-link'>Performance of <code>hashCode</code></a></li><li><a href='#_performance_of_equals' class='anchor-link'>Performance of <code>equals</code></a></li><li><a href='#_summary_2' class='anchor-link'>Summary</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Record Performance</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-05-09 11:39PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>We highly recommend the excellent
+<a href="https://www.youtube.com/results?search_query=%23jepcafe">JEP Café</a>
+series on the
+<a href="https://www.youtube.com/@java">@java</a> YouTube channel.
+Features arriving on the JDK are likely to be features you will
+be able to use in Groovy soon too!</p>
+</div>
+<div class="paragraph">
+<p>In JEP Café <a href="https://www.youtube.com/watch?v=1oC9ESbyvqs">Episode 8</a>,
+<a href="https://twitter.com/JosePaumard">José Paumard</a> looks at a number of topics related to Records including the performance
+of some of the generated methods like <code>hashCode</code> and <code>equals</code>.
+It compares the performance of those methods for Java, Kotlin
+data classes and Lombok&#8217;s @Data classes.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s do a similar comparison adding in Scala case classes
+and Groovy records. For Groovy, we&#8217;ll cover native records
+and emulated records (which you can use on JDK8 and above
+if you are still stuck on older JDK versions).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_our_domain">Our domain</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll use the example about 7½ minutes into the JEP Café episode.
+It is an aggregate of five Strings
+which together form a kind of aggregate label.</p>
+</div>
+<div class="sect2">
+<h3 id="_java_record">Java record</h3>
+<div class="paragraph">
+<p>Here is the Java version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public record JavaRecordLabel(String x0, String x1, String x2, String x3, String x4) { }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_java_class_with_lomboks_data">Java class with Lombok&#8217;s @Data</h3>
+<div class="paragraph">
+<p>Here is the Lombok equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Data
+public class LombokDataLabel {
+    final String x0, x1, x2, x3, x4;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kotlin_data_class">Kotlin data class</h3>
+<div class="paragraph">
+<p>Here is the Kotlin equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="kotlin">data class KotlinDataLabel (
+    val x0: String, val x1: String, val x2: String,
+    val x3: String, val x4: String)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scala_case_class">Scala case class</h3>
+<div class="paragraph">
+<p>Here is the Scala equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="scala">case class ScalaCaseLabel(x0: String, x1: String, x2: String, x3: String, x4: String)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy_record">Groovy record</h3>
+<div class="paragraph">
+<p>Here is the Groovy equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record GroovyRecordLabel(String x0, String x1, String x2, String x3, String x4) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will produce bytecode similar to a native Java record
+when run on a version of the JDK supporting records.
+On earlier JDK versions, it will produce an emulated record.
+We are going to use JDK17 for our examples. We can force the
+Groovy compiler to produce emulated code with JDK17 by
+applying a record option annotation as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@RecordOptions(mode = RecordTypeMode.EMULATE)
+record GroovyEmulatedRecordLabel(String x0, String x1, String x2, String x3, String x4) { }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance_of_hashcode">Performance of <code>hashCode</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our benchmark code was written in Java for all cases
+and used <a href="https://github.com/openjdk/jmh">JMH</a>.
+It called the <code>hashCode</code> method of a static instance
+for each of the different cases.
+The full source code is in a <code>record-performance</code> <a href="https://github.com/paulk-asert/record-performance/">repo</a> on GitHub.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of setting up the static instance (<code>X0</code> .. <code>X4</code> are String constants):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static final JavaRecordLabel JAVA_RECORD_LABEL = new JavaRecordLabel(X0, X1, X2, X3, X4);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is an example of the benchmark test:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Benchmark
+public void hashcodeJavaRecord(Blackhole bh) {
+    bh.consume(JAVA_RECORD_LABEL.hashCode());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We used 3 warmup iterations and 10 benchmark iterations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">jmh {
+    warmupIterations = 3
+    iterations = 10
+    fork = 1
+    timeUnit = 'ns'
+    benchmarkMode = ['avgt']
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_results">Results</h3>
+<div class="paragraph">
+<p>The tests were run using GitHub actions on various platforms.
+The results show average time taken in nanoseconds, so a smaller <em>Score</em> means faster.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_ubuntu_latest">Using ubuntu-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                         Mode  Cnt   Score   Error  Units
+HashCodeBenchmark.hashcodeGroovyEmulatedRecord    avgt   10   3.530 ± 0.186  ns/op
+HashCodeBenchmark.hashcodeGroovyRecord            avgt   10   3.180 ± 0.145  ns/op
+HashCodeBenchmark.hashcodeJavaRecord              avgt   10   3.184 ± 0.156  ns/op
+HashCodeBenchmark.hashcodeKotlinDataLabel         avgt   10   7.523 ± 0.272  ns/op
+HashCodeBenchmark.hashcodeLombokDataLabel         avgt   10  19.042 ± 0.425  ns/op
+HashCodeBenchmark.hashcodeScalaCaseLabel          avgt   10  21.639 ± 0.843  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_windows_latest">Using windows-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                         Mode  Cnt   Score   Error  Units
+HashCodeBenchmark.hashcodeGroovyEmulatedRecord    avgt   10   3.074 ± 0.010  ns/op
+HashCodeBenchmark.hashcodeGroovyRecord            avgt   10   2.832 ± 0.004  ns/op
+HashCodeBenchmark.hashcodeJavaRecord              avgt   10   3.233 ± 0.003  ns/op
+HashCodeBenchmark.hashcodeKotlinDataLabel         avgt   10   4.091 ± 0.006  ns/op
+HashCodeBenchmark.hashcodeLombokDataLabel         avgt   10  19.000 ± 0.027  ns/op
+HashCodeBenchmark.hashcodeScalaCaseLabel          avgt   10  18.984 ± 0.172  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_macos_latest">Using macos-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                         Mode  Cnt   Score   Error  Units
+HashCodeBenchmark.hashcodeGroovyEmulatedRecord    avgt   10   2.732 ± 0.135  ns/op
+HashCodeBenchmark.hashcodeGroovyRecord            avgt   10   2.995 ± 0.038  ns/op
+HashCodeBenchmark.hashcodeJavaRecord              avgt   10   3.056 ± 0.147  ns/op
+HashCodeBenchmark.hashcodeKotlinDataLabel         avgt   10   6.670 ± 0.308  ns/op
+HashCodeBenchmark.hashcodeLombokDataLabel         avgt   10  16.560 ± 0.425  ns/op
+HashCodeBenchmark.hashcodeScalaCaseLabel          avgt   10  17.542 ± 0.465  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_graphing_the_results">Graphing the results</h4>
+<div class="paragraph">
+<p>We can already see some variance in the results across platforms.
+So, let&#8217;s average the results across the three platforms, which
+gives us the following chart:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/hashcodeTimes.png" alt="hashcodeTimes"></span></p>
+</div>
+<div class="paragraph">
+<p>Next we&#8217;ll look at some of the reasons behind these differences
+and some other considerations which can help you speed up <code>hashCode</code>
+or justify why you might want to choose a slower version as a
+trade-off for other useful properties.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discussion">Discussion</h3>
+<div class="paragraph">
+<p>It is always dangerous to draw too many conclusions from microbenchmarks.
+We don&#8217;t always know if we are comparing apples with apples, or what else
+was running on the machine when the benchmarks were executed, or how changing
+the benchmark slightly might alter the result. Certainly for <code>hashCode</code>,
+the result is impacted by the number of and types of our record components.
+Even the particular data instances (arbitrary Strings in our case) will
+impact the speed of that method.</p>
+</div>
+<div class="paragraph">
+<p>But what does this really tell us? For Groovy users, it is good to know
+that the <code>hashCode</code> method is as good or better than Java records.
+That isn&#8217;t too surprising since the Groovy bytecode is almost identical
+to the Java bytecode for most parts of records.</p>
+</div>
+<div class="paragraph">
+<p>For Lombok and the other languages, the <code>hashCode</code> method is slower but only
+by a few (or into the 10s of) nanoseconds.
+Do we really care about how fast this particular method is?
+Certainly if we are storing a lot of our label instances
+into hashed collections, it could matter, but otherwise, not so much;
+we&#8217;ll rarely call this method directly.</p>
+</div>
+<div class="paragraph">
+<p>But speed is only one of properties we&#8217;d like in a good <code>hashCode</code> method.
+Another is minimal collisions. We can after all return the constant <code>0</code> or <code>-1</code>
+from our <code>hashCode</code> and that would be very fast but hopeless in terms of collisions.</p>
+</div>
+<div class="sect3">
+<h4 id="_hashing_algorithm">Hashing algorithm</h4>
+<div class="paragraph">
+<p>For Scala case classes, the
+<a href="https://en.wikipedia.org/wiki/MurmurHash">Murmur3</a> hashing algorithm is currently
+used which is slightly slower that what Java uses but
+<a href="https://stackoverflow.com/questions/40980193/scala-murmur-hash-vs-java-native-hash">claims</a>
+to have improved collision resistance.
+If you are using large collections or records with many components, this tradeoff
+might be worth considering.</p>
+</div>
+<div class="paragraph">
+<p>You can use Scala&#8217;s algorithm directly in Groovy with a record definition like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record GroovyRecordScalaMurmur3Label(String x0, String x1, String x2, String x3, String x4) {
+    int hashCode() {
+        ScalaRunTime._hashCode(new Tuple5&lt;&gt;(x0, x1, x2, x3, x4))
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And this has almost identical performance to the native Scala example from our earlier bar chart.</p>
+</div>
+<div class="paragraph">
+<p>If you want a smaller dependency than the Scala runtime jar, you could use
+the <a href="https://guava.dev/releases/31.0-jre/api/docs/src-html/com/google/common/hash/Hashing.html#line.158">32-bit Murmur3</a> algorithm from <a href="https://github.com/google/guava">Guava</a>
+or write your own combiner to combine hashes produced by Apache Commons Codec&#8217;s
+<a href="https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/digest/MurmurHash3.html#hash32x86-byte:A-">Murmur3 algorithm</a> on the bytes of each String component.
+In my tests, both of these alternatives ended up being slower than borrowing Scala&#8217;s algorithm,
+but I didn&#8217;t try to optimise my implementation.</p>
+</div>
+<div class="paragraph">
+<p>If you want to diver deeper on this topic, check out:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>this great overview article about <a href="https://www.baeldung.com/java-hashmap-optimize-performance">Optimizing HashMap’s Performance</a>,</p>
+</li>
+<li>
+<p>and this article on
+<a href="https://www.javacodegeeks.com/2015/09/an-introduction-to-optimising-a-hashing-strategy.html">optimising a hashing strategy</a> and its impact on collisions,</p>
+</li>
+<li>
+<p>the original
+<a href="https://github.com/aappleby/smhasher/wiki/MurmurHash3">C++ implementation</a> of the Murmur3 algorithm.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_jdk_version_support">JDK version support</h4>
+<div class="paragraph">
+<p>One difference worth pointing out is that the Groovy, Lombok and other
+languages work on earlier JDKs. As the GitHub action workflow configuration
+shows, the example in this blog post are tested on JDK 8, 11 and 17.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="yaml">matrix:
+  java: [8,11,17]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Java record examples are tested in JDK 17 (technically requires 16+).
+This is good to know if you are stuck on earlier versions but should become
+less of an issue over time.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_caching">Caching</h4>
+<div class="paragraph">
+<p>A nice Groovy feature provided by some of Groovy&#8217;s transforms
+is <em>caching</em>, which is exactly what you might want to do
+for immutable classes (like records). In fact, in Groovy, caching is turned on
+by default for the <code>hashCode</code> and <code>toString</code> methods for <code>@Immutable</code> classes,
+but we leave it off by default for records for Java compatibility.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s turn on caching for the <code>hashCode</code> method with Groovy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@EqualsAndHashCode(useGetters = false, cache = true)
+record GroovyRecordWithCacheLabel(String x0, String x1, String x2, String x3, String x4) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, Groovy records behave like Java records.
+By supplying the <code>@EqualsAndHashCode</code> annotation, we effectively get
+the code for an emulated record instead of the normal record bytecode.
+To be as close to records as possible but with caching turned on,
+we enable <code>cache</code> and disable <code>useGetters</code>. We&#8217;ll discuss the latter
+in more detail in the next subsection.</p>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s change our Java and Groovy benchmark code to simulate some code that
+uses <code>hashCode</code> multiple times. For our purposes, we&#8217;ll just sum 5 calls to <code>hashCode</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Benchmark
+public void hashcodeJavaRecord(Blackhole bh) {
+    bh.consume(JAVA_RECORD_LABEL.hashCode()
+        + JAVA_RECORD_LABEL.hashCode()
+        + JAVA_RECORD_LABEL.hashCode()
+        + JAVA_RECORD_LABEL.hashCode()
+        + JAVA_RECORD_LABEL.hashCode());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And we can do the same for Groovy. Here are the results of our new benchmark:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                         Mode  Cnt   Score   Error  Units
+HashCodeCacheBenchmark.hashcodeGroovyCacheRecord  avgt   10   4.296 ± 0.108  ns/op  windows-latest
+HashCodeCacheBenchmark.hashcodeGroovyCacheRecord  avgt   10   4.787 ± 0.151  ns/op  ubuntu-latest
+HashCodeCacheBenchmark.hashcodeGroovyCacheRecord  avgt   10   5.465 ± 0.045  ns/op  macos-latest
+HashCodeCacheBenchmark.hashcodeJavaRecord         avgt   10  21.956 ± 0.023  ns/op  windows-latest
+HashCodeCacheBenchmark.hashcodeJavaRecord         avgt   10  33.820 ± 0.750  ns/op  ubuntu-latest
+HashCodeCacheBenchmark.hashcodeJavaRecord         avgt   10  32.837 ± 1.136  ns/op  macos-latest</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As expected, the effect of caching is clearly visible. We could certainly
+write our own caching with an explicit <code>hashCode</code> method in Java and perhaps
+call into <code>Objects.hash</code> or similar, but it&#8217;s not as nice as having a declarative
+approach to achieve that.</p>
+</div>
+<div class="paragraph">
+<p>As a side note, we could add <code>@Memoized</code> to the <code>hashCode</code> method in our earlier
+<code>GroovyRecordScalaMurmur3Label</code> example to turn on caching when using that algorithm.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_supporting_javabean_like_behavior">Supporting JavaBean-like behavior</h4>
+<div class="paragraph">
+<p>One other "feature" of Java (and Groovy) records is the ability to override the
+record component "getters". You could for instance, write a 3-String label record in Java that
+always returns its <code>x1</code> component in uppercase:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public record JavaRecordLabelUpper(String x0, String x1, String x2) {
+    public String x1() { return x1.toUpperCase(); }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now using the <code>x1()</code> getter method will give you the uppercase version.
+Just be aware though that <code>hashCode</code> (and <code>equals</code>) don&#8217;t use the getter
+but access the field directly.</p>
+</div>
+<div class="paragraph">
+<p>So, while all the components might be equal in the following example,
+the hashcode (and the record as a whole) won&#8217;t be equal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static final JavaRecordLabelUpper JAVA_UPPER_1
+        = new JavaRecordLabelUpper("a", "b", "c");
+private static final JavaRecordLabelUpper JAVA_UPPER_2
+        = new JavaRecordLabelUpper("a", "B", "c");
+...
+assertEquals(JAVA_UPPER_1.x0(), JAVA_UPPER_2.x0());
+assertEquals(JAVA_UPPER_1.x1(), JAVA_UPPER_2.x1());
+assertEquals(JAVA_UPPER_1.x2(), JAVA_UPPER_2.x2());
+assertNotEquals(JAVA_UPPER_1.hashCode(), JAVA_UPPER_2.hashCode());
+assertNotEquals(JAVA_UPPER_1, JAVA_UPPER_2);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is exactly as expected from the record-related parts of the JLS specification
+and is a reasonable design decision given that records are handling the use case
+of <em>"a simple aggregate of values"</em>.
+Indeed, records step away from many of the JavaBean conventions, so we might expect
+some differences, yet not using the getter might still seem strange to some folks.</p>
+</div>
+<div class="paragraph">
+<p>The JLS specification elaborates further, stating that the above <code>JavaRecordLabelUpper</code>
+class might be considered bad style. The rationale is in terms of a record <code>r2</code> derived
+from the components of record <code>r1</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">R r2 = new R(r1.c1(), r1.c2(), ..., r1.cn());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For any well-behaved record class, <code>r1.equals(r2)</code> should be true, which
+won&#8217;t be the case for <code>JavaRecordLabelUpper</code>.</p>
+</div>
+<div class="paragraph">
+<p>Accessing the component through its getter is slower but would preserve the above property.
+Both the Lombok and Scala implementations use the getter. This accounts for some of the
+reduced speed of those implementations.</p>
+</div>
+<div class="paragraph">
+<p>Groovy records default to Java behavior here but allow you to use the getters
+for <code>hashCode</code> (and <code>equals</code> and <code>toString</code>) if you so desire. It will be slower
+be preserves traditional JavaBean-like getter behavior.</p>
+</div>
+<div class="paragraph">
+<p>Here is what the code would look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@EqualsAndHashCode
+record GroovyRecordUpperGetter(String x0, String x1, String x2) {
+    String x1() { x1.toUpperCase() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The explicit annotation turns on Groovy&#8217;s emulated record bytecode
+which is the same algorithm but defaults to using the getters.</p>
+</div>
+<div class="paragraph">
+<p>And now our tests pass (with <code>assertEquals</code> instead of <code>assertNotEquals</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">private static final GroovyRecordUpperGetter GROOVY_UPPER_GETTER_1
+        = new GroovyRecordUpperGetter("a", "b", "c");
+private static final GroovyRecordUpperGetter GROOVY_UPPER_GETTER_2
+        = new GroovyRecordUpperGetter("a", "B", "c");
+...
+assertEquals(GROOVY_UPPER_GETTER_1.hashCode(), GROOVY_UPPER_GETTER_2.hashCode());</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_summary">Summary</h4>
+<div class="paragraph">
+<p>Groovy records have good <code>hashCode</code> performance. There are times when you might want to
+enable caching. Rarely, you might want to also consider swapping the hashing algorithm
+or enabling getters, but if you need to, Groovy makes that easy too.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_performance_of_equals">Performance of <code>equals</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For this benchmark, the <code>equals</code> method of a static instance
+was called passing in a second static instance.</p>
+</div>
+<div class="paragraph">
+<p>Here is an example of our benchmark code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Benchmark
+public void equalsGroovyRecord(Blackhole bh) {
+    bh.consume(GROOVY_RECORD_LABEL.equals(GROOVY_RECORD_LABEL_2));
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_results_2">Results</h3>
+<div class="paragraph">
+<p>As before, the tests were run using GitHub actions on various platforms.
+The results show average time taken in nanoseconds, so a smaller <em>Score</em> means faster.</p>
+</div>
+<div class="sect3">
+<h4 id="_using_ubuntu_latest_2">Using ubuntu-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                           Mode  Cnt   Score   Error  Units
+EqualsBenchmark.equalsGroovyEmulatedRecord          avgt   10   2.573 ± 0.017  ns/op
+EqualsBenchmark.equalsGroovyRecord                  avgt   10   0.592 ± 0.002  ns/op
+EqualsBenchmark.equalsJavaRecord                    avgt   10   0.595 ± 0.006  ns/op
+EqualsBenchmark.equalsKotlinDataLabel               avgt   10   3.560 ± 0.024  ns/op
+EqualsBenchmark.equalsLombokDataLabel               avgt   10  24.914 ± 0.118  ns/op
+EqualsBenchmark.equalsScalaCaseLabel                avgt   10  25.000 ± 0.141  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_windows_latest_2">Using windows-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                           Mode  Cnt   Score   Error  Units
+EqualsBenchmark.equalsGroovyEmulatedRecord          avgt   10   2.221 ± 0.012  ns/op
+EqualsBenchmark.equalsGroovyRecord                  avgt   10   0.511 ± 0.002  ns/op
+EqualsBenchmark.equalsJavaRecord                    avgt   10   0.512 ± 0.001  ns/op
+EqualsBenchmark.equalsKotlinDataLabel               avgt   10   3.071 ± 0.007  ns/op
+EqualsBenchmark.equalsLombokDataLabel               avgt   10  21.491 ± 0.038  ns/op
+EqualsBenchmark.equalsScalaCaseLabel                avgt   10  21.477 ± 0.032  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_using_macos_latest_2">Using macos-latest</h4>
+<div class="listingblock">
+<div class="content">
+<pre>Benchmark                                           Mode  Cnt   Score   Error  Units
+EqualsBenchmark.equalsGroovyEmulatedRecord          avgt   10   1.841 ± 0.036  ns/op
+EqualsBenchmark.equalsGroovyRecord                  avgt   10   0.557 ± 0.002  ns/op
+EqualsBenchmark.equalsJavaRecord                    avgt   10   0.557 ± 0.001  ns/op
+EqualsBenchmark.equalsKotlinDataLabel               avgt   10   2.620 ± 0.013  ns/op
+EqualsBenchmark.equalsLombokDataLabel               avgt   10  19.273 ± 0.125  ns/op
+EqualsBenchmark.equalsScalaCaseLabel                avgt   10  19.335 ± 0.298  ns/op</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_graphing_the_results_2">Graphing the results</h4>
+<div class="paragraph">
+<p>Like before, we&#8217;ll average the results across the three platforms:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/equalsTimes.png" alt="equalsTimes"></span></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_discussion_2">Discussion</h3>
+<div class="paragraph">
+<p>We saw for <code>hashCode</code>, that using getters retained JavaBean-like expectations
+but with additional costs of calling that method. That impact is doubly worse
+for <code>equals</code> since we call the getters for <code>this</code> and the instance we are comparing
+against. This explains a significant part of the slowness for Lombok and Scala.</p>
+</div>
+<div class="paragraph">
+<p>Groovy follows Java behavior here by default but enables you to turn on getters
+if you desire.</p>
+</div>
+<div class="paragraph">
+<p>The JLS has an example of a <code>SmallPoint</code> record in section
+<a href="https://docs.oracle.com/javase/specs/jls/se20/html/jls-8.html#jls-8.10.3">8.10.3</a>
+which is discussed as <em>bad style</em> because with Java records the last statement prints <code>false</code>.
+If we enable getters, the last statement now prints <code>true</code> as shown in this Groovy equivalent
+of that example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@EqualsAndHashCode
+record SmallPoint(int x, int y) {
+    int x() { this.x &lt; 100 ? this.x : 100 }
+    int y() { this.y &lt; 100 ? this.y : 100 }
+
+    static main(args) {
+        var p1 = new SmallPoint(200, 300)
+        var p2 = new SmallPoint(200, 300)
+        println p1 == p2  // prints true
+
+        var p3 = new SmallPoint(p1.x(), p1.y())
+        println p1 == p3  // prints true
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Never-the-less, for this particular example, it might be better style to leave the
+normal field access in place and provide something like a compact canonical
+constructor to truncate the points during construction.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_summary_2">Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at a few aspects of the performance of Groovy records and compared
+them to other languages. Groovy&#8217;s default behavior piggybacks directly on Java&#8217;s
+behavior but Groovy has many declarative options to tweak the generated code if needed.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
