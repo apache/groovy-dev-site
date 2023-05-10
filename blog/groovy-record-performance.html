@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Record Performance</a></li><li><a href='#_our_domain' class='anchor-link'>Our domain</a></li><li><a href='#_performance_of_hashcode' class='anchor-link'>Performance of <code>hashCode</code></a></li><li><a href='#_performance_of_equals' class='anchor-link'>Performance of <code>equals</code></a></li><li><a href='#_summary_2' class='anchor-link'>Summary</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Record Performance</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-05-09 11:39PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Record Performance</a></li><li><a href='#_our_domain' class='anchor-link'>Our domain</a></li><li><a href='#_performance_of_hashcode' class='anchor-link'>Performance of <code>hashCode</code></a></li><li><a href='#_performance_of_equals' class='anchor-link'>Performance of <code>equals</code></a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Record Performance</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-05-09 11:39PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>We highly recommend the excellent
@@ -506,7 +506,7 @@ reduced speed of those implementations.</p>
 <div class="paragraph">
 <p>Groovy records default to Java behavior here but allow you to use the getters
 for <code>hashCode</code> (and <code>equals</code> and <code>toString</code>) if you so desire. It will be slower
-be preserves traditional JavaBean-like getter behavior.</p>
+but now preserves traditional JavaBean-like getter behavior.</p>
 </div>
 <div class="paragraph">
 <p>Here is what the code would look like:</p>
@@ -520,8 +520,10 @@ record GroovyRecordUpperGetter(String x0, String x1, String x2) {
 </div>
 </div>
 <div class="paragraph">
-<p>The explicit annotation turns on Groovy&#8217;s emulated record bytecode
-which is the same algorithm but defaults to using the getters.</p>
+<p>The explicit <code>@EqualsAndHashCode</code> annotation tells the compiler to provide
+Groovy&#8217;s default generated <code>hashCode</code> bytecode which does use getters rather
+than special record bytecode. It ends up being the same hashing algorithm but
+use the getters to access the components.</p>
 </div>
 <div class="paragraph">
 <p>And now our tests pass (with <code>assertEquals</code> instead of <code>assertNotEquals</code>):</p>
@@ -541,8 +543,8 @@ assertEquals(GROOVY_UPPER_GETTER_1.hashCode(), GROOVY_UPPER_GETTER_2.hashCode())
 <h4 id="_summary">Summary</h4>
 <div class="paragraph">
 <p>Groovy records have good <code>hashCode</code> performance. There are times when you might want to
-enable caching. Rarely, you might want to also consider swapping the hashing algorithm
-or enabling getters, but if you need to, Groovy makes that easy too.</p>
+enable caching. On rare occasions, you might want to also consider swapping the hashing
+algorithm or enabling getters, but if you need to, Groovy makes that easy too.</p>
 </div>
 </div>
 </div>
@@ -670,7 +672,7 @@ constructor to truncate the points during construction.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_summary_2">Summary</h2>
+<h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have looked at a few aspects of the performance of Groovy records and compared
