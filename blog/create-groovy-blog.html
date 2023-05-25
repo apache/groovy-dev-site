@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, collections, zip, eclipse collections, guava, vavr, streamex, jOOλ, ginq, gquery, emoji'/><meta name='description' content='This post looks at zipping collections.'/><title>The Apache Groovy programming language - Blogs - Zipping Collections with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, blog'/><meta name='description' content='This post looks at the steps to create a blog post.'/><title>The Apache Groovy programming language - Blogs - Creating a Groovy Blog Post</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,131 +53,209 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Zipping Collections with Groovy</a></li><li><a href='#_what_is_zipping' class='anchor-link'>What is zipping?</a></li><li><a href='#_groovy' class='anchor-link'>Groovy</a></li><li><a href='#_eclipse_collections' class='anchor-link'>Eclipse Collections</a></li><li><a href='#_guava' class='anchor-link'>Guava</a></li><li><a href='#_streamex' class='anchor-link'>StreamEx</a></li><li><a href='#_vavr' class='anchor-link'>Vavr</a></li><li><a href='#_jooλ' class='anchor-link'>jOOλ</a></li><li><a href='#_groovy_gquery' class='anchor-link'>Groovy GQuery</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./groovy-sequenced-collections'>Groovy and Sequenced Collections (JEP-431)</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Zipping Collections with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-11-17 12:50PM</span></p><hr/><div class="sect1">
-<h2 id="_what_is_zipping">What is zipping?</h2>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Creating a Groovy Blog Post</a></li><li><a href='#_using_the_command_line' class='anchor-link'>Using the command line</a></li><li><a href='#_using_the_github_webui' class='anchor-link'>Using the GitHub WebUI</a></li><li><a href='#_choosing_your_content' class='anchor-link'>Choosing your content</a></li><li><a href='#_next_steps' class='anchor-link'>Next steps</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Creating a Groovy Blog Post</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-05-25 11:35PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In computer science, <a href="https://en.wikipedia.org/wiki/Zipping_(computer_science)">zipping</a> translates sequences into sequences where, if visualized in two dimensions, the rows and columns are swapped. So the zip of:</p>
+<p>The Groovy project welcomes contributions from the community
+on any topics related to Groovy including posts which:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Highlight a feature of the Groovy language which you think deserves additional attention</p>
+</li>
+<li>
+<p>Give details about using Groovy&#8217;s tools</p>
+</li>
+<li>
+<p>Give details about using Groovy with other tools, libraries or frameworks</p>
+</li>
+<li>
+<p>Provide advice for new users to Groovy</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>As mentioned on the
+<a href="https://groovy.apache.org/#blogging">Groovy website</a>,
+you can use your own blogging platform if you wish,
+or add a post to Groovy&#8217;s own
+<a href="https://groovy.apache.org/blog">blogging site</a>.
+This post goes into more detail about this second option.</p>
+</div>
+<div class="paragraph">
+<p>The summary is that writing a blog is easy if you know the basics of
+<a href="https://asciidoc.org/">Asciidoc</a> and git.
+A blog is normally just an asciidoc file added to the
+<a href="https://github.com/apache/groovy-website/tree/asf-site/site/src/site/blog">blog part</a>
+of the
+<a href="https://github.com/apache/groovy-website/">apache/groovy-website</a>
+GitHub repo and maybe an image or two
+in the corresponding
+<a href="https://github.com/apache/groovy-website/tree/asf-site/site/src/site/blog/img">image</a> directory.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_command_line">Using the command line</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you are already familiar with git, first fork the repo using the WebUI.
+Then clone the repo on the commandline in the normal way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 'b', 'c'],
-[ 1 ,  2 ,  3 ]]</code></pre>
+<pre class="prettyprint highlight"><code>$ git clone https://github.com/apache/groovy-website.git</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>would be:</p>
+<p>Or if you have the <a href="https://cli.github.com/">GitHub CLI</a> tools installed,
+you can fork and clone in one step using:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 1],
-['b', 2],
-['c', 3]]</code></pre>
+<pre class="prettyprint highlight"><code>$ gh repo fork https://github.com/apache/groovy-website.git --clone</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It&#8217;s a very handy operation and depending on the language, may be supported for tuples, lists, streams and other sequences or aggregates.</p>
+<p>Now create a new <code>.adoc</code> file in the <code>site/src/site/blog/</code> directory.
+You can edit the file using your favourite text/Asciidoc editor or an IDE.
+I generally use
+<a href="https://www.jetbrains.com/idea/">Intellij IDEA</a>
+with the
+<a href="https://plugins.jetbrains.com/plugin/7391-asciidoc">Asciidoc plugin</a>.</p>
 </div>
 <div class="paragraph">
-<p>Java collections and streams don&#8217;t currently support such functionality out-of-the-box with various workarounds discussed <a href="https://dzone.com/articles/bridge-the-gap-of-zip-operation">here</a>. The summary: language and library design is hard; any zip implementation that Java provides would have some limitations baked in, so they instead provide the necessary primitives to allow folks to build their own implementations based on their specific requirements.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll look at what Groovy provides and some of the available Java libraries that you can also use. The same caveats apply to these libraries, each will have its own implementation strengths and weaknesses.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll use an example inspired by this <a href="https://twitter.com/TheDonRaab">Donald Raab</a> <a href="https://donraab.medium.com/make-or-append-me-a-string-c654f247373a">blog post</a>. It looks at zipping (and formatting) lists of strings containing "fall"-inspired emoji. Yes, it&#8217;s late spring for the southern hemisphere who also mostly call fall "autumn", but hopefully everyone will appreciate the inspiration.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/fall_emojis.png" alt="some fall inspired emojis" width="741"></span></p>
-</div>
-<hr>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy">Groovy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Groovy uses the <code>transpose</code> method for zipping:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGroovy.png" alt="zipping example with Groovy"></span></p>
+<p>You&#8217;ll want to follow all the normal steps to
+<a href="https://www.digitalocean.com/community/tutorials/how-to-create-a-pull-request-on-github">create a pull request on GitHub</a>. This will typically involve
+creating a branch, committing your new file (and maybe images),
+pushing your branch to your fork, and then creating the actual PR.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_eclipse_collections">Eclipse Collections</h2>
+<h2 id="_using_the_github_webui">Using the GitHub WebUI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Collections has a <code>zip</code> method on its list classes:</p>
+<p>If you don&#8217;t want to install git and an editor/IDE, you can use the WebUI.
+Simply navigate to the repo, go to the <code>site/src/site/blog/</code> folder, then
+under <code>Add file</code> click on <code>Create new file</code>. It should look something like
+the following image:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsEC.png" alt="zipping example with Eclipse Collections"></span></p>
+<p><span class="image"><img src="img/blog_add_file_github.png" alt="Clicking Add file &#8594; Create new file"></span></p>
+</div>
+<div class="paragraph">
+<p>You will be prompted to enter an appropriate name for your file:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_enter_filename.png" alt="Entering the new file name"></span></p>
+</div>
+<div class="paragraph">
+<p>You generally pick a unique name that isn&#8217;t too long. Here we picked
+<code>create-groovy-blog.adoc</code>. Don&#8217;t get too stressed out about the name,
+we can provide further guidance once your PR is submitted if your
+name seems out-of-place compared to existing names.
+We generally avoid using exotic characters like emojis in the filenames.
+Some of the tooling doesn&#8217;t like such characters.</p>
+</div>
+<div class="paragraph">
+<p>We now enter Asciidoc content into the file:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_enter_content.png" alt="Entering some content"></span></p>
+</div>
+<div class="paragraph">
+<p>The first line is the title for the post.
+The second line is the author (or authors).
+The next few lines contain metadata. Your best bet is to copy
+the metadata from an existing post and change accordingly, but
+we&#8217;ll guide you through any changes if needed once the PR is submitted.</p>
+</div>
+<div class="paragraph">
+<p>When finished, click on "Commit changes&#8230;&#8203;":</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_commit_changes_start.png" alt="click commit changes"></span></p>
+</div>
+<div class="paragraph">
+<p>If you haven&#8217;t forked the repository before, you might be prompted
+to do that now:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_fork_repository.png" alt="forking the repo"></span></p>
+</div>
+<div class="paragraph">
+<p>Next, you have the option to override the default commit message
+and provide an optional extended description if you wish:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_confirm_commit.png" alt="confirm commit"></span></p>
+</div>
+<div class="paragraph">
+<p>When ready, click "Propose changes".</p>
+</div>
+<div class="paragraph">
+<p>You should now see a summary of your pull request.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blog_create_pr.png" alt="create pull request"></span></p>
+</div>
+<div class="paragraph">
+<p>Add a comment if you wish and finally click "Create pull request".</p>
+</div>
+<div class="paragraph">
+<p>Your PR should now be listed under the repo&#8217;s pull requests:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/apache/groovy-website/pulls" class="bare">https://github.com/apache/groovy-website/pulls</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_guava">Guava</h2>
+<h2 id="_choosing_your_content">Choosing your content</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Guava has a streams utility class with a <code>zip</code> method:</p>
+<p>As mentioned earlier, we welcome a wide range of topics for the posts.
+Not every topic may be suitable. We need to make sure anything we post
+conforms with normal copyright restrictions and can be released under
+the Apache license. Also, we generally don&#8217;t want duplicated content
+or content which is overtly commercial in nature.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGuava.png" alt="zipping example with Guava"></span></p>
+<p>If in doubt, it might be good to have a short conversation
+with the Apache Groovy team on the mailing list or Slack channel
+before you create your PR.
+Further details about contacting the team are on the
+<a href="https://groovy.apache.org/">getting involved</a> page.</p>
+</div>
+<div class="paragraph">
+<p>If your post takes inspiration from other sites or content, make sure to provide
+appropriate attribution. Finally, make sure you have some fun writing
+the post. It will be more enjoyable for you and our readers!</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_streamex">StreamEx</h2>
+<h2 id="_next_steps">Next steps</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>StreamEx provides an enhanced stream library which supports <code>zipWith</code>:</p>
+<p>The acceptance process might involve several iterations to
+improve the content.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsStreamEx.png" alt="zipping example with StreamEx"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vavr">Vavr</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Vavr has a <code>zipWith</code> method on its list class:</p>
+<p>Your PR, once accepted, will be merged into the repo.
+At this point, a CI job kicks off and will build a new version of the website.
+You can watch the CI progress here:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsVavr.png" alt="zipping example with Vavr"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jooλ">jOOλ</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>jOOλ has a <code>zip</code> method for its sequences:</p>
+<p><a href="https://ci-builds.apache.org/job/Groovy/job/Groovy%20dev%20website/" class="bare">https://ci-builds.apache.org/job/Groovy/job/Groovy%20dev%20website/</a></p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsJool.png" alt="zipping example with jOOλ"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy_gquery">Groovy GQuery</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you are a fan of query-like DSLs, Groovy&#8217;s language integrated query, GQuery (AKA GINQ), can also be used:</p>
+<p>And the end result will appear here:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGQ.png" alt="zipping example with GQuery"></span></p>
-</div>
-<div class="paragraph">
-<p>This uses a special <code>_rn</code> "row number" pre-defined variable in GQ expressions. It follows the same strategy as the IntStream "workaround" for Java mentioned in this <a href="https://www.baeldung.com/java-collections-zip">blog</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_more_information">More information</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code examples can be found in the <a href="https://github.com/paulk-asert/zipping-collections">repo</a></p>
+<p><a href="https://groovy.apache.org/blog" class="bare">https://groovy.apache.org/blog</a></p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
