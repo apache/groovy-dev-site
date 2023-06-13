@@ -79,6 +79,9 @@ we looked at reading and writing CSV files using a number of CSV libraries. Toda
 <a href="https://duckdb.org/">DuckDB</a>
 which can read in CSV files on the fly.</p>
 </div>
+<div class="paragraph">
+<p>Our goal is very simple, just print out the information but grouped by each rider&#8217;s country.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">Sql.withInstance('jdbc:duckdb:', 'org.duckdb.DuckDBDriver') { sql -&gt;
@@ -140,8 +143,8 @@ println GQ {
 </div>
 </div>
 <div class="paragraph">
-<p>We could have used a CSV library to read in the data, but for this simple example
-we just used Groovy&#8217;s line/text processing capabilities.
+<p>We could use a CSV library to read in the data, but for this simple example
+we&#8217;ll just use Groovy&#8217;s line/text processing capabilities.
 GQuery doesn&#8217;t currently have built in equivalents to <code>bar</code> or <code>string_agg</code>
 so we roll our own crude bar character function and aggregators, <code>aggRiders</code>
 and <code>aggPlaces</code>.</p>
