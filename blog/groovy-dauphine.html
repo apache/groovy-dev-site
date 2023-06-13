@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, release'/><meta name='description' content='Groovy 2.5.7 Release Announcement.'/><title>The Apache Groovy programming language - Blogs - Groovy 2.5.7 Released</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, cycling, duckdb, sql, ginq, gquery, csv'/><meta name='description' content='This post looks at processing the general classification results for the Critérium du Dauphiné using Groovy, GQuery and DuckDB.'/><title>The Apache Groovy programming language - Blogs - Processing Results for the Critérium du Dauphiné</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,47 +53,123 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 2.5.7 Released</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./groovy-2-5-2-windows'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./groovy-2-5-4-windows'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li><li><a href='./groovy-3-0-0-beta2'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./gmavenplus-1-6-2-released'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-4-0-3-released'>Groovy 4.0.3 Released</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 2.5.7 Released</h1><p><span>Author: <i>Remko Popma</i></span><br/><span>Published: 2019-05-12 10:39PM</span></p><hr/><div class="paragraph">
-<p>Dear community,</p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='#_results_file' class='anchor-link'>Results file</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Processing Results for the Critérium du Dauphiné</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-06-13 05:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The 2023 <a href="https://www.criterium-du-dauphine.fr/en/">Critérium du Dauphiné</a>
+has just finished. Let&#8217;s examine the results using Groovy and DuckDB.
+For the purposes of this post, we are interested in the overall top ten
+riders in the general classification.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_results_file">Results file</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our results are stored in a CSV file:</p>
 </div>
 <div class="paragraph">
-<p><span class="image right"><img src="img/groovy_logo.png" alt="Groovy logo" width="200"></span>
-The Apache Groovy team is pleased to announce version 2.5.7 of Apache Groovy.
-Apache Groovy is a multi-faceted programming language for the JVM.
-Further details can be found at the <a href="https://groovy.apache.org" class="bare">https://groovy.apache.org</a> website.</p>
+<p><span class="image"><img src="img/topten.png" alt="lines from CSV file"></span></p>
 </div>
 <div class="paragraph">
-<p>This release is a maintenance release of the GROOVY_2_5_X branch.
-It is strongly encouraged that all users using prior
-versions on this branch upgrade to this version.</p>
+<p>In a
+<a href="https://groovy.apache.org/blog/reading-and-writing-csv-files">previous article</a>,
+we looked at reading and writing CSV files using a number of CSV libraries. Today we will use a nice feature of
+<a href="https://duckdb.org/">DuckDB</a>
+which can read in CSV files on the fly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Sql.withInstance('jdbc:duckdb:', 'org.duckdb.DuckDBDriver') { sql -&gt;
+    println "Country  Riders                                  Places    Count"
+    sql.eachRow("""SELECT Country,
+        rpad(string_agg(Rider, ', '), 40, ' ') as Riders,
+        rpad(string_agg(Place, ', '), 10, ' ') as Places,
+        bar(count(Country), 0, 4, 30) as Count
+        FROM 'topten.csv' GROUP BY Country""") { row -&gt;
+        row.with {
+            println "$Country       $Riders$Places$Count"
+        }
+    }
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>This release includes 56 bug fixes/improvements as outlined in the changelog:
-<a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12318123&amp;version=12344939" class="bare">https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12318123&amp;version=12344939</a></p>
+<p>Here we are making use of several built-in functions from DuckDB
+including <code>rpad</code> to right pad the output, <code>string_agg</code> to aggregate
+the riders (and their places) from the same country, and <code>bar</code>
+to produce a pretty barchart.</p>
 </div>
 <div class="paragraph">
-<p>Sources, convenience binaries, downloadable documentation and an SDK
-bundle can be found at: <a href="https://groovy.apache.org/download.html" class="bare">https://groovy.apache.org/download.html</a></p>
+<p>Running this code produces the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>Country  Riders                                  Places    Count
+🇩🇰       JONAS VINGEGAARD                        1         ███████▌
+🇬🇧       ADAM YATES                              2         ███████▌
+🇦🇺       BEN O'CONNOR, JAI HINDLEY, JACK HAIG    3, 4, 5   ██████████████████████▌
+🇫🇷       GUILLAUME MARTIN, JULIAN ALAPHILIPPE    6, 10     ███████████████
+🇿🇦       LOUIS DU BOUISSON MEINTJES              7         ███████▌
+🇳🇴       TORSTEIN TRÆEN                          8         ███████▌
+🇪🇸       CARLOS RODRIGUEZ CANO                   9         ███████▌</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>We recommend you verify your installation using the information on that page.</p>
+<p>We can achieve a similar result using GQuery (AKA GINQ) using the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var f = 'topten.csv' as File
+var lines = f.readLines()*.split(',')
+var cols = lines[0].size()
+var rows = lines[1..-1].collect{row -&gt;
+    (0..&lt;cols).collectEntries{ col -&gt; [lines[0][col], row[col]] }}
+var commaDelimited = Collectors.joining(', ')
+var aggRiders = { it.stream().map(rec -&gt; rec.r.Rider).collect(commaDelimited) }
+var aggPlaces = { it.stream().map(rec -&gt; rec.r.Place).collect(commaDelimited) }
+println GQ {
+    from r in rows
+    groupby r.Country
+    select r.Country,
+        agg(aggRiders(_g)) as Riders,
+        agg(aggPlaces(_g)) as Places,
+        '██' * count(r.Country) as Count
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Jars are also available within the major binary repositories.</p>
+<p>We could have used a CSV library to read in the data, but for this simple example
+we just used Groovy&#8217;s line/text processing capabilities.
+GQuery doesn&#8217;t currently have built in equivalents to <code>bar</code> or <code>string_agg</code>
+so we roll our own crude bar character function and aggregators, <code>aggRiders</code>
+and <code>aggPlaces</code>.</p>
 </div>
 <div class="paragraph">
-<p>We welcome your help and feedback and in particular want
-to thank everyone who contributed to this release.</p>
+<p>Running this code gives the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>+---------+--------------------------------------+---------+--------+
+| Country | Riders                               | Places  | Count  |
++---------+--------------------------------------+---------+--------+
+| 🇦🇺      | BEN O'CONNOR, JAI HINDLEY, JACK HAIG | 3, 4, 5 | ██████ |
+| 🇩🇰      | JONAS VINGEGAARD                     | 1       | ██     |
+| 🇳🇴      | TORSTEIN TRÆEN                       | 8       | ██     |
+| 🇿🇦      | LOUIS DU BOUISSON MEINTJES           | 7       | ██     |
+| 🇬🇧      | ADAM YATES                           | 2       | ██     |
+| 🇪🇸      | CARLOS RODRIGUEZ CANO                | 9       | ██     |
+| 🇫🇷      | GUILLAUME MARTIN, JULIAN ALAPHILIPPE | 6, 10   | ████   |
++---------+--------------------------------------+---------+--------+</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>For more information on how to report problems, and to get involved,
-visit the project website at <a href="https://groovy.apache.org/" class="bare">https://groovy.apache.org/</a></p>
+<p>For Groovy 5, we are currently exploring the possibility of adding more
+functions in GQuery, like <code>bar</code> and <code>stringAgg</code>. If you are interested in this
+functionality, please get in touch via the mailing lists or slack.</p>
 </div>
-<div class="paragraph">
-<p>Best regards,</p>
 </div>
-<div class="paragraph">
-<p>The Apache Groovy team.</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
