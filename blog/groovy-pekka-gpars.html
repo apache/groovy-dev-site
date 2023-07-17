@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, actors, pekka, gpars'/><meta name='description' content='This post looks at using Apache Pekka Actors and GPars Actors with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Apache Pekka actors and GPars actors with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekka actors and GPars actors with Groovy</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekka_implementation_in_groovy' class='anchor-link'>A Pekka implementation in Groovy</a></li><li><a href='#_a_gpars_implementation_in_groovy' class='anchor-link'>A GPars implementation in Groovy</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekka actors and GPars actors with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-07-17 11:24PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekka logo" width="100"></span>
+<a href="https://pekko.apache.org/">Apache Pekka</a> is a project undergoing <a href="https://incubator.apache.org/">incubation</a> at the Apache Software Foundation.
+It is an Apache licensed fork of the Akka project (based on Akka version 2.6.x) and provides a
+framework for building applications that are concurrent, distributed, resilient and elastic.
+Pekko provides high-level abstractions for concurrency based on actors,
+as well as additional libraries for persistence, streams, HTTP, and more.
+It provides Scala and Java APIs/DSLs for writing your applications. We&#8217;ll be using the latter.
+We&#8217;ll look at just one example of using Pekka actors.</p>
+</div>
+<div class="paragraph">
+<p><span class="image right"><img src="img/gpars_logo.png" alt="gpars" width="180"></span>
+By way of comparison, we&#8217;ll also be looking at <a href="http://www.gpars.org/">GPars</a>,
+a concurrency library for Java and Groovy with support for actors, agents,
+concurrent &amp; parallel map/reduce, fork/join, asynchronous closures, dataflow, and more.
+A <a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">previous blog post</a>
+looks at additional features of GPars and how to use it with virtual threads.
+Here, we&#8217;ll just look at the comparable actor features for our Pekka example.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_example">The example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A common first example involving actors involves creating two actors where one actor
+sends a message to the second actor which sends a reply back to the first.
+We could certainly do that, but we&#8217;ll use a slightly more interesting example involving three
+actors. The example comes from the
+<a href="https://pekko.apache.org/docs/pekko/current/typed/actors.html#first-example">Pekka documentation</a>
+and is illustrated in the following diagram (from the Pekka documentation):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://pekko.apache.org/docs/pekko/current/typed/images/hello-world2.png" alt="actors in our system - from pekka documentation"></span></p>
+</div>
+<div class="paragraph">
+<p>The system consists of the following actors:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>HelloWorldMain</code> actor creates the other two actors and sends
+an initial message to kick off our little system. The initial message
+goes to the <code>HelloWorld</code> actor and gives the <code>HelloWorldBot</code> as the reply address.</p>
+</li>
+<li>
+<p>The <code>HelloWorld</code> actor is listening for <code>Greet</code>
+messages. When it receives one, it sends a <code>Greeted</code> acknowledgement back to a reply address.</p>
+</li>
+<li>
+<p>The <code>HelloWorldBot</code> is like an echo chamber. It returns any message it receives.
+This would potentially be an infinite loop, however, the actor has a parameter
+to tell it the maximum number of times to echo the message before stopping.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_pekka_implementation_in_groovy">A Pekka implementation in Groovy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example uses Groovy 4.0.13, JDK11 and Pekka 1.0.0, but should also
+run using later JDK versions.</p>
+</div>
+<div class="paragraph">
+<p>The Pekka documentation gives Java and Scala implementations.
+You should notice that the Groovy implementation is similar to the Java one
+but just a little shorter. The Groovy code is a little more complex than the
+equivalent Scala code. We could certainly use Groovy meta-programming to
+simplify the Groovy code in numerous ways but that is a topic for another day.</p>
+</div>
+<div class="paragraph">
+<p>Here is the code for <code>HelloWorld</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class HelloWorld extends AbstractBehavior&lt;HelloWorld.Greet&gt; {
+
+    static record Greet(String whom, ActorRef&lt;Greeted&gt; replyTo) {}
+    static record Greeted(String whom, ActorRef&lt;Greet&gt; from) {}
+
+    static Behavior&lt;Greet&gt; create() {
+        Behaviors.setup(HelloWorld::new)
+    }
+
+    private HelloWorld(ActorContext&lt;Greet&gt; context) {
+        super(context)
+    }
+
+    @Override
+    Receive&lt;Greet&gt; createReceive() {
+        newReceiveBuilder().onMessage(Greet.class, this::onGreet).build()
+    }
+
+    private Behavior&lt;Greet&gt; onGreet(Greet command) {
+        context.log.info "Hello $command.whom!"
+        command.replyTo.tell(new Greeted(command.whom, context.self))
+        this
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>First we define <code>Greet</code> and <code>Greeter</code> records to have strong typing for the messages in our system.
+We then define the details of our actor. A fair bit of this is boilerplate. The interesting part
+is inside the <code>onGreet</code> method. We log the message details before sending back the <code>Greeted</code> acknowledgement.</p>
+</div>
+<div class="paragraph">
+<p>The <code>HelloWorldBot</code> is similar. You should notice some state variables which keep an
+invocation counter and a maximum number of invocations before terminating:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class HelloWorldBot extends AbstractBehavior&lt;HelloWorld.Greeted&gt; {
+
+    static Behavior&lt;HelloWorld.Greeted&gt; create(int max) {
+        Behaviors.setup(context -&gt; new HelloWorldBot(context, max))
+    }
+
+    private final int max
+    private int greetingCounter
+
+    private HelloWorldBot(ActorContext&lt;HelloWorld.Greeted&gt; context, int max) {
+        super(context)
+        this.max = max
+    }
+
+    @Override
+    Receive&lt;HelloWorld.Greeted&gt; createReceive() {
+        newReceiveBuilder().onMessage(HelloWorld.Greeted.class, this::onGreeted).build()
+    }
+
+    private Behavior&lt;HelloWorld.Greeted&gt; onGreeted(HelloWorld.Greeted message) {
+        greetingCounter++
+        context.log.info "Greeting $greetingCounter for $message.whom"
+        if (greetingCounter == max) {
+            return Behaviors.stopped()
+        } else {
+            message.from.tell(new HelloWorld.Greet(message.whom, context.self))
+            return this
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The interesting logic is in the <code>onGreeted</code> method. We increment the counter and either stop,
+if we have reached the maximum count threshold, or echo back the message contents to the sender.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at the final actor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class HelloWorldMain extends AbstractBehavior&lt;HelloWorldMain.SayHello&gt; {
+
+    static record SayHello(String name) { }
+
+    static Behavior&lt;SayHello&gt; create() {
+        Behaviors.setup(HelloWorldMain::new)
+    }
+
+    private final ActorRef&lt;HelloWorld.Greet&gt; greeter
+
+    private HelloWorldMain(ActorContext&lt;SayHello&gt; context) {
+        super(context)
+        greeter = context.spawn(HelloWorld.create(), 'greeter')
+    }
+
+    @Override
+    Receive&lt;SayHello&gt; createReceive() {
+        newReceiveBuilder().onMessage(SayHello.class, this::onStart).build()
+    }
+
+    private Behavior&lt;SayHello&gt; onStart(SayHello command) {
+        var replyTo = context.spawn(HelloWorldBot.create(3), command.name)
+        greeter.tell(new HelloWorld.Greet(command.name, replyTo))
+        this
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is a <code>SayHello</code> record, to act as a strongly typed incoming message.
+The <code>HelloWorldMain</code> actor creates the other actors.
+It creates one <code>HelloWorld</code> actor which is the <em>greeter</em> target of subsequent messages.
+For each incoming <code>SayHello</code> message, it creates a <em>bot</em>, then sends a message
+to the <em>greeter</em> containing the <code>SayHello</code> payload and telling it to reply to the <em>bot</em>.</p>
+</div>
+<div class="paragraph">
+<p>Finally, we need to kick off our system. We create the <code>HelloWorldMain</code> actor and
+send it two messages:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var system = ActorSystem.create(HelloWorldMain.create(), 'hello')
+
+system.tell(new HelloWorldMain.SayHello('World'))
+system.tell(new HelloWorldMain.SayHello('Pekko'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The log output from running the script will look similar to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-5] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 1 for World
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 1 for Pekko
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-5] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 2 for World
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
+[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 3 for World
+[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 2 for Pekko
+[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 3 for Pekko
+[hello-pekko.actor.default-dispatcher-6] INFO org.apache.pekko.actor.CoordinatedShutdown - Running CoordinatedShutdown with reason [ActorSystemTerminateReason]</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_gpars_implementation_in_groovy">A GPars implementation in Groovy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This example uses Groovy 4.0.13, JDK11 and GPars 1.2.1, but should
+run with any JDK 8+ version.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll follow the same conventions for strongly typed messages in our GPars example.
+Here are our three message containers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Greet(String whom, Actor replyTo) { }
+
+record Greeted(String whom, Actor from) {}
+
+record SayHello(String name) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we&#8217;ll define our <code>helloWorld</code> actor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">helloWorld = actor {
+    loop {
+        react { Greet command -&gt;
+            println "Hello $command.whom!"
+            command.replyTo &lt;&lt; new Greeted(command.whom, helloWorld)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here, we are using GPars Groovy continuation-style DSL for defining actors.
+The <code>loop</code> indicates that the actor will loop continually.
+When we receive the <code>Greet</code> message, we log the details to stdout and
+send the acknowledgement.</p>
+</div>
+<div class="paragraph">
+<p>If we don&#8217;t want to use the DSL syntax, we can use the related classes directly.
+Here we&#8217;ll define a <code>BotActor</code> using this slightly more verbose style.
+It shows adding the state variables we need for tracking the invocation count:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class BotActor extends DefaultActor {
+    int max
+    private int greetingCounter = 0
+    @Override
+    protected void act() {
+        loop {
+            react { Greeted message -&gt;
+                greetingCounter++
+                println "Greeting $greetingCounter for $message.whom"
+                if (greetingCounter &lt; max) message.from &lt;&lt; new Greet(message.whom, this)
+                else terminate()
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our main actor is very simple. It is waiting for <code>SayHello</code> messages, and when it receives one,
+it sends the payload to the helloWorld greeter telling it to reply to a newly created <em>bot</em>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var main = actor {
+    loop {
+        react { SayHello command -&gt;
+            helloWorld &lt;&lt; new Greet(command.name, new BotActor(max: 3).start())
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, we start the system going by sending some initial messages:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">main &lt;&lt; new SayHello('World')
+main &lt;&lt; new SayHello('GPars')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Hello World!
+Hello GPars!
+Greeting 1 for World
+Greeting 1 for GPars
+Hello World!
+Hello GPars!
+Greeting 2 for World
+Hello World!
+Greeting 2 for GPars
+Hello GPars!
+Greeting 3 for World
+Greeting 3 for GPars</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick glimpse at using actors with Apache Pekka and GPars.</p>
+</div>
+<div class="paragraph">
+<p>The sample code can be found here:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/paulk-asert/groovy-pekka-gpars" class="bare">https://github.com/paulk-asert/groovy-pekka-gpars</a></p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
