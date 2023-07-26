@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and GPars actors with Groovy</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_gpars_implementation_in_groovy' class='anchor-link'>A GPars implementation in Groovy</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and GPars actors with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2023-07-18 06:45PM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and GPars actors with Groovy</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_gpars_implementation_in_groovy' class='anchor-link'>A GPars implementation in Groovy</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and GPars actors with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2023-07-26 03:02PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekko logo" width="100"></span>
@@ -117,7 +117,7 @@ to tell it the maximum number of times to echo the message before stopping.</p>
 <h2 id="_a_pekko_implementation_in_groovy">A Pekko implementation in Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This example uses Groovy 4.0.13 and Pekko 1.0.0.
+<p>This example uses Groovy 4.0.13 and Pekko 1.0.1.
 It was tested with JDK 11 and 17.</p>
 </div>
 <div class="paragraph">
@@ -308,7 +308,7 @@ record SayHello(String name) { }</code></pre>
     loop {
         react { Greet command -&gt;
             println "Hello $command.whom!"
-            command.replyTo &lt;&lt; new Greeted(command.whom, helloWorld)
+            command.replyTo &lt;&lt; new Greeted(command.whom, greeter)
         }
     }
 }</code></pre>
@@ -451,6 +451,16 @@ when using Groovy&#8217;s static nature.</p>
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/paulk-asert/groovy-pekko-gpars" class="bare">https://github.com/paulk-asert/groovy-pekko-gpars</a></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>17/Jul/2023</strong>: Initial version.<br>
+<strong>18/Jul/2023</strong>: Add discussion about type-safe messages.<br>
+<strong>26/Jul/2023</strong>: Update to Pekko 1.0.1.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
