@@ -341,6 +341,89 @@ def c = new Car(s.toMap())
 assert c.toString() == 'Car[make=Landrover, model=Explore, color=Black, year=2018]'</code></pre>
 </div>
 </div>
+<hr>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><em>Why did the Jedi use a mind trick on the stormtroopers when they couldn&#8217;t find the missing droids?</em></p>
+</div>
+<div class="paragraph">
+<p><em>Because, as Obi-Wan said, "These aren&#8217;t the droids you&#8217;re looking for. You&#8217;re actually looking for your misplaced keys, and you&#8217;ll find them in the last place you look!"</em></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s first show how Groovy could help us find some droids that we are looking for.
+Drones are hardest to find when there are several clone look-a-likes. We won&#8217;t mention the clone wars!</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll create a shuffled list of droids and their clones, and then search for the ones we are after:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AutoClone class Droid { String name }
+
+def r2d2 = new Droid(name: 'R2-D2')
+def c3po = new Droid(name: 'C-3PO')
+def droids = [r2d2, c3po]
+3.times {
+    droids &lt;&lt; r2d2.clone()
+    droids &lt;&lt; c3po.clone()
+}
+droids.shuffle()
+droids.eachWithIndex { droid, index -&gt;
+    if (droid == r2d2) println "Droid $index is $r2d2.name"
+    if (droid == c3po) println "Droid $index is $c3po.name"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we don&#8217;t want to output the index where we found the droid, we can use
+an alternative expression to show that the droids we are after are found:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert droids.any{ it.is(r2d2) }
+assert droids.any{ it.is(c3po) }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Of course, Obi-Wan uses a Jedi mind trick which we can show here using
+some Groovy metaprogramming, in this case a category class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class JediMindTrick {
+    static boolean is(Droid d, Droid other) { false }
+}
+
+use(JediMindTrick) {
+    assert !droids.any{ it.is(r2d2) }
+    assert !droids.any{ it.is(c3po) }
+}</code></pre>
+</div>
+</div>
+<hr>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><em>Q: What happened when the pirates pet bird tried to say "Pieces of 7"?</em></p>
+</div>
+<div class="paragraph">
+<p><em>A: It got a ParrotyError!"</em></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>As shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">try {
+   pet.say('Pieces of 7')
+} catch(ParrotyError ignore) { }</code></pre>
+</div>
+</div>
 <hr></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
