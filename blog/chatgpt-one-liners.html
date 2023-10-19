@@ -424,6 +424,61 @@ use(JediMindTrick) {
 } catch(ParrotyError ignore) { }</code></pre>
 </div>
 </div>
+<hr>
+<div class="sidebarblock">
+<div class="content">
+<div class="paragraph">
+<p><em>A politician visited a village and asked what their needs were.</em></p>
+</div>
+<div class="paragraph">
+<p><em>”We have 2 basic needs sir,” replied the villager.</em></p>
+</div>
+<div class="paragraph">
+<p><em>“Firstly, we have a hospital, but there’s no doctor.”</em></p>
+</div>
+<div class="paragraph">
+<p><em>On hearing this, politician whipped out his cellphone, and after speaking for a while he reassured the village leader that the doctor would be there the next day. He then asked about the second problem.</em></p>
+</div>
+<div class="paragraph">
+<p><em>“Secondly sir, there is no cellphone coverage anywhere in this village.</em></p>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>First let&#8217;s look at how we might write a <code>Politician</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Politician {
+    private static int next = 0
+    boolean elected
+    private List&lt;String&gt; excuses = ['No budget', 'Maybe later', 'Not a priority']
+    String canYouHelpFix(String problem) {
+        if (!elected) 'Sure can!'
+        else excuses[next++ % excuses.size()]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy can&#8217;t help fix all political problems, but using the <code>@Memoized</code> annotation, and leaving everything else the same, we can make sure that once a politician responds one way, they can only keep responding in exactly the same way, regardless of whether they are elected or not.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.transform.*
+
+class Politician {
+    private static int next = 0
+    boolean elected
+    private List&lt;String&gt; excuses = ['No budget', 'Maybe later', 'Not a priority']
+    @Memoized
+    String canYouHelpFix(String problem) {
+        if (!elected) 'Sure can!'
+        else excuses[next++ % excuses.size()]
+    }
+}</code></pre>
+</div>
+</div>
 <hr></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
