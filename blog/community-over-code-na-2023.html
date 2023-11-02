@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, asf, apachecon, communityovercode'/><meta name='description' content='This post looks at the ASF Community Over Code conference in Halifax, Nova Scotia, October 7-10 2023, with a particular focus on the Groovy Track.'/><title>The Apache Groovy programming language - Blogs - Community Over Code (North America) 2023</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Community Over Code (North America) 2023</a></li><li><a href='#_upon_arrival' class='anchor-link'>Upon arrival</a></li><li><a href='#_the_groovy_track' class='anchor-link'>The Groovy Track</a></li><li><a href='#_but_wait_theres_more' class='anchor-link'>But wait, there&#8217;s more&#8230;&#8203;</a></li><li><a href='#_back_home' class='anchor-link'>Back home</a></li><li><a href='#_other_information' class='anchor-link'>Other information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./apache-groovy-2022-year-in'>Apache Groovy 2022 Year In Review</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Community Over Code (North America) 2023</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-10-26 05:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This year&#8217;s North American edition of the ASF conference, <a href="https://communityovercode.org/">Community Over Code</a>,
+featured four in-person days of sessions (October 7-10) at the Halifax Convention Centre.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The presentation slides and audio/video (where available) are still being added onto the conference site.
+If additional material becomes available, this post will be updated with links to the additional content.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This post gives an update on the conference. It is mostly a focus on the Groovy track,
+but there is also material about other tracks and the many other aspects of the conference.
+In particular, hopefully, this post gives you some insight into why going to conferences,
+and the ASF conferences in particular, can be a rewarding experience. I hope to see you at
+a future conference.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_upon_arrival">Upon arrival</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before getting into the conference report proper, just a pro-tip for anyone travelling
+to conferences from more than a few time-zones away. If you base your knowledge just on viewing
+social media, regular speaking at conferences may look like a glamorous life, but without a little
+bit of planning, you may see little more than the inside of planes, hotels, and conference rooms.
+It pays to allocate some time to seeing the host city/country. If you also get some sun on the
+first day you arrive (or first full day after you arrive if arriving at night), it seems to help
+with getting over jet lag.
+In my case, I took the opportunity to do a bicycle ride East of Halifax mostly along some
+cyclist-friendly bike trails.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxRideMap.png" alt="HalifaxRideMap"></span></p>
+</div>
+<div class="paragraph">
+<p>The route was 90% on trails built upon now disused railroad tracks
+which form part of the <a href="https://tctrail.ca/">Trans Canada Trail</a>.
+It is further broken down into smaller sections including
+the <a href="https://www.alltrails.com/trail/canada/nova-scotia/shearwater-flyer-trail">Shearwater Flyer Trail</a>,
+the <a href="https://www.alltrails.com/trail/canada/nova-scotia/salt-marsh-trail">Salt Marsh Trail</a>,
+the <a href="https://www.alltrails.com/trail/canada/nova-scotia/atlantic-view-trail">Atlantic View Trail</a>,
+and the <a href="https://www.alltrails.com/trail/canada/nova-scotia/dartmouth-waterfront-trail">Dartmouth Waterfront Trail</a>.
+The place I hired the bike from recommended riding to <a href="https://parks.novascotia.ca/park/lawrencetown-beach">Lawrencetown Beach</a>, but I went just a little further for good measure.
+The views were spectacular. I particularly like some of the autumn color scenery which is seldom seen
+where I live.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxRideCollage.jpg" alt="HalifaxRideCollage"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_groovy_track">The Groovy Track</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/20/20231020033313-d56c0136-me.jpg" alt="stickers" width="200"></span></p>
+</div>
+<div class="paragraph">
+<p>The Groovy track was spread over the first two days of the conference and had ten sessions
+as well as a <em>birds-of-a-feather</em> session after the first day.
+The sessions typically had mini-themes: Groovy update, for Java developers, Kubernetes and Groovy,
+Groovy and Data Science (this year featuring Apache Ignite) and so on.</p>
+</div>
+<div class="sect2">
+<h3 id="_groovy_update">Groovy update</h3>
+<div class="paragraph">
+<p>The first two talks covered the state of the Groovy project with also some updates
+from the broader Groovy ecosystem.</p>
+</div>
+<div class="paragraph">
+<p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/12/20231012195704-e8e8482f-me.jpg" alt="Paul King" width="150"></span>
+The first talk was <a href="https://speakerdeck.com/paulk/groovy-roadmap">Groovy and Groovy Ecosystem Update</a>.
+This talked about the status of the Groovy project itself as well as some important projects
+within the broader Groovy ecosystem.</p>
+</div>
+<div class="paragraph">
+<p>Some highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Groovy downloads recently surpassed the 3 billion mark in total and is currently tracking just over
+3 million downloads per day on average.</p>
+</li>
+<li>
+<p>Groovy supports classes and scripts but with JEP 445 scripting on the way in Java (preview in JDK21),
+Groovy 5 supports additional forms so that JEP 445 code examples will run straight in Groovy (for JDK11+).</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def main() {
+    println 'Hello world!'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are variations that remain strictly JEP 445 compatible (to gain the same bytecode simplifications)
+and variations which retain Groovy&#8217;s extra features like access to the script binding and context.
+The <code>run</code> method is used instead of the <code>main</code> method to gain the traditional Groovy script features.
+An added bonus is that Groovy&#8217;s <code>@Field</code> annotation isn&#8217;t needed to designate fields within JEP 445-like scripts.
+Here is another example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@JsonIgnoreProperties(["binding"])
+def run() {
+    var mapper = new ObjectMapper()
+    assert mapper.writeValueAsString(this) == '{"pets":["cat","dog"]}'
+}
+
+public pets = ['cat', 'dog']</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Groovy added support for "underscore as a placeholder" functionality. This is similar to JEP 443 (preview in JDK21) but Groovy also adds the feature for Closures and multi-assignment expressions.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var (_, y, m, _, _, d) = Calendar.instance
+println "Today is $y-${m+1}-$d" // Today is 2023-8-23</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>An additional <code>@OperatorRename</code> AST transform is now available which makes it easier to use
+a multitude of libraries with Groovy&#8217;s operator overloading. This is handy when working with
+packages that might manipulate complex numbers, matrices, or fractions (as per the example below
+which uses the Apache Commons Numbers Fraction library).
+Such libraries can now easily be used with the operator overloading feature.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@OperatorRename(plus='add')
+def testAddOfTwoFractions() {
+    var half = Fraction.of(1, 2)
+    var third = Fraction.of(1, 3)
+    assert half.add(third) == Fraction.of(5, 6)  // old style still works
+    assert half + third == Fraction.of(5, 6)     // fraction '+' operator!
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Grails 6 was recently released with support for recent versions of Groovy 3.</p>
+</li>
+<li>
+<p>Micronaut 4 was recently released with support for recent versions of Groovy 4.</p>
+</li>
+<li>
+<p>Geb 7 and several versions of the Spock testing framework also support Groovy 4.</p>
+</li>
+<li>
+<p>The latest version of the Deep Netts deep learning library works well when using
+Groovy 5 with GraalVM.</p>
+</li>
+<li>
+<p>The latest version of Apache Ignite works well with Groovy 5 when scaling up
+your distributed data, distributed compute, and distributed data science applications.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The second talk was <a href="https://speakerdeck.com/paulk/groovy-today">Why use Groovy in 2023</a>?
+This discussed the features that make Groovy a compelling language choice even given the
+wonderful progress being made in other languages within the JDK ecosystem.</p>
+</div>
+<div class="paragraph">
+<p>Some highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Groovy is compelling if you need its dynamic features like runtime metaprogramming,
+lifecycle hooks, and dynamic builders.</p>
+</li>
+<li>
+<p>Groovy also offers features like ranges, default parameters, named arguments,
+command chains, operator overloading, extensible tooling including an
+extensible type checker.</p>
+</li>
+<li>
+<p>As well as its own native features, Groovy 5 provides about 2000 extension
+methods for around 150 Java classes.</p>
+</li>
+<li>
+<p>Traits provide similar functionality to default methods in interfaces but rather
+than just tackling the problem of API evolution, traits are a more ambitious and
+powerful OO feature. Groovy offers stateful traits, more powerful method selection
+options, offers trait application at runtime (dynamic traits) and supports the
+stackable traits pattern like Scala.</p>
+</li>
+<li>
+<p>Groovy&#8217;s Closure abstraction offers several powerful mechanisms over and above
+what lambdas offer including memoization and tail call recursion handling.
+You can write factorial in a more natural recursive form (avoiding an explicitly
+imperative algorithm) and not suffer from stack overflow issues.
+You can write recursive fibonacci algorithms that take milliseconds
+to execute rather than the trillions of years a naïve recursive algorithm would take.</p>
+</li>
+<li>
+<p>AST transforms (based around annotations) and
+macro methods (which are similar but look like methods calls)
+allow a declarative style of programming where a few lines of code
+can be replaced with hundreds or thousands of lines of equivalent code.
+The generated code follows best practice and is much less error-prone.
+Groovy 5 has 80+ AST transforms.</p>
+</li>
+<li>
+<p>Language integrated queries allow a SQL-like style for querying data.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">GQ {
+    from fruit in ['Apple', 'Apricot', 'Banana', 'Cantaloupe']
+    groupby fruit[0] as firstChar
+    select firstChar, list(fruit.toUpperCase()) as fruit_list
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which yields:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>+-----------+------------------+
+| firstChar | fruit_list       |
++-----------+------------------+
+| A         | [APPLE, APRICOT] |
+| B         | [BANANA]         |
+| C         | [CANTALOUPE]     |
++-----------+------------------+</pre>
+</div>
+</div>
+</li>
+<li>
+<p>Groovy gives you powerful switch expressions:
+<span class="image"><img src="img/Groovy2023Switch.png" alt="Groovy switch expressions"></span></p>
+</li>
+<li>
+<p>Groovy gives you the choice of emulated records for JDK8+
+or native records for JDK16+ with many record enhancements:
+<span class="image"><img src="img/Groovy2023Records.png" alt="Groovy records"></span>
+Over and above the built-in enhancements, record development is made
+easier by Groovy&#8217;s AST transforms. The slides have examples of combining
+records with the following AST transforms:
+<code>@PropertyOptions</code>, <code>@ToString</code>, <code>@Memoized</code>, <code>@Builder</code>,
+<code>@Requires</code>, <code>@Sortable</code>, <code>@Newify</code>, and <code>@OperatorRename</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy_for_java_developers">Groovy for Java developers</h3>
+<div class="paragraph">
+<p>The next two talks were aimed at Java developers who wanted to understand how
+they could use Groovy for their development or testing needs.</p>
+</div>
+<div class="paragraph">
+<p>Groovy for Java Developers</p>
+</div>
+<div class="paragraph">
+<p>Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kubernetes_and_groovy">Kubernetes and Groovy</h3>
+<div class="paragraph">
+<p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/12/20231012200925-e882ed51-me.jpg" alt="Jorge Aguilera" width="200"></span></p>
+</div>
+<div class="paragraph">
+<p>It works on my cluster. Deploying a groovy kubernetes application to Okteto.
+<a href="https://communityovercode.files.wordpress.com/2023/10/sat_groovy_it_works_on_my_cluster-jorge.pdf">Slides</a></p>
+</div>
+<div class="paragraph">
+<p>In this talk, Jorge showed a
+<a href="https://groovy-lang.org/">Groovy</a>
+<a href="https://micronaut.io/">Micronaut</a>
+<a href="https://kubernetes.io/">Kubernetes</a> (k8s) application deployed in the cloud.
+It was deployed to the Okteto platform, so that in fact most of the k8s details were taken
+care of by the platform.</p>
+</div>
+<div class="paragraph">
+<p>The sample application was a simple solution to the
+<a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Collatz conjecture</a>.
+I remember studying this back in my Uni days but had forgotten the details.
+Basically one of two calculations is performed, depending on whether the
+current result is even. Eventually, the result always equals 1.
+Of interest is the number of cycles needed to get to 1.
+Here is an algorithm that returns the number of cycles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Collatz {
+  static long getAt(BigInteger n){
+    var result = n
+    var count = 0L
+    while (result != 1G) {
+      if (result % 2G == 0G) {
+        result /= 2G
+      } else {
+        result *= 3G
+        result++
+      }
+      count++
+    }
+    count
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can test out some of the example sequences mentioned in the <a href="https://en.wikipedia.org/wiki/Collatz_conjecture">Wikipedia page</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Collatz[12] == 9
+assert Collatz[19] == 20
+assert Collatz[27] == 111</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, to create our microservice based around this algorithm.
+We can create a fully working (but skeleton) project for Micronaut in a number
+of ways. Here, is what is needed from the command-line:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>mn create-app \
+    --features kubernetes \
+    --features postgres \
+    --features jdbc-data \
+    --lang groovy collatz</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can change the skeleton controller to have our desired functionality:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Controller
+  ...
+  @Get('{n}')
+  Map index(BigInteger n) {
+    [n: n, count: Collatz[n]]
+  }
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Jorge then went on to explain the k8s configuration details and gave a demonstration
+deploying the application.</p>
+</div>
+<div class="paragraph">
+<p>Let Groovy operate your k8s cluster</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_apache_groovy_and_apache_ignite">Apache Groovy and Apache Ignite</h3>
+<div class="paragraph">
+<p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/13/20231013192401-65a58458-cu_s9999x410.jpg" alt="Jeremy Meyer" width="200"></span></p>
+</div>
+<div class="paragraph">
+<p>Whiskey Clustering with Apache Groovy and Apache Ignite</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxWhisky.png" alt="Citadel"></span></p>
+</div>
+<div class="paragraph">
+<p>Scalable Distributed Computing with Groovy Using Apache Ignite</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_miscellaneous">Miscellaneous</h3>
+<div class="paragraph">
+<p>GORM Data Services</p>
+</div>
+<div class="paragraph">
+<p>Open Source Software and You</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_but_wait_theres_more">But wait, there&#8217;s more&#8230;&#8203;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxCitadel.png" alt="Citadel"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxConferenceOverall.png" alt="conference"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_back_home">Back home</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When you return from a trip, make sure to catch up with family and friends.
+In my case, this involved a weekend away at the beach.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/MermaidBeach.jpg" alt="Mermaid Beach"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_information">Other information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Other trip reports for the Halifax Community over Code conference 2023:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.linkedin.com/pulse/code-connections-collaboration-unpacking-community-over-atita-arora-b0gfe/">A review by Atita Arora</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See also:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://photos.apachecon.com/index.php?/category/37">Additional photos</a> grouped roughly into days and sessions within each day.</p>
+</li>
+<li>
+<p><a href="https://communityovercode.org/schedule/">The official schedule</a> includes all tracks and will include
+links to the slides of the talks if/when available.</p>
+</li>
+<li>
+<p>Details for <a href="https://eu.communityovercode.org/">Community over Code EU</a> next year.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
