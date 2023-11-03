@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Community Over Code (North America) 2023</a></li><li><a href='#_upon_arrival' class='anchor-link'>Upon arrival</a></li><li><a href='#_the_groovy_track' class='anchor-link'>The Groovy Track</a></li><li><a href='#_but_wait_theres_more' class='anchor-link'>But wait, there&#8217;s more&#8230;&#8203;</a></li><li><a href='#_back_home' class='anchor-link'>Back home</a></li><li><a href='#_other_information' class='anchor-link'>Other information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./apache-groovy-2022-year-in'>Apache Groovy 2022 Year In Review</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Community Over Code (North America) 2023</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-10-26 05:00PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Community Over Code (North America) 2023</a></li><li><a href='#_upon_arrival' class='anchor-link'>Upon arrival</a></li><li><a href='#_the_groovy_track' class='anchor-link'>The Groovy Track</a></li><li><a href='#_other_tracks' class='anchor-link'>Other tracks</a></li><li><a href='#_an_evening_at_the_citadel' class='anchor-link'>An evening at the Citadel</a></li><li><a href='#_but_wait_theres_more' class='anchor-link'>But wait, there&#8217;s more&#8230;&#8203;</a></li><li><a href='#_back_home' class='anchor-link'>Back home</a></li><li><a href='#_other_information' class='anchor-link'>Other information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./apache-groovy-2022-year-in'>Apache Groovy 2022 Year In Review</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Community Over Code (North America) 2023</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-10-26 05:00PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This year&#8217;s North American edition of the ASF conference, <a href="https://communityovercode.org/">Community Over Code</a>,
@@ -327,6 +327,9 @@ But of course, you aren&#8217;t limited to just that list.</p>
 they could use Groovy for their development or testing needs.</p>
 </div>
 <div class="paragraph">
+<p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/12/20231012200013-649bb746-me.jpg" alt="Jeff Scott Brown" width="200"></span></p>
+</div>
+<div class="paragraph">
 <p>The next talk was by <a href="https://www.linkedin.com/in/jeffscottbrown/">Jeff Scott Brown</a> on
 <em>Groovy for Java Developers</em>. Jeff covered a range of topics including:</p>
 </div>
@@ -570,12 +573,57 @@ class SwaggerOperator implements ResourceReconciler&lt;V1Swagger&gt;{
 <div class="paragraph">
 <p>The next mini-theme was Groovy and Data Science. Groovy has been described
 as the Python equivalent for the JVM and Groovy works well with many of the ASF
-frameworks and technologies related to data science and big data in general.
-This year the conference had a particular focus on scaling up data science,
-data and compute applications using <a href="https://ignite.apache.org/">Apache Ignite</a>.</p>
+frameworks and technologies related to data science and big data in general.</p>
 </div>
 <div class="paragraph">
-<p>The first talk was <a href="https://speakerdeck.com/paulk/whisky-clustering-groovy-ignite">Whisky Clustering with Apache Groovy and Apache Ignite</a></p>
+<p>This year the Groovy track&#8217;s data science content had a particular focus on
+scaling up your data science applications,
+and your data and compute applications in general,
+using <a href="https://ignite.apache.org/">Apache Ignite</a>.</p>
+</div>
+<div class="paragraph">
+<p>The first talk was <a href="https://speakerdeck.com/paulk/whisky-clustering-groovy-ignite">Whisky Clustering with Apache Groovy and Apache Ignite</a>. This was a case study looking at how to cluster
+86 single malt scotch whiskies.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering0.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+<div class="paragraph">
+<p>There are different algorithms that can be used to do the clustering.
+Here K-Means clustering was used.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering1.png" alt="The k-means algorithm"></span></p>
+</div>
+<div class="paragraph">
+<p>For this particular dataset, the number of datapoints is relatively small
+and scaling up isn&#8217;t crucial. But larger datasets would be split up in the same way
+so we&#8217;ll look at how we&#8217;d scale this up. First we read in the data:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering2.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+<div class="paragraph">
+<p>Apache Ignite has special features for reading in data within a cluster environment,
+but we can get by using Apache Commons CSV for our example.</p>
+</div>
+<div class="paragraph">
+<p>If you know the K-Means algorithm, at first glance it doesn&#8217;t appear amenable to
+distribution. To cluster points you need to calculate distances of <em>all</em> the points
+to your centroids. Luckily, various distributed versions of the algorithm have been
+devised and this is what is included in the <code>ignite-ml</code> library. We just use the library
+in the same way we&#8217;d use a non-distributed version and Ignite does the hard work for you.
+Here is the result:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering3.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+<div class="paragraph">
+<p>There are various options we have to tweak the algorithm and various
+ways to visualize the results.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering4.png" alt="Whiskey flavour profiles"></span></p>
 </div>
 <div class="paragraph">
 <p>As a side note, it is rumoured that additional extensive research on this topic may (or may not)
@@ -584,8 +632,70 @@ have been held in conjunction with the conference. Only because the conference w
 </div>
 <div class="paragraph">
 <p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/13/20231013192401-65a58458-cu_s9999x410.jpg" alt="Jeremy Meyer" width="200"></span>
-The second talk was by <a href="https://www.linkedin.com/in/jeremy-s-meyer/">Jeremy Meyer</a>:
-<a href="https://drive.google.com/file/d/1vjDkFmG9zz9y7yDY10ru9tya7KidJsqG/view?usp=sharing">Scalable Distributed Computing with Groovy Using Apache Ignite</a></p>
+The second talk was by <a href="https://www.linkedin.com/in/jeremy-s-meyer/">Jeremy Meyer</a> discussing
+<a href="https://drive.google.com/file/d/1vjDkFmG9zz9y7yDY10ru9tya7KidJsqG/view?usp=sharing">Scalable Distributed Computing with Groovy Using Apache Ignite</a>.</p>
+</div>
+<div class="paragraph">
+<p>In this talk, Jeremy posed the question:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+What if we used the dynamic, easy to code and prototype aspects of Groovy&#8230;&#8203;<br>
+&#8230;&#8203;with the fantastically scalable compute power of Apache Ignite&#8217;s
+compute grid, and clever peer class loading?
+</blockquote>
+</div>
+<div class="paragraph">
+<p>For those that know Ignite, it can be used in numerous ways:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks1.png" alt="Ignite" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>In this scenario, it was going to be used for distributed computing
+and the task at hand was to solve Rubik&#8217;s cubes. In this case,
+particular non-destructive corner moves of a 3x3x2 cube.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks2.png" alt="Numbers" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>First up was to create a little domain model to represent the cube:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks3.png" alt="Model" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>Then piece together a cluster of computers of varying skills for the compute grid:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks4.png" alt="Team" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>Or a different visualization of the machines if you&#8217;re not
+a Guardians of the Galaxy fan:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks5.png" alt="Machines" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>Then code up the corner swapping algorithm:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks6.png" alt="Algorithm" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>And finally get the results:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/IgniteRubiks7.png" alt="Results" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>I won&#8217;t steal Jeremy&#8217;s thunder. Check out the link for details.
+But a lesson learned is that naively allocating work to machines of
+differing capabilities can sometimes yield surprising results.
+Luckily, there are various ways that compute grids job allocation
+can account for such variations.</p>
 </div>
 </div>
 <div class="sect2">
@@ -594,8 +704,117 @@ The second talk was by <a href="https://www.linkedin.com/in/jeremy-s-meyer/">Jer
 <p>GORM Data Services</p>
 </div>
 <div class="paragraph">
-<p>Open Source Software and You</p>
+<p><span class="image right"><img src="img/JeffOpenSourceSoftwareAndYou.jpg" alt="Jeff Scott Brown" width="300"></span>
+Open Source Software and You</p>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_tracks">Other tracks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In addition to the Groovy track, the conference was full of other fascinating content too,
+grouped into the following tracks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>API/Microservices Track</p>
+</li>
+<li>
+<p>Big Data: Compute Track</p>
+</li>
+<li>
+<p>Big Data: Storage Track</p>
+</li>
+<li>
+<p>Cloud and Runtime Track</p>
+</li>
+<li>
+<p>Community Track</p>
+</li>
+<li>
+<p>Content Wrangling Track</p>
+</li>
+<li>
+<p>Data Engineering Track</p>
+</li>
+<li>
+<p>Fintech Track</p>
+</li>
+<li>
+<p>Frameworks Track</p>
+</li>
+<li>
+<p>Geospatial Track</p>
+</li>
+<li>
+<p>Highlights Track</p>
+</li>
+<li>
+<p>Incubator Track</p>
+</li>
+<li>
+<p>Internet of Things Track</p>
+</li>
+<li>
+<p>Performance Engineering Track</p>
+</li>
+<li>
+<p>Search Track</p>
+</li>
+<li>
+<p>Serverside Chat with ASF Infra</p>
+</li>
+<li>
+<p>Streaming Track</p>
+</li>
+<li>
+<p>Sustainability Track</p>
+</li>
+<li>
+<p>Tomcat and httpd Track</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>I did manage to see quite a few talks from some of the
+other tracks but instead of trying to summarise everything I saw,
+I&#8217;ll point you to the online content which is being linked to the conference
+<a href="https://communityovercode.org/schedule/">schedule</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_evening_at_the_citadel">An evening at the Citadel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The conference attendee event was an evening at the Halifax Citadel National Historic Site.
+The Citadel is a fortification that was built (and rebuilt several times) to
+protect the city. It stands high on a hill overlooking the harbour and also has
+been a crucial communication hub at times.</p>
+</div>
+<div class="paragraph">
+<p>It is worthwhile visiting the Citadel if you are ever in Halifax.
+They have historical tours, ghost tours, daily cannon firing,
+and occasional marching and band drills. I&#8217;ll just point out one feature
+that was mentioned in the tour. The flag poles served the dual purpose of
+military and commercial signalling before the advent of electronic telecommunications.
+Even after the invention of the telegraph, the flags have still been used
+as a tradition to earlier times.</p>
+</div>
+<div class="paragraph">
+<p>The commercial signal mast was used by the British army to communicate marine
+traffic in the harbour to the public. Different flags would indicate the
+number and nationality of approaching ships (among other things).
+The military signal mast used a code based on flags and disks.
+Messages could be relayed to other signal posts and allowed a message
+to be sent great distances quickly. A message that might take half a day
+to deliver on horseback could be done in 30 minutes using the signal masts and codes.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/HalifaxCitadel.png" alt="Citadel"></span></p>
 </div>
 </div>
 </div>
@@ -603,10 +822,15 @@ The second talk was by <a href="https://www.linkedin.com/in/jeremy-s-meyer/">Jer
 <h2 id="_but_wait_theres_more">But wait, there&#8217;s more&#8230;&#8203;</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image"><img src="img/HalifaxCitadel.png" alt="Citadel"></span></p>
+<p>Of course, there is much more to ASF conferences than I can hope to do justice to hear.
+There&#8217;s great people, great food, hallway conversations, a chance to chat to the wonderful
+Infra folks. And did I say great people and great food?</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/HalifaxConferenceOverall.png" alt="conference"></span></p>
+</div>
+<div class="paragraph">
+<p>I hope to see you at a future ASF conference.</p>
 </div>
 </div>
 </div>
@@ -619,6 +843,9 @@ In my case, this involved a weekend away at the beach.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/MermaidBeach.jpg" alt="Mermaid Beach"></span></p>
+</div>
+<div class="paragraph">
+<p>If you visit Australia, make sure to pop in.</p>
 </div>
 </div>
 </div>
