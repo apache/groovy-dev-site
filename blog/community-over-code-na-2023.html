@@ -327,11 +327,119 @@ But of course, you aren&#8217;t limited to just that list.</p>
 they could use Groovy for their development or testing needs.</p>
 </div>
 <div class="paragraph">
-<p>Groovy for Java Developers</p>
+<p>The next talk was by <a href="https://www.linkedin.com/in/jeffscottbrown/">Jeff Scott Brown</a> on
+<em>Groovy for Java Developers</em>. Jeff covered a range of topics including:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Groovy optional typing</p>
+</li>
+<li>
+<p>Groovy properties</p>
+</li>
+<li>
+<p>Groovy script syntax</p>
+</li>
+<li>
+<p>Evolving Java source to Groovy</p>
+</li>
+<li>
+<p>Special features of Groovy</p>
+</li>
+<li>
+<p>Groovy extension methods for Groovy and Java classes</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>The next talk was
-<a href="https://speakerdeck.com/paulk/property-based-testing">Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a>.</p>
+<a href="https://speakerdeck.com/paulk/property-based-testing">Testing your Java with Groovy, Spock, JUnit5, Jacoco, Jqwik and Pitest</a>.
+This talk covered a common scenario of using Groovy tests with Java production code, though most of the content
+is applicable for production code in other JVM languages (including Groovy!) too.
+It also showed examples of a few advanced tools you might want to consider as part of your testing toolkit.</p>
+</div>
+<div class="paragraph">
+<p>The central example for the talk was based around what initially appears to be a very
+simple mathematical calculation originally implemented using the following Java code:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava1.png" alt="Buggy code" width="80%"></span></p>
+</div>
+<div class="paragraph">
+<p>We write a Groovy test using the <a href="https://spockframework.org/">Spock</a> testing framework which
+at first glance seems to indicate our initial implementation is correct since all the tests
+pass and we have 100% test coverage.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava2.png" alt="Code coverage" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>But this is 100% line and branch coverage but doesn&#8217;t reflect 100% state coverage.
+We can illustrate this by adding one more test case, which now fails:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava3.png" alt="Add fault revealing test case" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>It turns out there was one edge case the initial implementation didn&#8217;t cater
+for but it is simple enough to fix:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava4.png" alt="Corrected algorithm" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>We now have all test cases passing and still 100% coverage.</p>
+</div>
+<div class="paragraph">
+<p>The moral of the story is that 100% line and branch coverage isn&#8217;t sufficient
+to ensure a correct implementation. You should try to add test cases until
+you think the problem domain is fully tested. The rest of the talk looked
+at two advanced tools which could assist you in finding test case deficiencies.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://pitest.org/">Pitest tool</a> is a mutation testing tool.
+Understanding how it works and how it can help is a little mind-bending at first.
+Pitest mutates your production code and then re-runs your test suite.
+If the test suite still passes, i.e. the mutant survives, it represents a possible code smell.</p>
+</div>
+<div class="paragraph">
+<p>Often it means that your test suite isn&#8217;t complete enough to kill the mutant,
+and you should add some more test cases.
+But mutation testing is not an exact science, if a mutant survives,
+it could mean there is a missing test case,
+it could mean there is a flaw in the existing test cases,
+it could mean there is a bug in the implementation code,
+or it could be a false positive.</p>
+</div>
+<div class="paragraph">
+<p>Running the tool on the faulty implementation when we had 3 test cases,
+indeed reveals some surviving mutations and analysis indicates that indeed the mutations
+correspond to the faulty edge case:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava5.png" alt="Pitest result" width="90%"></span></p>
+</div>
+<div class="paragraph">
+<p>This should direct us to add the additional test case like we did manually earlier
+and this would hopefully have forced us to discover the bug.</p>
+</div>
+<div class="paragraph">
+<p>Running the tool on the fixed implementation showed an improvement
+but still indicated a possible code smell. That finding reflects that
+for our fixed implementation, that <code>c &gt; Math.min(a, b)</code> and <code>c &gt;= Math.min(a, b)</code>
+are equivalent, even though in the general case it might mean
+an edge case wasn&#8217;t being tested. So mutation testing can certainly be
+useful but often requires human analysis to rule out any false positives.</p>
+</div>
+<div class="paragraph">
+<p>The other tool examined was <a href="https://jqwik.net/">Jqwik</a>, a property-based testing tool.
+Such tools check that certain properties hold when exercising the implementation
+under test with random data. Indeed, such testing also reveals the flaw in the
+original code, with no flaw found in the fixed code.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/TestingJava6.png" alt="Jqwik result" width="90%"></span></p>
 </div>
 </div>
 <div class="sect2">
