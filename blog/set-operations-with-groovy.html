@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Set Operators with Groovy</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Set Operators with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-11-14 03:22PM</span></p><hr/><div class="paragraph">
-<p><a href="https://twitter.com/TheDonRaab">Donald Raab</a> posted an article about set operators using Java collections and <a href="https://github.com/eclipse/eclipse-collections">Eclipse Collections</a>. That post focuses
+<p><a href="https://twitter.com/TheDonRaab">Donald Raab</a> posted <a href="https://donraab.medium.com/comparing-set-operations-between-java-and-eclipse-collections-92cf1df28d3b">an article</a> about set operators using Java collections and <a href="https://github.com/eclipse/eclipse-collections">Eclipse Collections</a>. <a href="https://donraab.medium.com/comparing-set-operations-between-java-and-eclipse-collections-92cf1df28d3b">That post</a> focuses
 on the <em>union</em>, <em>intersection</em> and <em>difference</em> operators. We&#8217;ll add in
 <em>symmetric difference</em> since Groovy supports operator overloading for that
 operator also.</p>
@@ -98,8 +98,24 @@ assert (NOV ^ OCT ^ DEC) == ['🍂', '🍃', '🎃', '🍫', '🌝', '👻', '�
 </div>
 </div>
 <div class="paragraph">
-<p>Since operator overloading is extensible in Groovy, you can have similar
-shorthand notation for your domain objects also. Enjoy!</p>
+<p>This code is using standard mutable Java collections,
+but we could use the normal <code>Set.of(&#8230;&#8203;)</code> form and work with immutable sets
+if that was our preference.</p>
+</div>
+<div class="paragraph">
+<p>Also, since the Eclipse Collections Set implementations implement
+the standard Java <code>Set</code> interface, these operator overloading shorthands
+also work when using Eclipse Collections. We simply use
+<code>Sets.immutable.of(&#8230;&#8203;)</code> in our set definitions.</p>
+</div>
+<div class="paragraph">
+<p>What&#8217;s more, since Groovy operator overloading is extensible, you can have similar
+shorthand notation for your own domain objects also. Enjoy!</p>
+</div>
+<div class="paragraph">
+<p>This example used an alpha version of Groovy 5. Groovy 5 adds a little bit
+of extra syntactic sugar when using sets. Earlier versions of Groovy
+have <code>union</code> and <code>intersect</code> methods for sets.</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
