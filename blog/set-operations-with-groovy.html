@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, collections, zip, eclipse collections, guava, vavr, streamex, jOOλ, ginq, gquery, emoji'/><meta name='description' content='This post looks at zipping collections.'/><title>The Apache Groovy programming language - Blogs - Zipping Collections with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, emoji, set'/><meta name='description' content='This blog looks at union, intersection, difference &amp; symmetric difference operators in Groovy.'/><title>The Apache Groovy programming language - Blogs - Set Operators with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,133 +53,53 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Zipping Collections with Groovy</a></li><li><a href='#_what_is_zipping' class='anchor-link'>What is zipping?</a></li><li><a href='#_groovy' class='anchor-link'>Groovy</a></li><li><a href='#_eclipse_collections' class='anchor-link'>Eclipse Collections</a></li><li><a href='#_guava' class='anchor-link'>Guava</a></li><li><a href='#_streamex' class='anchor-link'>StreamEx</a></li><li><a href='#_vavr' class='anchor-link'>Vavr</a></li><li><a href='#_jooλ' class='anchor-link'>jOOλ</a></li><li><a href='#_groovy_gquery' class='anchor-link'>Groovy GQuery</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./groovy-sequenced-collections'>Groovy and Sequenced Collections (JEP-431)</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Zipping Collections with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-11-17 12:50PM</span></p><hr/><div class="sect1">
-<h2 id="_what_is_zipping">What is zipping?</h2>
-<div class="sectionbody">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Set Operators with Groovy</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Set Operators with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-11-14 03:22PM</span></p><hr/><div class="paragraph">
+<p><a href="https://twitter.com/TheDonRaab">Donald Raab</a> posted an article about set operators using Java collections and <a href="https://github.com/eclipse/eclipse-collections">Eclipse Collections</a>. That post focuses
+on the <em>union</em>, <em>intersection</em> and <em>difference</em> operators. We&#8217;ll add in
+<em>symmetric difference</em> since Groovy supports operator overloading for that
+operator also.</p>
+</div>
 <div class="paragraph">
-<p>In computer science, <a href="https://en.wikipedia.org/wiki/Zipping_(computer_science)">zipping</a> translates sequences into sequences where, if visualized in two dimensions, the rows and columns are swapped. So the zip of:</p>
+<p>First, a quick refresh about the operators for two sets <strong>A</strong> and <strong>B</strong>:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/SetOperators.png" alt="SetOperators"></span></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use the same emoji sets from Donald&#8217;s post:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 'b', 'c'],
-[ 1 ,  2 ,  3 ]]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">Set OCT = ["🍁", "🍃", "🎃", "🥧", "🍫", "🌝", "👻", "🌽", "🍎", "🪵", "☕️"]
+Set NOV = ["🍂", "🍁", "🥧", "🦃", "🌽", "🍎", "🪵", "☕️"]
+Set DEC = ["🥧", "🦃", "⛄️", "🍎", "🌰", "🛷", "🪵", "🎄", "☕️"]</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>would be:</p>
+<p>Groovy lets you write the same code as in Donald&#8217;s post but also offers
+operator overloading for these operators as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 1],
-['b', 2],
-['c', 3]]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (OCT &amp; NOV &amp; DEC) == ["🪵", "🥧", "🍎", "☕️"] as Set
+
+assert (OCT | NOV | DEC) == ["🪵", "🦃", "🌰", "🛷", "🍎", "🎄",
+                             "🍫", "🌝", "☕️", "🥧", "⛄️", "🍁",
+                             "🍂", "🍃", "👻", "🌽", "🎃"] as Set
+
+assert (OCT - NOV - DEC) == ["🍫", "🌝", "🍃", "👻", "🎃"] as Set
+assert (NOV - OCT - DEC) == ["🍂"] as Set
+assert (DEC - OCT - NOV) == ["🎄", "🌰", "⛄️", "🛷"] as Set
+
+assert (OCT ^ NOV ^ DEC) == ['⛄️', '🌰', '🛷', '🎄', '🍃', '🎃', '🍫', '🌝',
+                             '👻', '🍂', '🥧', '🍎', '🪵', '☕️'] as Set
+assert (NOV ^ OCT ^ DEC) == ['🍂', '🍃', '🎃', '🍫', '🌝', '👻', '🥧', '⛄️',
+                             '🍎', '🌰', '🛷', '🪵', '🎄', '☕️'] as Set</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It&#8217;s a very handy operation and depending on the language, may be supported for tuples, lists, streams and other sequences or aggregates.</p>
-</div>
-<div class="paragraph">
-<p>Java collections and streams don&#8217;t currently support such functionality out-of-the-box with various workarounds discussed <a href="https://dzone.com/articles/bridge-the-gap-of-zip-operation">here</a>. The summary: language and library design is hard; any zip implementation that Java provides would have some limitations baked in, so they instead provide the necessary primitives to allow folks to build their own implementations based on their specific requirements.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll look at what Groovy provides and some of the available Java libraries that you can also use. The same caveats apply to these libraries, each will have its own implementation strengths and weaknesses.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll use an example inspired by this <a href="https://twitter.com/TheDonRaab">Donald Raab</a> <a href="https://donraab.medium.com/make-or-append-me-a-string-c654f247373a">blog post</a>. It looks at zipping (and formatting) lists of strings containing "fall"-inspired emoji. Yes, it&#8217;s late spring for the southern hemisphere who also mostly call fall "autumn", but hopefully everyone will appreciate the inspiration.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/fall_emojis.png" alt="some fall inspired emojis" width="741"></span></p>
-</div>
-<hr>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy">Groovy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Groovy uses the <code>transpose</code> method for zipping:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGroovy.png" alt="zipping example with Groovy"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_eclipse_collections">Eclipse Collections</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Eclipse Collections has a <code>zip</code> method on its list classes:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsEC.png" alt="zipping example with Eclipse Collections"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_guava">Guava</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Guava has a streams utility class with a <code>zip</code> method:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGuava.png" alt="zipping example with Guava"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_streamex">StreamEx</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>StreamEx provides an enhanced stream library which supports <code>zipWith</code>:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsStreamEx.png" alt="zipping example with StreamEx"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vavr">Vavr</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Vavr has a <code>zipWith</code> method on its list class:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsVavr.png" alt="zipping example with Vavr"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jooλ">jOOλ</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>jOOλ has a <code>zip</code> method for its sequences:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsJool.png" alt="zipping example with jOOλ"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy_gquery">Groovy GQuery</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you are a fan of query-like DSLs, Groovy&#8217;s language integrated query, GQuery (AKA GINQ), can also be used:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGQ.png" alt="zipping example with GQuery"></span></p>
-</div>
-<div class="paragraph">
-<p>This uses a special <code>_rn</code> "row number" pre-defined variable in GQ expressions. It follows the same strategy as the IntStream "workaround" for Java mentioned in this <a href="https://www.baeldung.com/java-collections-zip">blog</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_more_information">More information</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code examples can be found in the <a href="https://github.com/paulk-asert/zipping-collections">repo</a></p>
-</div>
-</div>
+<p>Since operator overloading is extensible in Groovy, you can have similar
+shorthand notation for your domain objects also. Enjoy!</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
