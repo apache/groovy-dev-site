@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk22, chop, collate, ginq, jep461'/><meta name='description' content='This post looks at using Gatherers (JEP 461) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Gatherers with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk22, chop, collate, inject, ginq, jep461'/><meta name='description' content='This post looks at using Gatherers (JEP 461) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Gatherers with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,17 +53,18 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Gatherers with Groovy</a></li><li><a href='#_understanding_gatherers' class='anchor-link'>Understanding Gatherers</a></li><li><a href='#_accessing_parts_of_a_collection' class='anchor-link'>Accessing parts of a collection</a></li><li><a href='#_collate' class='anchor-link'>Collate</a></li><li><a href='#_chop' class='anchor-link'>Chop</a></li><li><a href='#_testing_for_a_subsequence' class='anchor-link'>Testing for a subsequence</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Gatherers with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-09 11:30AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Gatherers with Groovy</a></li><li><a href='#_understanding_gatherers' class='anchor-link'>Understanding Gatherers</a></li><li><a href='#_accessing_parts_of_a_collection' class='anchor-link'>Accessing parts of a collection</a></li><li><a href='#_collate' class='anchor-link'>Collate</a></li><li><a href='#_chop' class='anchor-link'>Chop</a></li><li><a href='#_inject_and_fold' class='anchor-link'>Inject and fold</a></li><li><a href='#_testing_for_a_subsequence_fun_with_inits_and_tails' class='anchor-link'>Testing for a subsequence (fun with <code>inits</code> and <code>tails</code>)</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Gatherers with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-09 03:30PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>An interesting feature being previewed in JDK22 is <em>Gatherers</em>
 (<a href="https://openjdk.java.net/jeps/461">JEP 461</a>).
 This blog looks at using that feature with Groovy.
 The examples in this blog were tested with Groovy 4.0.16 using JDK version 22-ea+27-2262.
-As this JDK version is still in early access,
+As the JDK version we used is still in early access status,
 you should read the disclaimers to understand that this JDK feature
 is subject to change before final release. If and when the feature becomes
-final, Groovy supports it without needing any additional support.</p>
+final, it looks like Groovy will automatically support it without needing
+any additional tweaks.</p>
 </div>
 </div>
 </div>
@@ -85,11 +86,12 @@ some complex tasks cannot easily be expressed as stream pipelines.
 Enter <em>gatherers</em>. Gatherers provide the ability to customize intermediate operations.</p>
 </div>
 <div class="paragraph">
-<p>The stream API is updated to support a <code>gather</code> intermediate operation which takes a gatherer
-and returns a transformed stream. Let&#8217;s dive into a few more details of gatherers.</p>
+<p>With gatherers, the stream API is updated to support a <code>gather</code> intermediate operation
+which takes a gatherer and returns a transformed stream.
+Let&#8217;s dive into a few more details of gatherers.</p>
 </div>
 <div class="paragraph">
-<p>A gatherer has four functions:</p>
+<p>A gatherer is defined by four pieces of functionality:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -107,7 +109,7 @@ and returns a transformed stream. Let&#8217;s dive into a few more details of ga
 </div>
 <div class="paragraph">
 <p>where <code>state</code> is some state&#8201;&#8212;&#8201;we&#8217;ll use a list as state in a few of the upcoming
-examples, but it could just as easily be an instance of a class or record, <code>element</code>
+examples, but it could just as easily be an instance of some other class or record, <code>element</code>
 is the next element in the current stream to be processed, and <code>downstream</code> is
 a hook for creating the elements that will be processed in the next stage of the stream pipeline.</p>
 </div>
@@ -124,7 +126,13 @@ and thus cannot be parallelized, so we won&#8217;t discuss this aspect further h
 </div>
 <div class="paragraph">
 <p>Over and above, the Gatherer API, there are a number of built-in gathers
-like <code>windowFixed</code> and <code>windowSliding</code>, among others.</p>
+like <code>windowFixed</code>, <code>windowSliding</code>, and <code>fold</code>, among others.</p>
+</div>
+<div class="paragraph">
+<p>Before getting into functionality where gatherers will become essential,
+let&#8217;s start off by looking at accessing collections where functionality
+is well provided for in both the collection and stream APIs and related
+extension methods.</p>
 </div>
 </div>
 </div>
@@ -164,8 +172,9 @@ assert (1..8).stream().skip(2).limit(3).toList() == [3, 4, 5]</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>But what about some of Groovy&#8217;s more elaborate mechanisms for manipulating collections?
-I&#8217;m glad you asked. Let&#8217;s look at <code>collate</code> and <code>chop</code>.</p>
+<p>We can see here there are stream equivalents for <code>drop</code> and <code>take</code>,
+but what about some of Groovy&#8217;s more elaborate mechanisms for manipulating collections?
+I&#8217;m glad you asked. Let&#8217;s look at stream equivalents for <code>collate</code> and <code>chop</code>.</p>
 </div>
 </div>
 </div>
@@ -214,8 +223,8 @@ the leftover elements, but it&#8217;s easy enough to write our own:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; windowFixedTruncating(int windowSize) {
     Gatherer.ofSequential(
-        () -&gt; [],
-        Gatherer.Integrator.ofGreedy { window, element, downstream -&gt;
+        () -&gt; [],                                                       // initializer
+        Gatherer.Integrator.ofGreedy { window, element, downstream -&gt;   // integrator
             window &lt;&lt; element
             if (window.size() &lt; windowSize) return true
             var result = List.copyOf(window)
@@ -228,18 +237,36 @@ the leftover elements, but it&#8217;s easy enough to write our own:</p>
 </div>
 <div class="paragraph">
 <p>We have an initializer which just returns an empty list as our initial state.
-The gatherer keeps adding elements to the state (our list or window). Once the
+The integrator keeps adding elements to the state (our list or window). Once the
 list is filled to the window size, we&#8217;ll output it to the downstream,
-and then clear the list ready for the next window.
-The code here is essentially a simplified version of <code>windowFixed</code>, we can
-just leave out the finalizer that <code>windowFixed</code> would require to potentially
+and then clear the list ready for the next window.</p>
+</div>
+<div class="paragraph">
+<p>The code here is essentially a simplified version of <code>windowFixed</code>, we can
+just leave out the finisher that <code>windowFixed</code> would require to potentially
 output the partially-filled window at the end.</p>
 </div>
 <div class="paragraph">
-<p>A few details. Our operation is sequential since it is inherently ordered,
-hence we used <code>ofSequential</code> to mark it so. We will also always process all
+<p>A few details:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Our operation is sequential since it is inherently ordered,
+hence we used <code>ofSequential</code> to mark it so.</p>
+</li>
+<li>
+<p>We will also always process all
 elements, so we create a greedy gatherer using <code>ofGreedy</code>. While not strictly
 necessary, this allows for optimisation of the pipeline.</p>
+</li>
+<li>
+<p>We have specifically left out some validation logic out of this example
+to focus on the new gatherer functionality. Check out how <code>windowFixed</code>
+throws <code>IllegalArgumentException</code> for window sizes less than 1 to see what
+should really also be added here if you were using this in production.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>We&#8217;d use it like this:</p>
@@ -310,7 +337,7 @@ assert (1..8).collate(3, 3) == [[1, 2, 3], [4, 5, 6], [7, 8]]  // same as collat
             [stepSize, windowSize].min().times { window.removeFirst() }
             downstream.push(result)
         },
-        (window, downstream) -&gt; {                                        // finalizer
+        (window, downstream) -&gt; {                                        // finisher
             if (keepRemaining) {
                 while(window.size() &gt; stepSize) {
                     downstream.push(List.copyOf(window))
@@ -324,14 +351,29 @@ assert (1..8).collate(3, 3) == [[1, 2, 3], [4, 5, 6], [7, 8]]  // same as collat
 </div>
 </div>
 <div class="paragraph">
-<p>Some points. Our gatherer is still sequential for the same reasons as previously.
-We are still processing every element, so we again created a greedy gatherer.
-We have a little bit of optimization baked into the code. If our step size
+<p>Some points:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Our gatherer is still sequential for the same reasons as previously.
+We are still processing every element, so we again created a greedy gatherer.</p>
+</li>
+<li>
+<p>We have a little bit of optimization baked into the code. If our step size
 is bigger than the window size, we can do no further processing in our gatherer
 for the elements in between our windows. We could simplify the code and store those
 elements only to throw them away later, but it&#8217;s not too much effort to make
-the algorithm as efficient as possible. We also need a finalizer here which
-handles the leftover chunk(s).</p>
+the algorithm as efficient as possible.</p>
+</li>
+<li>
+<p>We also need a finisher here which
+handles the leftover chunk(s) when required.</p>
+</li>
+<li>
+<p>As per the previous example, we chose to elide some argument validation logic.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>And we&#8217;d use it like this:</p>
@@ -350,26 +392,344 @@ assert (1..8).stream().gather(windowSlidingByStep(3, 3)).toList() ==
     [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Before leaving this section, let&#8217;s look at a few examples using Groovy&#8217;s
+language integrated query capabilities as an alternative way to manipulate
+collections.</p>
+</div>
+<div class="paragraph">
+<p>Firstly, the equivalent of what we saw with <code>take</code> / <code>limit</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert GQL {
+    from n in 1..8
+    limit 3
+    select n
+} == [1, 2, 3]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, the equivalent if we added in <code>drop</code> / <code>skip</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert GQL {
+    from n in 1..8
+    limit 2, 3
+    select n
+} == [3, 4, 5]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, a sliding window equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert GQL {
+    from ns in (
+        from n in 1..8
+        select n, (lead(n) over(orderby n)), (lead(n, 2) over(orderby n))
+    )
+    limit 3
+    select ns
+}*.toList() == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_chop">Chop</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>A related collection method is <code>chop</code>. For this method, we also create chunks
+from the original collection but rather than specifying a fixed size that applies to
+all chunks, we specify the size we want for each chunk. Each size is only used once.
+The special size of <code>-1</code> indicates that we want the remainder of the collection as
+the last chunk.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).chop(3) == [[1, 2, 3]]
+assert (1..8).chop(3, 2, 1) == [[1, 2, 3], [4, 5], [6]]
+assert (1..8).chop(3, -1) == [[1, 2, 3], [4, 5, 6, 7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no original stream or pre-built gatherer for this functionality.
+We&#8217;ll write our own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; windowMultiple(int... steps) {
+    var remaining = steps.toList()
+    Gatherer.ofSequential(
+        () -&gt; [],
+        Gatherer.Integrator.of { window, element, downstream -&gt;
+            if (!remaining) {
+                return false
+            }
+            window &lt;&lt; element
+            if (remaining[0] != -1) remaining[0]--
+            if (remaining[0]) return true
+            remaining.removeFirst()
+            var result = List.copyOf(window)
+            window.clear()
+            downstream.push(result)
+        },
+        (window, downstream) -&gt; {
+            if (window) {
+                var result = List.copyOf(window)
+                downstream.push(result)
+            }
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some points:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>This is also an ordered algorithm, so we use <code>ofSequential</code> again.</p>
+</li>
+<li>
+<p>This is similar to what we used for collate, but we have a different sized
+window for each chunk size as we process the elements.</p>
+</li>
+<li>
+<p>Once we hit the last chunk, we don&#8217;t want to process further
+elements unless we see the special -1 marker, so we won&#8217;t create a greedy gatherer.</p>
+</li>
+<li>
+<p>We do need a finisher to potentially output elements that have been stored but not yet
+pushed downstream.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We&#8217;d use <code>windowMultiple</code> like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).stream().gather(windowMultiple(3)).toList() ==
+    [[1, 2, 3]]
+assert (1..8).stream().gather(windowMultiple(3, 2, 1)).toList() ==
+    [[1, 2, 3], [4, 5], [6]]
+assert (1..8).stream().gather(windowMultiple(3, -1)).toList() ==
+    [[1, 2, 3], [4, 5, 6, 7, 8]]</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_testing_for_a_subsequence">Testing for a subsequence</h2>
+<h2 id="_inject_and_fold">Inject and fold</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s <code>inject</code> is a little different to the stream <code>reduce</code> intermediate operator.
+The latter expects a binary operator which restricts the types of the elements
+being consumed and produced.</p>
+</div>
+<div class="paragraph">
+<p>The <code>inject</code> method can have different types for its arguments as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).inject(''){ string, number -&gt; string + number } == '12345'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>fold</code> built-in gatherer provides the equivalent functionality:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).stream().gather(fold(() -&gt; '', (string, number) -&gt; string + number)).findFirst().get() == '12345'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_for_a_subsequence_fun_with_inits_and_tails">Testing for a subsequence (fun with <code>inits</code> and <code>tails</code>)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a final example, let&#8217;s have a look at how we might test
+if one list is a subset of another.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll start with a list of words, and a list containing the search terms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var words = 'the quick brown fox jumped over the lazy dog'.split().toList()
+var search = 'brown fox'.split().toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It turns out that this is solved already in the JDK for collections:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Collections.indexOfSubList(words, search) != -1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at some possible stream implementations.
+But first a diversion. For any functional programmers who might have dabbled
+with Haskell, you may have seen the book <a href="http://learnyouahaskell.com/">Learn You a Haskell for Great Good!</a>. It sets an interesting exercise for finding a "Needle in the Haystack"
+using <code>inits</code> and <code>tails</code>. So what are <code>inits</code> and <code>tails</code>? They are built-in fuctions
+in Haskell and Groovy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..6).inits() == [[1, 2, 3, 4, 5, 6],
+                          [1, 2, 3, 4, 5],
+                          [1, 2, 3, 4],
+                          [1, 2, 3],
+                          [1, 2],
+                          [1],
+                          []]
 
+assert (1..6).tails() == [[1, 2, 3, 4, 5, 6],
+                             [2, 3, 4, 5, 6],
+                                [3, 4, 5, 6],
+                                   [4, 5, 6],
+                                      [5, 6],
+                                         [6],
+                                          []]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Once we know about these methods, we can paraphrase the "Needle in the Haystack"
+solution for collections in Groovy as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var found = words.tails().any{ subseq -&gt; subseq.inits().contains(search) }
+assert found</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It may not be the most efficient implementation of this functionality,
+but it has a nice symmetry. Let&#8217;s now explore some stream-based solutions.</p>
+</div>
+<div class="paragraph">
+<p>We can start off with a <code>tails</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; tails() {
+    Gatherer.ofSequential(
+        () -&gt; [],
+        Gatherer.Integrator.ofGreedy { state, element, downstream -&gt;
+            state &lt;&lt; element
+            return true
+        },
+        (state, downstream) -&gt; {
+            state.tails().each(downstream::push)
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the integrator, we just store away all the elements,
+and in the finisher we do all the work. This works but isn&#8217;t really
+properly leveraging the stream pipeline nature.</p>
+</div>
+<div class="paragraph">
+<p>We can check it works as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert search.stream().gather(tails()).toList() ==
+    [['brown', 'fox'], ['fox'], []]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We could continue with this approach to create an <code>initsOfTails</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; initsOfTails() {
+    Gatherer.ofSequential(
+        () -&gt; [],
+        Gatherer.Integrator.ofGreedy { state, element, downstream -&gt;
+            state &lt;&lt; element
+            return true
+        },
+        (state, downstream) -&gt; {
+            state.tails()*.inits().sum().each(downstream::push)
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, all the work is in the finisher, and we haven&#8217;t really made use
+of the power of the stream pipeline.</p>
+</div>
+<div class="paragraph">
+<p>It still works of course:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert words.stream().gather(initsOfTails()).anyMatch { it == search }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But it might have been more efficient to have collected
+the stream as a list and used Groovy&#8217;s built-in <code>inits</code> and <code>tails</code> on that.</p>
+</div>
+<div class="paragraph">
+<p>But all is not lost. If we were willing to tweak the algorithm slightly,
+we could make better use of the stream pipeline. For example, if we don&#8217;t
+mind getting the <code>inits</code> results in the reverse order, we could define the following
+gatherer for <code>inits</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; inits() {
+    Gatherer.ofSequential(
+        () -&gt; [],
+        Gatherer.Integrator.ofGreedy { state, element, downstream -&gt;
+            downstream.push(List.copyOf(state))
+            state &lt;&lt; element
+            return true
+        },
+        (state, downstream) -&gt; {
+            downstream.push(state)
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which we&#8217;d use like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert search.stream().gather(inits()).toList() ==
+    [[], ['brown'], ['brown', 'fox']]</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We have had a quick glimpse at using gatherers with Groovy.
-We are still in the early days of gatherers being available,
+<p>It is great that Groovy has a rich set of methods that
+work with collections. Some of these methods have stream
+equivalents, and now we see that using gatherers with Groovy,
+we can emulate more of the methods.
+Not all algorithms need or benefit from using streams,
+but it&#8217;s great to know that with gatherers, we can
+likely pick whichever style makes sense.</p>
+</div>
+<div class="paragraph">
+<p>We are still in the early days of gatherers being available,
 so expect much more to emerge as this feature becomes more mainstream.
 We look forward to it advancing past preview status.</p>
 </div>
