@@ -207,7 +207,7 @@ collector, but then you&#8217;d be giving up some of the key benefits of streams
 Luckily, with gatherers, we can now obtain this functionality.</p>
 </div>
 <div class="paragraph">
-<p>The first cases is so common, there is a built-in gatherer (<code>Gatherers#windowFixed</code>) for it:</p>
+<p>The first case is so common, there is a built-in gatherer (<code>Gatherers#windowFixed</code>) for it:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -217,7 +217,7 @@ Luckily, with gatherers, we can now obtain this functionality.</p>
 </div>
 <div class="paragraph">
 <p>There is no exact equivalent to handle the less common case of discarding
-the leftover elements, but it&#8217;s easy enough to write our own:</p>
+the leftover elements, but it&#8217;s easy enough to write our own gatherer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -269,7 +269,7 @@ should really also be added here if you were using this in production.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>We&#8217;d use it like this:</p>
+<p>We&#8217;d use <code>windowFixedTruncating</code> like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -442,9 +442,10 @@ collections.</p>
 <h2 id="_chop">Chop</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A related collection method is <code>chop</code>. For this method, we also create chunks
-from the original collection but rather than specifying a fixed size that applies to
-all chunks, we specify the size we want for each chunk. Each size is only used once.
+<p>A related collection extension method in Groovy is <code>chop</code>.
+For this method, we also create chunks from the original collection but rather
+than specifying a fixed size that applies to all chunks, we specify the size we
+want for each chunk. We give a list of sizes, and each size is only used once.
 The special size of <code>-1</code> indicates that we want the remainder of the collection as
 the last chunk.</p>
 </div>
@@ -528,7 +529,7 @@ assert (1..8).stream().gather(windowMultiple(3, -1)).toList() ==
 <h2 id="_inject_and_fold">Inject and fold</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Groovy&#8217;s <code>inject</code> is a little different to the stream <code>reduce</code> intermediate operator.
+<p>Groovy&#8217;s <code>inject</code> is a little different to the streams <code>reduce</code> intermediate operator.
 The latter expects a binary operator which restricts the types of the elements
 being consumed and produced.</p>
 </div>
@@ -561,7 +562,7 @@ being consumed and produced.</p>
 if one list is a subset of another.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll start with a list of words, and a list containing the search terms:</p>
+<p>We&#8217;ll start with a list of words, and a list containing the ordered search terms:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -581,7 +582,7 @@ var search = 'brown fox'.split().toList()</code></pre>
 <p>Let&#8217;s have a look at some possible stream implementations.
 But first a diversion. For any functional programmers who might have dabbled
 with Haskell, you may have seen the book <a href="http://learnyouahaskell.com/">Learn You a Haskell for Great Good!</a>. It sets an interesting exercise for finding a "Needle in the Haystack"
-using <code>inits</code> and <code>tails</code>. So what are <code>inits</code> and <code>tails</code>? They are built-in fuctions
+using <code>inits</code> and <code>tails</code>. So what are <code>inits</code> and <code>tails</code>? They are built-in functions
 in Haskell and Groovy:</p>
 </div>
 <div class="listingblock">
@@ -686,7 +687,7 @@ of the power of the stream pipeline.</p>
 the stream as a list and used Groovy&#8217;s built-in <code>inits</code> and <code>tails</code> on that.</p>
 </div>
 <div class="paragraph">
-<p>But all is not lost. If we were willing to tweak the algorithm slightly,
+<p>But all is not lost. If we are willing to tweak the algorithm slightly,
 we could make better use of the stream pipeline. For example, if we don&#8217;t
 mind getting the <code>inits</code> results in the reverse order, we could define the following
 gatherer for <code>inits</code>:</p>
