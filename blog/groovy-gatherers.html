@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk22, chop, collate, ginq, jep461'/><meta name='description' content='This post looks at using Gatherers (JEP 461) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Gatherers with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Gatherers with Groovy</a></li><li><a href='#_understanding_gatherers' class='anchor-link'>Understanding Gatherers</a></li><li><a href='#_accessing_parts_of_a_collection' class='anchor-link'>Accessing parts of a collection</a></li><li><a href='#_collate' class='anchor-link'>Collate</a></li><li><a href='#_chop' class='anchor-link'>Chop</a></li><li><a href='#_testing_for_a_subsequence' class='anchor-link'>Testing for a subsequence</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Gatherers with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-09 11:30AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>An interesting feature being previewed in JDK22 is <em>Gatherers</em>
+(<a href="https://openjdk.java.net/jeps/461">JEP 461</a>).
+This blog looks at using that feature with Groovy.
+The examples in this blog were tested with Groovy 4.0.16 using JDK version 22-ea+27-2262.
+As this JDK version is still in early access,
+you should read the disclaimers to understand that this JDK feature
+is subject to change before final release. If and when the feature becomes
+final, Groovy supports it without needing any additional support.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_understanding_gatherers">Understanding Gatherers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Java developers are by now very familiar with streams.
+A stream is a potentially unbounded sequence of values supporting lazy computation.
+Processing streams is done via a stream pipeline which consists of three parts:
+a source of elements, zero or more intermediate operations (like <code>filter</code> and <code>map</code>),
+and a terminal operation.</p>
+</div>
+<div class="paragraph">
+<p>This framework is very powerful and efficient and offers some extensibility
+via a customisable terminal operation. The available intermediate operations
+is fixed in size, and while the built-in ones are very useful,
+some complex tasks cannot easily be expressed as stream pipelines.
+Enter <em>gatherers</em>. Gatherers provide the ability to customize intermediate operations.</p>
+</div>
+<div class="paragraph">
+<p>The stream API is updated to support a <code>gather</code> intermediate operation which takes a gatherer
+and returns a transformed stream. Let&#8217;s dive into a few more details of gatherers.</p>
+</div>
+<div class="paragraph">
+<p>A gatherer has four functions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The optional <em>initializer</em> is just a <code>Supplier</code> which returns some (initial) state.</p>
+</li>
+<li>
+<p>The <em>integrator</em> is typically the most important part. It satisfies the following interface:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">interface Integrator&lt;A, T, R&gt; {
+    boolean integrate(A state, T element, Downstream&lt;? super R&gt; downstream);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>where <code>state</code> is some state&#8201;&#8212;&#8201;we&#8217;ll use a list as state in a few of the upcoming
+examples, but it could just as easily be an instance of a class or record, <code>element</code>
+is the next element in the current stream to be processed, and <code>downstream</code> is
+a hook for creating the elements that will be processed in the next stage of the stream pipeline.</p>
+</div>
+</li>
+<li>
+<p>The optional <code>finisher</code> has access to the state and downstream pipeline hook.
+It performs any last step actions which might be needed.</p>
+</li>
+<li>
+<p>The optional <em>combiner</em> is used to evaluate the gatherer in parallel when processing an input stream in parallel. The examples we&#8217;ll look at in this blog post are inherently ordered in nature
+and thus cannot be parallelized, so we won&#8217;t discuss this aspect further here.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Over and above, the Gatherer API, there are a number of built-in gathers
+like <code>windowFixed</code> and <code>windowSliding</code>, among others.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_accessing_parts_of_a_collection">Accessing parts of a collection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy provides very flexible indexing variants to
+select specific elements from a collection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8)[0..2] == [1, 2, 3]                   // index by closed range
+assert (1..8)[3&lt;..&lt;6] == [5, 6]                    // index by open range
+assert (1..8)[0..2,3..4,5] == [1, 2, 3, 4, 5, 6]   // index by multiple ranges
+assert (1..8)[0..2,3..-1] == 1..8                  // ditto
+assert (1..8)[0,2,4,6] == [1,3,5,7]                // select odd numbers
+assert (1..8)[1,3,5,7] == [2,4,6,8]                // select even numbers</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also pick out a window of elements using <code>take</code> and <code>drop</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).take(3) == [1, 2, 3]                 // same as [0..2]
+assert (1..8).drop(2).take(3) == [3, 4, 5]         // same as [2..4]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Stream users might do the same thing using <code>skip</code> and <code>limit</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).stream().limit(3).toList() == [1, 2, 3]
+assert (1..8).stream().skip(2).limit(3).toList() == [3, 4, 5]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But what about some of Groovy&#8217;s more elaborate mechanisms for manipulating collections?
+I&#8217;m glad you asked. Let&#8217;s look at <code>collate</code> and <code>chop</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_collate">Collate</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s <code>collate</code> method splits a collection into fixed size chunks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).collate(3) == [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The last chunk in this example is smaller than the chunk size.
+It contains the remaining elements left over after all full size chunks
+have been created. If we don&#8217;t want the leftover chunk,
+we can ask for it to be excluded using an optional boolean parameter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).collate(3, false) == [[1, 2, 3], [4, 5, 6]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Such functionality isn&#8217;t really possible with streams unless you wanted to
+process the stream multiple times, or you shoved all the logic in the
+collector, but then you&#8217;d be giving up some of the key benefits of streams.
+Luckily, with gatherers, we can now obtain this functionality.</p>
+</div>
+<div class="paragraph">
+<p>The first cases is so common, there is a built-in gatherer (<code>Gatherers#windowFixed</code>) for it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).stream().gather(windowFixed(3)).toList() ==
+    [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no exact equivalent to handle the less common case of discarding
+the leftover elements, but it&#8217;s easy enough to write our own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; windowFixedTruncating(int windowSize) {
+    Gatherer.ofSequential(
+        () -&gt; [],
+        Gatherer.Integrator.ofGreedy { window, element, downstream -&gt;
+            window &lt;&lt; element
+            if (window.size() &lt; windowSize) return true
+            var result = List.copyOf(window)
+            window.clear()
+            downstream.push(result)
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have an initializer which just returns an empty list as our initial state.
+The gatherer keeps adding elements to the state (our list or window). Once the
+list is filled to the window size, we&#8217;ll output it to the downstream,
+and then clear the list ready for the next window.
+The code here is essentially a simplified version of <code>windowFixed</code>, we can
+just leave out the finalizer that <code>windowFixed</code> would require to potentially
+output the partially-filled window at the end.</p>
+</div>
+<div class="paragraph">
+<p>A few details. Our operation is sequential since it is inherently ordered,
+hence we used <code>ofSequential</code> to mark it so. We will also always process all
+elements, so we create a greedy gatherer using <code>ofGreedy</code>. While not strictly
+necessary, this allows for optimisation of the pipeline.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;d use it like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..8).stream().gather(windowFixedTruncating(3)).toList() ==
+    [[1, 2, 3], [4, 5, 6]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The default when using <code>collate</code> is to start the next chunk/window
+at the element directly after the previous one, but there are overloads
+which also take a step size. This is used to calculate the index at which
+the second (and subsequent) window(s) will start.
+There is an optional <code>keepRemaining</code> boolean
+to handle the leftover case as well.
+If we want to slide along by 1 and discard leftovers, we&#8217;d use:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).collate(3, 1, false) == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This aligns with the built-in <code>windowSliding</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).stream().gather(windowSliding(3)).toList() ==
+    [[1, 2, 3], [2, 3, 4], [3, 4, 5]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we want the step size to be other than 1, or we want control over
+the leftovers, there is no built-in gatherer option,
+but we can again write one ourselves. Let&#8217;s consider some examples.
+We&#8217;ll look at a gatherer implementation shortly, but first Groovy&#8217;s
+collection variants:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).collate(3, 1) == [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5], [5]]
+assert (1..8).collate(3, 2) == [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8]]
+assert (1..8).collate(3, 2, false) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+assert (1..8).collate(3, 4, false) == [[1, 2, 3], [5, 6, 7]]
+assert (1..8).collate(3, 3) == [[1, 2, 3], [4, 5, 6], [7, 8]]  // same as collate(3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s write our gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">&lt;T&gt; Gatherer&lt;T, ?, List&lt;T&gt;&gt; windowSlidingByStep(int windowSize, int stepSize, boolean keepRemaining = true) {
+    int skip = 0
+    Gatherer.ofSequential(
+        () -&gt; [],                                                        // initializer
+        Gatherer.Integrator.ofGreedy { window, element, downstream -&gt;    // integrator
+            if (skip) {
+                skip--
+                return true
+            }
+            window &lt;&lt; element
+            if (window.size() &lt; windowSize) return true
+            var result = List.copyOf(window)
+            skip = stepSize &gt; windowSize ? stepSize - windowSize : 0
+            [stepSize, windowSize].min().times { window.removeFirst() }
+            downstream.push(result)
+        },
+        (window, downstream) -&gt; {                                        // finalizer
+            if (keepRemaining) {
+                while(window.size() &gt; stepSize) {
+                    downstream.push(List.copyOf(window))
+                    stepSize.times{ window.removeFirst() }
+                }
+                downstream.push(List.copyOf(window))
+            }
+        }
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Some points. Our gatherer is still sequential for the same reasons as previously.
+We are still processing every element, so we again created a greedy gatherer.
+We have a little bit of optimization baked into the code. If our step size
+is bigger than the window size, we can do no further processing in our gatherer
+for the elements in between our windows. We could simplify the code and store those
+elements only to throw them away later, but it&#8217;s not too much effort to make
+the algorithm as efficient as possible. We also need a finalizer here which
+handles the leftover chunk(s).</p>
+</div>
+<div class="paragraph">
+<p>And we&#8217;d use it like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).stream().gather(windowSlidingByStep(3, 1)).toList() ==
+    [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5], [5]]
+assert (1..8).stream().gather(windowSlidingByStep(3, 2)).toList() ==
+    [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8]]
+assert (1..8).stream().gather(windowSlidingByStep(3, 2, false)).toList() ==
+    [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+assert (1..8).stream().gather(windowSlidingByStep(3, 4, false)).toList() ==
+    [[1, 2, 3], [5, 6, 7]]
+assert (1..8).stream().gather(windowSlidingByStep(3, 3)).toList() ==
+    [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_chop">Chop</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_testing_for_a_subsequence">Testing for a subsequence</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick glimpse at using gatherers with Groovy.
+We are still in the early days of gatherers being available,
+so expect much more to emerge as this feature becomes more mainstream.
+We look forward to it advancing past preview status.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2023 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
