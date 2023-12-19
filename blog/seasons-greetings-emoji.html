@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, collections, zip, eclipse collections, guava, vavr, streamex, jOOλ, ginq, gquery, emoji'/><meta name='description' content='This post looks at zipping collections.'/><title>The Apache Groovy programming language - Blogs - Zipping Collections with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, emoji'/><meta name='description' content='Season&apos;s greetings with some emoji fun.'/><title>The Apache Groovy programming language - Blogs - Season&#8217;s Greetings with Emojis</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,131 +53,215 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Zipping Collections with Groovy</a></li><li><a href='#_what_is_zipping' class='anchor-link'>What is zipping?</a></li><li><a href='#_groovy' class='anchor-link'>Groovy</a></li><li><a href='#_eclipse_collections' class='anchor-link'>Eclipse Collections</a></li><li><a href='#_guava' class='anchor-link'>Guava</a></li><li><a href='#_streamex' class='anchor-link'>StreamEx</a></li><li><a href='#_vavr' class='anchor-link'>Vavr</a></li><li><a href='#_jooλ' class='anchor-link'>jOOλ</a></li><li><a href='#_groovy_gquery' class='anchor-link'>Groovy GQuery</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./groovy-sequenced-collections'>Groovy and Sequenced Collections (JEP-431)</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Zipping Collections with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-11-17 12:50PM</span></p><hr/><div class="sect1">
-<h2 id="_what_is_zipping">What is zipping?</h2>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Season&#8217;s Greetings with Emojis</a></li><li><a href='#_jdk_21_new_features' class='anchor-link'>JDK 21 New Features</a></li><li><a href='#_playing_with_emojis_with_groovy' class='anchor-link'>Playing with Emojis with Groovy</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Season&#8217;s Greetings with Emojis</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-23 12:24PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In computer science, <a href="https://en.wikipedia.org/wiki/Zipping_(computer_science)">zipping</a> translates sequences into sequences where, if visualized in two dimensions, the rows and columns are swapped. So the zip of:</p>
+<p>In a <a href="https://groovy.apache.org/blog/helloworldemoji">previous blog post</a>
+we looked at a fun way to write a <em>hello world</em> script using Groovy and Emojis.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at some of the additional emoji API calls
+available in JDK 21. We&#8217;re using Groovy 5.0.0-alpha-4,
+but most of the examples work as is with recent Groovy 4 versions.
+Groovy 5, adds one shortcut for making it easier to get to code points
+as an array.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_jdk_21_new_features">JDK 21 New Features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As part of <a href="https://bugs.openjdk.org/browse/JDK-8303018">JDK-8303018</a>, JDK 21 adds the following API calls to <code>java.lang.Character</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 'b', 'c'],
-[ 1 ,  2 ,  3 ]]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="java">public static boolean isEmoji(int codePoint)
+public static boolean isEmojiPresentation(int codePoint)
+public static boolean isEmojiModifier(int codePoint)
+public static boolean isEmojiModifierBase(int codePoint)
+public static boolean isEmojiComponent(int codePoint)
+public static boolean isExtendedPictographic(int codePoint)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>would be:</p>
+<p>Also added was equivalent functionality when performing regex matches
+using the following special binary properties:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 1],
-['b', 2],
-['c', 3]]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>It&#8217;s a very handy operation and depending on the language, may be supported for tuples, lists, streams and other sequences or aggregates.</p>
-</div>
-<div class="paragraph">
-<p>Java collections and streams don&#8217;t currently support such functionality out-of-the-box with various workarounds discussed <a href="https://dzone.com/articles/bridge-the-gap-of-zip-operation">here</a>. The summary: language and library design is hard; any zip implementation that Java provides would have some limitations baked in, so they instead provide the necessary primitives to allow folks to build their own implementations based on their specific requirements.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll look at what Groovy provides and some of the available Java libraries that you can also use. The same caveats apply to these libraries, each will have its own implementation strengths and weaknesses.</p>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll use an example inspired by this <a href="https://twitter.com/TheDonRaab">Donald Raab</a> <a href="https://donraab.medium.com/make-or-append-me-a-string-c654f247373a">blog post</a>. It looks at zipping (and formatting) lists of strings containing "fall"-inspired emoji. Yes, it&#8217;s late spring for the southern hemisphere who also mostly call fall "autumn", but hopefully everyone will appreciate the inspiration.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/fall_emojis.png" alt="some fall inspired emojis" width="741"></span></p>
-</div>
-<hr>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy">Groovy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Groovy uses the <code>transpose</code> method for zipping:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>\p{IsEmoji}</code></p>
+</li>
+<li>
+<p><code>\p{IsEmoji_Presentation}</code></p>
+</li>
+<li>
+<p><code>\p{IsEmoji_Modifier}</code></p>
+</li>
+<li>
+<p><code>\p{IsEmoji_Modifier_Base}</code></p>
+</li>
+<li>
+<p><code>\p{IsEmoji_Component}</code></p>
+</li>
+<li>
+<p><code>\p{IsExtended_Pictographic}</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGroovy.png" alt="zipping example with Groovy"></span></p>
+<p>Let&#8217;s have a look at using these features from Groovy.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_eclipse_collections">Eclipse Collections</h2>
+<h2 id="_playing_with_emojis_with_groovy">Playing with Emojis with Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Eclipse Collections has a <code>zip</code> method on its list classes:</p>
+<p>First, we&#8217;ll have a look at a String containing 3 emojis:
+a Christmas tree, Mrs Claus, and Santa Claus.
+We&#8217;ll check that the 3 Unicode code points for that String
+all correspond to emojis using one of the new API calls:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsEC.png" alt="zipping example with Eclipse Collections"></span></p>
+<p><span class="image"><img src="img/emoji1.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We can check using the newly added regex binary properties as well.
+The Groovy regex operator (<code>==~</code>) ensures that the String exactly matches 3 emojis:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji2.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>Unicode supports various forms of modification by sequencing Unicode characters.
+One of the simplest examples is when some "base" emoji character is followed
+by a skin-tone emoji modifier. The two consecutive characters are re-interpreted,
+resulting in a single emoji with skin tone.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll see that the Christmas tree cannot be used as an emoji modifier
+base, but the two Claus emojis can. Also, we can see that all 5 skin
+tone emoji characters can be used as emoji modifiers:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji3.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try some combinations. We&#8217;ll combine the Santa emoji with
+some of the skin tones. Depending on your IDE/editor, you&#8217;ll probably
+see a single emoji, but it is made up of multiple Unicode code points.</p>
+</div>
+<div class="paragraph">
+<p>If we look at the code points from the "single" emoji,
+it will be the same as the "bare" Santa emoji plus the code points
+from the skin tone emoji:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji4.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We are also checking the emoji roles using a regex.
+We can see the base followed by the modifier.</p>
+</div>
+<div class="paragraph">
+<p>We can put all this together to check all five toned Santas as follows:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji5.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>Another sequencing trick offered by Unicode is to combine related
+emojis to form new ones with an intervening <em>zero width joiner</em> (ZWJ).
+For example, you might combine the woman emoji, "👩", possibly with
+an additional skin tone emoji, then a ZWJ character,
+followed by the rocket emoji "🚀", which combined gives
+a female astronaut emoji "👩🏽‍🚀".</p>
+</div>
+<div class="paragraph">
+<p>Unicode has a special Mx Claus emoji which can be used to represent
+a gender-neutral alternative to Mrs Claus or Santa Claus, or to indicate
+a person with strong Christmas spirit. It combines the adult emoji, "🧑",
+the ZWJ character, and the Christmas tree emoji.</p>
+</div>
+<div class="paragraph">
+<p>Again if we look at the code points, the code points for the "combined" emoji
+is just the code points of the individual components one after the other,
+as we see on the first line. The second line shows how to enter the combined
+emoji using Unicode. The first and last parts are represented as surrogate
+pairs which are combined into the correct code points automatically.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji6.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>The last two lines show checking the combined emoji with regex.
+We can check the exact Unicode characters using regex&#8217;s <code>\x{&#8230;&#8203;}</code> notation,
+noting that we don&#8217;t use surrogate pairs. We can also check the
+emoji names using the <code>\N{&#8230;&#8203;}</code> notation.</p>
+</div>
+<div class="paragraph">
+<p>Combinations aren&#8217;t limited to size two. One "family" emoji combination
+combined 3 emojis, again with ZWJ characters.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji7.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We can do similar regex checks.</p>
+</div>
+<div class="paragraph">
+<p>As a final example, let&#8217;s look at the "🙋🏻‍♀️" emoji.
+Looking at the first line of code below might lead us to think we have combined
+three characters, but checking the size shows there are 5 parts to the
+combined emoji. The "🙋🏻" emoji combines a base emoji with a skin tone.
+The "♀️" emoji combines the female sign character "♀" with a special
+<em>variation selector</em>, which indicates that the previous character
+should be treated as an emoji rather than a character.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji8.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We can put the new emoji API calls through their paces by checking
+various properties for each part of the combined emoji.</p>
+</div>
+<div class="paragraph">
+<p>We can do similar checks using regex.
+We can check for an exact match of the Unicode characters exactly,
+by their emoji names, or by role each part plays as shown below:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/emoji9.png" alt="using isEmoji"></span></p>
+</div>
+<div class="paragraph">
+<p>We hope you have enjoyed this little exploration of the
+new JDK 21 emoji features.</p>
+</div>
+<div class="paragraph">
+<p>Oh yes, and Season&#8217;s greetings everyone 🎄🎅☃️🎁🌟🎉!</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_guava">Guava</h2>
+<h2 id="_more_information">More Information</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>Guava has a streams utility class with a <code>zip</code> method:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGuava.png" alt="zipping example with Guava"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_streamex">StreamEx</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>StreamEx provides an enhanced stream library which supports <code>zipWith</code>:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsStreamEx.png" alt="zipping example with StreamEx"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vavr">Vavr</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Vavr has a <code>zipWith</code> method on its list class:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsVavr.png" alt="zipping example with Vavr"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_jooλ">jOOλ</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>jOOλ has a <code>zip</code> method for its sequences:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsJool.png" alt="zipping example with jOOλ"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_groovy_gquery">Groovy GQuery</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>If you are a fan of query-like DSLs, Groovy&#8217;s language integrated query, GQuery (AKA GINQ), can also be used:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGQ.png" alt="zipping example with GQuery"></span></p>
-</div>
-<div class="paragraph">
-<p>This uses a special <code>_rn</code> "row number" pre-defined variable in GQ expressions. It follows the same strategy as the IntStream "workaround" for Java mentioned in this <a href="https://www.baeldung.com/java-collections-zip">blog</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_more_information">More information</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code examples can be found in the <a href="https://github.com/paulk-asert/zipping-collections">repo</a></p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-seasonsgreetings">Source code</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Character.html">JDK 21 JavaDoc for java.lang.Character</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=O1oq1sbUnmU">Java 21 Improved Emoji Support 💪 Video</a></p>
+</li>
+<li>
+<p><a href="https://inside.java/2023/11/20/sip089/">Improved Emoji Support in Java 21 - Sip of Java</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
