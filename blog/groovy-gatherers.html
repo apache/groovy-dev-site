@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk22, chop, collate, inject, ginq, streams, jep461'/><meta name='description' content='This post looks at using Gatherers (JEP 461) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Gatherers with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk22, chop, collate, inject, ginq, streams, jep461, fold, scan'/><meta name='description' content='This post looks at using Gatherers (JEP 461) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Gatherers with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Gatherers with Groovy</a></li><li><a href='#_understanding_gatherers' class='anchor-link'>Understanding Gatherers</a></li><li><a href='#_accessing_parts_of_a_collection' class='anchor-link'>Accessing parts of a collection</a></li><li><a href='#_collate' class='anchor-link'>Collate</a></li><li><a href='#_chop' class='anchor-link'>Chop</a></li><li><a href='#_inject_and_fold' class='anchor-link'>Inject and fold</a></li><li><a href='#_testing_for_a_subsequence_fun_with_inits_and_tails' class='anchor-link'>Testing for a subsequence (fun with <code>inits</code> and <code>tails</code>)</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Gatherers with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-09 03:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Gatherers with Groovy</a></li><li><a href='#_understanding_gatherers' class='anchor-link'>Understanding Gatherers</a></li><li><a href='#_accessing_parts_of_a_collection' class='anchor-link'>Accessing parts of a collection</a></li><li><a href='#_collate' class='anchor-link'>Collate</a></li><li><a href='#_chop' class='anchor-link'>Chop</a></li><li><a href='#_inject_fold_and_scan' class='anchor-link'>Inject, fold and scan</a></li><li><a href='#_testing_for_a_subsequence_fun_with_inits_and_tails' class='anchor-link'>Testing for a subsequence (fun with <code>inits</code> and <code>tails</code>)</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Gatherers with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-12-09 03:30PM (Last updated: 2024-01-03 10:00PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>An interesting feature being previewed in JDK22 is <em>Gatherers</em>
@@ -528,10 +528,10 @@ assert (1..8).stream().gather(windowMultiple(3, -1)).toList() ==
 </div>
 </div>
 <div class="sect1">
-<h2 id="_inject_and_fold">Inject and fold</h2>
+<h2 id="_inject_fold_and_scan">Inject, fold and scan</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Groovy&#8217;s <code>inject</code> is a little different to the streams <code>reduce</code> intermediate operator.
+<p>Groovy&#8217;s <code>inject</code> is a little different to the stream APIs <code>reduce</code> intermediate operator.
 The latter expects a binary operator which restricts the types of the elements
 being consumed and produced.</p>
 </div>
@@ -544,7 +544,7 @@ being consumed and produced.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>fold</code> built-in gatherer provides the equivalent functionality:</p>
+<p>The <code>fold</code> built-in gatherer allows us to write the equivalent functionality for stream processing as shown here:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -552,6 +552,45 @@ being consumed and produced.</p>
              .gather(fold(() -&gt; '', (string, number) -&gt; string + number))
              .findFirst()
              .get() == '12345'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at another <code>inject</code> example. This time <em>cumulative sum</em>.
+If we have a sequence of numbers, the cumulative sum is another sequence
+whose value at any index is determined by accumulating all the
+numbers from the original sequence up to and including the index in question, e.g. the cumulative sum of <code>[1, 2, 3, 4]</code> is <code>[1, 3, 6, 10]</code>.</p>
+</div>
+<div class="paragraph">
+<p>This is again a good fit for Groovy&#8217;s <code>inject</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).inject([]) { acc, next -&gt;
+    acc + [acc ? acc.last() + next : next]
+} == [1, 3, 6, 10, 15]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This particular operation is deemed useful enough that Java actually
+has a built-in library function for arrays:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Integer[] nums = 1..5
+Arrays.parallelPrefix(nums, Integer::sum)
+assert nums == [1, 3, 6, 10, 15]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This particular operation isn&#8217;t well suited to traditional streams,
+but now with gatherers, we can use the <code>scan</code> built-in gatherer
+to have similar functionality when processing streams:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).stream()
+             .gather(scan(() -&gt; 0, Integer::sum))
+             .toList() == [1, 3, 6, 10, 15]</code></pre>
 </div>
 </div>
 </div>
@@ -759,6 +798,14 @@ likely pick whichever style makes sense.</p>
 <p>We are still in the early days of gatherers being available,
 so expect much more to emerge as this feature becomes more mainstream.
 We look forward to it advancing past preview status.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>18/Jan/2024</strong>: Updated with a scan/cumulative sum example.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
