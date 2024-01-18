@@ -571,8 +571,21 @@ numbers from the original sequence up to and including the index in question, e.
 </div>
 </div>
 <div class="paragraph">
-<p>This particular operation is deemed useful enough that Java actually
-has a built-in library function for arrays:</p>
+<p>Groovy has a number of alternatives to achieve this functionality.
+Here is one using <code>inits</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).inits().grep().reverse()*.sum() == [1, 3, 6, 10, 15]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>inits</code> is a list processing function which we cover in more detail
+in the next section.</p>
+</div>
+<div class="paragraph">
+<p>Before examining gatherer equivalents, we should note that this particular operation
+is deemed useful enough that Java actually has built-in library function for arrays:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -582,7 +595,7 @@ assert nums == [1, 3, 6, 10, 15]</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This particular operation isn&#8217;t well suited to traditional streams,
+<p>Cumulative sum isn&#8217;t well suited to traditional streams,
 but now with gatherers, we can use the <code>scan</code> built-in gatherer
 to have similar functionality when processing streams:</p>
 </div>
