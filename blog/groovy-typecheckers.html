@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, collections, zip, eclipse collections, guava, vavr, streamex, jOOλ, ginq, gquery, emoji'/><meta name='description' content='This post looks at zipping collections.'/><title>The Apache Groovy programming language - Blogs - Zipping Collections with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='type checking, printf, regex, format'/><meta name='description' content='This post looks at Groovy&apos;s Type Checkers.'/><title>The Apache Groovy programming language - Blogs - Groovy Type Checkers</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,131 +53,205 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Zipping Collections with Groovy</a></li><li><a href='#_what_is_zipping' class='anchor-link'>What is zipping?</a></li><li><a href='#_groovy' class='anchor-link'>Groovy</a></li><li><a href='#_eclipse_collections' class='anchor-link'>Eclipse Collections</a></li><li><a href='#_guava' class='anchor-link'>Guava</a></li><li><a href='#_streamex' class='anchor-link'>StreamEx</a></li><li><a href='#_vavr' class='anchor-link'>Vavr</a></li><li><a href='#_jooλ' class='anchor-link'>jOOλ</a></li><li><a href='#_groovy_gquery' class='anchor-link'>Groovy GQuery</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy</a></li><li><a href='./groovy-haiku-processing'>Groovy Haiku processing</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./groovy-sequenced-collections'>Groovy and Sequenced Collections (JEP-431)</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Zipping Collections with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-11-17 12:50PM</span></p><hr/><div class="sect1">
-<h2 id="_what_is_zipping">What is zipping?</h2>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Type Checkers</a></li><li><a href='#_an_example' class='anchor-link'>An Example</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Type Checkers</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-01-20 08:30PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In computer science, <a href="https://en.wikipedia.org/wiki/Zipping_(computer_science)">zipping</a> translates sequences into sequences where, if visualized in two dimensions, the rows and columns are swapped. So the zip of:</p>
+<p>By default, Groovy only performs minimal static type checking
+during compilation. This allows you to write scripts which
+make use of very dynamic features of the language,
+like adding methods at runtime. But many programs don&#8217;t
+make use of such dynamic features, so Groovy allows
+you to ramp up the amount of type checking the compiler will
+do when you need to, by using Groovy&#8217;s
+<a href="https://docs.groovy-lang.org/docs/latest/html/documentation/#static-type-checking">static type checking</a> features.</p>
+</div>
+<div class="paragraph">
+<p>But rather than just providing a dynamic/static (or on/off)
+type checking capability, Groovy provides a
+<a href="https://docs.groovy-lang.org/docs/groovy-5.0.0-alpha-5/html/documentation/#_type_checking_extensions">type checking extension</a> mechanism. It turns out there are many scenarios
+where you want mostly Java-like type checking but some minor
+relaxations for just a <em>light sprinkling</em> of dynamic behavior.
+Conversely, there are times when you want <em>stronger-than-Java</em> checking.
+Here we will look at two built-in checkers for this latter case.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <a href="https://docs.groovy-lang.org/docs/groovy-5.0.0-alpha-5/html/documentation/#_checking_regular_expressions">RegexChecker</a> was introduced in Groovy 4. It performs additional checks when using Groovy&#8217;s regex operators or calling Java regex API calls.
+It looks for illegal characters, unclosed capturing groups or ranges, illegal or unknown syntax and many other errors that would normally occur at runtime. Using the checker ensures that if your program compiles, you won&#8217;t receive a runtime error.</p>
+</li>
+<li>
+<p>The <a href="https://docs.groovy-lang.org/docs/groovy-5.0.0-alpha-5/html/documentation/#_checking_format_strings">FormatStringChecker</a>
+is available in alpha releases of Groovy 5. It
+checks various printf and format methods. It looks for illegal precision
+specifications, unknown format conversions, type conversion mismatches
+and other errors. When using the checker, if your program compiles, you should
+not receive such errors.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both these checkers rely on having the regular expression or format string
+available somewhere in the code. If you store such expressions in databases
+or properties files, or somewhere else, then you are out of luck.
+But remember, the mechanism is extensible, so adding further support
+is only a few lines (or possibly tens of lines) of code away.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_example">An Example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s look at an example which uses both those checkers. It is an example
+which uses regex to pull some information out of a log message from
+the first commit in Groovy&#8217;s source code repository. For simplicity,
+we duplicated the log message as a String but Groovy has nice capabilities
+if we wanted to extract that from git ourselves.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 'b', 'c'],
-[ 1 ,  2 ,  3 ]]</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">var firstCommitLog = 'Date:   Thu Aug 28 18:48:39 2003 +0000' // <b class="conum">(1)</b>
+
+@TypeChecked(extensions = 'groovy.typecheckers.RegexChecker') // <b class="conum">(2)</b>
+def getMatcher(String text) {
+    text =~ /Date:\s*(\w{3})\s(\w{3})\s(\d{2})\s(\d{2}):(\d{2}):(\d{2})\s(\d{4})/
+}
+
+@TypeChecked(extensions = 'groovy.typecheckers.FormatStringChecker') // <b class="conum">(3)</b>
+def displayInfo(String day, boolean afternoon, BigDecimal numYears) {
+    printf 'Day: %s, Afternoon: %x, Years ago: %3.1f', day, afternoon, numYears
+}
+
+var (_, day, month, date, hour, _, _, year) = getMatcher(firstCommitLog)[0] // <b class="conum">(4)</b>
+
+var afternoon = hour.toInteger() &gt;= 12
+int monthNumber = DateTimeFormatter.ofPattern('MMM').parse(month)[MONTH_OF_YEAR]
+var now = LocalDate.now()
+var firstCommitDate = LocalDate.of(year.toInteger(), monthNumber, date.toInteger())
+var numYears = (now - firstCommitDate) / 365  // <b class="conum">(5)</b>
+
+displayInfo(day, afternoon, numYears)</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>One of the lines in the first git commit message</p>
+</li>
+<li>
+<p>A method with additional regex checking</p>
+</li>
+<li>
+<p>A method with additional format string checking</p>
+</li>
+<li>
+<p>Extract components from first match</p>
+</li>
+<li>
+<p>Calculate the number of years since the first commit as a floating-point number</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>would be:</p>
+<p>When we run this script we get the following output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">[['a', 1],
-['b', 2],
-['c', 3]]</code></pre>
+<pre>Day: Thu, Afternoon: true, Years ago: 20.4</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It&#8217;s a very handy operation and depending on the language, may be supported for tuples, lists, streams and other sequences or aggregates.</p>
+<p>So, we know the first commit happened over 20 years ago on a Thursday afternoon/evening.</p>
 </div>
 <div class="paragraph">
-<p>Java collections and streams don&#8217;t currently support such functionality out-of-the-box with various workarounds discussed <a href="https://dzone.com/articles/bridge-the-gap-of-zip-operation">here</a>. The summary: language and library design is hard; any zip implementation that Java provides would have some limitations baked in, so they instead provide the necessary primitives to allow folks to build their own implementations based on their specific requirements.</p>
+<p>Here we annotated the two methods in question with <code>TypeChecked</code>,
+and explicitly listed out the <code>extensions</code> we wanted in each case.
+Groovy provides programmatic
+<a href="https://docs.groovy-lang.org/docs/groovy-5.0.0-alpha-5/html/documentation/#compilation-customizers">compiler configuration</a>
+and
+<a href="https://docs.groovy-lang.org/docs/groovy-5.0.0-alpha-5/html/documentation/#_the_configscript_commandline_parameter">configuration
+scripts</a>
+to potentially hide away such details, but we won&#8217;t go into further details here.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll look at what Groovy provides and some of the available Java libraries that you can also use. The same caveats apply to these libraries, each will have its own implementation strengths and weaknesses.</p>
+<p>Let&#8217;s have a look at some of the compile-time errors we would see
+if we had made errors in the script.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll use an example inspired by this <a href="https://twitter.com/TheDonRaab">Donald Raab</a> <a href="https://donraab.medium.com/make-or-append-me-a-string-c654f247373a">blog post</a>. It looks at zipping (and formatting) lists of strings containing "fall"-inspired emoji. Yes, it&#8217;s late spring for the southern hemisphere who also mostly call fall "autumn", but hopefully everyone will appreciate the inspiration.</p>
+<p>Let&#8217;s put an accidental closing grouping bracket at the start of the expression:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Bad regex: Unmatched closing ')'
+)Date:\s*(\w{3})\s(\w{3})\s(\d{2})\s(\d{2}):(\d{2}):(\d{2})\s(\d{4})</pre>
+</div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/fall_emojis.png" alt="some fall inspired emojis" width="741"></span></p>
+<p>Or leave off the closing curly brace on the first repetition:</p>
 </div>
-<hr>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Bad regex: Unclosed counted closure near index 13
+Date:\s*(\w{3)\s(\w{3})\s(\d{2})\s(\d{2}):(\d{2}):(\d{2})\s(\d{4})
+             ^</pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_groovy">Groovy</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Groovy uses the <code>transpose</code> method for zipping:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGroovy.png" alt="zipping example with Groovy"></span></p>
+<p>Or used a bad escape sequence:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Bad regex: Illegal/unsupported escape sequence near index 6
+Date:\g*(\w{3})\s(\w{3})\s(\d{2})\s(\d{2}):(\d{2}):(\d{2})\s(\d{4})
+      ^</pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_eclipse_collections">Eclipse Collections</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Eclipse Collections has a <code>zip</code> method on its list classes:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsEC.png" alt="zipping example with Eclipse Collections"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_guava">Guava</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Guava has a streams utility class with a <code>zip</code> method:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGuava.png" alt="zipping example with Guava"></span></p>
+<p>Similarly, we might make mistakes in displaying the gathered information.
+Possibly, we might get the types incorrect, here mixing up the order
+of the last two parameters:</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - IllegalFormatConversion: f != java.lang.Boolean
+       printf 'Day: %s, Afternoon: %b, Years ago: %3.1f', day, numYears, afternoon</pre>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_streamex">StreamEx</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>StreamEx provides an enhanced stream library which supports <code>zipWith</code>:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsStreamEx.png" alt="zipping example with StreamEx"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_vavr">Vavr</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Vavr has a <code>zipWith</code> method on its list class:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsVavr.png" alt="zipping example with Vavr"></span></p>
+<p>Or perhaps just getting the conversion character altogether wrong,
+using <code>%y</code> for year but there is no such conversion character:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - UnknownFormatConversion: Conversion = 'y'
+       printf 'Day: %s, Afternoon: %b, Years ago: %y', day, afternoon, numYears</pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_jooλ">jOOλ</h2>
-<div class="sectionbody">
 <div class="paragraph">
-<p>jOOλ has a <code>zip</code> method for its sequences:</p>
+<p>Or perhaps asking for the boolean to be 0-padded:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - FormatFlagsConversionMismatch: Conversion = b, Flags = '0'
+       printf 'Day: %s, Afternoon: %0b, Years ago: %3.1f', day, afternoon, numYears</pre>
+</div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsJool.png" alt="zipping example with jOOλ"></span></p>
+<p>Check out the documentation to see more of around 30 classes of errors that are detected.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_groovy_gquery">Groovy GQuery</h2>
+<h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>If you are a fan of query-like DSLs, Groovy&#8217;s language integrated query, GQuery (AKA GINQ), can also be used:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/ZippingCollectionsGQ.png" alt="zipping example with GQuery"></span></p>
-</div>
-<div class="paragraph">
-<p>This uses a special <code>_rn</code> "row number" pre-defined variable in GQ expressions. It follows the same strategy as the IntStream "workaround" for Java mentioned in this <a href="https://www.baeldung.com/java-collections-zip">blog</a>.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_more_information">More information</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The code examples can be found in the <a href="https://github.com/paulk-asert/zipping-collections">repo</a></p>
+<p>Regular expressions and format strings are niche activities, so
+you may not have the need for such checking often. But the fact that
+you don&#8217;t use these features all the time increases the chance of making
+mistakes. Have these additional checkers can put your mind at rest. And remember,
+these are just examples of using Groovy&#8217;s extensible type checking.
+Why not add additional checking for your own scenarios! Have fun!</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
