@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='delegation, design pattern'/><meta name='description' content='This post looks at using the Delegation Design Pattern with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using the Delegation Pattern with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using the Delegation Pattern with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_using_explicit_by_hand_delegation' class='anchor-link'>Using explicit "by-hand" delegation</a></li><li><a href='#_using_traits' class='anchor-link'>Using Traits</a></li><li><a href='#_using_dynamic_language_features' class='anchor-link'>Using dynamic language features</a></li><li><a href='#_using_the_delegate_transform' class='anchor-link'>Using the @Delegate transform</a></li><li><a href='#_groovy_use_of_the_delegation_pattern' class='anchor-link'>Groovy use of the delegation pattern</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using the Delegation Pattern with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-01-28 08:08PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The
+<a href="https://en.wikipedia.org/wiki/Delegation_pattern">delegation design pattern</a>
+is used when one class delegates part of its functionality
+to one or more helper objects (known as <em>delegates</em>).
+It is often used as an alternative to the object-oriented
+<a href="https://en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)">inheritance</a>
+mechanism which allows behavior to be derived from a superclass.
+When used in this way, it is often termed favoring
+<a href="https://en.wikipedia.org/wiki/Composition_over_inheritance">composition over inheritance</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_study">Case Study</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a case study, let&#8217;s consider writing some code to track
+menu items that you might find at your favorite restaurant
+or take-away food establishment. We&#8217;ll use a <code>MenuItem</code> record
+to capture the name and price of an item we can order:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record MenuItem(String name, int price) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For very simple applications, this might be enough.
+We can simply use other collection types, like sets, maps
+or lists, of <code>MenuItem</code> instances. For our first example, we&#8217;ll just use a list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var spanishTapas = [
+    new MenuItem('Gambas al ajillo', 8),
+    new MenuItem('Tortilla de patatas', 6),
+    new MenuItem('Calamares a la romana', 7)
+]
+
+assert spanishTapas.size() == 3
+assert spanishTapas[0].price == 8
+assert spanishTapas[-1].name.startsWith('Calamares')
+assert spanishTapas.every{ it.price &lt; 10 }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we want to build more sophisticated applications, we quickly
+might find it useful to have a <code>Menu</code> class to embody additional
+functionality. Let&#8217;s look at alternative ways to create such a class.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_explicit_by_hand_delegation">Using explicit "by-hand" delegation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This is the approach that is often suggested in various design pattern
+guides. We have one (or more) objects called delegate(s).
+For numerous methods in the class we are defining, we call through
+to the delegate(s).</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll declare our delegate helper, in this case a list.
+We&#8217;ll define <code>add</code>, <code>getAt</code> and <code>size</code> methods which do no  more than
+pass on the arguments to the delegate&#8217;s identically named method.
+We&#8217;ll also add a <code>findByPrice</code> method which contains a tiny bit of
+its own business logic but mostly uses an underlying method from the delegate.
+Here is what the class might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Menu {
+    private ArrayList&lt;MenuItem&gt; delegate = []
+
+    boolean add(MenuItem newItem) {
+        delegate.add(newItem)
+    }
+
+    MenuItem getAt(int index) {
+        delegate[index]
+    }
+
+    int size() {
+        delegate.size()
+    }
+
+    MenuItem findByPrice(int price) {
+        delegate.find{ it.price == price }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is how we might use the class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def vietnamese = new Menu().tap {
+    add(new MenuItem('Phở', 7))
+    add(new MenuItem('Bánh Mì', 5))
+}
+
+assert vietnamese[0].price == 7
+assert vietnamese.size() == 2
+assert vietnamese.findByPrice(7).name == 'Phở'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This class isn&#8217;t too hard to understand, but if we wanted to add more
+list-like functionality into our <code>Menu</code> class, we&#8217;ll see a lot
+more repeated boilerplate code. As the class gets larger,
+it also becomes harder to see the intent that we are primarily
+using the delegation pattern with only a handful of methods (potentially)
+that might add their own business logic.</p>
+</div>
+<div class="paragraph">
+<p>At this point, we might question whether moving away from inheritance
+and to composition/delegation was a good idea.
+Extending from the <code>ArrayList</code> class, say, would automatically derive
+many of the methods we may be interested in, and we&#8217;d eliminate some
+of the boilerplate delegation methods. But, if a <code>Menu</code> isn&#8217;t really
+<em>just</em> a list, but has added functionality, trying to force fit it into
+the <code>List</code> inheritance hierarchy will usually not end well.
+Moreover, if it turns out we need to delegate to more than one helper
+object, then the single parent class model offered by inheritance
+(Groovy follows Java here and only allows a single parent),
+makes it impossible to use this approach.</p>
+</div>
+<div class="paragraph">
+<p>Before examining Groovy&#8217;s special support for delegation (which overcomes
+the exploding amount of boilerplate problem), let&#8217;s look at Groovy&#8217;s support for traits.
+Traits are a mechanism which does overcome the
+limitation of <em>inheriting</em> behavior from a single parent superclass.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_traits">Using Traits</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy traits provide a powerful mechanism for inheriting behavior.
+Unlike extending from a single superclass,
+you can implement multiple traits and derive behavior from multiple places.
+Rules and conventions are in place to overcome the
+<a href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem">diamond inheritance problem</a>.
+Traits are a bit like Java&#8217;s <em>interfaces with default methods</em> but traits
+have a few additional features, in particular, we&#8217;ll use <em>stateful</em> traits
+which allow inheriting state, not just behavior.</p>
+</div>
+<div class="paragraph">
+<p>In our case study, let&#8217;s now suppose that we want to enhance our <code>Menu</code>
+class to also have the concept of a <em>date</em>.
+We might have different menus on different days of the week,
+or we might evolve the menu over time with seasonal ingredients,
+or have special menus for special days of celebration.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll explore two traits, one for list-like behavior, and one for date-like behavior.
+We&#8217;ll examine the list-like behavior first, and for simplicity, we&#8217;ll follow
+a very similar approach to our explicit delegation example above, but add
+a couple of additional methods.</p>
+</div>
+<div class="paragraph">
+<p>Here is what our trait might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait HasList {
+    List&lt;MenuItem&gt; listDelegate = []
+    boolean add(MenuItem item) { listDelegate.add(item) }
+    MenuItem getAt(int index) { listDelegate[index] }
+    boolean any(Closure predicate) { listDelegate.any(predicate) }
+    boolean contains(MenuItem item) { listDelegate.contains(item) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next will be our trait for date-like behavior. For simplicity,
+let&#8217;s start with a single <code>isBefore</code> method which lets us check whether
+the intended date for one menu precedes the date of another menu.
+This is just an example which maps directly onto one of the methods offered
+by our <code>LocalDate</code> delegate.</p>
+</div>
+<div class="paragraph">
+<p>Here is what our trait might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait HasDate {
+    LocalDate dateDelegate
+    boolean isBefore(LocalDate other) { dateDelegate.isBefore(other) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can create a class using those two traits:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Menu implements HasList, HasDate {
+    Menu(LocalDate date) { dateDelegate = date }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are several advantages to the explicit delegation example:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>it becomes clear that we are using the delegation pattern</p>
+</li>
+<li>
+<p>if we wanted to add in some methods, like <code>findByPrice</code> that
+we used earlier, it becomes clear, that such a method is where additional
+business logic might be added over-and-above the delegation pattern</p>
+</li>
+<li>
+<p>if we have a need for list-like or date-like behavior in other scenarios,
+we now have some somewhat general-purpose traits that we can reuse</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Here is how we might use our new class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def italianWednesday = new Menu(LocalDate.of(2024, 1, 24)).tap {
+    add(new MenuItem('Spaghetti Bolognese', 10))
+    add(new MenuItem('Gnocchi di Patate', 11))
+    add(new MenuItem('Tiramisù', 9))
+}
+
+def italianThursday = new Menu(LocalDate.of(2024, 1, 25)).tap {
+    add(new MenuItem('Fettuccine al Pomodoro', 12))
+    add(new MenuItem('Pizza Margherita', 10))
+    add(new MenuItem('Pannacotta', 10))
+}
+
+assert italianWednesday[0].price == 10
+assert !italianWednesday.any{ italianThursday.contains(it) }
+assert italianWednesday.isBefore(italianThursday.dateDelegate)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we are doing a similar price check to what we have seen earlier,
+then since we might want to stress variety, we are checking that
+no menu items from Wednesday and Thursday overlap, then we are checking
+that the date associated with the first menu precedes the second.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_dynamic_language_features">Using dynamic language features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy has several dynamic features which facilitate delegation.
+The
+<a href="https://docs.groovy-lang.org/latest/html/documentation/#_implement_delegation_pattern_using_expandometaclass">Groovy documentation</a>
+shows an approach using Groovy&#8217;s <code>ExpandoMetaClass</code>. Here, we&#8217;ll show an approach that
+makes use of Groovy&#8217;s <code>methodMissing</code> hook:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Menu {
+    private ArrayList&lt;MenuItem&gt; delegate = []
+
+    def findByPrice(int price) {
+        delegate.find{ it.price == price }
+    }
+
+    def methodMissing(String name, args) {
+        delegate."$name"(*args)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we have one explicit method, <code>findByPrice</code>, which we couldn&#8217;t delegate directly.
+All other method calls are intercepted and directed to our delegate.</p>
+</div>
+<div class="paragraph">
+<p>Here is how we might use the class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def frenchBakery = new Menu().tap {
+    add(new MenuItem('Croissant', 4))
+    add(new MenuItem('Baguette', 5))
+}
+
+assert frenchBakery[0].price == 4
+assert frenchBakery.size() == 2
+assert frenchBakery.findByPrice(4).name == 'Croissant'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In general, we could extend our class to also make use of the <code>propertyMissing</code>
+method, if we had properties (think getters) that we wanted to also delegate.
+It is also possible to delegate to multiple delegates but the logic in
+our <code>methodMissing</code> method would become a little more complex.</p>
+</div>
+<div class="paragraph">
+<p>A difference of this dynamic approach is that the delegate methods don&#8217;t
+appear in our <code>Menu</code> class file since they are discovered at runtime.
+This might make our life slightly easier if new versions of the delegate
+class are used, we&#8217;ll automatically delegate to any new methods.
+Similarly, if we are adding methods to our delegate at runtime,
+this approach can happily delegate to those methods.
+It does however have the downside that the delegate methods don&#8217;t appear in
+our <code>Menu</code> class file, which means they won&#8217;t appear in our Groovydoc, and we
+might have less favorable IDE completion depending on how smart our tooling is.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll look at an approach that overcomes those downsides next.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_the_delegate_transform">Using the @Delegate transform</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy also provides compile-time delegation support via the <code>@Delegate</code>
+transform. Here we annotate two properties (our delegates).
+This automatically adds boilerplate methods
+similar to what we saw earlier for explicit delegation for
+every public method in the two classes (about 120 methods in total).
+Also, any interfaces implemented by our delegates are also automatically
+added to our classes implements clause.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TupleConstructor(includes='date')
+class Menu {
+    @Delegate
+    final ArrayList&lt;MenuItem&gt; items = []
+    @Delegate
+    final LocalDate date
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This automatically adds boilerplate methods
+similar to what we saw earlier for explicit delegation for
+every public method in the two classes (about 120 methods in total).
+Also, any interfaces implemented by our delegates are also automatically
+added to our <code>Menu</code> class&#8217;s implements clause.</p>
+</div>
+<div class="paragraph">
+<p>Here is how we might use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def bistroTuesday = new Menu(LocalDate.of(2024, 1, 16)).tap {
+    add(new MenuItem('Tacos', 12))
+    add(new MenuItem('Chicken Parma', 15))
+}
+def bistroFriday = new Menu(LocalDate.of(2024, 1, 19)).tap {
+    add(new MenuItem('Chicken Parma', 15))
+    add(new MenuItem('Fish &amp; Chips', 12))
+}
+
+assert bistroTuesday.any{ bistroFriday.contains(it) }
+assert bistroTuesday.isBefore(bistroFriday)
+assert bistroTuesday instanceof List
+assert bistroFriday instanceof ChronoLocalDate</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If we don&#8217;t really need all the list and date methods implemented,
+we can just delegate to the ones we are interested in. In this case,
+we also need to disable the automatic collection of delegate interfaces.</p>
+</div>
+<div class="paragraph">
+<p>Here is how we might write our class (just for list-like features):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Menu {
+    @Delegate(includes='add,forEach,get,size', interfaces=false)
+    final ArrayList&lt;MenuItem&gt; items = []
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is how we might use it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def japanese = new Menu().tap {
+    add(new MenuItem('Sushi', 8))
+    add(new MenuItem('Vegetarian Ramen', 12))
+    add(new MenuItem('Vegetable Gyoza', 12))
+    add(new MenuItem('Teriyaki Tofu', 12))
+}
+
+assert japanese.size() == 4
+japanese.forEach{ it.price % 4 == 0 }
+assert japanese.get(3).price == 12
+assert japanese !instanceof List</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that the class does have the methods of interest,
+but doesn&#8217;t implement the <code>List</code> interface.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_use_of_the_delegation_pattern">Groovy use of the delegation pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy also uses the delegation pattern internally in numerous places including Closures.
+You wouldn&#8217;t normally do this in normal code, but you can set and change
+the delegate of a Closure like this example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var sizeClosure = { size() }
+sizeClosure.delegate = 5..6
+assert sizeClosure() == 2
+sizeClosure.delegate = 'foo'
+assert sizeClosure() == 3</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>While this example may not look all that useful, the technique is
+fundamental to how builders and other nested Closures operate
+under the covers.</p>
+</div>
+<div class="paragraph">
+<p>Here&#8217;s another example involving dynamically adding a couple of methods to integers using <code>ExpandoMetaClass</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Integer.metaClass {
+    twice { multiply(2) }     // <b class="conum">(1)</b>
+    thrice { delegate * 3 }   // <b class="conum">(2)</b>
+}
+assert 3.twice() == 2.thrice()</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Implicit</p>
+</li>
+<li>
+<p>Explicit</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/documentation/#_delegation_pattern" class="bare">https://docs.groovy-lang.org/latest/html/documentation/#_delegation_pattern</a></p>
+</li>
+<li>
+<p><a href="https://blog.mrhaki.com/2009/08/groovy-goodness-delegate-to-simplify.html" class="bare">https://blog.mrhaki.com/2009/08/groovy-goodness-delegate-to-simplify.html</a></p>
+</li>
+<li>
+<p><a href="https://blog.mrhaki.com/2013/11/groovy-goodness-choose-which-delegated.html" class="bare">https://blog.mrhaki.com/2013/11/groovy-goodness-choose-which-delegated.html</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have seen how to use the delegation pattern in Groovy
+by hand, as well as with Groovy&#8217;s special runtime and compile-time support.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script><script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-257558-10', 'auto');
+          ga('send', 'pageview');
+    </script>
+</body></html>
