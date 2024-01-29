@@ -380,12 +380,8 @@ might have less favorable IDE completion depending on how smart our tooling is.<
 <div class="sectionbody">
 <div class="paragraph">
 <p>Groovy also provides compile-time delegation support via the <code>@Delegate</code>
-transform. Here we annotate two properties (our delegates).
-This automatically adds boilerplate methods
-similar to what we saw earlier for explicit delegation for
-every public method in the two classes (about 120 methods in total).
-Also, any interfaces implemented by our delegates are also automatically
-added to our classes implements clause.</p>
+transform. Here we annotate two properties (our delegates) with the
+<code>@Delegate</code> annotation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -403,7 +399,7 @@ class Menu {
 similar to what we saw earlier for explicit delegation for
 every public method in the two classes (about 120 methods in total).
 Also, any interfaces implemented by our delegates are also automatically
-added to our <code>Menu</code> class&#8217;s implements clause.</p>
+added to our <code>Menu</code> class&#8217;s <em>implements</em> clause.</p>
 </div>
 <div class="paragraph">
 <p>Here is how we might use it:</p>
@@ -426,9 +422,19 @@ assert bistroFriday instanceof ChronoLocalDate</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>If we don&#8217;t really need all the list and date methods implemented,
-we can just delegate to the ones we are interested in. In this case,
-we also need to disable the automatic collection of delegate interfaces.</p>
+<p>Here we are checking that at least one item appears on both menus
+and that the Tuesday menu is before the Friday menu.</p>
+</div>
+<div class="paragraph">
+<p>If the standard delegation options aren&#8217;t what we need, we can customise
+what code is generated for us by using annotation attributes.
+For example, if we don&#8217;t really need all the list and date methods implemented,
+we can just delegate to the ones we are interested in by using the
+<code>includes</code> annotation attribute. This now just brings in the delegation
+boilerplate code for the methods of interest.
+In this case, we&#8217;ll also want to disable the automatic collection of
+delegate interfaces, since we no longer will be implementing all the methods
+listed in the interfaces. We do this using the <code>interfaces</code> annotation attribute.</p>
 </div>
 <div class="paragraph">
 <p>Here is how we might write our class (just for list-like features):</p>
@@ -461,7 +467,9 @@ assert japanese !instanceof List</code></pre>
 </div>
 <div class="paragraph">
 <p>We can see that the class does have the methods of interest,
-but doesn&#8217;t implement the <code>List</code> interface.</p>
+since we are using those methods in the example,
+and also that it doesn&#8217;t implement the <code>List</code> interface
+as the last assertion shows.</p>
 </div>
 </div>
 </div>
