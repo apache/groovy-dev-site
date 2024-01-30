@@ -113,17 +113,20 @@ functionality. Let&#8217;s look at alternative ways to create such a class.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This is the approach that is often suggested in various design pattern
-guides. We have one (or more) objects called delegate(s).
-For numerous methods in the class we are defining, we call through
-to the delegate(s).</p>
+guides which talk about the delegation pattern.
+We have one (or more) <em>helper</em> objects called delegate(s).
+For numerous methods in the class we are defining, we simply call through
+to corresponding methods of the delegate(s).</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll declare our delegate helper, in this case a list.
-We&#8217;ll define <code>add</code>, <code>getAt</code> and <code>size</code> methods which do no  more than
+We&#8217;ll define <code>add</code>, <code>getAt</code> and <code>size</code> methods which do no more than
 pass on the arguments to the delegate&#8217;s identically named method.
 We&#8217;ll also add a <code>findByPrice</code> method which contains a tiny bit of
-its own business logic but mostly uses an underlying method from the delegate.
-Here is what the class might look like:</p>
+its own business logic, but mostly uses an underlying method from the delegate.</p>
+</div>
+<div class="paragraph">
+<p>Here is what the class might look like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
