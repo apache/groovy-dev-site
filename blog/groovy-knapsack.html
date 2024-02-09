@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='knapsack, optimisation'/><meta name='description' content='This post looks at solving the knapsack problem with Groovy.'/><title>The Apache Groovy programming language - Blogs - Solving the Knapsack Problem with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='knapsack, optimisation, choco, genetic algorithms, dynamic programming'/><meta name='description' content='This post looks at solving the knapsack problem with Groovy.'/><title>The Apache Groovy programming language - Blogs - Solving the Knapsack Problem with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving the Knapsack Problem with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_brute_force' class='anchor-link'>Brute force</a></li><li><a href='#_using_branch_and_bound' class='anchor-link'>Using Branch and Bound</a></li><li><a href='#_using_dynamic_programming' class='anchor-link'>Using Dynamic Programming</a></li><li><a href='#_using_bitsets' class='anchor-link'>Using BitSets</a></li><li><a href='#_using_constraint_programming' class='anchor-link'>Using Constraint Programming</a></li><li><a href='#_using_ortools' class='anchor-link'>Using OrTools</a></li><li><a href='#_using_jenetics' class='anchor-link'>Using Jenetics</a></li><li><a href='#_using_greedy_selection' class='anchor-link'>Using Greedy selection</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving the Knapsack Problem with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-02-03 08:08PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving the Knapsack Problem with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_brute_force' class='anchor-link'>Brute force</a></li><li><a href='#_using_branch_and_bound' class='anchor-link'>Using Branch and Bound</a></li><li><a href='#_using_dynamic_programming' class='anchor-link'>Using Dynamic Programming</a></li><li><a href='#_using_bitsets' class='anchor-link'>Using BitSets</a></li><li><a href='#_using_constraint_programming' class='anchor-link'>Using Constraint Programming</a></li><li><a href='#_using_ortools' class='anchor-link'>Using OrTools</a></li><li><a href='#_using_jenetics' class='anchor-link'>Using Jenetics</a></li><li><a href='#_using_greedy_selection' class='anchor-link'>Using Greedy selection</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving the Knapsack Problem with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-02-09 03:00PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The
@@ -123,8 +123,8 @@ This is known as the 0/1 knapsack variation of the problem.
 We&#8217;ll look at some other variations later.</p>
 </div>
 <div class="paragraph">
-<p>Our goal then is to find out which gems we place into the knapsack to maximise
-the value.</p>
+<p>Our goal then is to find out which gems we place into the knapsack to
+maximise the value.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/knapsack.jpg" alt="A knapsack and some gems"></span></p>
@@ -229,126 +229,11 @@ the limit, then we can discard that path from further processing.</p>
 <div class="paragraph">
 <p>It is useful to visualize the above process as a solution tree (shown for capacity 10):</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>digraph unix {
-	fontname="Helvetica,Arial,sans-serif"
-	node [fontname="Helvetica,Arial,sans-serif"]
-	edge [fontname="Helvetica,Arial,sans-serif"]
-	node [color=lightblue2, style=filled];
-	n [label="0 0"]
-	n5 [label="6 17"]
-	n_ [label="0 0"]
-
-	n54 [label="11 _", color="#f88379"]
-	n_4 [label="5 15"]
-	n5_ [label="6 17"]
-	n__ [label="0 0"]
-
-	n5_3 [label="9 27"]
-	n5__ [label="6 17"]
-	n_43 [label="8 25"]
-	n_4_ [label="5 15"]
-	n__3 [label="3 10"]
-	n___ [label="0 0"]
-
-	n__32 [label="5 15"]
-	n___2 [label="2 5"]
-	n5_32 [label="11 _", color="#f88379"]
-	n5__2 [label="8 23"]
-	n_432 [label="10 30"]
-	n_4_2 [label="7 20"]
-
-	n__3_ [label="3 10"]
-	n____ [label="0 0"]
-	n5_3_ [label="9 27"]
-	n5___ [label="6 17"]
-	n_43_ [label="8 25"]
-	n_4__ [label="5 15"]
-	n__3_ [label="3 10"]
-	n____ [label="0 0"]
-
-	n__321 [label="6 16"]
-	n___21 [label="3 7"]
-	n5__21 [label="9 23"]
-	n_4321 [label="11 _", color="#f88379"]
-	n_4_21 [label="9 20"]
-	n__3_1 [label="4 11"]
-	n____1 [label="1 1"]
-	n5_3_1 [label="10 28"]
-	n5___1 [label="7 18"]
-	n_43_1 [label="9 26"]
-	n_4__1 [label="6 16"]
-	n__3_1 [label="4 11"]
-	n____1 [label="1 1"]
-
-	n__32_ [label="5 15"]
-	n___2_ [label="2 5"]
-	n5__2_ [label="8 23"]
-	n_432_ [label="10 30", color=gold]
-	n_4_2_ [label="7 20"]
-	n__3__ [label="3 10"]
-	n_____ [label="0 0"]
-	n5_3__ [label="9 27"]
-	n5____ [label="6 17"]
-	n_43__ [label="8 25"]
-	n_4___ [label="5 15"]
-	n__3__ [label="3 10"]
-	n_____ [label="0 0"]
-
-	n -&gt; n5 [label="Gem5"];
-	n -&gt; n_ [label=&lt;&lt;s&gt;Gem5&lt;/s&gt;&gt;];
-
-	n5 -&gt; n54 [label="Gem4"];
-	n5 -&gt; n5_ [label=&lt;&lt;s&gt;Gem4&lt;/s&gt;&gt;];
-	n_ -&gt; n_4 [label="Gem4"];
-	n_ -&gt; n__ [label=&lt;&lt;s&gt;Gem4&lt;/s&gt;&gt;];
-
-	n5_ -&gt; n5_3 [label="Gem3"];
-	n5_ -&gt; n5__ [label=&lt;&lt;s&gt;Gem3&lt;/s&gt;&gt;];
-	n_4 -&gt; n_43 [label="Gem3"];
-	n_4 -&gt; n_4_ [label=&lt;&lt;s&gt;Gem3&lt;/s&gt;&gt;];
-	n__ -&gt; n__3 [label="Gem3"];
-	n__ -&gt; n___ [label=&lt;&lt;s&gt;Gem3&lt;/s&gt;&gt;];
-
-	n5_3 -&gt; n5_32 [label="Gem2"];
-	n5_3 -&gt; n5_3_ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n_43 -&gt; n_432 [label="Gem2"];
-	n_43 -&gt; n_43_ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n__3 -&gt; n__32 [label="Gem2"];
-	n__3 -&gt; n__3_ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n5__ -&gt; n5__2 [label="Gem2"];
-	n5__ -&gt; n5___ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n_4_ -&gt; n_4_2 [label="Gem2"];
-	n_4_ -&gt; n_4__ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n___ -&gt; n___2 [label="Gem2"];
-	n___ -&gt; n____ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-
-	n_432 -&gt; n_4321 [label="Gem1"];
-	n_432 -&gt; n_432_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n__32 -&gt; n__321 [label="Gem1"];
-	n__32 -&gt; n__32_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n5__2 -&gt; n5__21 [label="Gem1"];
-	n5__2 -&gt; n5__2_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n_4_2 -&gt; n_4_21 [label="Gem1"];
-	n_4_2 -&gt; n_4_2_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n___2 -&gt; n___21 [label="Gem1"];
-	n___2 -&gt; n___2_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-
-	n5_3_ -&gt; n5_3_1 [label="Gem1"];
-	n5_3_ -&gt; n5_3__ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n_43_ -&gt; n_43_1 [label="Gem1"];
-	n_43_ -&gt; n_43__ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n__3_ -&gt; n__3_1 [label="Gem1"];
-	n__3_ -&gt; n__3__ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n5___ -&gt; n5___1 [label="Gem1"];
-	n5___ -&gt; n5____ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n_4__ -&gt; n_4__1 [label="Gem1"];
-	n_4__ -&gt; n_4___ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n____ -&gt; n____1 [label="Gem1"];
-	n____ -&gt; n_____ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-}</pre>
+<div class="paragraph">
+<p><span class="image"><img src="img/brute-force-tree.png" alt="brute force tree"></span></p>
 </div>
+<div class="paragraph">
+<p>The light red nodes indicate where subsequent processing of the solution tree can be skipped.</p>
 </div>
 <div class="paragraph">
 <p>We calculate here the result for 3 different knapsack weight limits (6, 8, and 10).
@@ -396,7 +281,8 @@ the <code>knapsack</code> method reduces from 44 to 32 (when just calculating fo
 <h2 id="_using_branch_and_bound">Using Branch and Bound</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Another technique often used for optimisation is branch and bound.
+<p>Another technique often used for optimisation is
+<a href="https://en.wikipedia.org/wiki/Branch_and_bound">branch and bound</a>.
 It&#8217;s a special form of the general principle of divide and conquer;
 solving a big problem by turning it into smaller problems.</p>
 </div>
@@ -404,9 +290,14 @@ solving a big problem by turning it into smaller problems.</p>
 <p>Divide and conquer is similar to what we did for the recursive solution above,
 but with branch and bound, we perform smarter elimination.
 Before processing the children of a branch, the branch is checked against
-upper and lower estimated bounds of some optimal solution and is discarded
-if it cannot produce a better solution. For the knapsack problem,
-we could find an optimal "greedy" solution if we could use fractional</p>
+upper and lower estimated bounds of some optimal solution. Processing for
+a given path is terminated if we can determine that heading down that
+path can&#8217;t possibly be better than heading done some alternative path.
+For the knapsack problem,
+we can work out those bounds by finding the optimal "greedy" solution if
+we were allowed to use fractional quantities of a given knapsack item.
+We&#8217;ll look at fractional quantities as the last example in this blog.
+It turns out we can calculate them very efficiently.</p>
 </div>
 <div class="paragraph">
 <p>First, we&#8217;ll create an <code>Item</code> record for holding our weights and values.</p>
@@ -521,105 +412,13 @@ println "Total value for capacity $W = ${knapsack(W, items, values.length)}"</co
 <div class="paragraph">
 <p>Which has this visualization (for capacity 10):</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre>digraph unix {
-	fontname="Helvetica,Arial,sans-serif"
-	node [fontname="Helvetica,Arial,sans-serif"]
-	edge [fontname="Helvetica,Arial,sans-serif"]
-	node [color=lightblue2, style=filled];
-	n [label="0 0 _ _"]
-
-	n3 [label="3 10 30 10"]
-	n_ [label="0 0 29 10"]
-
-	n34 [label="8 25 30 25"]
-	n_4 [label="5 15 29 25"]
-	n3_ [label="3 10 30 25"]
-	n__ [label="0 0 29 25"]
-
-	n345 [label="14 _ _ _", color="#f88379"]
-	n_45 [label="11 _ _ _", color="#f88379"]
-	n3_5 [label="9 27 30 25"]
-	n__5 [label="6 17 29 25"]
-	n34_ [label="8 25 30 25"]
-	n_4_ [label="5 15 29 25"]
-	n3__ [label="3 10 30 25"]
-	n___ [label="0 0 29 25"]
-
-	n3_52 [label="11 _ _ _", color="#f88379"]
-	n__52 [label="8 23 29 30", color="#cbc3e3"]
-	n34_2 [label="10 30 30 30"]
-	n_4_2 [label="7 20 29 30", color="#cbc3e3"]
-	n3__2 [label="5 15 30 30"]
-	n___2 [label="2 5 29 30", color="#cbc3e3"]
-	n3_5_ [label="9 27 30 30"]
-	n__5_ [label="6 17 29 30", color="#cbc3e3"]
-	n34__ [label="8 25 30 30"]
-	n_4__ [label="5 15 29 30", color="#cbc3e3"]
-	n3___ [label="3 10 30 30"]
-	n____ [label="0 0 29 30", color="#cbc3e3"]
-
-	n34_21 [label="11 _ _ _", color="#f88379"]
-	n3__21 [label="6 16 30 30"]
-	n3_5_1 [label="10 28 30 30"]
-	n34__1 [label="9 26 30 30"]
-	n3___1 [label="4 11 30 30"]
-
-	n34_2_ [label="10 30 30 30", color=gold]
-	n3__2_ [label="5 15 30 30"]
-	n3_5__ [label="9 27 30 30"]
-	n34___ [label="8 25 30 30"]
-	n3____ [label="3 10 30 30"]
-
-	n -&gt; n3 [label="Gem3"];
-	n -&gt; n_ [label=&lt;&lt;s&gt;Gem3&lt;/s&gt;&gt;];
-
-	n3 -&gt; n34 [label="Gem4"];
-	n_ -&gt; n_4 [label="Gem4"];
-	n3 -&gt; n3_ [label=&lt;&lt;s&gt;Gem4&lt;/s&gt;&gt;];
-	n_ -&gt; n__ [label=&lt;&lt;s&gt;Gem4&lt;/s&gt;&gt;];
-
-	n34 -&gt; n345 [label="Gem5"];
-	n_4 -&gt; n_45 [label="Gem5"];
-	n3_ -&gt; n3_5 [label="Gem5"];
-	n__ -&gt; n__5 [label="Gem5"];
-	n34 -&gt; n34_ [label=&lt;&lt;s&gt;Gem5&lt;/s&gt;&gt;];
-	n_4 -&gt; n_4_ [label=&lt;&lt;s&gt;Gem5&lt;/s&gt;&gt;];
-	n3_ -&gt; n3__ [label=&lt;&lt;s&gt;Gem5&lt;/s&gt;&gt;];
-	n__ -&gt; n___ [label=&lt;&lt;s&gt;Gem5&lt;/s&gt;&gt;];
-
-	n3_5 -&gt; n3_52 [label="Gem2"];
-	n__5 -&gt; n__52 [label="Gem2"];
-	n34_ -&gt; n34_2 [label="Gem2"];
-	n_4_ -&gt; n_4_2 [label="Gem2"];
-	n3__ -&gt; n3__2 [label="Gem2"];
-	n___ -&gt; n___2 [label="Gem2"];
-	n3_5 -&gt; n3_5_ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n__5 -&gt; n__5_ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n34_ -&gt; n34__ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n_4_ -&gt; n_4__ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n3__ -&gt; n3___ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-	n___ -&gt; n____ [label=&lt;&lt;s&gt;Gem2&lt;/s&gt;&gt;];
-
-	n34_2 -&gt; n34_21 [label="Gem1"];
-	n3__2 -&gt; n3__21 [label="Gem1"];
-	n3_5_ -&gt; n3_5_1 [label="Gem1"];
-	n34__ -&gt; n34__1 [label="Gem1"];
-	n3___ -&gt; n3___1 [label="Gem1"];
-
-	n34_2 -&gt; n34_2_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n3__2 -&gt; n3__2_ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n3_5_ -&gt; n3_5__ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n34__ -&gt; n34___ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-	n3___ -&gt; n3____ [label=&lt;&lt;s&gt;Gem1&lt;/s&gt;&gt;];
-}</pre>
-</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/branch-and-bound-tree.png" alt="branch and bound tree"></span></p>
 </div>
 <div class="paragraph">
 <p>We should note that as well as discarding the
-infeasible paths which exceed the weight limit,
-we now also discard unfruitful paths which our bound
+infeasible paths which exceed the weight limit (light red),
+we now also discard unfruitful paths (light purple) which our bound
 value tells us can never exceed some alternative <em>best</em> path
 we already know about.</p>
 </div>
@@ -637,7 +436,9 @@ we already know about.</p>
 <h2 id="_using_dynamic_programming">Using Dynamic Programming</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can think of dynamic programming as a special case of the
+<p>You can think of
+<a href="https://en.wikipedia.org/wiki/Dynamic_programming">dynamic programming</a>
+as a special case of the
 branch and bound technique. It can also be thought of as similar
 to the memoization we looked at earlier. In this case, rather
 than Groovy providing us with the cache, we track it ourselves
@@ -667,6 +468,16 @@ int[] weights = [1, 2, 3, 5, 6]    // Weights
     println "Total value for capacity $it = ${solve(values, weights, it)}"
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>To solve the knapsack problem, we break it into smaller pieces.
+If we have already cached the solution to the smaller piece, we use
+the cached value. Because of the way we have structured our problem,
+we are actually sharing the cached results for the different
+knapsack sizes.</p>
+</div>
+<div class="paragraph">
+<p>When we run this script, it produces the following output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -765,7 +576,7 @@ but does the job in our case.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Most often bitsets are used not just to save memory but
+<p>Most often, bitsets are used not just to save memory but
 because for certain problems we can perform operations
 on entire bitsets. You can think of this as bulk
 operations with <em>free</em> parallelism when compared to performing
@@ -804,7 +615,9 @@ println "Total value for capacity $W = $totalValue"</code></pre>
 so luckily, our crude optimisation step didn&#8217;t reject the best solution.</p>
 </div>
 <div class="paragraph">
-<p>Groovy 5 adds support for <code>&lt;&lt;</code> (left shift),<code>&gt;&gt;</code> (right shift),
+<p>In ths example, we just shifted an integer. Depending on the
+particular problem, we might wan tto instead shift a long or bitset.
+Groovy 5 adds support for <code>&lt;&lt;</code> (left shift),<code>&gt;&gt;</code> (right shift),
 and <code>&gt;&gt;&gt;</code> (right shift unsigned) operators for bitsets.
 This kind of functionality will make working on such
 problems even nicer with Groovy.</p>
@@ -815,16 +628,23 @@ problems even nicer with Groovy.</p>
 <h2 id="_using_constraint_programming">Using Constraint Programming</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Another technique we could consider is constraint programming.
+<p>Another technique we could consider is
+<a href="https://en.wikipedia.org/wiki/Constraint_programming">constraint programming</a>.
 Here we define some constraints and let a solver find solutions
-for us. Here we have used the Choco solver.</p>
+for us. Here we have used the
+<a href="https://choco-solver.org/">Choco solver</a>.</p>
 </div>
 <div class="paragraph">
 <p>We thought we would also spice up the example and illustrate
-what is known as the bounded knapsack problem. Instead of
+what is known as the <em>bounded knapsack problem</em>. Instead of
 either taking the gem or leaving it out, we now consider
 gems to be readily available commodities and the weight and
 value would apply to all gems of a particular type.</p>
+</div>
+<div class="paragraph">
+<p>In general, we can take as many gems of a particular type as we want
+(this would be unbounded), or as we&#8217;ll do here take as many
+gems of a particular type up to some bound.</p>
 </div>
 <div class="paragraph">
 <p>In our example, we&#8217;ll set the bound for our solver&#8217;s
@@ -931,7 +751,9 @@ Total value for capacity 10 (unbounded) = 31, Total weight taken = 10, [count0 =
 <div class="sectionbody">
 <div class="paragraph">
 <p>Other libraries also have built-in solvers for knapsack.
-Here is another implementation using the OrTools library:</p>
+Here is another implementation using the
+<a href="https://developers.google.com/optimization">OrTools</a>
+library:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -979,7 +801,9 @@ Gem weights: [2, 3, 5]</pre>
 <h2 id="_using_jenetics">Using Jenetics</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We can also use Genetic Algorithms to find a solution.
+<p>We can also use
+<a href="https://en.wikipedia.org/wiki/Genetic_algorithm">Genetic Algorithms</a>
+to find a solution.
 When creating solutions based on genetic algorithms,
 a series of steps take place which mimic evolution
 in nature. We typically start with some random guesses,
@@ -1233,8 +1057,11 @@ when allowing fractional amounts of the valuables.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have seen how to solve the knapsack problem in Groovy
-using several approaches. In the references, there are even
-more exotic algorithms which can be used to solve the knapsack problem.</p>
+using several approaches. In the
+<a href="https://www.hindawi.com/journals/mpe/2023/1742922/">references</a>, there are even
+more exotic algorithms which can be used to solve the knapsack problem.
+If you have a great way to solve the knapsack problem using Groovy,
+let us know and we can add it to this blog!</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
