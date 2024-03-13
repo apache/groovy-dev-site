@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, optaplanner, timefold, ojalgo, jacop, or-tools, choco, commons math, hipparchus, linear programming'/><meta name='description' content='This post looks at solving simple optimization problems using Groovy.'/><title>The Apache Groovy programming language - Blogs - Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_case_study_diet_optimization' class='anchor-link'>Case Study: Diet Optimization</a></li><li><a href='#_solving_with_a_spreadsheet_solver' class='anchor-link'>Solving with a spreadsheet solver</a></li><li><a href='#_using_apache_commons_math_or_hipparchus' class='anchor-link'>Using Apache Commons Math or Hipparchus</a></li><li><a href='#_using_optaplanner_or_timefold' class='anchor-link'>Using OptaPlanner or Timefold</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./solving-cryptarithmetic-puzzles-with-groovy'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-03-10 09:45PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are many problems involving optimization.
+We&#8217;ll explore a case study which can be solved using linear optimization,
+also known as
+<a href="https://en.wikipedia.org/wiki/Linear_programming">linear programming</a>.
+Linear programming problems optimize a particular linear objective
+function subject to one or more linear equality and inequality constraints.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll look at such a problem and some libraries
+and tools which can be used to solve them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_study_diet_optimization">Case Study: Diet Optimization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s look at a case study where we try to minimize the cost of food
+items in our diet, while still maintaining some overall constraints
+which we might set for health or dietary preference reasons.
+The example is inspired by
+<a href="https://documentation.sas.com/doc/en/orcdc/14.2/ormpug/ormpug_lpsolver_examples01.htm">this SAS example</a>,
+but see the <a href="#_further_information">Further Information</a> section for a more elaborate linear programming example,
+the classic Stigler diet problem, solved using Google OR-Tools.</p>
+</div>
+<div class="paragraph">
+<p>First, here are six foods with their costs and nutritional
+values that make up our diet:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bread 🍞</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Milk 🥛</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cheese 🧀</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Potato 🥔</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fish 🐟</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yogurt 🍶</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Protein (g)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fat (g)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Carbohydrates (g)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11.7</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">22.6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Calories</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">120</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">106</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">97</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">130</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">180</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>We want to minimize cost, while maintaining optimal nutrition,
+where optimal will be defined as meeting the following criteria:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Must be at least 300 calories</p>
+</li>
+<li>
+<p>Not more than 10 grams of fat</p>
+</li>
+<li>
+<p>Not less than 10 grams of carbohydrates</p>
+</li>
+<li>
+<p>Not less than 8 grams of fat</p>
+</li>
+<li>
+<p>At least 0.5 units of fish</p>
+</li>
+<li>
+<p>No more than 1 unit of milk</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note, we don&#8217;t recommend this simplified set of constraints
+as a real diet, it is only for illustrative purposes for our case study.</p>
+</div>
+<div class="paragraph">
+<p>Relating this back to our earlier definition of linear programming,
+our list above represent our linear constraints. Our object function
+is cost which is determined by the amount of each food multiplied
+by its cost.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_solving_with_a_spreadsheet_solver">Solving with a spreadsheet solver</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This kind of problem is so common that solvers exist even within spreadsheet applications. We&#8217;ll show a solution using the
+<a href="https://opensolver.org/opensolver-for-google-sheets/">OpenSolver Add-on</a> for
+<a href="https://www.google.com.au/sheets/about/">Google Sheets</a>.
+But you can do the same thing using
+<a href="https://speakerdeck.com/paulk/groovy-constraint-programming?slide=77">Microsoft Excel</a> if you prefer.</p>
+</div>
+<div class="paragraph">
+<p>First, we fill in the data for our problem.
+It will be similar to the figure shown below, but initially,
+the variable cells (blue) and objective cell (yellow) will be blank.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/GoogleSheetsDietData.png" alt="Data"></span></p>
+</div>
+<div class="paragraph">
+<p>Then, using the OpenSolver extension, we identify by way
+of cell ranges, our data (blue) and objective (yellow) cells,
+as well as the constraints.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/GoogleSheetsDietOpenSolver.png" alt="Solver" width="25%"></span></p>
+</div>
+<div class="paragraph">
+<p>Then we click "Solve" and it calculates our optimized value.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at solving this programmatically using Groovy.
+Groovy provides a particularly nice environment for
+scripting solutions to such problems, but for
+the libraries we are using, it should be possible to use
+most JVM languages.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_apache_commons_math_or_hipparchus">Using Apache Commons Math or Hipparchus</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s now look at solving this problem using a simplex solver.
+We&#8217;ll use the <code>SimplexSolver</code> class from Apache Commons
+Math which is essentially the same as the one from Hipparchus
+(a commons math fork).</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll start with a little helper method for defining our constraints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static scalar(coeffs, rel, double val) {
+    new LinearConstraint(coeffs as double[], rel, val)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next we define our individual constraints and the combined set:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var milk_max   = scalar([0, 1, 0, 0, 0, 0], LEQ, 1)
+var fish_min   = scalar([0, 0, 0, 0, 1, 0], GEQ, 0.5)
+var protein    = scalar([4.0, 8.0, 7.0, 1.3, 8.0, 9.2],     LEQ, 10)
+var fat        = scalar([1.0, 5.0, 9.0, 0.1, 7.0, 1.0],     GEQ, 8)
+var carbs      = scalar([15.0, 11.7, 0.4, 22.6, 0.0, 17.0], GEQ, 10)
+var calories   = scalar([90, 120, 106, 97, 130, 180],       GEQ, 300)
+
+LinearConstraintSet constraints = [milk_max, fish_min, protein, fat, carbs, calories]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each individual constraint has a coefficient for each food,
+a relationship, and a value.</p>
+</div>
+<div class="paragraph">
+<p>Next, we define our cost function, and an additional constraint
+to indicate that we can&#8217;t buy a negative amount of any food.
+The <code>zeroOrMore</code> constraint saves us from doing the long-hand
+equivalent, like <code>fish_min</code> but with a minimum of <code>0</code>, for each food.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var cost = new LinearObjectiveFunction([2.0, 3.5, 8.0, 1.5, 11.0, 1.0] as double[], 0)
+
+var zeroOrMore = new NonNegativeConstraint(true)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, our solution is found by creating a new solver, and asking
+it to optimize using our cost function and the constraints.
+We then print our solution out:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var solution = new SimplexSolver().optimize(cost, constraints, zeroOrMore)
+
+static pretty(int idx, double d) {
+    d ? [sprintf('%s %.2f', ['🍞', '🥛', '🧀', '🥔', '🐟', '🍶'][idx], d)] : []
+}
+
+if (solution != null) {
+    printf "Cost: %.2f%n", solution.value
+    println solution.point.indexed().collectMany(this::pretty).join(', ')
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, it gives the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Cost: 12.08
+🥛 0.05, 🧀 0.45, 🥔 1.87, 🐟 0.50</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is the same solution as what we saw when using the spreadsheet.</p>
+</div>
+<div class="paragraph">
+<p>You can currently swap between Apache Commons Math and Hipparchus
+by switching the Maven coordinates of the jar being used on the classpath
+and changing a few import statements. This may change in future versions,
+but for now:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Using <code>org.apache.commons:commons-math3:3.6.1</code> gives an older stable version
+of Commons Math, starting to show its age at 8 years old.</p>
+</li>
+<li>
+<p>Using <code>org.apache.commons:commons-math4-legacy:4.0-beta1</code>
+gives the latest version of these classes from Apache Commons Math.
+The naming possibly deserves some explanation. There has been ongoing
+effort to modularise Commons Math and there are numerous components
+delivered as a result. The optimisation classes haven&#8217;t
+been worked on yet and are available in the aforementioned artifact.</p>
+</li>
+<li>
+<p>Using <code>org.hipparchus:hipparchus-optim:3.0</code> gives classes from the forked
+project. For the classes we are using, there is essentially no difference
+in the fork, but other parts of the library have seen useful updates
+if you don&#8217;t mind having a dependency that isn&#8217;t backed by the ASF.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>If you don&#8217;t like those options, there are many more, here are a few
+with Groovy solutions in the same repo:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For a solution using the SCIP simplex solver in Google <a href="https://developers.google.com/optimization/lp">OR-Tools</a>, see <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietOrTools.groovy">DietOrTools.groovy</a></p>
+</li>
+<li>
+<p>For a solution showing Groovy support within <a href="https://documentation.sas.com/doc/en/pgmsascdc/9.4_3.5/proc/p1x8agymll9gten1ocziihptcjzj.htm">SAS</a>, see <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietGroovy.sas">DietGroovy.sas</a></p>
+</li>
+<li>
+<p>For a solution using the LP solver in <a href="https://www.ojalgo.org/">ojAlgo</a>, see <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietOjalgo.groovy">DietOjalgo.groovy</a></p>
+</li>
+<li>
+<p>For a solution using the <a href="https://choco-solver.org/">Choco</a> constraint programming solver, see <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietChocoInt.groovy">DietChocoInt.groovy</a> for a solution using scaled integers, and <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietChocoReal.groovy">DietChocoReal.groovy</a> for a solution with real numbers using Ibex integration</p>
+</li>
+<li>
+<p>For a solution using the <a href="https://github.com/radsz/jacop">JaCoP</a> constraint programming solver, see <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietJacopInt.groovy">DietJacopInt.groovy</a> for a solution using scaled integers, and <a href="https://github.com/paulk-asert/groovy-constraint-programming/blob/master/subprojects/Diet/src/main/groovy/DietJacopIntKnapsack.groovy">DietJacopIntKnapsack.groovy</a> for a solution utilizing a Knapsack constraint</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_optaplanner_or_timefold">Using OptaPlanner or Timefold</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@PlanningEntity
+@ToString(includePackage = false)
+class Food {
+    String name
+    @PlanningVariable(valueRangeProviderRefs = "amount")
+    Integer amount // times 100
+    double cost, protein, fat, carbs, calories
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@PlanningSolution
+class DietSolution {
+    @PlanningEntityCollectionProperty
+    List&lt;Food&gt; foods
+
+    @ValueRangeProvider(id = "amount")
+    CountableValueRange&lt;Integer&gt; getAmount() {
+        ValueRangeFactory.createIntValueRange(0, 200, 5)
+    }
+
+    @PlanningScore
+    HardSoftScore score
+
+    void display() {
+        foods.eachWithIndex { f, idx -&gt;
+            var emoji = ['🍞', '🥛', '🧀', '🥔', '🐟', '🍶']
+            println "${emoji[idx]} $f.name: ${f.amount / 100}"
+        }
+        for (name in ['fat', 'carbs', 'protein', 'calories', 'cost']) {
+            var total = foods.sum{ f -&gt; f."$name" * f.amount / 100 }
+            printf "Total %s: %.2f%n", name, total
+        }
+        println "Score: $score"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class DietConstraintProvider implements ConstraintProvider {
+    @Override
+    Constraint[] defineConstraints(ConstraintFactory factory) {
+        new Constraint[]{
+                maxField(factory, 'protein', 10),
+                minField(factory, 'fat', 8),
+                minField(factory, 'carbs', 10),
+                minField(factory, 'calories', 300),
+                minFood(factory, 'Fish', 50),
+                maxFood(factory, 'Milk', 100),
+                minCost(factory),
+        }
+    }
+
+    private static int amountOf(Food f, String name) {
+        (f."$name" * f.amount).toInteger()
+    }
+
+    private static Constraint minField(ConstraintFactory factory, String fieldName, double minAmount) {
+        ToIntFunction&lt;Food&gt; amount = f -&gt; amountOf(f, fieldName)
+        factory.forEach(Food)
+                .groupBy(sum(amount))
+                .filter(fs -&gt; fs &lt; minAmount * 100)
+                .penalize(ONE_HARD)
+                .asConstraint("Min $fieldName")
+    }
+
+    private static Constraint maxField(ConstraintFactory factory, String fieldName, double maxAmount) {
+        ToIntFunction&lt;Food&gt; amount = f -&gt; amountOf(f, fieldName)
+        factory.forEach(Food)
+                .groupBy(sum(amount))
+                .filter(fs -&gt; fs &gt; maxAmount * 100)
+                .penalize(ONE_HARD)
+                .asConstraint("Max $fieldName")
+    }
+
+    private static Constraint minFood(ConstraintFactory factory, String foodName, double minAmount) {
+        factory.forEach(Food)
+                .filter(f -&gt; f.name == foodName &amp;&amp; f.amount &lt; minAmount)
+                .penalize(ONE_HARD)
+                .asConstraint("Min $foodName")
+    }
+
+    private static Constraint maxFood(ConstraintFactory factory, String foodName, double maxAmount) {
+        factory.forEach(Food)
+                .filter(f -&gt; f.name == foodName &amp;&amp; f.amount &gt; maxAmount)
+                .penalize(ONE_HARD)
+                .asConstraint("Max $foodName")
+    }
+
+    private static ToIntFunction&lt;Food&gt; totalCost = f -&gt; (f.cost * f.amount).toInteger()
+
+    private static Constraint minCost(ConstraintFactory factory) {
+        factory.forEach(Food)
+                .filter(f -&gt; f.amount &gt; 0)
+                .groupBy(sum(totalCost))
+                .penalize(ONE_SOFT, fs -&gt; fs &gt;&gt; 2)
+                .asConstraint('Min cost')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def unsolved = new DietSolution(foods: [
+    new Food(name:  'Bread', cost:  2.0, protein: 4.0, fat: 1.0, carbs: 15.0, calories:  90),
+    new Food(name:   'Milk', cost:  3.5, protein: 8.0, fat: 5.0, carbs: 11.7, calories: 120),
+    new Food(name: 'Cheese', cost:  8.0, protein: 7.0, fat: 9.0, carbs:  0.4, calories: 106),
+    new Food(name: 'Potato', cost:  1.5, protein: 1.3, fat: 0.1, carbs: 22.6, calories:  97),
+    new Food(name:   'Fish', cost: 11.0, protein: 8.0, fat: 7.0, carbs:  0.0, calories: 130),
+    new Food(name: 'Yogurt', cost:  1.0, protein: 9.2, fat: 1.0, carbs: 17.0, calories: 180)
+])
+
+def construction = new ConstructionHeuristicPhaseConfig(constructionHeuristicType: FIRST_FIT)
+def moveSelector = new UnionMoveSelectorConfig([
+        new ChangeMoveSelectorConfig(),
+        new SwapMoveSelectorConfig()
+])
+def localSearch = new LocalSearchPhaseConfig(localSearchType: VARIABLE_NEIGHBORHOOD_DESCENT,
+        moveSelectorConfig: moveSelector)
+def config = new SolverConfig()
+        .withSolutionClass(DietSolution)
+        .withEntityClasses(Food)
+        .withConstraintProviderClass(DietConstraintProvider)
+        .withPhases(construction, localSearch)
+        .withTerminationSpentLimit(Duration.ofSeconds(10))
+
+def factory = SolverFactory.create(config)
+def solver = factory.buildSolver()
+def solved = solver.solve(unsolved)
+solved.display()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has this output when run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>08:17:05.202 [main] INFO  a.t.s.core.impl.solver.DefaultSolver - Solving started: time spent (25), best score (-6init/0hard/0soft), environment mode (REPRODUCIBLE), move thread count (NONE), random (JDK with seed 0).
+08:17:05.385 [main] INFO  a.t.s.c.i.c.DefaultConstructionHeuristicPhase - Construction Heuristic phase (0) ended: time spent (210), best score (-1hard/-521soft), score calculation speed (1355/sec), step total (6).
+08:17:15.175 [main] INFO  a.t.s.c.i.l.DefaultLocalSearchPhase - Local Search phase (1) ended: time spent (10000), best score (-1hard/-261soft), score calculation speed (155967/sec), step total (1030).
+08:17:15.176 [main] INFO  a.t.s.core.impl.solver.DefaultSolver - Solving ended: time spent (10000), best score (-1hard/-261soft), score calculation speed (152685/sec), phase total (2), environment mode (REPRODUCIBLE), move thread count (NONE).
+🍞 Bread: 0.6
+🥛 Milk: 0.6
+🧀 Cheese: 0
+🥔 Potato: 0.4
+🐟 Fish: 0.5
+🍶 Yogurt: 1.05
+Total fat: 8.19
+Total carbs: 42.91
+Total protein: 21.38
+Total calories: 418.80
+Total cost: 10.45
+Score: -1hard/-261soft</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has this output when run:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>🍞 Bread: 0
+🥛 Milk: 0
+🧀 Cheese: 0.5
+🥔 Potato: 1.9
+🐟 Fish: 0.5
+🍶 Yogurt: 0
+Total fat: 8.19
+Total carbs: 43.14
+Total protein: 9.97
+Total calories: 302.30
+Total cost: 12.35
+Score: 0hard/-308soft</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://developers.google.com/optimization/lp">OR-Tools</a> linear optimization</p>
+</li>
+<li>
+<p>A related but more elaborate example based on the <a href="https://developers.google.com/optimization/lp/stigler_diet">Stigler Diet</a> problem using Google OR-Tools</p>
+</li>
+<li>
+<p>A Python <a href="https://www.kaggle.com/code/nbuhagiar/diet-optimization-with-or-tools">Diet example</a> also using Google OR-Tools</p>
+</li>
+<li>
+<p>GitHub repos containing sample code: <a href="https://github.com/paulk-asert/groovy-constraint-programming/tree/master/subprojects/Diet">Diet</a> <a href="https://github.com/paulk-asert/groovy-constraint-programming/tree/master/subprojects/DietOptaPlanner">DietOptaPlanner</a> <a href="https://github.com/paulk-asert/groovy-constraint-programming/tree/master/subprojects/DietTimeflow">DietTimeflow</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at using Groovy and a few linear optimization
+libraries to solve a diet case study.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
