@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, optaplanner, timefold, ojalgo, jacop, or-tools, choco, commons math, hipparchus, linear programming'/><meta name='description' content='This post looks at solving simple optimization problems using Groovy.'/><title>The Apache Groovy programming language - Blogs - Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, optaplanner, timefold, ojalgo, jacop, or-tools, choco, commons math, hipparchus, linear programming'/><meta name='description' content='This post looks at solving simple optimization problems using Groovy.'/><title>The Apache Groovy programming language - Blogs - Solving simple optimization problems with Groovy using Commons Math, Hipparchus, OptaPlanner, and Timefold</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_case_study_diet_optimization' class='anchor-link'>Case Study: Diet Optimization</a></li><li><a href='#_solving_with_a_spreadsheet_solver' class='anchor-link'>Solving with a spreadsheet solver</a></li><li><a href='#_using_apache_commons_math_or_hipparchus' class='anchor-link'>Using Apache Commons Math or Hipparchus</a></li><li><a href='#_using_optaplanner_or_timefold' class='anchor-link'>Using OptaPlanner or Timefold</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./solving-cryptarithmetic-puzzles-with-groovy'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving simple optimization problems with Groovy using Commons Math, Choco, JaCoP, Ojalgo, OptaPlanner, Timefold, and OR-Tools</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-03-10 09:45PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Solving simple optimization problems with Groovy using Commons Math, Hipparchus, OptaPlanner, and Timefold</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_case_study_diet_optimization' class='anchor-link'>Case Study: Diet Optimization</a></li><li><a href='#_solving_with_a_spreadsheet_solver' class='anchor-link'>Solving with a spreadsheet solver</a></li><li><a href='#_using_apache_commons_math_or_hipparchus' class='anchor-link'>Using Apache Commons Math or Hipparchus</a></li><li><a href='#_using_optaplanner_or_timefold' class='anchor-link'>Using OptaPlanner or Timefold</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./solving-cryptarithmetic-puzzles-with-groovy'>Solving cryptarithmetic puzzles with Groovy and constraint programming using Choco, JaCoP, and OR-Tools</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Solving simple optimization problems with Groovy using Commons Math, Hipparchus, OptaPlanner, and Timefold</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-03-14 11:45AM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -341,7 +341,7 @@ if you don&#8217;t mind having a dependency that isn&#8217;t backed by the ASF.<
 </div>
 <div class="paragraph">
 <p>If you don&#8217;t like those options, there are many more, here are a few
-with Groovy solutions in the same repo:</p>
+with Groovy solutions in the same repo as the above examples:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -367,6 +367,23 @@ with Groovy solutions in the same repo:</p>
 <div class="sect1">
 <h2 id="_using_optaplanner_or_timefold">Using OptaPlanner or Timefold</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>OptaPlanner is an optimization library combining optimization algorithms with constraint solving.
+For most of the last 10 years the library was developed under Red Hat&#8217;s guidance.
+In the last 12 months, the project and other related projects
+were donated to the <a href="https://www.apache.org/">ASF</a> as part of <a href="https://kie.apache.org/">Apache KIE</a>.
+More recently, the library was forked as [Timefold].</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use Timefold, but the code in the examples remains the same for both libraries.
+Just the Maven coordinate of the library changes along with the associated class imports.
+At this stage, it isn&#8217;t clear how the two projects will evolve over time.</p>
+</div>
+<div class="paragraph">
+<p>One of the claims of the Timefold project is that it has a lighter dependency footprint.
+This can be confirmed by running the <code>printRuntimeClasspath</code> task in the associated builds.
+Timefold has 20 dependant jars compared with OptaPlanner&#8217;s 55 jars.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">@PlanningEntity
