@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='equals, equality, scala, type checking'/><meta name='description' content='This post looks at how Groovy could support multiversal equality.'/><title>The Apache Groovy programming language - Blogs - Groovy and Multiversal Equality</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy and Multiversal Equality</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_book_case_study' class='anchor-link'>Book Case Study</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy and Multiversal Equality</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-04-24 03:00PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Scala 3, an opt-in feature called
+<a href="https://docs.scala-lang.org/scala3/reference/contextual/multiversal-equality.html"><em>multiversal equality</em></a>
+was introduced. Earlier versions of Scala supported <em>universal equality</em>,
+where any two objects can be compared for equality.
+Universal equality makes a lot of sense when you understand
+that Scala&#8217;s (<code>==</code> and <code>!=</code>) equality operators, like Groovy&#8217;s,
+is based on Java&#8217;s <code>equals</code> method and that method takes
+any <code>Object</code> as its argument.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+Java folks might be more familiar with those operators
+when used with objects as being used for reference equality.
+Groovy, like Scala and Kotlin, reserves those operators for
+structural equality (since that is what we are interested in
+most of the time) and has identity operators (<code>===</code> and <code>!==</code>)
+for referential equality (pointing to the same instance).
+</div>
+</div>
+<div class="paragraph">
+<p>The Scala documentation has an online book which gives
+<a href="https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html">further details</a>
+on the benefits of having multiversal equality as an option.
+Let&#8217;s look at a concrete example inspired by one of their code snippets.
+Consider the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var blue = getBlue() // returns Color.BLUE
+var pink = Color.PINK
+assert blue != pink</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, suppose the <code>getBlue</code> method is refactored to use a different color
+library, and now returns <code>RGBColor.BLUE</code>.
+In our case, the assertion will still fail, as before, but we aren&#8217;t
+really testing what we thought. In general, the behavior of our
+code might change in subtle or catastrophic ways, and we may not
+find out until runtime. Multiversal equality takes a stricter
+stance on the types which can be checked for equality and
+would pick up the issue in our above example at compilation time.
+With multiversal equality enabled, you might see an error like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Invalid equality check: com.threed.jpct.RGBColor != java.awt.Color
+ @ line 3, column 8.
+       assert blue != pink
+              ^</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at the <code>Book</code> case study from the online Scala
+<a href="https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html">documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_book_case_study">Book Case Study</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The case study involves an online bookstore which sells
+physical printed books, and audiobooks. We&#8217;ll start without
+considering multiversal equality, and then look at how that
+could be added later in Groovy.</p>
+</div>
+<div class="paragraph">
+<p>As a first attempt, we might define a <code>Book</code> trait containing the
+common properties:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait Book {
+    String title
+    String author
+    int year
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A domain class for printed books:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Immutable(allProperties = true)
+class PrintedBook implements Book {
+    int pages
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Immutable</code> annotation is a meta-annotation which conceptually
+expands into the <code>@EqualsAndHashCode</code> annotation (and others).
+<code>@EqualsAndHashCode</code> is an AST transform which instructs the
+compiler to inject an <code>equals</code> method into our code.</p>
+</div>
+<div class="paragraph">
+<p>In a similar way, we&#8217;ll create a domain class for audiobooks:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Immutable(allProperties = true)
+class AudioBook implements Book {
+    int lengthInMinutes
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this stage, we can create and compare audio and printed books,
+but they will always be non-equal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var pBook = new PrintedBook(328, "1984", "George Orwell", 1949)
+var aBook = new AudioBook(682, "1984", "George Orwell", 2006)
+assert pBook != aBook
+assert aBook != pBook</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The generated <code>equals</code> method in our code will always return false
+when comparing objects from other classes.
+It turns out that writing a correct equality method can be
+<a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java">surprisingly difficult</a>.
+As that article alludes to, a common best practice when wanting to
+compare objects within a class hierarchy is to write a <code>canEqual</code>
+method. We also capture within our trait&#8217;s <code>equals</code> method, our definition of
+what equals should mean for different subclasses. In our case,
+if the <code>title</code> and <code>author</code> are the same, they are deemed equal.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait Book {
+    String title
+    String author
+    int year
+
+    boolean canEqual(Object other) {
+        other in Book
+    }
+
+    boolean equals(Object other) {
+        if (other in Book) {
+            return other.canEqual(this)
+                &amp;&amp; other.title == title
+                &amp;&amp; other.author == author
+        }
+        false
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When comparing different subclasses of <code>Book</code>, we&#8217;d like to use
+the <code>equals</code> logic from the trait. When comparing two printed books
+or two audiobooks, we might want normal structural equality to apply.
+This turns out to be not too hard to do.</p>
+</div>
+<div class="paragraph">
+<p>If the <code>@EqualsAndHashCode</code> transform finds an explicit <code>equals</code>
+method, it generates instead a private <code>_equals</code> method containing
+the normal structural equality logic which you are free to use.
+Let&#8217;s do that for the <code>PrintedBook</code> class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Immutable(allProperties = true)
+class PrintedBook implements Book {
+    int pages
+
+    boolean equals(other) {
+        switch (other) {
+            case PrintedBook -&gt; this._equals(other)
+            case AudioBook -&gt; Book.super.equals(other)
+            default -&gt; false
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With these changes in place, we can change our first assertion
+from above to now show equality of the audiobook to the printed book:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert pBook == aBook
+assert aBook != pBook</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The second assertion remains unchanged since we haven&#8217;t at this
+stage changed the <code>equals</code> method in <code>AudioBook</code>. Modifying <code>AudioBook</code>
+in this way, and making the relationship
+symmetrical would be the next logical step, but we&#8217;ll leave the example
+as is for now to match the Scala example.</p>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t yet currently support multiversal equality as a standard feature,
+but let&#8217;s look at how we could add it. We&#8217;ll first consider an ad-hoc approach.</p>
+</div>
+<div class="paragraph">
+<p>Groovy supports type checking extensions. It has a DSL for writing snippets
+that augment static type checking. Checks on binary operators are not common
+and don&#8217;t currently have a very compact DSL syntax, but it isn&#8217;t hard to
+do by making use of the <code>afterVisitMethod</code> hook and using a special <code>CheckingVisitor</code>
+helper class. In this case, we&#8217;ll  write our extension in a file called
+<code>strictEqualsButRelaxedForPrintedBook.groovy</code>. It looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="title">strictEqualsButRelaxedForPrintedBook.groovy</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">afterVisitMethod { method -&gt;
+    method.code.visit(new CheckingVisitor() {
+        @Override
+        void visitBinaryExpression(BinaryExpression be) {
+            if (be.operation.type !in [Types.COMPARE_EQUAL, Types.COMPARE_NOT_EQUAL]) {
+                return
+            }
+            lhsType = getType(be.leftExpression)
+            rhsType = getType(be.rightExpression)
+            if (lhsType != rhsType &amp;&amp;
+                lhsType != classNodeFor(PrintedBook) &amp;&amp;
+                rhsType != classNodeFor(AudioBook)) {
+                addStaticTypeError("Invalid equality check: $lhsType.name != $rhsType.name", be)
+                handled = true
+            }
+        }
+    })
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Don&#8217;t worry if you don&#8217;t understand this code at first glance.
+Users familiar with writing their own AST transforms will recognise parts of it.
+To fully understand it, you need to understand the type checking extension DSL.
+The good news is that, you don&#8217;t need to understand how it works, just what it does.</p>
+</div>
+<div class="paragraph">
+<p>This code turns on strict equality. If the types on the left and right hand sides
+of the <code>==</code> or <code>!=</code> operators are different, compilation will fail.
+The only exception is when a <code>PrintedBook</code> is compared to an <code>AudioBook</code>,
+since we hard-coded that in our ad-hoc extension.</p>
+</div>
+<div class="paragraph">
+<p>Using it is fairly simple. Simply declare the extension on any method or class:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'strictEqualsButRelaxedForPrintedBook.groovy')
+def method() {
+    var pBook = new PrintedBook(328, "1984", "George Orwell", 1949)
+    var aBook = new AudioBook(682, "1984", "George Orwell", 2006)
+    assert pBook == aBook
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This compiles and executes successfully.
+Attempting to use other types gives compilation errors:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert aBook != pBook // [Static type checking] - Invalid equality check: AudioBook != PrintedBook
+assert 3 != 'foo' // [Static type checking] - Invalid equality check: int != java.lang.String
+assert 3 == 3f // [Static type checking] - Invalid equality check: int != float</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As coded in our extension, even math primitives comparisons are strict.
+The Scala compiler has numerous predefined <code>CanEqual</code> instances to allow comparison between
+various types including between primitives, and between primitives and their wrapper classes.</p>
+</div>
+<div class="paragraph">
+<p>If we compare this solution so far with the Scala example,
+the Scala example uses a more general approach.
+Let&#8217;s make our example slightly more general, although still not production ready.</p>
+</div>
+<div class="paragraph">
+<p>First we&#8217;ll create a marker interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">interface CanEqual { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A production version of this feature would probably also add generics information
+to this definition, but we&#8217;ll discuss that later.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s change our trait into an abstract class and even though our <code>year</code> property
+is common, let&#8217;s move it down into the audio and printed book classes.
+Now we can use the standard generated <code>equals</code> method. By default, the method
+also knows about the <code>canEqual</code> pattern and also generates that method and makes
+use of it in the generated <code>equals</code> logic.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@EqualsAndHashCode
+@TupleConstructor
+abstract class Book {
+    final String title
+    final String author
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now let&#8217;s create our <code>PrintedBook</code> class extending from our abstract class and
+implementing our marker interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@EqualsAndHashCode(callSuper = true, useCanEqual = false)
+@TupleConstructor(callSuper = true, includeSuperProperties = true)
+class PrintedBook extends Book implements CanEqual {
+    final int pages
+    final int year
+
+    boolean equals(other) {
+        other in PrintedBook ? _equals(other) : super.equals(other)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We do the same for <code>AudioBook</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@EqualsAndHashCode(callSuper = true, useCanEqual = false)
+@TupleConstructor(callSuper = true, includeSuperProperties = true)
+class AudioBook extends Book implements CanEqual {
+    final int lengthInMinutes
+    final int year
+
+    boolean equals(other) {
+        other in AudioBook ? _equals(other) : super.equals(other)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we alter our type checking extension to be aware of the <code>CanEqual</code> marker
+interface. Strict equality is turned on in all cases except where both
+types implement our marker interface:</p>
+</div>
+<div class="listingblock">
+<div class="title">canEquals.groovy</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">afterVisitMethod { method -&gt;
+    method.code.visit(new CheckingVisitor() {
+        @Override
+        void visitBinaryExpression(BinaryExpression be) {
+            if (be.operation.type !in [Types.COMPARE_EQUAL, Types.COMPARE_NOT_EQUAL]) {
+                return
+            }
+            var lhsType = getType(be.leftExpression)
+            var rhsType = getType(be.rightExpression)
+            if ([lhsType, rhsType].every { type -&gt;
+                implementsInterfaceOrIsSubclassOf(type, classNodeFor(CanEqual))
+            }) {
+                return
+            }
+            if (lhsType != rhsType) {
+                addStaticTypeError("Invalid equality check: $lhsType.name != $rhsType.name", be)
+                handled = true
+            }
+        }
+    })
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We use it in a similar way as before, but now comparisons are symmetric:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'canEquals.groovy')
+def method() {
+    var pBook = new PrintedBook("1984", "George Orwell", 328, 1949)
+    var aBook = new AudioBook("1984", "George Orwell", 682, 2006)
+    assert pBook == aBook
+    assert aBook == pBook
+    var reprint = new PrintedBook("1984", "George Orwell", 328, 1961)
+    assert pBook != reprint
+    assert aBook == reprint
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, compilation will fail when comparing any types which don&#8217;t implement
+the marker interface. This works nicely but still isn&#8217;t perfect.
+If we had two hierarchies and our classes in both hierarchies implemented
+our marker interface, comparing objects across the two hierarchies
+would compile but always return false.</p>
+</div>
+<div class="paragraph">
+<p>The obvious way around this would be to add generics. We could for instance
+add generics to <code>CanEqual</code> and then <code>PrintedBook</code> might implement <code>CanEqual&lt;Book&gt;</code>
+or we could follow Scala&#8217;s lead and supply
+<a href="https://docs.scala-lang.org/scala3/reference/contextual/multiversal-equality.html#why-two-type-parameters-1">two generic parameters</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://docs.scala-lang.org/scala3/reference/contextual/multiversal-equality.html" class="bare">https://docs.scala-lang.org/scala3/reference/contextual/multiversal-equality.html</a></p>
+</li>
+<li>
+<p><a href="https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html" class="bare">https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html</a></p>
+</li>
+<li>
+<p><a href="https://www.artima.com/articles/how-to-write-an-equality-method-in-java" class="bare">https://www.artima.com/articles/how-to-write-an-equality-method-in-java</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-multiversal-equality" class="bare">https://github.com/paulk-asert/groovy-multiversal-equality</a> (source code)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>At this stage, Groovy isn&#8217;t planning to have multiversal equality as a standard feature
+but if you think you would find it useful, do
+<a href="https://groovy-lang.org/mailing-lists.html">let us know</a>!</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
