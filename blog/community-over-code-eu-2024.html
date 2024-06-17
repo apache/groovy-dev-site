@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, asf, apachecon, communityovercode'/><meta name='description' content='This post looks at the ASF Community Over Code EU conference in Bratislava, Slovakia, June 3-5 2024, with a particular focus on the Groovy Track.'/><title>The Apache Groovy programming language - Blogs - Community Over Code (Europe) 2024</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Community Over Code (Europe) 2024</a></li><li><a href='#_the_conference_venue_and_host_city' class='anchor-link'>The Conference, Venue, and Host city</a></li><li><a href='#_highlights_from_the_groovy_bof_and_groovy_track' class='anchor-link'>Highlights from the Groovy BoF and Groovy Track</a></li><li><a href='#_posters' class='anchor-link'>Posters</a></li><li><a href='#_other_information' class='anchor-link'>Other information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./community-over-code-na-2023'>Community Over Code (North America) 2023</a></li><li><a href='./apache-groovy-2022-year-in'>Apache Groovy 2022 Year In Review</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Community Over Code (Europe) 2024</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-06-17 05:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This year&#8217;s European edition of the ASF conference, <a href="https://communityovercode.org/">Community Over Code</a>,
+featured three in-person days of sessions (June 3-5) at the Halifax Convention Centre, including a Groovy track on the last day.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The presentation slides and audio/video (where available) are still being added onto the conference site.
+If additional material becomes available, this post will be updated with links to the additional content.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>This post gives a short trip report on the conference mostly focussed on the Groovy track.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_conference_venue_and_host_city">The Conference, Venue, and Host city</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The conference was hosted at the Radisson Blu Carlton in Bratislava, Slovakia. The facilities were great,
+and it was a great city to visit.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://eu.communityovercode.org/images/blog/images-bratislava1.jpg" alt="images bratislava1" width="47%"></span>
+<span class="image"><img src="https://photos.apachecon.com/_data/i/upload/2024/06/05/20240605134031-d3953d86-xx.jpg" alt="20240605134031 d3953d86 xx" width="42%"></span>
+<span class="image"><img src="https://photos.apachecon.com/_data/i/upload/2024/06/10/20240610202025-1ac29b1e-xx.jpg" alt="20240610202025 1ac29b1e xx" width="44.4%"></span>
+<span class="image"><img src="https://photos.apachecon.com/_data/i/upload/2024/06/05/20240605081228-926eecf0-xx.jpg" alt="20240605081228 926eecf0 xx" width="44.4%"></span>
+<span class="image"><img src="img/coceu2024_tac_dinner.jpg" alt="coceu2024 tac dinner" width="55%"></span>
+<span class="image"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/20/20231020033313-d56c0136-me.jpg" alt="stickers" width="33%"></span></p>
+</div>
+<div class="paragraph">
+<p>Kudos to all involved for making the event a fruitful and rewarding one!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_highlights_from_the_groovy_bof_and_groovy_track">Highlights from the Groovy BoF and Groovy Track</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We had a very engaging Birds-of-a-Feather (BoF) session with various users of the
+Groovy programming language including a large contingent from the <a href="https://ofbiz.apache.org/">Apache OFBiz</a>
+project. We also discussed some of the reasons why Groovy is still a compelling
+language choice in 2024.</p>
+</div>
+<div class="sect2">
+<h3 id="_why_use_groovy_in_2024">Why use Groovy in 2024?</h3>
+<div class="paragraph">
+<p>This talk looked at some of the compelling reasons for using Groovy today.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://speakerdeck.com/paulk/groovy-today"><span class="image"><img src="img/coceu2024_why_groovy.png" alt="first slide of slide deck"></span></a>
+<a href="https://speakerdeck.com/paulk/groovy-today">Why use Groovy in 2024?</a></p>
+</div>
+<div class="paragraph">
+<p>Some highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Groovy&#8217;s 80+ AST transforms allow you to write concise declarative style code.
+As one example, here&#8217;s an example of a deeply immutable <code>Book</code> class with
+additional generated code for comparators (sorting), custom serialization and deserialization,
+and some special JavaBean index handling code:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_transforms.png" alt="AST transform example"></span></p>
+</div>
+</li>
+<li>
+<p>Groovy&#8217;s 2000+ extension methods enrich the Java class libraries with additional
+functionality. As one example, primitive array extensions speed up certain operations
+where you might otherwise use streams:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_primitives.png" alt="performance of primitive int array extension methods"></span></p>
+</div>
+</li>
+<li>
+<p>Groovy&#8217;s operator overloading and extensible tooling greatly simplifies
+use of the libraries and APIs that Java programmers are familiar with.
+Here&#8217;s an example of using Apache Commons Math:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_operator_overloading.png" alt="matrix example"></span></p>
+</div>
+</li>
+<li>
+<p>Groovy has excellent scripting and domain specific language (DSL) support. As one example,
+in about 10 lines of code, you can write a statically-typed DSL for working with Roman
+numerals. Once the DSL is defined, you can use it in scripts like this:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert [LVII + LVII, V * III, V ** II, IV..(V+I), [X, V, I].sort()]
+    == [       cxiv,      xv,     xxv,    iv..vi, [i, v, x]       ]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Invalid roman numerals are detected at compile-time:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_static_roman_numerals.png" alt="error" width="80%"></span></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Check out the <a href="https://speakerdeck.com/paulk/groovy-today">slide deck</a> for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_classifying_iris_flowers_with_groovy_deep_learning_and_graalvm">Classifying Iris flowers with Groovy, Deep Learning, and GraalVM</h3>
+<div class="paragraph">
+<p>This talk looked at the machine language problem of classification using a classic Iris flowers dataset.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://speakerdeck.com/paulk/groovy-iris"><span class="image"><img src="img/coceu2024_iris.png" alt="cover slide for slide deck"></span></a>
+<a href="https://speakerdeck.com/paulk/groovy-iris">Classifying Iris flowers with Groovy, Deep Learning, and GraalVM</a></p>
+</div>
+<div class="paragraph">
+<p>Highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Classification predicts the class of something using models trained
+on measured features given a known class:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris1.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+<li>
+<p>The case study uses a well-known Iris dataset.
+The measured features are sepal width and length, and petal width and length:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris2.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+<li>
+<p>First, a number of classic algorithms for doing classification were examined
+including the Naïve Bayes algorithm, here using the Weka data science library:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris3.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+<li>
+<p>Then neural networks are explained. A potential network for the case study
+is shown here:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris4.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+<li>
+<p>Each node acts like a neuron in the human brain:
+<span class="image"><img src="img/coceu2024_iris5.png" alt="classifiation" width="80%"></span></p>
+</li>
+<li>
+<p>Several libraries for deep learning were discussed including Deep Netts:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris6.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+<li>
+<p>Compiling the script using the Groovy compiler with the <code>--compile-static</code> switch and
+then using GraalVM to build a native image gave a more than 10 times speed increase:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_iris7.png" alt="classifiation" width="80%"></span></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Check out the <a href="https://speakerdeck.com/paulk/groovy-iris">slide deck</a> for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_getting_started_with_the_micronaut_framework">Getting Started with the Micronaut Framework</h3>
+<div class="paragraph">
+<p><a href="https://sergiodelamo.com/">Sergio del Amo</a> gave a talk on
+<a href="https://speakerdeck.com/sdelamo/getting-started-with-the-micronaut-framework">Getting Started with the Micronaut Framework</a>, in particular
+its support for using Groovy when building microservices.
+<a href="https://speakerdeck.com/sdelamo/getting-started-with-the-micronaut-framework"><span class="image"><img src="img/coceu2024_micronaut.png" alt="slide deck first slide"></span></a></p>
+</div>
+<div class="paragraph">
+<p>Highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The speed of Micronaut applications comes from its ahead-of-time approach:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut1.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+<li>
+<p>Micronaut supports a range of runtimes:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut2.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+<li>
+<p>Micronaut supports a range of messaging technologies:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut3.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+<li>
+<p>Micronaut supports a range of persistence technologies:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut4.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+<li>
+<p>Micronaut supports a range of view technologies:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut5.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+<li>
+<p>You can create Microservices applications using Micronaut launch:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_micronaut_groovy_spock.png" alt="Using Micronaut Launch"></span></p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Check out the <a href="https://speakerdeck.com/sdelamo/getting-started-with-the-micronaut-framework">slide deck</a> for more information.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_whiskey_clustering_with_apache_projectsgroovy_commons_csv_commons_math_ignite_spark_wayang_beam_and_flink">Whiskey Clustering with Apache Projects:Groovy, Commons CSV, Commons Math, Ignite, Spark, Wayang, Beam, and Flink</h3>
+<div class="paragraph">
+<p>This talk looked at the machine language problem of clustering using a well-known whiskey flavor profiles dataset.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://speakerdeck.com/paulk/groovy-whiskey"><span class="image"><img src="img/coceu2024_whiskey.png" alt="cover slide for slide deck"></span></a>
+<a href="https://speakerdeck.com/paulk/groovy-whiskey">Whiskey Clustering with Apache Projects:Groovy, Commons CSV, Commons Math, Ignite, Spark, Wayang, Beam, &amp; Flink</a></p>
+</div>
+<div class="paragraph">
+<p>Highlights:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The case study looked at how to cluster 86 single malt scotch whiskies based on rankings of 12 flavor categories:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering0.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+</li>
+<li>
+<p>There are different algorithms that can be used to do the clustering.
+K-Means clustering was the key algorithm covered:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering1.png" alt="The k-means algorithm"></span></p>
+</div>
+</li>
+<li>
+<p>The talk covers using vanilla data science libraries
+including Apache Commons Math to solve this problem, then looks at
+how you might scale up the problem using a range of Apache technologies.
+The first technology considered was Apache Ignite. First we read in the data:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering2.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+</li>
+<li>
+<p>Then we use Ignite&#8217;s distributed clustering libraries to find the centroids:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering3.png" alt="Whiskey flavour profiles"></span></p>
+</div>
+</li>
+<li>
+<p>Various options to tweak the algorithm and various
+ways to visualize the results were examined:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/Clustering4.png" alt="Whiskey flavour profiles with Ignite"></span></p>
+</div>
+</li>
+<li>
+<p>The same case study was also done using Spark:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_whiskey1.png" alt="Whiskey flavour profiles with Spark"></span></p>
+</div>
+</li>
+<li>
+<p>The same case study was also done using Wayang:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_whiskey2.png" alt="Whiskey flavour profiles with Wayang"></span></p>
+</div>
+</li>
+<li>
+<p>The same case study was also done using Beam (Python-style version shown here):</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_whiskey3.png" alt="Whiskey flavour profiles with Beam"></span></p>
+</div>
+</li>
+<li>
+<p>The same case study was also done using Flink:</p>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_whiskey4.png" alt="Whiskey flavour profiles with Flink"></span></p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_posters">Posters</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Community over Code EU also featured a dedicated area for poster sessions.
+Corridor conversations are a key part of any ASF conference.
+The posters provided a complimentary way to trigger conversations
+as well as to learn about a range of topics if the folks who might know
+all about those topics aren&#8217;t in the corridor at the same time as you.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/coceu2024_posters.jpg" alt="Posters" width="51%"></span>
+<a href="https://github.com/apache/apachecon-eu/blob/main/static/posters/CoCEU_WhyGroovyToday.pdf"><span class="image"><img src="img/coceu2024_groovy_poster.jpg" alt="Why use Groovy in 2024? Poster" width="35%"></span></a></p>
+</div>
+<div class="paragraph">
+<p>Check out the Groovy <a href="https://github.com/apache/apachecon-eu/blob/main/static/posters/CoCEU_WhyGroovyToday.pdf">poster</a>!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_other_information">Other information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>See also:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://photos.apachecon.com/index.php?/category/38">Additional photos</a> (may be added to over time).</p>
+</li>
+<li>
+<p><a href="https://eu.communityovercode.org/program/">The official program</a> includes all tracks and will include
+links to the slides of the talks if/when available.</p>
+</li>
+<li>
+<p>Upcoming Community Over Code conferences: <a href="https://asia.communityovercode.org/">C Over C Asia 2024</a>
+<a href="https://communityovercode.org/">C Over C NA 2024</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
