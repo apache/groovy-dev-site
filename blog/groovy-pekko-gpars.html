@@ -53,12 +53,11 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and GPars actors with Groovy</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_gpars_implementation_in_groovy' class='anchor-link'>A GPars implementation in Groovy</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and GPars actors with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2023-07-26 03:02PM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and GPars actors with Groovy</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_gpars_implementation_in_groovy' class='anchor-link'>A GPars implementation in Groovy</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and GPars actors with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2024-06-25 11:59AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekko logo" width="100"></span>
-<a href="https://pekko.apache.org/">Apache Pekko</a> is a project undergoing <a href="https://incubator.apache.org/">incubation</a> at the Apache Software Foundation.
-It is an Apache licensed fork of the Akka project (based on Akka version 2.6.x) and provides a
+<a href="https://pekko.apache.org/">Apache Pekko</a> is an Apache-licensed fork of the Akka project (based on Akka version 2.6.x) and provides a
 framework for building applications that are concurrent, distributed, resilient and elastic.
 Pekko provides high-level abstractions for concurrency based on actors,
 as well as additional libraries for persistence, streams, HTTP, and more.
@@ -117,7 +116,7 @@ to tell it the maximum number of times to echo the message before stopping.</p>
 <h2 id="_a_pekko_implementation_in_groovy">A Pekko implementation in Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This example uses Groovy 4.0.13 and Pekko 1.0.1.
+<p>This example uses Groovy 4.0.21 and Pekko 1.0.3.
 It was tested with JDK 11 and 17.</p>
 </div>
 <div class="paragraph">
@@ -132,7 +131,7 @@ simplify the Groovy code in numerous ways but that is a topic for another day.</
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">class HelloWorld extends AbstractBehavior&lt;HelloWorld.Greet&gt; {
+<pre class="prettyprint highlight"><code data-lang="groovy">class HelloWorld extends AbstractBehavior&lt;Greet&gt; {
 
     static record Greet(String whom, ActorRef&lt;Greeted&gt; replyTo) {}
     static record Greeted(String whom, ActorRef&lt;Greet&gt; from) {}
@@ -262,18 +261,18 @@ system.tell(new HelloWorldMain.SayHello('Pekko'))</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
-[hello-pekko.actor.default-dispatcher-5] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 1 for World
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 1 for Pekko
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
-[hello-pekko.actor.default-dispatcher-5] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 2 for World
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello World!
-[hello-pekko.actor.default-dispatcher-3] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 3 for World
-[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 2 for Pekko
-[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Hello Pekko!
-[hello-pekko.actor.default-dispatcher-6] INFO org.codehaus.groovy.vmplugin.v8.IndyInterface - Greeting 3 for Pekko
+<pre>[hello-pekko.actor.default-dispatcher-6] INFO pekko.HelloWorld - Hello World!
+[hello-pekko.actor.default-dispatcher-6] INFO pekko.HelloWorld - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-3] INFO pekko.HelloWorldBot - Greeting 1 for Pekko
+[hello-pekko.actor.default-dispatcher-5] INFO pekko.HelloWorldBot - Greeting 1 for World
+[hello-pekko.actor.default-dispatcher-6] INFO pekko.HelloWorld - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-6] INFO pekko.HelloWorld - Hello World!
+[hello-pekko.actor.default-dispatcher-5] INFO pekko.HelloWorldBot - Greeting 2 for Pekko
+[hello-pekko.actor.default-dispatcher-3] INFO pekko.HelloWorldBot - Greeting 2 for World
+[hello-pekko.actor.default-dispatcher-5] INFO pekko.HelloWorld - Hello Pekko!
+[hello-pekko.actor.default-dispatcher-5] INFO pekko.HelloWorld - Hello World!
+[hello-pekko.actor.default-dispatcher-3] INFO pekko.HelloWorldBot - Greeting 3 for Pekko
+[hello-pekko.actor.default-dispatcher-5] INFO pekko.HelloWorldBot - Greeting 3 for World
 [hello-pekko.actor.default-dispatcher-6] INFO org.apache.pekko.actor.CoordinatedShutdown - Running CoordinatedShutdown with reason [ActorSystemTerminateReason]</pre>
 </div>
 </div>
@@ -283,8 +282,8 @@ system.tell(new HelloWorldMain.SayHello('Pekko'))</code></pre>
 <h2 id="_a_gpars_implementation_in_groovy">A GPars implementation in Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This example uses Groovy 4.0.13 and GPars 1.2.1.
-It was tested with JDK 8, 11 and 17.</p>
+<p>This example uses Groovy 4.0.21 and GPars 1.2.1.
+It was tested with JDK 8, 11, 17 and 21.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll follow the same conventions for strongly typed messages in our GPars example.
@@ -458,7 +457,8 @@ when using Groovy&#8217;s static nature.</p>
 <div class="paragraph">
 <p><strong>17/Jul/2023</strong>: Initial version.<br>
 <strong>18/Jul/2023</strong>: Add discussion about type-safe messages.<br>
-<strong>26/Jul/2023</strong>: Update to Pekko 1.0.1.</p>
+<strong>26/Jul/2023</strong>: Update to Pekko 1.0.1.<br>
+<strong>25/Jun/2024</strong>: Update to Pekko 1.0.3.</p>
 </div>
 </div>
 </div>
