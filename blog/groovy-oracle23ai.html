@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='oracle, jdbc, groovy, classification'/><meta name='description' content='This post looks at using the Oracle 23ai Vector data type with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</a></li><li><a href='#_the_dataset' class='anchor-link'>The dataset</a></li><li><a href='#_the_database_solution' class='anchor-link'>The database solution</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-06-30 11:21PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="200"></span>
+A classic data science <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">dataset</a> captures flower characteristics of Iris flowers.
+It captures the <em>width</em> and <em>length</em> of the <em>sepals</em> and <em>petals</em> for three <em>species</em> (<a href="https://en.wikipedia.org/wiki/Iris_setosa">Setosa</a>, <a href="https://en.wikipedia.org/wiki/Iris_versicolor">Versicolor</a>, and <a href="https://en.wikipedia.org/wiki/Iris_virginica">Virginica</a>).</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Iris">Iris project</a> in the <a href="https://github.com/paulk-asert/groovy-data-science">groovy-data-science repo</a> is dedicated to this example.
+It includes a number of Groovy scripts and a Jupyter/BeakerX notebook highlighting this example
+comparing and contrasting various libraries and various classification algorithms.</p>
+</div>
+<div class="paragraph">
+<p>A previous <a href="https://groovy.apache.org/blog/classifying-iris-flowers-with-deep">blog post</a>
+describes this example  using several deep learning libraries and gave a solution utilizing GraalVM.
+In this blog post, we&#8217;ll look at using Oracle 23ai&#8217;s Vector data type and Vector AI
+queries to classify part of our dataset.</p>
+</div>
+<div class="paragraph">
+<p>In general, many machine learning/AI algorithms process vectors of information.
+Such information might be actual data values, like our flowers, or projections
+of data values, or representations of important information of text,
+video, images or sound files. The latter is often called embeddings.
+For us, we&#8217;ll find flowers with similar characteristics. In other similarity
+search scenarios, we might find similar images based on the "closeness"
+of their embeddings.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_dataset">The dataset</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The previously mentioned <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Iris">Iris Project</a>
+shows how to classify the Iris dataset using various techniques. In particular, one example uses the <a href="http://haifengl.github.io/">Smile</a> library&#8217;s
+kNN classification algorithm. The example uses the whole dataset to train the model
+and then runs the model on the whole dataset to gauge its accuracy. The algorithm
+has some trouble with the data points near the overlap of the Virginica and Versicolor
+groupings as shown in the resulting graph:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iris_knn_smile.png" alt="Graph of predicted vs actual Iris flower classifications"></span></p>
+</div>
+<div class="paragraph">
+<p>The purple and green points show the incorrectly classified flowers.</p>
+</div>
+<div class="paragraph">
+<p>The corresponding confusion matrix also shows these results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Confusion matrix:
+ROW=truth and COL=predicted
+class  0 |      50 |       0 |       0 |
+class  1 |       0 |      47 |       <strong>3</strong> |
+class  2 |       0 |       <strong>3</strong> |      47 |</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In general, running a model on the original dataset might not be ideal
+in the sense we won&#8217;t get accurate error calculations, but it does
+highlight some important information about our data. In our case
+we can see that two of the groupings become congested, and data points
+near where the two groups overlap might be expected to be prone
+to mis-classification.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_database_solution">The database solution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>First, we load our dataset from a CSV file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var file = getClass().classLoader.getResource('iris_data.csv').file as File
+var rows = file.readLines()[1..-1].shuffled() // skip header and shuffle
+var (training, test) = rows.chop(rows.size() * .8 as int, -1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After shuffling the rows, we split the data into two sets.
+The first 80% will go into the database.
+It corresponds to "training" data in normal data science terminology.
+The last 20% will correspond to our "test" data.</p>
+</div>
+<div class="paragraph">
+<p>Next, we define the required information for our SQL connection:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var url = 'jdbc:oracle:thin:@localhost:1521/FREEPDB1'
+var user = 'some_user'
+var password = 'some_password'
+var driver = 'oracle.jdbc.driver.OracleDriver'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, we create our database connection and use it to insert the "training" rows,
+before testing against the "test" rows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Sql.withInstance(url, user, password, driver) { sql -&gt;
+    training.each { row -&gt;
+        var data = row.split(',')
+        var features = data[0..-2].toString()
+        sql.executeInsert("INSERT INTO Iris (class, features) VALUES (${data[-1]},$features)")
+    }
+    printf "%-20s%-20s%-20s%n", 'Actual', 'Predicted', 'Confidence'
+    test.each { row -&gt;
+        var data = row.split(',')
+        var features = VECTOR.ofFloat64Values(data[0..-2]*.toDouble() as double[])
+        var closest10 = sql.rows """
+        select class from Iris
+        order by vector_distance(features, $features)
+        fetch first 10 rows only
+        """
+        var results = closest10.groupBy{ e -&gt; e.CLASS }.collectEntries { e -&gt; [e.key, e.value.size()]}
+        var predicted = results.max{ e -&gt; e.value }
+        printf "%-20s%-20s%5d%n", data[-1], predicted.key, predicted.value * 10
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are some interesting aspects to this code.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>When we inserted the data, we just used strings. Because the type of the
+<code>features</code> column is known, it converts it automatically.</p>
+</li>
+<li>
+<p>We can alternatively, explicitly handle types, as shown for the query where
+<code>VECTOR.ofFloat64Values</code> is used.</p>
+</li>
+<li>
+<p>What might seem strange is that no model is actually trained like
+a traditional algorithm might do. Instead, the <code>vector_distance</code> function
+in the SQL query invokes a kNN based search to find results. In our
+case we asked for the top 10 closest points.</p>
+</li>
+<li>
+<p>Once we had the top 10 closest points, the class prediction is simply
+the most predicated class from the 10 results. Our confidence indicates
+how many of the top 10 agreed with the prediction.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Actual              Predicted           Confidence
+Iris-virginica      Iris-virginica         90
+Iris-virginica      Iris-virginica         90
+Iris-virginica      Iris-virginica        100
+Iris-virginica      Iris-virginica        100
+<strong>Iris-virginica      Iris-versicolor        60</strong>
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-virginica      Iris-virginica        100
+Iris-versicolor     Iris-versicolor       100
+Iris-versicolor     Iris-versicolor       100
+Iris-versicolor     Iris-versicolor        70
+Iris-virginica      Iris-virginica        100
+Iris-virginica      Iris-virginica        100
+Iris-setosa         Iris-setosa           100
+Iris-versicolor     Iris-versicolor       100
+Iris-virginica      Iris-virginica        100
+Iris-versicolor     Iris-versicolor       100
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-versicolor     Iris-versicolor       100
+Iris-virginica      Iris-virginica         90
+Iris-setosa         Iris-setosa           100
+Iris-virginica      Iris-virginica         90
+Iris-setosa         Iris-setosa           100
+Iris-setosa         Iris-setosa           100
+Iris-virginica      Iris-virginica        100
+Iris-virginica      Iris-virginica        100</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only one result was incorrect. Since we randomly shuffled the data,
+we might get a different number of incorrect results for other runs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have had a quick glimpse at using the Vector data type from Oracle 23ai with Apache Groovy.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
