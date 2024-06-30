@@ -161,7 +161,9 @@ before testing against the "test" rows:</p>
     training.each { row -&gt;
         var data = row.split(',')
         var features = data[0..-2].toString()
-        sql.executeInsert("INSERT INTO Iris (class, features) VALUES (${data[-1]},$features)")
+        sql.executeInsert """
+            INSERT INTO Iris (class, features) VALUES (${data[-1]},$features)
+        """
     }
     printf "%-20s%-20s%-20s%n", 'Actual', 'Predicted', 'Confidence'
     test.each { row -&gt;
@@ -172,7 +174,9 @@ before testing against the "test" rows:</p>
         order by vector_distance(features, $features)
         fetch first 10 rows only
         """
-        var results = closest10.groupBy{ e -&gt; e.CLASS }.collectEntries { e -&gt; [e.key, e.value.size()]}
+        var results = closest10
+                .groupBy{ e -&gt; e.CLASS }
+                .collectEntries { e -&gt; [e.key, e.value.size()]}
         var predicted = results.max{ e -&gt; e.value }
         printf "%-20s%-20s%5d%n", data[-1], predicted.key, predicted.value * 10
     }
