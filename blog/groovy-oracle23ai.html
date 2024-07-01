@@ -261,7 +261,7 @@ Iris-setosa         Iris-setosa           100
 Iris-virginica      Iris-virginica        100
 Iris-versicolor     Iris-versicolor       100
 Iris-versicolor     Iris-versicolor       100
-Iris-versicolor     Iris-versicolor        70
+<strong>Iris-versicolor     Iris-versicolor        70</strong>
 Iris-virginica      Iris-virginica        100
 Iris-virginica      Iris-virginica        100
 Iris-setosa         Iris-setosa           100
@@ -281,8 +281,31 @@ Iris-virginica      Iris-virginica        100</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Only one result was incorrect. Since we randomly shuffled the data,
-we might get a different number of incorrect results for other runs.</p>
+<p>Only one result was incorrect (first <strong>bold</strong> line above).
+Since we randomly shuffled the data,  we might get a
+different number of incorrect results for other runs.</p>
+</div>
+<div class="paragraph">
+<p>We can visualize how the distance query works
+by plotting the closest 10 points in a 3D plot.
+We&#8217;ll do this for the points returned for the 70%
+confidence case (second <strong>bold</strong> line above):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iris_closest10points.png" alt="closest 10 points"></span></p>
+</div>
+<div class="paragraph">
+<p>This is a Principal Component Analysis (PCA) plot
+which projects our 4 dimensions (Petal width and length,
+Sepal width and length) down onto 3 dimensions.</p>
+</div>
+<div class="paragraph">
+<p>The large red dot is the projection for our test query characteristics.
+The small dots are the unselected points in our dataset.
+The medium dots are the dots returned by our <code>vector_distance</code>
+query.
+7 Versicolor points (blue) were returned and 3 Virginica points (orange) were returned.
+We know the result was Versicolor for that data point.</p>
 </div>
 </div>
 </div>
