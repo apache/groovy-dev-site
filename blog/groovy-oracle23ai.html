@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</a></li><li><a href='#_the_dataset' class='anchor-link'>The dataset</a></li><li><a href='#_the_database_solution' class='anchor-link'>The database solution</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-06-30 11:21PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</a></li><li><a href='#_the_dataset' class='anchor-link'>The dataset</a></li><li><a href='#_the_database_solution' class='anchor-link'>The database solution</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-06-30 11:21PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="200"></span>
@@ -73,11 +73,14 @@ queries to classify part of our dataset.</p>
 </div>
 <div class="paragraph">
 <p>In general, many machine learning/AI algorithms process vectors of information.
-Such information might be actual data values, like our flowers, or projections
+Such information might be actual data values, like the characteristics for our flowers, or projections
 of data values, or representations of important information of text,
-video, images or sound files. The latter is often called embeddings.
-For us, we&#8217;ll find flowers with similar characteristics. In other similarity
-search scenarios, we might find similar images based on the "closeness"
+video, images or sound files. The latter is often called embeddings.</p>
+</div>
+<div class="paragraph">
+<p>For us, we&#8217;ll find flowers with similar characteristics. In other similarity
+search scenarios, we might detect fraudulent transactions, find customer recommendations,
+or find similar images based on the "closeness"
 of their embeddings.</p>
 </div>
 </div>
@@ -91,10 +94,16 @@ shows how to classify the Iris dataset using various techniques. In particular, 
 kNN classification algorithm. The example uses the whole dataset to train the model
 and then runs the model on the whole dataset to gauge its accuracy. The algorithm
 has some trouble with the data points near the overlap of the Virginica and Versicolor
-groupings as shown in the resulting graph:</p>
+groupings as shown in the resulting graph of classification vs petal size:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/iris_knn_smile.png" alt="Graph of predicted vs actual Iris flower classifications"></span></p>
+<p><span class="image"><img src="img/iris_knn_smile_petal.png" alt="Graph of predicted vs actual Iris flower classifications"></span></p>
+</div>
+<div class="paragraph">
+<p>If we look at classification vs sepal size, we can see even more chance of confusion:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iris_knn_smile_sepal.png" alt="Graph of predicted vs actual Iris flower classifications"></span></p>
 </div>
 <div class="paragraph">
 <p>The purple and green points show the incorrectly classified flowers.</p>
@@ -115,9 +124,9 @@ class  2 |       0 |       <strong>3</strong> |      47 |</pre>
 <p>In general, running a model on the original dataset might not be ideal
 in the sense we won&#8217;t get accurate error calculations, but it does
 highlight some important information about our data. In our case
-we can see that two of the groupings become congested, and data points
-near where the two groups overlap might be expected to be prone
-to mis-classification.</p>
+we can see that the Virginica and Versacolor classes become congested,
+and data points near where the two groups overlap might be expected
+to be prone to mis-classification.</p>
 </div>
 </div>
 </div>
@@ -125,7 +134,16 @@ to mis-classification.</p>
 <h2 id="_the_database_solution">The database solution</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>First, we load our dataset from a CSV file:</p>
+<p>Our data is stored in a CSV file:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/iris_csv.png" alt="iris CSV file"></span></p>
+</div>
+<div class="paragraph">
+<p>It happens to have 50 each of the three classes of Iris.
+First, we load our dataset from the CSV file, skipping the header row
+and shuffling the remaining rows to ensure we&#8217;ll test against a random
+mixture of the three classes of Iris:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -135,7 +153,7 @@ var (training, test) = rows.chop(rows.size() * .8 as int, -1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>After shuffling the rows, we split the data into two sets.
+<p>After shuffling, we split the data into two sets.
 The first 80% will go into the database.
 It corresponds to "training" data in normal data science terminology.
 The last 20% will correspond to our "test" data.</p>
@@ -162,7 +180,7 @@ before testing against the "test" rows:</p>
         var data = row.split(',')
         var features = data[0..-2].toString()
         sql.executeInsert """
-            INSERT INTO Iris (class, features) VALUES (${data[-1]},$features)
+            INSERT INTO Iris (class, features) VALUES (${data[-1]}, $features)
         """
     }
     printf "%-20s%-20s%-20s%n", 'Actual', 'Predicted', 'Confidence'
@@ -171,7 +189,7 @@ before testing against the "test" rows:</p>
         var features = VECTOR.ofFloat64Values(data[0..-2]*.toDouble() as double[])
         var closest10 = sql.rows """
         select class from Iris
-        order by vector_distance(features, $features)
+        order by vector_distance(features, $features, EUCLIDEAN)
         fetch first 10 rows only
         """
         var results = closest10
@@ -203,7 +221,22 @@ in the SQL query invokes a kNN based search to find results. In our
 case we asked for the top 10 closest points.</p>
 </li>
 <li>
-<p>Once we had the top 10 closest points, the class prediction is simply
+<p>We used the <code>EUCLIDEAN</code> distance measure in our query but had we chosen
+<code>EUCLIDEAN_SQUARED</code>, we would have obtained similar results with faster execution time.
+Intuitively, if two points are close to one another, both measures will be small whereas
+if two points are unrelated, both measures will be large.
+If our feature characteristics were normalized, we&#8217;d expect the same result.</p>
+</li>
+<li>
+<p>The <code>COSINE</code> distance measure also works remarkably well.
+Intuitively, if it&#8217;s not the actual size of the sepals and petals that
+is important but their ratios, then similar flowers will be on the same
+angle on our 2D plots, and that is what <code>COSINE</code> measures. For this
+dataset, both matter but either measure gets all (or nearly all)
+correct.</p>
+</li>
+<li>
+<p>Once we have the top 10 closest points, the class prediction is simply
 the most predicated class from the 10 results. Our confidence indicates
 how many of the top 10 agreed with the prediction.</p>
 </li>
@@ -250,6 +283,24 @@ Iris-virginica      Iris-virginica        100</pre>
 <div class="paragraph">
 <p>Only one result was incorrect. Since we randomly shuffled the data,
 we might get a different number of incorrect results for other runs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Source code: <a href="https://github.com/paulk-asert/groovy-oracle23ai" class="bare">https://github.com/paulk-asert/groovy-oracle23ai</a></p>
+</li>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/documentation/sql-userguide.html">Groovy SQL User Guide</a></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/database/oracle/oracle-database/23/vecse/oracle-ai-vector-search-users-guide.pdf">Oracle AI Vector Search User&#8217;s Guide</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
