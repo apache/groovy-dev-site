@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, windows installer, release'/><meta name='description' content='Groovy 2.5.4 Windows Installer Release Announcement.'/><title>The Apache Groovy programming language - Blogs - Groovy 2.5.4 Windows Installer Released (Community Artifact)</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, bom_chars, unicode, encoding'/><meta name='description' content='Handling Byte Order Mark (BOM) characters in Groovy'/><title>The Apache Groovy programming language - Blogs - Handling Byte-Order-Mark Characters in Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,9 +53,44 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-2-5-2-windows'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta2'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-2-5-7-released'>Groovy 2.5.7 Released</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-4-0-3-released'>Groovy 4.0.3 Released</a></li><li><a href='./gmavenplus-1-6-2-released'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 2.5.4 Windows Installer Released (Community Artifact)</h1><p><span>Author: <i>Remko Popma</i></span><br/><span>Published: 2018-11-12 11:43AM</span></p><hr/><div class="paragraph">
-<p>The Windows installer for Groovy 2.5.4 (community artifact) is available from:
-<a href="https://bintray.com/groovy/Distributions/Windows-Installer/groovy-2.5.4-installer" class="bare">https://bintray.com/groovy/Distributions/Windows-Installer/groovy-2.5.4-installer</a></p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Handling Byte-Order-Mark Characters in Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Handling Byte-Order-Mark Characters in Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-07-11 08:00PM</span></p><hr/><div class="paragraph">
+<p>A <a href="https://www.javacodegeeks.com/remove-byte-order-mark-characters-from-file.html">recent article</a>
+showed how to process <a href="https://en.wikipedia.org/wiki/Byte_order_mark">Byte Order Mark (BOM)</a> characters
+within text files when coding in Java. In particular, often manual removal of those characters might
+be needed when processing text files. The article showed how to remove the BOM characters when using
+the <code>InputStream</code> and <code>Reader</code> classes as well as how to do it using <code>NIO</code> functionality. It also showed
+how the <code>BOMInputStream</code> class in <a href="https://commons.apache.org/proper/commons-io/">Apache Commons IO</a>
+could be used. It automatically skips over the BOM characters.</p>
+</div>
+<div class="paragraph">
+<p>Those examples can be run as is in Groovy (albeit after fixing a bug in the first example)
+but the (complete!) idiomatic solution in Groovy is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println new File('file.txt').text</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s right, Groovy automatically detects
+the encoding, and removes BOM characters,
+when using the <code>getText()</code> method
+along with others like <code>eachLine</code>, <code>splitEachLine</code>,
+<code>readLines</code>, <code>withReader</code>, and <code>filterLine</code>.
+The same functionality can be obtained using
+the <code>newReader</code> method too on files and URLs.</p>
+</div>
+<div class="paragraph">
+<p>When needed there are variants that let you
+specify the encoding should you wish to explicitly
+declare it. In that case, you&#8217;d need to handle the
+BOM characters manually.</p>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s methods like <code>getText</code> call an underlying
+<code>CharsetToolkit</code> class. You can also use that class directly
+should you wish to learn more about the encoding
+of a file.</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
