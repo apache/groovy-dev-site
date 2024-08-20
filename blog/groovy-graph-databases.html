@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, release'/><meta name='description' content='Groovy 4.0.3 Release Announcement.'/><title>The Apache Groovy programming language - Blogs - Groovy 4.0.3 Released</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, neo4j, apache age, graph databases, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,45 +53,163 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 4.0.3 Released</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-2-5-7-released'>Groovy 2.5.7 Released</a></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-3-0-0-beta2'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./groovy-2-5-2-windows'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./gmavenplus-1-6-2-released'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-2-5-4-windows'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 4.0.3 Released</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2022-06-15 08:16AM</span></p><hr/><div class="paragraph">
-<p>Dear community,</p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
+Let&#8217;s look at just one event where the Olympic record was broken several times over the
+last three years. We&#8217;ll look at the women&#8217;s 100m backstroke and model the results as a graph database.</p>
 </div>
 <div class="paragraph">
-<p><span class="image right"><img src="img/groovy_logo.png" alt="Groovy logo" width="200"></span>
-The Apache Groovy team is pleased to announce version 4.0.3 of Apache Groovy.
-Apache Groovy is a multi-faceted programming language for the JVM.
-Further details can be found at the <a href="https://groovy.apache.org" class="bare">https://groovy.apache.org</a> website.</p>
+<p>We&#8217;ll have vertices in our graph database corresponding to the swimmers and the swims.
+We&#8217;ll use the labels <code>swimmer</code> and <code>swim</code> for these vertices. We&#8217;ll have relationships
+such as <code>swam</code> and <code>supercedes</code> between vertices. We&#8217;ll explore modelling and querying the event
+information using several graph database technologies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apache_tinkerpop">Apache TinkerPop</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our first technology to examine is <a href="https://tinkerpop.apache.org/">Apache TinkerPop™</a>.</p>
 </div>
 <div class="paragraph">
-<p>This release is a maintenance release of the GROOVY_4_0_X branch.
-It is strongly encouraged that all users using prior
-versions on this branch upgrade to this version.</p>
+<p><span class="image"><img src="https://tinkerpop.apache.org/img/tinkerpop-splash.png" alt="tinkerpop logo"></span></p>
 </div>
 <div class="paragraph">
-<p>This release includes 40 bug fixes/improvements as outlined in the changelog:
-<a href="https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12318123&amp;version=12351650" class="bare">https://issues.apache.org/jira/secure/ReleaseNote.jspa?projectId=12318123&amp;version=12351650</a></p>
+<p>TinkerPop is an open source computing framework for graph databases. It provides
+a common abstraction layer, and a graph query language, called Gremlin.
+This allows you to work with numerous graph database implementations in a consistent way.
+TinkerPop also provides its own graph engine implementation, called TinkerGraph, which is what
+we&#8217;ll use initially.</p>
 </div>
 <div class="paragraph">
-<p>Sources, convenience binaries, downloadable documentation and an SDK
-bundle can be found at: <a href="https://groovy.apache.org/download.html" class="bare">https://groovy.apache.org/download.html</a>
-We recommend you verify your installation using the information on that page.</p>
+<p>We&#8217;ll look at the swims in the 2021 and 2024 Olympic finals as well as any preliminary swims
+where the Olympic record was broken.</p>
 </div>
 <div class="paragraph">
-<p>Jars are also available within the major binary repositories.</p>
+<p>Let&#8217;s first create the information relevant for the previous Olympic record which was set
+at the London 2012 Olympics. Emily Seebohm set that record in Heat 4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var graph = TinkerGraph.open()
+var g = traversal().withEmbedded(graph)
+var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
+swim1 = g.addV('swim').property(where: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+es.addEdge('swam', swim1)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { g.V(es).values(it)[0] }
+var (where, event, time) = ['where', 'event', 'time'].collect { g.V(swim1).values(it)[0] }
+println "$name from $country swam a time of $time in $event at the $where Olympics"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>We welcome your help and feedback and in particular want
-to thank everyone who contributed to this release.</p>
+<p>And here is the output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Emily Seebohm from 🇦🇺 swam a time of 58.23 in Heat 4 at the London 2012 Olympics</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>For more information on how to report problems, and to get involved,
-visit the project website at <a href="https://groovy.apache.org/" class="bare">https://groovy.apache.org/</a></p>
+<p>Let&#8217;s create some helper methods to simplify creation of the remaining information.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def insertSwimmer(TraversalSource g, name, country) {
+    g.addV('swimmer').property(name: name, country: country).next()
+}
+
+def insertSwim(TraversalSource g, where, event, time, result, swimmer) {
+    var swim = g.addV('swim').property(where: where, event: event, time: time, result: result).next()
+    swimmer.addEdge('swam', swim)
+    swim
+}</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Best regards,</p>
+<p>Now we can create the remaining swim information:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
+var swim2 = insertSwim(g, 'Tokyo 2021', 'Heat 4', 58.17, 'First', km)
+swim2.addEdge('supercedes', swim1)
+var swim3 = insertSwim(g, 'Tokyo 2021', 'Final', 57.72, '🥈', km)
+
+var rs = insertSwimmer(g, 'Regan Smith', '🇺🇸')
+var swim4 = insertSwim(g, 'Tokyo 2021', 'Heat 5', 57.96, 'First', rs)
+swim4.addEdge('supercedes', swim2)
+var swim5 = insertSwim(g, 'Tokyo 2021', 'Semifinal 1', 57.86, '', rs)
+var swim6 = insertSwim(g, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
+var swim7 = insertSwim(g, 'Paris 2024', 'Final', 57.66, '🥈', rs)
+var swim8 = insertSwim(g, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
+
+var kmk = insertSwimmer(g, 'Kaylie McKeown', '🇦🇺')
+var swim9 = insertSwim(g, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
+swim9.addEdge('supercedes', swim4)
+swim5.addEdge('supercedes', swim9)
+var swim10 = insertSwim(g, 'Tokyo 2021', 'Final', 57.47, '🥇', kmk)
+swim10.addEdge('supercedes', swim5)
+var swim11 = insertSwim(g, 'Paris 2024', 'Final', 57.33, '🥇', kmk)
+swim11.addEdge('supercedes', swim10)
+swim8.addEdge('supercedes', swim11)
+
+var kb = insertSwimmer(g, 'Katharine Berkoff', '🇺🇸')
+var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V().out('swam').has('where', 'Paris 2024').in()
+    .values('country').toSet()
+assert successInParis == ['🇺🇸', '🇦🇺'] as Set</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().hasLabel('swim')
+    .filter { it.get().property('event').value().startsWith('Heat') }
+    .values('where').toSet()
+assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordTimesInFinals = g.V().has('event', 'Final').as('ev').out('supercedes')
+    .select('ev').values('time').toSet()
+assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println "Olympic records after ${g.V(swim1).values('where', 'event').toList().join(' ')}: "
+println g.V(swim1).repeat(in('supercedes') ).as('sw').emit()
+    .values('where').concat(' ')
+    .concat(select('sw').values('event')).toList().join('\n')</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The Apache Groovy team.</p>
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Olympic records after London 2012 Heat 4:
+Tokyo 2021 Heat 4
+Tokyo 2021 Heat 5
+Tokyo 2021 Heat 6
+Tokyo 2021 Semifinal 1
+Tokyo 2021 Final
+Paris 2024 Final
+Paris 2024 Relay leg1</code></pre>
+</div>
+</div>
+</div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
