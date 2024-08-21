@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, neo4j, apache age, graph databases, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -89,17 +89,29 @@ we&#8217;ll use initially.</p>
 where the Olympic record was broken.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s first create the information relevant for the previous Olympic record which was set
-at the London 2012 Olympics. Emily Seebohm set that record in Heat 4:</p>
+<p>We&#8217;ll start by creating a new in-memory graph database and
+create a helper object for traversing the graph:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var graph = TinkerGraph.open()
-var g = traversal().withEmbedded(graph)
-var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
+var g = traversal().withEmbedded(graph)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Next, let&#8217;s create the information relevant for the previous Olympic record which was set
+at the London 2012 Olympics. Emily Seebohm set that record in Heat 4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
 swim1 = g.addV('swim').property(where: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>We can print out some information from our newly created nodes (vertices)
+by querying the properties of two nodes respectively:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -109,12 +121,33 @@ println "$name from $country swam a time of $time in $event at the $where Olympi
 </div>
 </div>
 <div class="paragraph">
-<p>And here is the output:</p>
+<p>Which has this output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>Emily Seebohm from 🇦🇺 swam a time of 58.23 in Heat 4 at the London 2012 Olympics</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>So far, we&#8217;ve just been using the Java API from TinkerPop.
+It also provides some additional syntactic sugar for Groovy.
+We can enable that with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">SugarLoader.load()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which lets us write the slightly shorter:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println "$es.name from $es.country swam a time of $swim1.time in $swim1.event at the $swim1.at Olympics"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This uses Groovy&#8217;s normal property access syntax and has the same output when executed.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s create some helper methods to simplify creation of the remaining information.</p>
@@ -164,20 +197,46 @@ var kb = insertSwimmer(g, 'Katharine Berkoff', '🇺🇸')
 var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Note that we just entered the swims where medals were won or
+where olympic records were broken. We could easily have added
+more swimmers, other strokes and distances, and even other sports
+if we wanted to.</p>
+</div>
+<div class="paragraph">
+<p>We now might want to query the graph in numerous ways.
+For instance, what countries had success at the Paris 2024 olympics,
+where success is defined for the purposes of this query as
+winning a medal or breaking a record. Of course, just having
+a swimmer make the olympic team is a great success - but let&#8217;s
+keep our example simple for now.</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V().out('swam').has('where', 'Paris 2024').in()
+<pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V().out('swam').has('at', 'Paris 2024').in()
     .values('country').toSet()
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>By way of explanation, we find all nodes with an outgoing <code>swam</code> edge
+pointing to a swim that was at the Paris 2024 olympics, i.e.
+all the swimmers from Paris 2024. We then find the set of countries
+represented.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, we can find the olympic records set during heat swims:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().hasLabel('swim')
     .filter { it.get().property('event').value().startsWith('Heat') }
-    .values('where').toSet()
+    .values('at').toSet()
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Or, we can find the times of the records set during finals:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -186,16 +245,45 @@ assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
 assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Making use of the Groovy syntactic sugar gives simpler versions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
+assert successInParis == ['🇺🇸', '🇦🇺'] as Set
+
+var recordSetInHeat = g.V.hasLabel('swim').filter { it.event.startsWith('Heat') }.at.toSet
+assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
+
+var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supercedes').select('ev').time.toSet
+assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But graph databases really excel when performing queries
+involving multiple edge traversals. Here is one looking
+at all the olympic records set in 2021 and 2024:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">println "Olympic records after ${g.V(swim1).values('where', 'event').toList().join(' ')}: "
-println g.V(swim1).repeat(in('supercedes') ).as('sw').emit()
+println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
     .values('where').concat(' ')
     .concat(select('sw').values('event')).toList().join('\n')</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Which has this output:</p>
+<p>Or after using the Groovy syntactic sugar, the query becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println g.V(swim1).repeat(in('supercedes')).as('sw').emit
+    .at.concat(' ').concat(select('sw').event).toList.join('\n')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both have this output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
