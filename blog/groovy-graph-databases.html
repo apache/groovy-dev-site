@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
@@ -105,7 +105,7 @@ at the London 2012 Olympics. Emily Seebohm set that record in Heat 4:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
-swim1 = g.addV('swim').property(where: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+swim1 = g.addV('swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)</code></pre>
 </div>
 </div>
@@ -116,8 +116,8 @@ by querying the properties of two nodes respectively:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { g.V(es).values(it)[0] }
-var (where, event, time) = ['where', 'event', 'time'].collect { g.V(swim1).values(it)[0] }
-println "$name from $country swam a time of $time in $event at the $where Olympics"</code></pre>
+var (at, event, time) = ['at', 'event', 'time'].collect { g.V(swim1).values(it)[0] }
+println "$name from $country swam a time of $time in $event at the $at Olympics"</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -158,8 +158,8 @@ We can enable that with:</p>
     g.addV('swimmer').property(name: name, country: country).next()
 }
 
-def insertSwim(TraversalSource g, where, event, time, result, swimmer) {
-    var swim = g.addV('swim').property(where: where, event: event, time: time, result: result).next()
+def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
+    var swim = g.addV('swim').property(at: at, event: event, time: time, result: result).next()
     swimmer.addEdge('swam', swim)
     swim
 }</code></pre>
@@ -273,9 +273,9 @@ at all the olympic records set in 2021 and 2024:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">println "Olympic records after ${g.V(swim1).values('where', 'event').toList().join(' ')}: "
+<pre class="prettyprint highlight"><code data-lang="groovy">println "Olympic records after ${g.V(swim1).values('at', 'event').toList().join(' ')}: "
 println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
-    .values('where').concat(' ')
+    .values('at').concat(' ')
     .concat(select('sw').values('event')).toList().join('\n')</code></pre>
 </div>
 </div>
@@ -293,14 +293,174 @@ println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">Olympic records after London 2012 Heat 4:
+<pre>Olympic records after London 2012 Heat 4:
 Tokyo 2021 Heat 4
 Tokyo 2021 Heat 5
 Tokyo 2021 Heat 6
 Tokyo 2021 Semifinal 1
 Tokyo 2021 Final
 Paris 2024 Final
-Paris 2024 Relay leg1</code></pre>
+Paris 2024 Relay leg1</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_neo4j">Neo4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our next technology to examine is
+<a href="https://neo4j.com/product/neo4j-graph-database/">neo4j</a>. Neo4j is a graph
+database storing nodes and edges. Nodes and edges may have a label and properties (or attributes).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">es = tx.createNode(label('swimmer'))
+es.setProperty('name', 'Emily Seebohm')
+es.setProperty('country', '🇦🇺')
+
+swim1 = tx.createNode(label('swim'))
+swim1.setProperty('event', 'Heat 4')
+swim1.setProperty('at', 'London 2012')
+swim1.setProperty('result', 'First')
+swim1.setProperty('time', 58.23d)
+es.createRelationshipTo(swim1, swam)
+
+var name = es.getProperty('name')
+var country = es.getProperty('country')
+var at = swim1.getProperty('at')
+var event = swim1.getProperty('event')
+var time = swim1.getProperty('time')
+println "$name from $country swam a time of $time in $event at the $at Olympics"</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Node.metaClass {
+    propertyMissing { String name, val -&gt; delegate.setProperty(name, val) }
+    propertyMissing { String name -&gt; delegate.getProperty(name) }
+    methodMissing { String name, args -&gt;
+        delegate.createRelationshipTo(args[0], SwimmingRelationships."$name")
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">km = tx.createNode(label('swimmer'))
+km.name = 'Kylie Masse'
+km.country = '🇨🇦'
+
+swim2 = tx.createNode(label('swim'))
+swim2.time = 58.17d
+swim2.result = 'First'
+swim2.event = 'Heat 4'
+swim2.at = 'Tokyo 2021'
+km.swam(swim2)
+swim2.supercedes(swim1)
+
+swim3 = tx.createNode(label('swim'))
+swim3.time = 57.72d
+swim3.result = '🥈'
+swim3.event = 'Final'
+swim3.at = 'Tokyo 2021'
+km.swam(swim3)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static insertSwimmer(Transaction tx, name, country) {
+    var sr = tx.createNode(label('swimmer'))
+    sr.setProperty('name', name)
+    sr.setProperty('country', country)
+    sr
+}
+
+static insertSwim(Transaction tx, at, event, time, result, swimmer) {
+    var sm = tx.createNode(label('swim'))
+    sm.setProperty('result', result)
+    sm.setProperty('event', event)
+    sm.setProperty('at', at)
+    sm.setProperty('time', time)
+    swimmer.createRelationshipTo(sm, swam)
+    sm
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var swimmers = [es, km, rs, kmk, kb]
+var successInParis = swimmers.findAll { swimmer -&gt;
+    swimmer.getRelationships(swam).any { run -&gt;
+        run.getOtherNode(swimmer).at == 'Paris 2024'
+    }
+}
+assert successInParis*.country.unique() == ['🇺🇸', '🇦🇺']
+
+var swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
+var recordSetInHeat = swims.findAll { swim -&gt;
+    swim.event.startsWith('Heat')
+}*.at
+assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']
+
+var recordTimesInFinals = swims.findAll { swim -&gt;
+    swim.event == 'Final' &amp;&amp; swim.hasRelationship(supercedes)
+}*.time
+assert recordTimesInFinals == [57.47d, 57.33d]
+
+var info = { s -&gt; "$s.at $s.event" }
+println "Olympic records following ${info(swim1)}:"
+
+for (Path p in tx.traversalDescription()
+    .breadthFirst()
+    .relationships(supercedes)
+    .evaluator(Evaluators.fromDepth(1))
+    .uniqueness(Uniqueness.NONE)
+    .traverse(swim1)) {
+    println p.endNode().with(info)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
+MATCH (s:swim WHERE s.event STARTS WITH 'Heat')
+WITH s.at as at
+WITH DISTINCT at
+RETURN at
+''')*.at == ['London 2012', 'Tokyo 2021']
+
+assert tx.execute('''
+MATCH (s1:swim {event: 'Final'})-[:supercedes]-&gt;(s2:swim)
+RETURN s1.time AS time
+''')*.time == [57.47d, 57.33d]
+
+tx.execute('''
+MATCH (s1:swim)-[:supercedes]-&gt;{1,}(s2:swim { at: $at })
+RETURN s1
+''', [at: swim1.at])*.s1.each { s -&gt;
+    println "$s.at $s.event"
+}
+
+assert tx.execute('''
+MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
+WHERE sm1.at = sm2.at AND sm1 &lt;&gt; sm2 AND sm1.time &lt; sm3.time
+RETURN sr1.name as name
+''')*.name == ['Kylie Masse']</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">swim6.runnerup(swim3)
+swim3.runnerup(swim10)
+swim12.runnerup(swim7)
+swim7.runnerup(swim11)
+
+assert tx.execute('''
+MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
+WHERE sm1.time &lt; sm3.time
+RETURN sr1.name as name
+''')*.name == ['Kylie Masse']</code></pre>
 </div>
 </div>
 </div>
