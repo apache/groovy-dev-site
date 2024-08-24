@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache Age</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
@@ -461,6 +461,113 @@ MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2
 WHERE sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_apache_age">Apache Age</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sql.execute'''
+    SELECT * FROM cypher('swimming_graph', $$ CREATE
+    (es:swimmer {name: 'Emily Seebohm', country: '🇦🇺'}),
+    (swim1:swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012'}),
+    (es)-[:swam]-&gt;(swim1),
+
+    (km:swimmer {name: 'Kylie Masse', country: '🇨🇦'}),
+    (swim2:swim {event: 'Heat 4', result: 'First', time: 58.17, at: 'Tokyo 2021'}),
+    (km)-[:swam]-&gt;(swim2),
+    (swim2)-[:supercedes]-&gt;(swim1),
+    (swim3:swim {event: 'Final', result: '🥈', time: 57.72, at: 'Tokyo 2021'}),
+    (km)-[:swam]-&gt;(swim3),
+
+    (rs:swimmer {name: 'Regan Smith', country: '🇺🇸'}),
+    (swim4:swim {event: 'Heat 5', result: 'First', time: 57.96, at: 'Tokyo 2021'}),
+    (rs)-[:swam]-&gt;(swim4),
+    (swim4)-[:supercedes]-&gt;(swim2),
+    (swim5:swim {event: 'Semifinal 1', result: 'First', time: 57.86, at: 'Tokyo 2021'}),
+    (rs)-[:swam]-&gt;(swim5),
+    (swim6:swim {event: 'Final', result: '🥉', time: 58.05, at: 'Tokyo 2021'}),
+    (rs)-[:swam]-&gt;(swim6),
+    (swim7:swim {event: 'Final', result: '🥈', time: 57.66, at: 'Paris 2024'}),
+    (rs)-[:swam]-&gt;(swim7),
+    (swim8:swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024'}),
+    (rs)-[:swam]-&gt;(swim8),
+
+    (kmk:swimmer {name: 'Kaylie McKeown', country: '🇦🇺'}),
+    (swim9:swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021'}),
+    (kmk)-[:swam]-&gt;(swim9),
+    (swim9)-[:supercedes]-&gt;(swim4),
+    (swim5)-[:supercedes]-&gt;(swim9),
+    (swim10:swim {event: 'Final', result: '🥇', time: 57.47, at: 'Tokyo 2021'}),
+    (kmk)-[:swam]-&gt;(swim10),
+    (swim10)-[:supercedes]-&gt;(swim5),
+    (swim11:swim {event: 'Final', result: '🥇', time: 57.33, at: 'Paris 2024'}),
+    (kmk)-[:swam]-&gt;(swim11),
+    (swim11)-[:supercedes]-&gt;(swim10),
+    (swim8)-[:supercedes]-&gt;(swim11),
+
+    (kb:swimmer {name: 'Katharine Berkoff', country: '🇺🇸'}),
+    (swim12:swim {event: 'Final', result: '🥉', time: 57.98, at: 'Paris 2024'}),
+    (kb)-[:swam]-&gt;(swim12)
+    $$) AS (a agtype)
+'''</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert sql.rows('''
+    SELECT * from cypher('swimming_graph', $$
+    MATCH (s:swim)
+    WHERE left(s.event, 4) = 'Heat'
+    RETURN s
+    $$) AS (a agtype)
+''').a*.map*.get('properties')*.at.toUnique() == ['London 2012', 'Tokyo 2021']</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert sql.rows('''
+    SELECT * from cypher('swimming_graph', $$
+    MATCH (s1:swim {event: 'Final'})-[:supercedes]-&gt;(s2:swim)
+    RETURN s1
+    $$) AS (a agtype)
+''').a*.map*.get('properties')*.time == [57.47, 57.33]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sql.eachRow('''
+    SELECT * from cypher('swimming_graph', $$
+    MATCH (s1:swim)-[:supercedes]-&gt;(swim1)
+    RETURN s1
+    $$) AS (a agtype)
+''') {
+    println it.a*.map*.get('properties')[0].with{ "$it.at $it.event" }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Tokyo 2021 Heat 4
+Tokyo 2021 Heat 5
+Tokyo 2021 Heat 6
+Tokyo 2021 Final
+Tokyo 2021 Semifinal 1
+Paris 2024 Final
+Paris 2024 Relay leg1</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
 </div>
 </div>
 </div>
