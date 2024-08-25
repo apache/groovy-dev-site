@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache Age</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
@@ -75,7 +75,7 @@ information using several graph database technologies.</p>
 <p>Our first technology to examine is <a href="https://tinkerpop.apache.org/">Apache TinkerPop™</a>.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://tinkerpop.apache.org/img/tinkerpop-splash.png" alt="tinkerpop logo"></span></p>
+<p><span class="image"><img src="https://tinkerpop.apache.org/img/tinkerpop-splash.png" alt="tinkerpop logo" width="70%"></span></p>
 </div>
 <div class="paragraph">
 <p>TinkerPop is an open source computing framework for graph databases. It provides
@@ -313,6 +313,9 @@ Paris 2024 Relay leg1</pre>
 <a href="https://neo4j.com/product/neo4j-graph-database/">neo4j</a>. Neo4j is a graph
 database storing nodes and edges. Nodes and edges may have a label and properties (or attributes).</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><img src="https://dist.neo4j.com/wp-content/uploads/20230926084108/Logo_FullColor_RGB_TransBG.svg" alt="neo4j logo" width="50%"></span></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">es = tx.createNode(label('swimmer'))
@@ -466,8 +469,36 @@ RETURN sr1.name as name
 </div>
 </div>
 <div class="sect1">
-<h2 id="_apache_age">Apache Age</h2>
+<h2 id="_apache_age">Apache AGE</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The next technology is the <a href="https://age.apache.org/">Apache AGE™</a> graph database.
+Apache AGE leverages <a href="https://www.postgresql.org">PostgreSQL</a> for storage.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="https://age.apache.org/age-manual/master/_static/logo.png" alt="Apache AGE logo" width="50%"></span>
+<span class="image"><img src="https://age.apache.org/img/logo-large-postgresql.jpg" alt="PostgreSQL logo"></span></p>
+</div>
+<div class="paragraph">
+<p>We installed Apache AGE via a Docker Image as outlined in the Apache AGE
+<a href="https://age.apache.org/age-manual/master/intro/setup.html#installing-via-docker-image">manual</a>.</p>
+</div>
+<div class="paragraph">
+<p>Since Apache AGE offers a SQL-inspired graph database experience, we use Groovy&#8217;s
+SQL facilities to interact with the database:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Sql.withInstance(DB_URL, USER, PASS, 'org.postgresql.jdbc.PgConnection') { sql -&gt;
+    // enable Apache AGE extension, then use Sql connection ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For creating our nodes and subsequent querying, we use SQL statements
+with embedded <em>cypher</em> clauses. Here is the statement for creating
+out nodes and edges:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">sql.execute'''
@@ -516,6 +547,10 @@ RETURN sr1.name as name
 '''</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>To find which olympics where records were set in heats, we
+can use the following <em>cypher</em> query:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert sql.rows('''
@@ -527,6 +562,15 @@ RETURN sr1.name as name
 ''').a*.map*.get('properties')*.at.toUnique() == ['London 2012', 'Tokyo 2021']</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The results come back in a special JSON-like data type called <code>agtype</code>.
+From that, we can query the properties and return the <code>at</code> property.
+We select the unique ones to remove duplicates.</p>
+</div>
+<div class="paragraph">
+<p>Similarly, we can find the times of olympic records set in finals
+as follows:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert sql.rows('''
@@ -536,6 +580,10 @@ RETURN sr1.name as name
     $$) AS (a agtype)
 ''').a*.map*.get('properties')*.time == [57.47, 57.33]</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>To print all the olympic records set across Tokyo 2021 and Paris 2024,
+we can use <code>eachRow</code> and the following query:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -549,6 +597,9 @@ RETURN sr1.name as name
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>Tokyo 2021 Heat 4
@@ -560,11 +611,32 @@ Paris 2024 Final
 Paris 2024 Relay leg1</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The Apache AGE project also maintains a viewer tool offering a web-based
+user interface for visualization of graph data stored in our database.
+Instructions for installation are available on the
+<a href="https://github.com/apache/age-viewer">GitHub site</a>.
+The tool allows visualization of the results from any query.
+For our database, a query returning all nodes and edges looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/age-viewer.png" alt="age viewer"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_orientdb">OrientDB</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tugraph">TuGraph</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
