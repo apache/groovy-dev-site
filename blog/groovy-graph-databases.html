@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
@@ -457,9 +457,15 @@ RETURN sr1.name as name
 <pre class="prettyprint highlight"><code data-lang="groovy">swim6.runnerup(swim3)
 swim3.runnerup(swim10)
 swim12.runnerup(swim7)
-swim7.runnerup(swim11)
-
-assert tx.execute('''
+swim7.runnerup(swim11)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/BackstrokeRecordsRunnerup.png" alt="Additional runnerup relationship" width="60%"></span></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
 MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
 WHERE sm1.time &lt; sm3.time
 RETURN sr1.name as name
@@ -627,6 +633,19 @@ For our database, a query returning all nodes and edges looks like this:</p>
 <div class="sect1">
 <h2 id="_orientdb">OrientDB</h2>
 <div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_arcadedb">ArcadeDB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="img/ArcadeStudio.png" alt="ArcadeStudio"></span></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
