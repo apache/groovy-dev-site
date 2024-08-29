@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, apache hugegraph, orientdb, arcadedb, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_hugegraph' class='anchor-link'>HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
@@ -85,8 +85,9 @@ TinkerPop also provides its own graph engine implementation, called TinkerGraph,
 we&#8217;ll use initially.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll look at the swims in the 2021 and 2024 Olympic finals as well as any preliminary swims
-where the Olympic record was broken.</p>
+<p>We&#8217;ll look at the swims for the medalists and record breakers at the Tokyo 2021 and Paris 2024 Olympics
+in the women&#8217;s 100m backstroke. For reference purposes, we&#8217;ll also include the previous swim that
+set an olympic record.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll start by creating a new in-memory graph database and
@@ -115,8 +116,8 @@ by querying the properties of two nodes respectively:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { g.V(es).values(it)[0] }
-var (at, event, time) = ['at', 'event', 'time'].collect { g.V(swim1).values(it)[0] }
+<pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { es.property(it).value() }
+var (at, event, time) = ['at', 'event', 'time'].collect { swim1.property(it).value() }
 println "$name from $country swam a time of $time in $event at the $at Olympics"</code></pre>
 </div>
 </div>
@@ -131,7 +132,7 @@ println "$name from $country swam a time of $time in $event at the $at Olympics"
 <div class="paragraph">
 <p>So far, we&#8217;ve just been using the Java API from TinkerPop.
 It also provides some additional syntactic sugar for Groovy.
-We can enable that with:</p>
+We can enable the syntactic sugar with:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -139,7 +140,7 @@ We can enable that with:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Which lets us write the slightly shorter:</p>
+<p>Which then lets us write the slightly shorter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -228,7 +229,9 @@ assert successInParis == ['🇺🇸', '🇦🇺'] as Set</code></pre>
 <p>By way of explanation, we find all nodes with an outgoing <code>swam</code> edge
 pointing to a swim that was at the Paris 2024 olympics, i.e.
 all the swimmers from Paris 2024. We then find the set of countries
-represented.</p>
+represented. We are using sets here to remove duplicates, and also
+we aren&#8217;t imposing an ordering on the returned results so we compare
+sets on both sides.</p>
 </div>
 <div class="paragraph">
 <p>Similarly, we can find the olympic records set during heat swims:</p>
@@ -246,7 +249,7 @@ assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var recordTimesInFinals = g.V().has('event', 'Final').as('ev').out('supercedes')
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordTimesInFinals = g.V().has('event', 'Final').as('ev').out('supersedes')
     .select('ev').values('time').toSet()
 assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 </div>
@@ -259,10 +262,10 @@ assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 <pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V.hasLabel('swim').filter { it.event.startsWith('Heat') }.at.toSet
+var recordSetInHeat = g.V.hasLabel('Swim').filter { it.event.startsWith('Heat') }.at.toSet
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
-var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supercedes').select('ev').time.toSet
+var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supersedes').select('ev').time.toSet
 assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 </div>
 </div>
@@ -274,7 +277,7 @@ at all the olympic records set in 2021 and 2024:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">println "Olympic records after ${g.V(swim1).values('at', 'event').toList().join(' ')}: "
-println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
+println g.V(swim1).repeat(in('supersedes')).as('sw').emit()
     .values('at').concat(' ')
     .concat(select('sw').values('event')).toList().join('\n')</code></pre>
 </div>
@@ -284,7 +287,7 @@ println g.V(swim1).repeat(in('supercedes')).as('sw').emit()
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">println g.V(swim1).repeat(in('supercedes')).as('sw').emit
+<pre class="prettyprint highlight"><code data-lang="groovy">println g.V(swim1).repeat(in('supersedes')).as('sw').emit
     .at.concat(' ').concat(select('sw').event).toList.join('\n')</code></pre>
 </div>
 </div>
@@ -303,6 +306,10 @@ Paris 2024 Final
 Paris 2024 Relay leg1</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>As a side note, TinkerPop has a <code>GraphMLWriter</code> class which can write out our
+graph in <em>GraphML</em>, which is how the above image was created.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -316,13 +323,26 @@ database storing nodes and edges. Nodes and edges may have a label and propertie
 <div class="paragraph">
 <p><span class="image"><img src="https://dist.neo4j.com/wp-content/uploads/20230926084108/Logo_FullColor_RGB_TransBG.svg" alt="neo4j logo" width="50%"></span></p>
 </div>
+<div class="paragraph">
+<p>Neo4j models edge relationships using enums. Let&#8217;s create an enum for our example:</p>
+</div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">es = tx.createNode(label('swimmer'))
+<pre class="prettyprint highlight"><code data-lang="groovy">enum SwimmingRelationships implements RelationshipType {
+    swam, supersedes, runnerup
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s create our nodes and edges using Neo4j. First the existing Olympic record:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">es = tx.createNode(label('Swimmer'))
 es.setProperty('name', 'Emily Seebohm')
 es.setProperty('country', '🇦🇺')
 
-swim1 = tx.createNode(label('swim'))
+swim1 = tx.createNode(label('Swim'))
 swim1.setProperty('event', 'Heat 4')
 swim1.setProperty('at', 'London 2012')
 swim1.setProperty('result', 'First')
@@ -337,6 +357,10 @@ var time = swim1.getProperty('time')
 println "$name from $country swam a time of $time in $event at the $at Olympics"</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>While there is nothing wrong with this code, Groovy has many features for making code more succinct.
+Let&#8217;s use some dynamic metaprogramming to achieve just that.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">Node.metaClass {
@@ -347,6 +371,10 @@ println "$name from $country swam a time of $time in $event at the $at Olympics"
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Now we use normal Groovy property access for setting the node properties. It looks much cleaner.
+We define an edge relationship simply by calling a method having the relationship name.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -370,25 +398,28 @@ swim3.at = 'Tokyo 2021'
 km.swam(swim3)</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">static insertSwimmer(Transaction tx, name, country) {
-    var sr = tx.createNode(label('swimmer'))
-    sr.setProperty('name', name)
-    sr.setProperty('country', country)
-    sr
-}
-
-static insertSwim(Transaction tx, at, event, time, result, swimmer) {
-    var sm = tx.createNode(label('swim'))
-    sm.setProperty('result', result)
-    sm.setProperty('event', event)
-    sm.setProperty('at', at)
-    sm.setProperty('time', time)
-    swimmer.createRelationshipTo(sm, swam)
-    sm
-}</code></pre>
+<div class="paragraph">
+<p>The code is certainly a lot cleaner, and it was quite a minimal amount of work to define the necessary
+metaprogramming. With a little bit more work, we could use static metaprogramming techniques.
+This would give us better IDE completion.</p>
 </div>
+<div class="paragraph">
+<p>Another interesting topic which we won&#8217;t elaborate here is stronger type checking for graphs.
+For graph libraries which support schemas, the types for node and edge properties can be defined,
+as can the allowable nodes applicable to any edge relationship. For such systems, if you try to
+define a poorly-typed property, or incorrectly use a relationship, you will receive a runtime error.
+Groovy lets us take things further, if we want, and if we are willing to do a little more work.
+For example, if the schema is available at compile time, we could write a type checking extension
+which would fail compilation if any invalid edge or vertex definitions were detected.</p>
+</div>
+<div class="paragraph">
+<p>For now though, let&#8217;s continue with defining the rest of our graph.
+We can redefine our <code>insertSwimmer</code> and <code>insertSwim</code> methods using Neo4j implementation
+calls, and then our earlier code could be used to create our graph. Now let&#8217;s
+investigate what the queries look like.</p>
+</div>
+<div class="paragraph">
+<p>First, the successful countries in Paris 2024:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -398,25 +429,43 @@ var successInParis = swimmers.findAll { swimmer -&gt;
         run.getOtherNode(swimmer).at == 'Paris 2024'
     }
 }
-assert successInParis*.country.unique() == ['🇺🇸', '🇦🇺']
-
-var swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
+assert successInParis*.country.unique() == ['🇺🇸', '🇦🇺']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, at which olympics were records broken in heats:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var swims = [swim1, swim2, swim3, swim4, swim5, swim6, swim7, swim8, swim9, swim10, swim11, swim12]
 var recordSetInHeat = swims.findAll { swim -&gt;
     swim.event.startsWith('Heat')
 }*.at
-assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']
-
-var recordTimesInFinals = swims.findAll { swim -&gt;
+assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, what were the times for records broken in finals:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordTimesInFinals = swims.findAll { swim -&gt;
     swim.event == 'Final' &amp;&amp; swim.hasRelationship(supercedes)
 }*.time
-assert recordTimesInFinals == [57.47d, 57.33d]
-
-var info = { s -&gt; "$s.at $s.event" }
+assert recordTimesInFinals == [57.47d, 57.33d]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To see traversal in action, Neo4j has a special API for doing such queries:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var info = { s -&gt; "$s.at $s.event" }
 println "Olympic records following ${info(swim1)}:"
 
 for (Path p in tx.traversalDescription()
     .breadthFirst()
-    .relationships(supercedes)
+    .relationships(supersedes)
     .evaluator(Evaluators.fromDepth(1))
     .uniqueness(Uniqueness.NONE)
     .traverse(swim1)) {
@@ -424,33 +473,61 @@ for (Path p in tx.traversalDescription()
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Earlier versions of Neo4j also supported Gremlin, so we could have written our queries in
+the same was as we did for TinkerPop. That technology is deprecated for Neo4j, and instead
+they now offer a Cypher query language. We can use that language for all of our previous queries
+as shown here:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
-MATCH (s:swim WHERE s.event STARTS WITH 'Heat')
+MATCH (s:Swim WHERE s.event STARTS WITH 'Heat')
 WITH s.at as at
 WITH DISTINCT at
 RETURN at
 ''')*.at == ['London 2012', 'Tokyo 2021']
 
 assert tx.execute('''
-MATCH (s1:swim {event: 'Final'})-[:supercedes]-&gt;(s2:swim)
+MATCH (s1:Swim {event: 'Final'})-[:supersedes]-&gt;(s2:Swim)
 RETURN s1.time AS time
 ''')*.time == [57.47d, 57.33d]
 
 tx.execute('''
-MATCH (s1:swim)-[:supercedes]-&gt;{1,}(s2:swim { at: $at })
+MATCH (s1:Swim)-[:supersedes]-&gt;{1,}(s2:Swim { at: $at })
 RETURN s1
 ''', [at: swim1.at])*.s1.each { s -&gt;
     println "$s.at $s.event"
-}
-
-assert tx.execute('''
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_an_aside_on_graph_design">An aside on graph design</h3>
+<div class="paragraph">
+<p>Deciding which information should be stored as node properties and which as relationships
+still requires developer judgement. For example, we could have added a Boolean <code>olympicRecord</code>
+property to our <code>Swim</code> nodes. Certain queries might now become simpler, or at least more familiar
+to traditional RDBMS SQL developers, but other queries might become much harder to write
+and potentially much less efficient.
+This is the kind of thing which needs to be thought through and sometimes experimented with.</p>
+</div>
+<div class="paragraph">
+<p>Suppose, in the case where a record is broken, we wanted to see which other swimmers
+(in our case medallists in the final) also broke the previous record.
+We could write a query to find this as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
 MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
 WHERE sm1.at = sm2.at AND sm1 &lt;&gt; sm2 AND sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s not too bad, but if we had a much larger graph of data, it could be quite slow.
+We could instead opt to use an additional relationship, called <code>runnerup</code> in our graph.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -461,7 +538,16 @@ swim7.runnerup(swim11)</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>The visualization is something like this:</p>
+</div>
+<div class="paragraph">
 <p><span class="image"><img src="img/BackstrokeRecordsRunnerup.png" alt="Additional runnerup relationship" width="60%"></span></p>
+</div>
+<div class="paragraph">
+<p>It essentially makes it easier to find the other medalists if we know any one of them.</p>
+</div>
+<div class="paragraph">
+<p>The resulting query becomes this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -470,6 +556,11 @@ MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2
 WHERE sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <em>MATCH</em> clause is similar in complexity, the <em>WHERE</em> clause is much simpler.
+The query is probably faster too, but it is a tradeoff that should be weighed up.</p>
 </div>
 </div>
 </div>
@@ -623,7 +714,8 @@ user interface for visualization of graph data stored in our database.
 Instructions for installation are available on the
 <a href="https://github.com/apache/age-viewer">GitHub site</a>.
 The tool allows visualization of the results from any query.
-For our database, a query returning all nodes and edges looks like this:</p>
+For our database, a query returning all nodes and edges creates
+a visualization like below (we chose to manually re-arrange the nodes):</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/age-viewer.png" alt="age viewer"></span></p>
@@ -655,6 +747,16 @@ For our database, a query returning all nodes and edges looks like this:</p>
 </div>
 <div class="sect1">
 <h2 id="_tugraph">TuGraph</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hugegraph">HugeGraph</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
