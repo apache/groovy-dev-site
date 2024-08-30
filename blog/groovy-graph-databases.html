@@ -53,12 +53,23 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_hugegraph' class='anchor-link'>HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
 Let&#8217;s look at just one event where the Olympic record was broken several times over the
 last three years. We&#8217;ll look at the women&#8217;s 100m backstroke and model the results as a graph database.</p>
+</div>
+<div class="paragraph">
+<p>Why the women&#8217;s 100m backstroke? Well, that was a particularly exciting event
+in terms of broken records. In Heat 4 of the Tokyo 2021 Olympics, Kylie Masse broke the record previously
+held by Emily Seebohm at the London 2012 Olympics. A few minutes later in Heat 5, Regan Smith
+broke the record again. Then in another few minutes in Heat 6, Kaylee McKeown broke the record again.
+On the following day in Semifinal 1, Regan took back the record. Then, on the following
+day in the final, Kaylee reclaimed the record. At the Paris 2024 Olympics,
+Kaylee bettered her own record in the final. Then a few days later,
+Regan lead off the 4 x 100m medley relay and broke the backstroke record swimming the first leg.
+That makes 7 times the record was broken across the 2 games!</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll have vertices in our graph database corresponding to the swimmers and the swims.
@@ -188,7 +199,7 @@ var swim6 = insertSwim(g, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
 var swim7 = insertSwim(g, 'Paris 2024', 'Final', 57.66, '🥈', rs)
 var swim8 = insertSwim(g, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
 
-var kmk = insertSwimmer(g, 'Kaylie McKeown', '🇦🇺')
+var kmk = insertSwimmer(g, 'Kaylee McKeown', '🇦🇺')
 var swim9 = insertSwim(g, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
 swim9.addEdge('supercedes', swim4)
 swim5.addEdge('supercedes', swim9)
@@ -595,7 +606,7 @@ The query is probably faster too, but it is a tradeoff that should be weighed up
 Apache AGE leverages <a href="https://www.postgresql.org">PostgreSQL</a> for storage.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://age.apache.org/age-manual/master/_static/logo.png" alt="Apache AGE logo" width="50%"></span>
+<p><span class="image"><img src="https://age.apache.org/age-manual/master/_static/logo.png" alt="Apache AGE logo" width="40%"></span>
 <span class="image"><img src="https://age.apache.org/img/logo-large-postgresql.jpg" alt="PostgreSQL logo"></span></p>
 </div>
 <div class="paragraph">
@@ -646,7 +657,7 @@ out nodes and edges:</p>
     (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024'}),
     (rs)-[:swam]-&gt;(swim8),
 
-    (kmk:Swimmer {name: 'Kaylie McKeown', country: '🇦🇺'}),
+    (kmk:Swimmer {name: 'Kaylee McKeown', country: '🇦🇺'}),
     (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021'}),
     (kmk)-[:swam]-&gt;(swim9),
     (swim9)-[:supersedes]-&gt;(swim4),
@@ -1059,7 +1070,7 @@ CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
     (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024', id:8}),
     (rs)-[:swam]-&gt;(swim8),
     (swim4)-[:supersedes]-&gt;(swim2),
-    (kmk:Swimmer {name: 'Kaylie McKeown', country: 'AU'}),
+    (kmk:Swimmer {name: 'Kaylee McKeown', country: 'AU'}),
     (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021', id:9}),
     (kmk)-[:swam]-&gt;(swim9),
     (swim9)-[:supersedes]-&gt;(swim4),
@@ -1127,18 +1138,18 @@ assert run('''
 </div>
 </div>
 <div class="sect1">
-<h2 id="_hugegraph">HugeGraph</h2>
+<h2 id="_apache_hugegraph">Apache HugeGraph</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Our final technology is
+<p>Our final technology is Apache
 <a href="https://hugegraph.apache.org/">HugeGraph</a>.
-HugeGraph is a project undergoing incubation at the ASF.</p>
+It is a project undergoing incubation at the ASF.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="https://www.apache.org/logos/res/hugegraph/hugegraph.png" alt="hugegraph logo" width="50%"></span></p>
 </div>
 <div class="paragraph">
-<p>Apache HugeGraph&#8217;s claim to fame is the ability to support very large graph databases.
+<p>HugeGraph&#8217;s claim to fame is the ability to support very large graph databases.
 Again, not really needed for this example, but it should be fun to play with.
 We used a docker image as described in the
 <a href="https://hugegraph.apache.org/docs/quickstart/hugegraph-server/#31-use-docker-container-convenient-for-testdev">documentation</a>.</p>
