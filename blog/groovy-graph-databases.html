@@ -53,17 +53,40 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this blog post, we look at using graph databases with Groovy.
+We&#8217;ll look at:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Some advantages of graph database technologies</p>
+</li>
+<li>
+<p>Some features of Groovy which make using such databases a little nicer</p>
+</li>
+<li>
+<p>Code examples for a common case study across 7 interesting graph databases</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_case_study">Case Study</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Olympics is over for another 4 years. For sports fans, there were many exciting moments.
 Let&#8217;s look at just one event where the Olympic record was broken several times over the
-last three years. We&#8217;ll look at the women&#8217;s 100m backstroke and model the results as a graph database.</p>
+last three years. We&#8217;ll look at the women&#8217;s 100m backstroke and model the results using
+graph databases.</p>
 </div>
 <div class="paragraph">
 <p>Why the women&#8217;s 100m backstroke? Well, that was a particularly exciting event
 in terms of broken records. In Heat 4 of the Tokyo 2021 Olympics, Kylie Masse broke the record previously
-held by Emily Seebohm at the London 2012 Olympics. A few minutes later in Heat 5, Regan Smith
+held by Emily Seebohm from the London 2012 Olympics. A few minutes later in Heat 5, Regan Smith
 broke the record again. Then in another few minutes in Heat 6, Kaylee McKeown broke the record again.
 On the following day in Semifinal 1, Regan took back the record. Then, on the following
 day in the final, Kaylee reclaimed the record. At the Paris 2024 Olympics,
@@ -72,14 +95,112 @@ Regan lead off the 4 x 100m medley relay and broke the backstroke record swimmin
 That makes 7 times the record was broken across the 2 games!</p>
 </div>
 <div class="paragraph">
+<p><span class="image"><img src="img/BackstrokeRecord.png" alt="Result of Semifinal1" width="70%"></span></p>
+</div>
+<div class="paragraph">
 <p>We&#8217;ll have vertices in our graph database corresponding to the swimmers and the swims.
-We&#8217;ll use the labels <code>swimmer</code> and <code>swim</code> for these vertices. We&#8217;ll have relationships
-such as <code>swam</code> and <code>supercedes</code> between vertices. We&#8217;ll explore modelling and querying the event
+We&#8217;ll use the labels <code>Swimmer</code> and <code>Swim</code> for these vertices. We&#8217;ll have relationships
+such as <code>swam</code> and <code>supersedes</code> between vertices.
+We&#8217;ll explore modelling and querying the event
 information using several graph database technologies.</p>
 </div>
 <div class="paragraph">
 <p>The examples in this post can be found on
 <a href="https://github.com/paulk-asert/groovy-graphdb/">GitHub</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_graph_databases">Why graph databases?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>RDBMS systems are many times more popular than graph databases.
+This blog post doesn&#8217;t aim to convert everyone to use graph databases all the time,
+but we&#8217;ll show you some examples of when it might make sense and let you make up your own mind.</p>
+</div>
+<div class="paragraph">
+<p>Graph databases are known for more succinct queries
+and vastly more efficient queries in some scenarios.
+Which scenarios? Usually, it boils down to relationships.
+If there are important relationships between data in your system,
+graph databases might make sense.</p>
+</div>
+<div class="paragraph">
+<p>As a first example, do you prefer this cypher query (it&#8217;s from the TuGraph code we&#8217;ll see later
+but other technologies are similar):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="sql">MATCH (sr:Swimmer)-[:swam]-&gt;(sm:Swim {at: 'Paris 2024'})
+RETURN DISTINCT sr.country AS country</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or the equivalent SQL query assuming we were storing
+the information in relational tables:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="sql">SELECT DISTINCT country FROM Swimmer
+LEFT JOIN Swimmer_Swim
+    ON Swimmer.swimmerId = Swimmer_Swim.fkSwimmer
+LEFT JOIN Swim
+    ON Swim.swimId = Swimmer_Swim.fkSwim
+WHERE Swim.at = 'Paris 2024'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This SQL query is typical of what is required when we have a many-to-many relationship
+between our entities, in this case <em>swimmers</em> and <em>swims</em>. Many-to-many is required to
+correctly model relay swims like the last record swim (though for brevity, we haven&#8217;t
+included the other relay swimmers in our dataset). The multiple joins in that query
+can also be notoriously slow for large datasets.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll see other examples later too, one being a query involving traversal of relationships.
+Here is the cypher (again from TuGraph):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="sql">MATCH (s1:Swim)-[:supersedes*1..10]-&gt;(s2:Swim {at: 'London 2012'})
+RETURN s1.at as at, s1.event as event</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the equivalent SQL:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="sql">WITH RECURSIVE traversed(swimId) AS (
+    SELECT fkNew FROM Supersedes
+    WHERE fkOld IN (
+        SELECT swimId FROM Swim
+        WHERE event = 'Heat 4' AND at = 'London 2012'
+    )
+    UNION ALL
+    SELECT Supersedes.fkNew as swimId
+    FROM traversed as t
+        JOIN Supersedes
+            ON t.swimId = Supersedes.fkOld
+    WHERE t.swimId = swimId
+)
+SELECT at, event FROM Swim
+WHERE swimId IN (SELECT * FROM traversed)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we have a <code>Supersedes</code> table and a recursive SQL function, <code>traversed</code>.
+The details aren&#8217;t important, but it shows the kind of complexity typically
+required for the kind of relationship traversal we are looking at.
+There are certainly far more complex SQL examples for different kinds of
+traversals like shortest path.</p>
+</div>
+<div class="paragraph">
+<p>Now, it&#8217;s time to explore the case study using our different database technologies.
+We tried to pick technologies that seem reasonably well maintained, had reasonable
+JVM support, and had any features that seemed worth showing off. Several we
+selected because they have TinkerPop support. It&#8217;s a Groovy-based technology
+and will be our first technology to explore.</p>
 </div>
 </div>
 </div>
@@ -96,8 +217,9 @@ information using several graph database technologies.</p>
 <p>TinkerPop is an open source computing framework for graph databases. It provides
 a common abstraction layer, and a graph query language, called Gremlin.
 This allows you to work with numerous graph database implementations in a consistent way.
-TinkerPop also provides its own graph engine implementation, called TinkerGraph, which is what
-we&#8217;ll use initially.</p>
+TinkerPop also provides its own graph engine implementation, called TinkerGraph,
+which is what we&#8217;ll use initially. TinkerPop/Gremlin will be a technology we revisit
+for other databases later.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll look at the swims for the medalists and record breakers at the Tokyo 2021 and Paris 2024 Olympics
@@ -402,16 +524,42 @@ Let&#8217;s use some dynamic metaprogramming to achieve just that.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Now we use normal Groovy property access for setting the node properties. It looks much cleaner.
+<p>What does this do? The propertyMissing lines catch attempts to use Groovy&#8217;s
+normal property access and funnels then through the <code>getProperty</code> and <code>setProperty</code> methods.
+The methodMissing line means any attempted method calls that we don&#8217;t recognize
+are intended to be relationship creation, so we funnel them through the appropriate
+method call.</p>
+</div>
+<div class="paragraph">
+<p>Now we can use normal Groovy property access for setting the node properties.
+It looks much cleaner.
 We define an edge relationship simply by calling a method having the relationship name.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">km = tx.createNode(label('swimmer'))
+<pre class="prettyprint highlight"><code data-lang="groovy">km = tx.createNode(label('Swimmer'))
 km.name = 'Kylie Masse'
-km.country = '🇨🇦'
-
-swim2 = tx.createNode(label('swim'))
+km.country = '🇨🇦'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The code is already a little cleaner, but we can tweak the metaprogramming a little
+more to get rid of the noise associated with the <code>label</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Transaction.metaClass {
+    createNode { String labelName -&gt; delegate.createNode(label(labelName)) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This adds an overload for <code>createNode</code> that takes a <code>String</code>, and
+node creation is improved again, as we can see here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">swim2 = tx.createNode('Swim')
 swim2.time = 58.17d
 swim2.result = 'First'
 swim2.event = 'Heat 4'
@@ -419,7 +567,7 @@ swim2.at = 'Tokyo 2021'
 km.swam(swim2)
 swim2.supercedes(swim1)
 
-swim3 = tx.createNode(label('swim'))
+swim3 = tx.createNode('Swim')
 swim3.time = 57.72d
 swim3.result = '🥈'
 swim3.event = 'Final'
@@ -428,8 +576,9 @@ km.swam(swim3)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The code is certainly a lot cleaner, and it was quite a minimal amount of work to define the necessary
-metaprogramming. With a little bit more work, we could use static metaprogramming techniques.
+<p>The code for relationships is certainly a lot cleaner too,
+and it was quite a minimal amount of work to define the necessary metaprogramming.
+With a little bit more work, we could use static metaprogramming techniques.
 This would give us better IDE completion.</p>
 </div>
 <div class="paragraph">
@@ -1133,74 +1282,6 @@ assert run('''
     MATCH (s1:Swim)-[:supersedes*1..10]-&gt;(s2:Swim {at: 'London 2012'})
     RETURN s1.at as at, s1.event as event
 ''')*.asMap().each{ println "$it.at $it.event" }</code></pre>
-</div>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="title">An Aside on Graph Databases</div>
-<div class="paragraph">
-<p>Graph databases are known for more succinct queries
-and vastly more efficient queries in some scenarios.
-Do you prefer this cypher query:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="sql">MATCH (sr:Swimmer)-[:swam]-&gt;(sm:Swim {at: 'Paris 2024'})
-RETURN DISTINCT sr.country AS country</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or the equivalent SQL query assuming we were storing all the information in tables:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="sql">SELECT DISTINCT country FROM Swimmer
-LEFT JOIN Swimmer_Swim
-    ON Swimmer.swimmerId = Swimmer_Swim.fkSwimmer
-LEFT JOIN Swim
-    ON Swim.swimId = Swimmer_Swim.fkSwim
-WHERE Swim.at = 'Paris 2024'</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here we are assuming a many-to-many relationship between <em>swimmers</em> and <em>swims</em>
-which is what is required to correctly model relay swims.</p>
-</div>
-<div class="paragraph">
-<p>For the traversal case, the difference is even more obvious.
-Here is the cypher:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="sql">MATCH (s1:Swim)-[:supersedes*1..10]-&gt;(s2:Swim {at: 'London 2012'})
-RETURN s1.at as at, s1.event as event</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>And the equivalent cypher:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="sql">WITH RECURSIVE traversed(swimId) AS (
-    SELECT fkNew FROM Supersedes
-    WHERE fkOld IN (
-        SELECT swimId FROM Swim
-        WHERE event = 'Heat 4' AND at = 'London 2012'
-    )
-    UNION ALL
-    SELECT Supersedes.fkNew as swimId
-    FROM traversed as t
-        JOIN Supersedes
-            ON t.swimId = Supersedes.fkOld
-    WHERE t.swimId = swimId
-)
-SELECT at, event FROM Swim
-WHERE swimId IN (SELECT * FROM traversed)</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here we have a <code>Supersedes</code> table and a recursive SQL function, <code>traversed</code>.</p>
-</div>
 </div>
 </div>
 </div>
