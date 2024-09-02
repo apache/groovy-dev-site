@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-09-02 10:18PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this blog post, we look at using property graph databases with Groovy.
@@ -719,7 +719,7 @@ We could write a query to find this as follows:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
-MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supersedes]-&gt;(sm3:swim)
+MATCH (sr1:Swimmer)-[:swam]-&gt;(sm1:Swim {event: 'Final'}), (sm2:Swim {event: 'Final'})-[:supersedes]-&gt;(sm3:Swim)
 WHERE sm1.at = sm2.at AND sm1 &lt;&gt; sm2 AND sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
@@ -752,7 +752,7 @@ swim7.runnerup(swim11)</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
-MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:swim {event: 'Final'})-[:supersedes]-&gt;(sm3:swim)
+MATCH (sr1:Swimmer)-[:swam]-&gt;(sm1:Swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:Swim {event: 'Final'})-[:supersedes]-&gt;(sm3:Swim)
 WHERE sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
@@ -853,7 +853,7 @@ can use the following <em>cypher</em> query:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert sql.rows('''
     SELECT * from cypher('swimming_graph', $$
-    MATCH (s:swim)
+    MATCH (s:Swim)
     WHERE left(s.event, 4) = 'Heat'
     RETURN s
     $$) AS (a agtype)
