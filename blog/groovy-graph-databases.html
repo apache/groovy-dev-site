@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, apache hugegraph, orientdb, arcadedb, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, apache hugegraph, arcadedb, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,16 +53,16 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-08-20 10:18AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this blog post, we look at using graph databases with Groovy.
+<p>In this blog post, we look at using property graph databases with Groovy.
 We&#8217;ll look at:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Some advantages of graph database technologies</p>
+<p>Some advantages of property graph database technologies</p>
 </li>
 <li>
 <p>Some features of Groovy which make using such databases a little nicer</p>
@@ -92,7 +92,7 @@ On the following day in Semifinal 1, Regan took back the record. Then, on the fo
 day in the final, Kaylee reclaimed the record. At the Paris 2024 Olympics,
 Kaylee bettered her own record in the final. Then a few days later,
 Regan lead off the 4 x 100m medley relay and broke the backstroke record swimming the first leg.
-That makes 7 times the record was broken across the 2 games!</p>
+That makes 7 times the record was broken across the last 2 games!</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/BackstrokeRecord.png" alt="Result of Semifinal1" width="70%"></span></p>
@@ -114,19 +114,23 @@ information using several graph database technologies.</p>
 <h2 id="_why_graph_databases">Why graph databases?</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>RDBMS systems are many times more popular than graph databases.
-This blog post doesn&#8217;t aim to convert everyone to use graph databases all the time,
-but we&#8217;ll show you some examples of when it might make sense and let you make up your own mind.</p>
+<p>RDBMS systems are many times more popular than graph databases, but there are a
+range of scenarios where graph databases are often used.
+Which scenarios? Usually, it boils down to relationships.
+If there are important relationships between data in your system,
+graph databases might make sense.
+Typical usage scenarios include fraud detection, knowledge graphs, recommendations engines,
+social networks, and supply chain management.</p>
+</div>
+<div class="paragraph">
+<p>This blog post doesn&#8217;t aim to convert everyone to use graph databases all the time,
+but we&#8217;ll show you some examples of when it might make sense and let you make up your own mind.
+Graph databases certainly represent a very useful tool to have in your toolbox should the need arise.</p>
 </div>
 <div class="paragraph">
 <p>Graph databases are known for more succinct queries
 and vastly more efficient queries in some scenarios.
-Which scenarios? Usually, it boils down to relationships.
-If there are important relationships between data in your system,
-graph databases might make sense.</p>
-</div>
-<div class="paragraph">
-<p>As a first example, do you prefer this cypher query (it&#8217;s from the TuGraph code we&#8217;ll see later
+As a first example, do you prefer this cypher query (it&#8217;s from the TuGraph code we&#8217;ll see later
 but other technologies are similar):</p>
 </div>
 <div class="listingblock">
@@ -242,8 +246,8 @@ at the London 2012 Olympics. Emily Seebohm set that record in Heat 4:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var es = g.addV('swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
-swim1 = g.addV('swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
+<pre class="prettyprint highlight"><code data-lang="groovy">var es = g.addV('Swimmer').property(name: 'Emily Seebohm', country: '🇦🇺').next()
+swim1 = g.addV('Swim').property(at: 'London 2012', event: 'Heat 4', time: 58.23, result: 'First').next()
 es.addEdge('swam', swim1)</code></pre>
 </div>
 </div>
@@ -293,11 +297,11 @@ We can enable the syntactic sugar with:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def insertSwimmer(TraversalSource g, name, country) {
-    g.addV('swimmer').property(name: name, country: country).next()
+    g.addV('Swimmer').property(name: name, country: country).next()
 }
 
 def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
-    var swim = g.addV('swim').property(at: at, event: event, time: time, result: result).next()
+    var swim = g.addV('Swim').property(at: at, event: event, time: time, result: result).next()
     swimmer.addEdge('swam', swim)
     swim
 }</code></pre>
@@ -310,12 +314,12 @@ def insertSwim(TraversalSource g, at, event, time, result, swimmer) {
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var km = insertSwimmer(g, 'Kylie Masse', '🇨🇦')
 var swim2 = insertSwim(g, 'Tokyo 2021', 'Heat 4', 58.17, 'First', km)
-swim2.addEdge('supercedes', swim1)
+swim2.addEdge('supersedes', swim1)
 var swim3 = insertSwim(g, 'Tokyo 2021', 'Final', 57.72, '🥈', km)
 
 var rs = insertSwimmer(g, 'Regan Smith', '🇺🇸')
 var swim4 = insertSwim(g, 'Tokyo 2021', 'Heat 5', 57.96, 'First', rs)
-swim4.addEdge('supercedes', swim2)
+swim4.addEdge('supersedes', swim2)
 var swim5 = insertSwim(g, 'Tokyo 2021', 'Semifinal 1', 57.86, '', rs)
 var swim6 = insertSwim(g, 'Tokyo 2021', 'Final', 58.05, '🥉', rs)
 var swim7 = insertSwim(g, 'Paris 2024', 'Final', 57.66, '🥈', rs)
@@ -323,13 +327,13 @@ var swim8 = insertSwim(g, 'Paris 2024', 'Relay leg1', 57.28, 'First', rs)
 
 var kmk = insertSwimmer(g, 'Kaylee McKeown', '🇦🇺')
 var swim9 = insertSwim(g, 'Tokyo 2021', 'Heat 6', 57.88, 'First', kmk)
-swim9.addEdge('supercedes', swim4)
-swim5.addEdge('supercedes', swim9)
+swim9.addEdge('supersedes', swim4)
+swim5.addEdge('supersedes', swim9)
 var swim10 = insertSwim(g, 'Tokyo 2021', 'Final', 57.47, '🥇', kmk)
-swim10.addEdge('supercedes', swim5)
+swim10.addEdge('supersedes', swim5)
 var swim11 = insertSwim(g, 'Paris 2024', 'Final', 57.33, '🥇', kmk)
-swim11.addEdge('supercedes', swim10)
-swim8.addEdge('supercedes', swim11)
+swim11.addEdge('supersedes', swim10)
+swim8.addEdge('supersedes', swim11)
 
 var kb = insertSwimmer(g, 'Katharine Berkoff', '🇺🇸')
 var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)</code></pre>
@@ -338,8 +342,8 @@ var swim12 = insertSwim(g, 'Paris 2024', 'Final', 57.98, '🥉', kb)</code></pre
 <div class="paragraph">
 <p>Note that we just entered the swims where medals were won or
 where olympic records were broken. We could easily have added
-more swimmers, other strokes and distances, and even other sports
-if we wanted to.</p>
+more swimmers, other strokes and distances, relay events,
+and even other sports if we wanted to.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s have a look at what our graph now looks like:</p>
@@ -350,7 +354,7 @@ if we wanted to.</p>
 <div class="paragraph">
 <p>We now might want to query the graph in numerous ways.
 For instance, what countries had success at the Paris 2024 olympics,
-where success is defined for the purposes of this query as
+where success is defined, for the purposes of this query, as
 winning a medal or breaking a record. Of course, just having
 a swimmer make the olympic team is a great success - but let&#8217;s
 keep our example simple for now.</p>
@@ -375,7 +379,7 @@ sets on both sides.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().hasLabel('swim')
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().hasLabel('Swim')
     .filter { it.get().property('event').value().startsWith('Heat') }
     .values('at').toSet()
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
@@ -407,9 +411,18 @@ assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>But graph databases really excel when performing queries
-involving multiple edge traversals. Here is one looking
-at all the olympic records set in 2021 and 2024:</p>
+<p>Groovy happens to be very good at allowing you to add syntactic sugar
+for your own programs or existing classes. TinkerPop&#8217;s special Groovy support
+is just one example of this. Your vendor could certainly supply such a feature
+for your favorite graph database (why not ask them?) but we&#8217;ll look shortly at
+how you could write such syntactic sugar yourself when we explore Neo4j.</p>
+</div>
+<div class="paragraph">
+<p>Our examples so far are all interesting,
+but graph databases really excel when performing queries
+involving multiple edge traversals. Let&#8217;s look
+at all the olympic records set in 2021 and 2024,
+i.e. all records set after London 2012 (<code>swim1</code> from earlier):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -443,9 +456,18 @@ Paris 2024 Final
 Paris 2024 Relay leg1</pre>
 </div>
 </div>
-<div class="paragraph">
-<p>As a side note, TinkerPop has a <code>GraphMLWriter</code> class which can write out our
-graph in <em>GraphML</em>, which is how the above image was created.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+While not important for our examples, TinkerPop has a <code>GraphMLWriter</code> class which can write out our
+graph in <em>GraphML</em>, which is how the earlier image of Graphs and Nodes was initially generated.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -525,10 +547,10 @@ Let&#8217;s use some dynamic metaprogramming to achieve just that.</p>
 </div>
 <div class="paragraph">
 <p>What does this do? The propertyMissing lines catch attempts to use Groovy&#8217;s
-normal property access and funnels then through the <code>getProperty</code> and <code>setProperty</code> methods.
+normal property access and funnels then through appropriate <code>getProperty</code> and <code>setProperty</code> methods.
 The methodMissing line means any attempted method calls that we don&#8217;t recognize
 are intended to be relationship creation, so we funnel them through the appropriate
-method call.</p>
+<code>createRelationshipTo</code> method call.</p>
 </div>
 <div class="paragraph">
 <p>Now we can use normal Groovy property access for setting the node properties.
@@ -565,7 +587,7 @@ swim2.result = 'First'
 swim2.event = 'Heat 4'
 swim2.at = 'Tokyo 2021'
 km.swam(swim2)
-swim2.supercedes(swim1)
+swim2.supersedes(swim1)
 
 swim3 = tx.createNode('Swim')
 swim3.time = 57.72d
@@ -577,24 +599,19 @@ km.swam(swim3)</code></pre>
 </div>
 <div class="paragraph">
 <p>The code for relationships is certainly a lot cleaner too,
-and it was quite a minimal amount of work to define the necessary metaprogramming.
-With a little bit more work, we could use static metaprogramming techniques.
-This would give us better IDE completion.</p>
+and it was quite a minimal amount of work to define the necessary metaprogramming.</p>
 </div>
 <div class="paragraph">
-<p>Another interesting topic which we won&#8217;t elaborate here is stronger type checking for graphs.
-For graph libraries which support schemas, the types for node and edge properties can be defined,
-as can the allowable nodes applicable to any edge relationship. For such systems, if you try to
-define a poorly-typed property, or incorrectly use a relationship, you will receive a runtime error.
-Groovy lets us take things further, if we want, and if we are willing to do a little more work.
-For example, if the schema is available at compile time, we could write a type checking extension
-which would fail compilation if any invalid edge or vertex definitions were detected.</p>
+<p>With a little bit more work, we could use static metaprogramming techniques.
+This would give us better IDE completion.
+We&#8217;ll have more to say about improved type checking at the end of this post.
+For now though, let&#8217;s continue with defining the rest of our graph.</p>
 </div>
 <div class="paragraph">
-<p>For now though, let&#8217;s continue with defining the rest of our graph.
-We can redefine our <code>insertSwimmer</code> and <code>insertSwim</code> methods using Neo4j implementation
+<p>We can redefine our <code>insertSwimmer</code> and <code>insertSwim</code> methods using Neo4j implementation
 calls, and then our earlier code could be used to create our graph. Now let&#8217;s
-investigate what the queries look like.</p>
+investigate what the queries look like. We&#8217;ll start with querying via
+the API. and later look at using Cypher.</p>
 </div>
 <div class="paragraph">
 <p>First, the successful countries in Paris 2024:</p>
@@ -628,7 +645,7 @@ assert recordSetInHeat.unique() == ['London 2012', 'Tokyo 2021']</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var recordTimesInFinals = swims.findAll { swim -&gt;
-    swim.event == 'Final' &amp;&amp; swim.hasRelationship(supercedes)
+    swim.event == 'Final' &amp;&amp; swim.hasRelationship(supersedes)
 }*.time
 assert recordTimesInFinals == [57.47d, 57.33d]</code></pre>
 </div>
@@ -653,7 +670,7 @@ for (Path p in tx.traversalDescription()
 </div>
 <div class="paragraph">
 <p>Earlier versions of Neo4j also supported Gremlin, so we could have written our queries in
-the same was as we did for TinkerPop. That technology is deprecated for Neo4j, and instead
+the same was as we did for TinkerPop. That technology is deprecated in recent Neo4j versions, and instead
 they now offer a Cypher query language. We can use that language for all of our previous queries
 as shown here:</p>
 </div>
@@ -679,11 +696,12 @@ RETURN s1
 }</code></pre>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_an_aside_on_graph_design">An aside on graph design</h3>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">An aside on graph design</div>
 <div class="paragraph">
 <p>This blog post is definitely, not meant to be an advanced course on graph database
-design, but it is worth pointing out a few points.</p>
+design, but it is worth noting a few points.</p>
 </div>
 <div class="paragraph">
 <p>Deciding which information should be stored as node properties and which as relationships
@@ -701,7 +719,7 @@ We could write a query to find this as follows:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
-MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
+MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'}), (sm2:swim {event: 'Final'})-[:supersedes]-&gt;(sm3:swim)
 WHERE sm1.at = sm2.at AND sm1 &lt;&gt; sm2 AND sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
@@ -734,7 +752,7 @@ swim7.runnerup(swim11)</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">assert tx.execute('''
-MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:swim {event: 'Final'})-[:supercedes]-&gt;(sm3:swim)
+MATCH (sr1:swimmer)-[:swam]-&gt;(sm1:swim {event: 'Final'})-[:runnerup]-&gt;{1,2}(sm2:swim {event: 'Final'})-[:supersedes]-&gt;(sm3:swim)
 WHERE sm1.time &lt; sm3.time
 RETURN sr1.name as name
 ''')*.name == ['Kylie Masse']</code></pre>
@@ -743,6 +761,7 @@ RETURN sr1.name as name
 <div class="paragraph">
 <p>The <em>MATCH</em> clause is similar in complexity, the <em>WHERE</em> clause is much simpler.
 The query is probably faster too, but it is a tradeoff that should be weighed up.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1432,6 +1451,107 @@ gremlin.gremlin('''
     println "$a $e"
 }</code></pre>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_static_typing">Static typing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another interesting topic is improving type checking for graph database code.
+Groovy supports very dynamic styles of code through to "stronger-than-Java" type checking.</p>
+</div>
+<div class="paragraph">
+<p>Some graph database technologies offer only a schema-free experience
+to allow your data models to <em>"adapt and change easily with your business"</em>.
+Others allow a schema to be defined with varying degrees of information.
+Groovy&#8217;s dynamic capabilities make it particularly suited for writing code
+that will work easily even if you change your data model on the fly.
+However, if you prefer to add further type checking into your code, Groovy has
+options for that too.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s recap on what schema-like capabilities our examples made use of:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Apache TinkerPop: used dynamic vertex labels and edges</p>
+</li>
+<li>
+<p>Neo4j: used dynamic vertex labels but required edges to be defined by an enum</p>
+</li>
+<li>
+<p>Apache AGE: although not shown in this post, defined vertex labels, edges were dynamic</p>
+</li>
+<li>
+<p>OrientDB: defined vertex and edge classes</p>
+</li>
+<li>
+<p>ArcadeDB: defined vertex and edge types</p>
+</li>
+<li>
+<p>TuGraph: defined vertex and edge labels, vertex labels had typed properties, edge labels typed with from/to vertex labels</p>
+</li>
+<li>
+<p>Apache HugeGraph: defined vertex and edge labels, vertex labels had typed properties, edge labels typed with from/to vertex labels</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The good news about where we chose very dynamic options, we could easily add new
+vertices and edges, e.g.:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var mb = g.addV('Coach').property(name: 'Michael Bohl').next()
+mb.coaches(kmk)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the examples which used schema-like capabilities, we&#8217;d need to declare the additional
+vertex type <code>Coach</code> and edge <code>coaches</code> before we could define the new node and edge.
+Let&#8217;s explore just a few options where Groovy capabilities could make it easier to deal
+with typing.</p>
+</div>
+<div class="paragraph">
+<p>We previously used <code>insertSwimmer</code> and <code>insertSwim</code> helper methods. We could supply types
+for those parameters even where our underlying database technology wasn&#8217;t using them.
+That would at least capture typing errors when inserting information into our graph.</p>
+</div>
+<div class="paragraph">
+<p>We could use a richly-typed domain using Groovy classes or records. We could generate
+the necessary method calls to create the schema/labels and then populate the database.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, we can leave the code in its dynamic form and make use of Groovy&#8217;s
+extensible type checking system. We could write an extension which
+fails compilation if any invalid edge or vertex definitions were detected.
+For our <code>coaches</code> example above, the previous line would pass compilation
+but if had incorrect vertices for that edge relationship, compilation would fail,
+e.g. for the statement <code>swim1.coaches(mb)</code>, we&#8217;d get the following error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Invalid edge - expected: &lt;Coach&gt;.coaches(&lt;Swimmer&gt;)
+but found: &lt;Swim&gt;.coaches(&lt;Coach&gt;)
+@ line 20, column 5.
+swim1.coaches(mb)
+^
+
+1 error</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We won&#8217;t show the code for this, it&#8217;s in the GitHub repo. It is hard-coded to
+know about the <code>coaches</code> relationship. Ideally, we&#8217;d combine extensible type checking
+with the previously mentioned richly-typed model, and we could populate both the
+information that our type checker needs and any label/schema information our
+graph database would need.</p>
+</div>
+<div class="paragraph">
+<p>Anyway, these a just a few options Groovy gives you. Why not have fun trying out some
+ideas yourself!</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
