@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-09-02 10:18PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-09-02 10:18PM (Last updated: 2024-09-18 10:20PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this blog post, we look at using property graph databases with Groovy.
@@ -270,8 +270,8 @@ by querying the properties of two nodes respectively:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { es.property(it).value() }
-var (at, event, time) = ['at', 'event', 'time'].collect { swim1.property(it).value() }
+<pre class="prettyprint highlight"><code data-lang="groovy">var (name, country) = ['name', 'country'].collect { es.value(it) }
+var (at, event, time) = ['at', 'event', 'time'].collect { swim1.value(it) }
 println "$name from $country swam a time of $time in $event at the $at Olympics"</code></pre>
 </div>
 </div>
@@ -294,7 +294,7 @@ We can enable the syntactic sugar with:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Which then lets us write the slightly shorter:</p>
+<p>Which then lets us write (instead of the three earlier lines) the slightly shorter:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -392,9 +392,7 @@ sets on both sides.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().hasLabel('Swim')
-    .filter { it.get().property('event').value().startsWith('Heat') }
-    .values('at').toSet()
+<pre class="prettyprint highlight"><code data-lang="groovy">var recordSetInHeat = g.V().has('Swim','event', startingWith('Heat')).values('at').toSet()
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set</code></pre>
 </div>
 </div>
@@ -416,7 +414,7 @@ assert recordTimesInFinals == [57.47, 57.33] as Set</code></pre>
 <pre class="prettyprint highlight"><code data-lang="groovy">var successInParis = g.V.out('swam').has('at', 'Paris 2024').in.country.toSet
 assert successInParis == ['🇺🇸', '🇦🇺'] as Set
 
-var recordSetInHeat = g.V.hasLabel('Swim').filter { it.event.startsWith('Heat') }.at.toSet
+var recordSetInHeat = g.V.has('Swim','event', startingWith('Heat')).at.toSet
 assert recordSetInHeat == ['London 2012', 'Tokyo 2021'] as Set
 
 var recordTimesInFinals = g.V.has('event', 'Final').as('ev').out('supersedes').select('ev').time.toSet
@@ -1217,8 +1215,8 @@ Hence, we added the <code>id</code> for our <code>Swim</code> vertex.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">'''
 CALL db.dropDB()
-CALL db.createVertexLabel('Swimmer', 'name', 'name', STRING, false, 'country', STRING, false)
-CALL db.createVertexLabel('Swim', 'id', 'id', INT32, false, 'event', STRING, false, 'result', STRING, false, 'at', STRING, false, 'time', FLOAT, false)
+CALL db.createVertexLabel('Swimmer', 'name', 'name', 'STRING', false, 'country', 'STRING', false)
+CALL db.createVertexLabel('Swim', 'id', 'id', 'INT32', false, 'event', 'STRING', false, 'result', 'STRING', false, 'at', 'STRING', false, 'time', 'FLOAT', false)
 CALL db.createEdgeLabel('swam','[["Swimmer","Swim"]]')
 CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 '''.trim().readLines().each{ run(it) }</code></pre>
@@ -1230,58 +1228,44 @@ CALL db.createEdgeLabel('supersedes','[["Swim","Swim"]]')
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">run '''create
-    (es:Swimmer {name: 'Emily Seebohm', country: 'AU'}),
+    (es:Swimmer {name: 'Emily Seebohm', country: '🇦🇺'}),
     (swim1:Swim {event: 'Heat 4', result: 'First', time: 58.23, at: 'London 2012', id:1}),
     (es)-[:swam]-&gt;(swim1),
-    (km:Swimmer {name: 'Kylie Masse', country: 'CA'}),
+    (km:Swimmer {name: 'Kylie Masse', country: '🇨🇦'}),
     (swim2:Swim {event: 'Heat 4', result: 'First', time: 58.17, at: 'Tokyo 2021', id:2}),
     (km)-[:swam]-&gt;(swim2),
-    (swim3:Swim {event: 'Final', result: 'Silver', time: 57.72, at: 'Tokyo 2021', id:3}),
+    (swim3:Swim {event: 'Final', result: '🥈', time: 57.72, at: 'Tokyo 2021', id:3}),
     (km)-[:swam]-&gt;(swim3),
     (swim2)-[:supersedes]-&gt;(swim1),
-    (rs:Swimmer {name: 'Regan Smith', country: 'US'}),
+    (rs:Swimmer {name: 'Regan Smith', country: '🇺🇸'}),
     (swim4:Swim {event: 'Heat 5', result: 'First', time: 57.96, at: 'Tokyo 2021', id:4}),
     (rs)-[:swam]-&gt;(swim4),
     (swim5:Swim {event: 'Semifinal 1', result: 'First', time: 57.86, at: 'Tokyo 2021', id:5}),
     (rs)-[:swam]-&gt;(swim5),
-    (swim6:Swim {event: 'Final', result: 'Bronze', time: 58.05, at: 'Tokyo 2021', id:6}),
+    (swim6:Swim {event: 'Final', result: '🥉', time: 58.05, at: 'Tokyo 2021', id:6}),
     (rs)-[:swam]-&gt;(swim6),
-    (swim7:Swim {event: 'Final', result: 'Silver', time: 57.66, at: 'Paris 2024', id:7}),
+    (swim7:Swim {event: 'Final', result: '🥈', time: 57.66, at: 'Paris 2024', id:7}),
     (rs)-[:swam]-&gt;(swim7),
     (swim8:Swim {event: 'Relay leg1', result: 'First', time: 57.28, at: 'Paris 2024', id:8}),
     (rs)-[:swam]-&gt;(swim8),
     (swim4)-[:supersedes]-&gt;(swim2),
-    (kmk:Swimmer {name: 'Kaylee McKeown', country: 'AU'}),
+    (kmk:Swimmer {name: 'Kaylee McKeown', country: '🇦🇺'}),
     (swim9:Swim {event: 'Heat 6', result: 'First', time: 57.88, at: 'Tokyo 2021', id:9}),
     (kmk)-[:swam]-&gt;(swim9),
     (swim9)-[:supersedes]-&gt;(swim4),
     (swim5)-[:supersedes]-&gt;(swim9),
-    (swim10:Swim {event: 'Final', result: 'Gold', time: 57.47, at: 'Tokyo 2021', id:10}),
+    (swim10:Swim {event: 'Final', result: '🥇', time: 57.47, at: 'Tokyo 2021', id:10}),
     (kmk)-[:swam]-&gt;(swim10),
     (swim10)-[:supersedes]-&gt;(swim5),
-    (swim11:Swim {event: 'Final', result: 'Gold', time: 57.33, at: 'Paris 2024', id:11}),
+    (swim11:Swim {event: 'Final', result: '🥇', time: 57.33, at: 'Paris 2024', id:11}),
     (kmk)-[:swam]-&gt;(swim11),
     (swim11)-[:supersedes]-&gt;(swim10),
     (swim8)-[:supersedes]-&gt;(swim11),
-    (kb:Swimmer {name: 'Katharine Berkoff', country: 'US'}),
-    (swim12:Swim {event: 'Final', result: 'Bronze', time: 57.98, at: 'Paris 2024', id:12}),
+    (kb:Swimmer {name: 'Katharine Berkoff', country: '🇺🇸'}),
+    (swim12:Swim {event: 'Final', result: '🥉', time: 57.98, at: 'Paris 2024', id:12}),
     (kb)-[:swam]-&gt;(swim12)
 '''</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-In my attempts to use this client, emoji content seemed to break the property parser.
-For now, I have replaced emoji content with simple text. I&#8217;ll revise this post should I find
-a better workaround or if the issue is otherwise resolved.
-</td>
-</tr>
-</table>
 </div>
 <div class="paragraph">
 <p>TuGraph uses Cypher style queries. Here are our three standard queries:</p>
@@ -1291,7 +1275,7 @@ a better workaround or if the issue is otherwise resolved.
 <pre class="prettyprint highlight"><code data-lang="groovy">assert run('''
     MATCH (sr:Swimmer)-[:swam]-&gt;(sm:Swim {at: 'Paris 2024'})
     RETURN DISTINCT sr.country AS country
-''')*.get('country')*.asString().toSet() == ["US", "AU"] as Set
+''')*.get('country')*.asString().toSet() == ['🇺🇸', '🇦🇺'] as Set
 
 assert run('''
     MATCH (s:Swim)
@@ -1565,6 +1549,15 @@ graph database would need.</p>
 <div class="paragraph">
 <p>Anyway, these a just a few options Groovy gives you. Why not have fun trying out some
 ideas yourself!</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>02/Sep/2024</strong>: Initial version.<br>
+<strong>18/Sep/2024</strong>: Updated for latest Groovy 5 version, updated for TuGraph 4.5.0 with thanks to Florian (GitHub: fanzhidongyzby) and Richard Bian (x: @RichSFO), TinkerPop tweaks with thanks to Stephen Mallette (ASF: spmallette).<br></p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
