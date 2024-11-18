@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='aggregation, search, lucene, groovy'/><meta name='description' content='This post looks at using Lucene to find references to other projects in Groovy&apos;s blog posts.'/><title>The Apache Groovy programming language - Blogs - Searching with Lucene</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='/img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_finding_project_names_with_a_regex' class='anchor-link'>Finding project names with a regex</a></li><li><a href='#_finding_project_names_using_regex_matching' class='anchor-link'>Finding project names using regex matching</a></li><li><a href='#_using_lucene' class='anchor-link'>Using Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-18 08:30PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Groovy <a href="https://groovy.apache.org/blog/">blog posts</a> often reference other Apache projects.
+Let&#8217;s have a look at how we can find such references, first using regular expressions
+and then using Apache Lucene.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_finding_project_names_with_a_regex">Finding project names with a regex</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For the sake of this post, let&#8217;s assume that project references will
+include the work "Apache" followed by the project name. To make it more
+interesting, we&#8217;ll also include references to Eclipse projects.
+We&#8217;ll also make provision for project with subprojects, at least for
+Apache Commons, so this will pick up names like Apache Commons Math
+for instance. We&#8217;ll exclude Apache Groovy since that would hit possibly
+every Groovy blog post. We&#8217;ll also exclude a bunch of words that appear in
+commonly used phrases like "Apache License" and "Apache Projects".</p>
+</div>
+<div class="paragraph">
+<p>This is by no means a perfect name reference finder, for example,
+we often refer to Apache Commons Math by its full name when first introduced
+but later in posts we fall back to the more friendly "Commons Math" reference
+where the "Apache" is understood from the context. We could make the regex
+more elaborate to cater for such cases but there isn&#8217;t really any benefit,
+so we won&#8217;t.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">String tokenRegex = /(?ix)           # ignore case, enable whitespace &amp; comments
+    \b                               # word boundary
+    (                                # start capture of all terms
+        (                            # capture project name
+            (apache|eclipse)\s       # foundation name
+            (commons\s)?             # optional subproject name
+                (                    # capture next word unless excluded word
+                    ?!(
+                        groovy       # excluded words
+                      | and
+                      | license
+                      | users
+                      | software
+                      | projects
+                      | https
+                      | technologies
+                      )
+                )\w+                 # end capture #2
+        )
+        |                            # alternatively
+        (                            # capture non-project word
+            (?!(apache|eclipse))
+            \w+
+        )                            # end capture #3
+    )                                # end capture #1
+/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve used Groovy&#8217;s multiline slashy string to save having to escape backslashes.
+We&#8217;ve also enabled regex whitespace and comments to explain the regex.
+Feel free to make a compact (long) one-liner without comments if you prefer.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_finding_project_names_using_regex_matching">Finding project names using regex matching</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With our regex sorted, let&#8217;s look at how you could use a Groovy matcher
+to find all the project names.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var blogBaseDir = '/projects/apache-websites/groovy-website/site/src/site/blog' // <b class="conum">(1)</b>
+var histogram = [:].withDefault { 0 }
+
+new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;  // <b class="conum">(2)</b>
+    var m = file.text =~ tokenRegex // <b class="conum">(3)</b>
+    var projects = m*.get(2).grep()*.toLowerCase()*.replaceAll('\n', ' ').countBy() // <b class="conum">(4)</b>
+    if (projects) {
+        println "$file.name: $projects" // <b class="conum">(5)</b>
+        projects.each { k, v -&gt; histogram[k] += v } // <b class="conum">(6)</b>
+    }
+}
+
+println()
+
+histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(7)</b>
+    var label = "$k ($v)"
+    println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>You&#8217;d need to check out the Groovy website and point to it here</p>
+</li>
+<li>
+<p>This traverse the directory processing each asciidoc file</p>
+</li>
+<li>
+<p>We define our matcher</p>
+</li>
+<li>
+<p>This pulls out project names (capture group 2) and ignores other words (using grep) then aggregates the hits for that file</p>
+</li>
+<li>
+<p>We print out each blog post file name and its project references</p>
+</li>
+<li>
+<p>We add the file aggregates to the overall aggregates</p>
+</li>
+<li>
+<p>We print out the pretty ascii barchart summarising the overall aggregates</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The output looks like:</p>
+</div>
+<pre>
+apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
+classifying-iris-flowers-with-deep.adoc: [eclipse&nbsp;deeplearning4j:5, apache&nbsp;commons math:1, apache&nbsp;spark:2]
+community-over-code-eu-2024.adoc: [apache&nbsp;ofbiz:1, apache&nbsp;commons math:2, apache&nbsp;ignite:1]
+community-over-code-na-2023.adoc: [apache&nbsp;ignite:8, apache&nbsp;commons numbers:1, apache&nbsp;commons csv:1]
+deck-of-cards-with-groovy.adoc: [eclipse&nbsp;collections:5]
+deep-learning-and-eclipse-collections.adoc: [eclipse&nbsp;collections:7, eclipse&nbsp;deeplearning4j:2]
+detecting-objects-with-groovy-the.adoc: [apache&nbsp;mxnet:12]
+fruity-eclipse-collections.adoc: [eclipse&nbsp;collections:9, apache&nbsp;commons math:1]
+fun-with-obfuscated-groovy.adoc: [apache&nbsp;commons math:1]
+groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
+groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
+groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
+groovy-list-processing-cheat-sheet.adoc: [eclipse&nbsp;collections:4, apache&nbsp;commons collections:3]
+groovy-lucene.adoc: [apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-null-processing.adoc: [eclipse&nbsp;collections:6, apache&nbsp;commons collections:4]
+groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
+groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
+handling-byte-order-mark-characters.adoc: [apache&nbsp;commons io:1]
+lego-bricks-with-groovy.adoc: [eclipse&nbsp;collections:6]
+matrix-calculations-with-groovy-apache.adoc: [apache&nbsp;commons math:6, eclipse&nbsp;deeplearning4j:1, apache&nbsp;commons:1]
+natural-language-processing-with-groovy.adoc: [apache&nbsp;opennlp:2, apache&nbsp;spark:1]
+reading-and-writing-csv-files.adoc: [apache&nbsp;commons csv:1]
+set-operations-with-groovy.adoc: [eclipse&nbsp;collections:3]
+solving-simple-optimization-problems-with-groovy.adoc: [apache&nbsp;commons math:5, apache&nbsp;kie:1]
+using-groovy-with-apache-wayang.adoc: [apache&nbsp;wayang:9, apache&nbsp;spark:7, apache&nbsp;flink:1, apache&nbsp;commons csv:1, apache&nbsp;ignite:1]
+whiskey-clustering-with-groovy-and.adoc: [apache&nbsp;ignite:7, apache&nbsp;wayang:1, apache&nbsp;spark:2, apache&nbsp;commons csv:2]
+wordle-checker.adoc: [eclipse&nbsp;collections:3]
+zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
+
+eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
+apache&nbsp;commons math (18)         ██████████████████▏
+apache&nbsp;ignite (17)               █████████████████▏
+apache&nbsp;spark (12)                ████████████▏
+apache&nbsp;mxnet (12)                ████████████▏
+apache&nbsp;age (11)                  ███████████▏
+apache&nbsp;wayang (10)               ██████████▏
+eclipse&nbsp;deeplearning4j (8)       ████████▏
+apache&nbsp;commons collections (7)   ███████▏
+apache&nbsp;nlpcraft (5)              █████▏
+apache&nbsp;commons csv (5)           █████▏
+apache&nbsp;pekko (4)                 ████▏
+apache&nbsp;hugegraph (3)             ███▏
+apache&nbsp;tinkerpop (3)             ███▏
+apache&nbsp;commons cli (2)           ██▏
+apache&nbsp;commons (2)               ██▏
+apache&nbsp;lucene (2)                ██▏
+apache&nbsp;opennlp (2)               ██▏
+apache&nbsp;ofbiz (1)                 █▏
+apache&nbsp;commons numbers (1)       █▏
+apache&nbsp;commons codec (1)         █▏
+apache&nbsp;commons io (1)            █▏
+apache&nbsp;kie (1)                   █▏
+apache&nbsp;flink (1)                 █▏
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_lucene">Using Lucene</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Okay, regular expressions weren&#8217;t that hard but in general we might want to search many things.
+Search frameworks like Lucene help with that. Let&#8217;s see what it looks like to apply
+Lucene to our problem.</p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll define a custom analyzer. Lucene is very flexible and comes with builtin
+analyzers. In a typical scenario, we might just search on all words.
+There&#8217;s a builtin analyzer for that.
+If we used that, to query for our project names,
+we&#8217;d construct a query that spanned multiple (word) terms.
+For the purposes of our little example, we are going to assume project names
+are indivisible terms and slice them up that way. There is a pattern tokenizer
+which lets us reuse our existing regex.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class ApacheProjectAnalyzer extends Analyzer {
+    @Override
+    protected TokenStreamComponents createComponents(String fieldName) {
+        var src = new PatternTokenizer(~tokenRegex, 0)
+        var result = new LowerCaseFilter(src)
+        new TokenStreamComponents(src, result)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now tokenize our documents and let Lucene index them.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var analyzer = new ApacheProjectAnalyzer() // <b class="conum">(1)</b>
+var indexDir = new ByteBuffersDirectory() // <b class="conum">(2)</b>
+var config = new IndexWriterConfig(analyzer)
+var writer = new IndexWriter(indexDir, config)
+
+var blogBaseDir = '/projects/apache-websites/groovy-website/site/src/site/blog'
+new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
+    file.withReader { br -&gt;
+        var document = new Document()
+        var fieldType = new FieldType(stored: true,
+            indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
+            storeTermVectors: true,
+            storeTermVectorPositions: true,
+            storeTermVectorOffsets: true)
+        document.add(new Field('content', br.text, fieldType)) // <b class="conum">(3)</b>
+        document.add(new StringField('name', file.name, Field.Store.YES)) // <b class="conum">(4)</b>
+        writer.addDocument(document)
+    }
+}
+writer.close()
+
+var reader = DirectoryReader.open(indexDir)
+var searcher = new IndexSearcher(reader)
+var parser = new QueryParser("content", analyzer)
+
+var query = parser.parse('apache* OR eclipse*') // <b class="conum">(5)</b>
+var results = searcher.search(query, 30) // <b class="conum">(6)</b>
+println "Total documents with hits for $query --&gt; $results.totalHits"
+
+var storedFields = searcher.storedFields()
+var histogram = [:].withDefault { 0 }
+results.scoreDocs.each { ScoreDoc doc -&gt; // <b class="conum">(7)</b>
+    var document = storedFields.document(doc.doc)
+    var found = handleHit(doc, query, reader) // <b class="conum">(8)</b>
+    println "${document.get('name')}: ${found*.replaceAll('\n', ' ').countBy()}"
+    found.each { histogram[it.replaceAll('\n', ' ')] += 1 } // <b class="conum">(9)</b>
+}
+
+println()
+
+histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(10)</b>
+    var label = "$k ($v)"
+    println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
+}
+
+List&lt;String&gt; handleHit(ScoreDoc hit, Query query, DirectoryReader dirReader) { // <b class="conum">(11)</b>
+    boolean phraseHighlight = Boolean.TRUE
+    boolean fieldMatch = Boolean.TRUE
+    FieldQuery fieldQuery = new FieldQuery(query, dirReader, phraseHighlight, fieldMatch)
+    FieldTermStack stack = new FieldTermStack(dirReader, hit.doc, 'content', fieldQuery)
+    FieldPhraseList phrases = new FieldPhraseList(stack, fieldQuery)
+    phrases.phraseList*.termsInfos*.text.flatten()
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>This is our regex-based analyzer</p>
+</li>
+<li>
+<p>We&#8217;ll use a memory-based index for our little example</p>
+</li>
+<li>
+<p>Store content of document along with term position info</p>
+</li>
+<li>
+<p>Also store the name of the file</p>
+</li>
+<li>
+<p>Search for terms with the apache or eclipse prefixes</p>
+</li>
+<li>
+<p>Perform our query with a limit of 30 results</p>
+</li>
+<li>
+<p>Process each result</p>
+</li>
+<li>
+<p>Pull out the actual matched terms</p>
+</li>
+<li>
+<p>Also aggregate the counts</p>
+</li>
+<li>
+<p>Display the aggregates as a pretty barchart</p>
+</li>
+<li>
+<p>Helper method</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The output is essentially the same as before:</p>
+</div>
+<pre>
+Total documents with hits for content:apache* content:eclipse* --> 28 hits
+classifying-iris-flowers-with-deep.adoc: [eclipse&nbsp;deeplearning4j:5, apache&nbsp;commons math:1, apache&nbsp;spark:2]
+fruity-eclipse-collections.adoc: [eclipse&nbsp;collections:9, apache&nbsp;commons math:1]
+groovy-list-processing-cheat-sheet.adoc: [eclipse&nbsp;collections:4, apache&nbsp;commons collections:3]
+groovy-null-processing.adoc: [eclipse&nbsp;collections:6, apache&nbsp;commons collections:4]
+matrix-calculations-with-groovy-apache.adoc: [apache&nbsp;commons math:6, eclipse&nbsp;deeplearning4j:1, apache&nbsp;commons:1]
+apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
+community-over-code-eu-2024.adoc: [apache&nbsp;ofbiz:1, apache&nbsp;commons math:2, apache&nbsp;ignite:1]
+community-over-code-na-2023.adoc: [apache&nbsp;ignite:8, apache&nbsp;commons numbers:1, apache&nbsp;commons csv:1]
+deck-of-cards-with-groovy.adoc: [eclipse&nbsp;collections:5]
+deep-learning-and-eclipse-collections.adoc: [eclipse&nbsp;collections:7, eclipse&nbsp;deeplearning4j:2]
+detecting-objects-with-groovy-the.adoc: [apache&nbsp;mxnet:12]
+fun-with-obfuscated-groovy.adoc: [apache&nbsp;commons math:1]
+groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
+groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
+groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
+groovy-lucene.adoc: [apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
+groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
+handling-byte-order-mark-characters.adoc: [apache&nbsp;commons io:1]
+lego-bricks-with-groovy.adoc: [eclipse&nbsp;collections:6]
+natural-language-processing-with-groovy.adoc: [apache&nbsp;opennlp:2, apache&nbsp;spark:1]
+reading-and-writing-csv-files.adoc: [apache&nbsp;commons csv:1]
+set-operations-with-groovy.adoc: [eclipse&nbsp;collections:3]
+solving-simple-optimization-problems-with-groovy.adoc: [apache&nbsp;commons math:5, apache&nbsp;kie:1]
+using-groovy-with-apache-wayang.adoc: [apache&nbsp;wayang:9, apache&nbsp;spark:7, apache&nbsp;flink:1, apache&nbsp;commons csv:1, apache&nbsp;ignite:1]
+whiskey-clustering-with-groovy-and.adoc: [apache&nbsp;ignite:7, apache&nbsp;wayang:1, apache&nbsp;spark:2, apache&nbsp;commons csv:2]
+wordle-checker.adoc: [eclipse&nbsp;collections:3]
+zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
+
+eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
+apache&nbsp;commons math (18)         ██████████████████▏
+apache&nbsp;ignite (17)               █████████████████▏
+apache&nbsp;spark (12)                ████████████▏
+apache&nbsp;mxnet (12)                ████████████▏
+apache&nbsp;age (11)                  ███████████▏
+apache&nbsp;wayang (10)               ██████████▏
+eclipse&nbsp;deeplearning4j (8)       ████████▏
+apache&nbsp;commons collections (7)   ███████▏
+apache&nbsp;nlpcraft (5)              █████▏
+apache&nbsp;commons csv (5)           █████▏
+apache&nbsp;pekko (4)                 ████▏
+apache&nbsp;hugegraph (3)             ███▏
+apache&nbsp;tinkerpop (3)             ███▏
+apache&nbsp;commons (2)               ██▏
+apache&nbsp;commons cli (2)           ██▏
+apache&nbsp;lucene (2)                ██▏
+apache&nbsp;opennlp (2)               ██▏
+apache&nbsp;ofbiz (1)                 █▏
+apache&nbsp;commons numbers (1)       █▏
+apache&nbsp;commons codec (1)         █▏
+apache&nbsp;commons io (1)            █▏
+apache&nbsp;kie (1)                   █▏
+apache&nbsp;flink (1)                 █▏
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_lucene_facets">Using Lucene Facets</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var analyzer = new ApacheProjectAnalyzer()
+var indexDir = new ByteBuffersDirectory()
+var taxonDir = new ByteBuffersDirectory()
+var config = new IndexWriterConfig(analyzer)
+var indexWriter = new IndexWriter(indexDir, config)
+var taxonWriter = new DirectoryTaxonomyWriter(taxonDir)
+
+var fConfig = new FacetsConfig().tap {
+    setHierarchical("projectNameCounts", true)
+    setMultiValued("projectNameCounts", true)
+    setMultiValued("projectFileCounts", true)
+    setMultiValued("projectHitCounts", true)
+    setIndexFieldName('projectHitCounts', '$projectHitCounts')
+}
+
+var blogBaseDir = '/projects/apache-websites/groovy-website/site/src/site/blog'
+new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
+    var m = file.text =~ tokenRegex
+    var projects = m*.get(2).grep()*.toLowerCase()*.replaceAll('\n', ' ').countBy()
+    file.withReader { br -&gt;
+        var document = new Document()
+        var fieldType = new FieldType(stored: true,
+            indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
+            storeTermVectors: true,
+            storeTermVectorPositions: true,
+            storeTermVectorOffsets: true)
+        document.add(new Field('content', br.text, fieldType))
+        document.add(new StringField('name', file.name, Field.Store.YES))
+        if (projects) {
+            println "$file.name: $projects"
+            projects.each { k, v -&gt;
+                document.add(new IntAssociationFacetField(v, "projectHitCounts", k))
+                document.add(new FacetField("projectFileCounts", k))
+                document.add(new FacetField("projectNameCounts", k.split()))
+            }
+        }
+        indexWriter.addDocument(fConfig.build(taxonWriter, document))
+    }
+}
+indexWriter.close()
+taxonWriter.close()
+println()
+
+var reader = DirectoryReader.open(indexDir)
+var searcher = new IndexSearcher(reader)
+var taxonReader = new DirectoryTaxonomyReader(taxonDir)
+var fcm = new FacetsCollectorManager()
+var fc = FacetsCollectorManager.search(searcher, new MatchAllDocsQuery(), 10, fcm).facetsCollector()
+
+var projects = new TaxonomyFacetIntAssociations('$projectHitCounts', taxonReader, fConfig, fc, AssociationAggregationFunction.SUM)
+var hitCounts = projects.getTopChildren(10, "projectHitCounts")
+println hitCounts
+
+var facets = new FastTaxonomyFacetCounts(taxonReader, fConfig, fc)
+var fileCounts = facets.getTopChildren(10, "projectFileCounts")
+println fileCounts
+
+var nameCounts = facets.getTopChildren(10, "projectNameCounts")
+println nameCounts
+nameCounts = facets.getTopChildren(10, "projectNameCounts", 'apache')
+println nameCounts
+nameCounts = facets.getTopChildren(10, "projectNameCounts", 'apache', 'commons')
+println nameCounts
+
+var parser = new QueryParser("content", analyzer)
+var query = parser.parse('apache* AND eclipse*')
+var results = searcher.search(query, 10)
+println "Total documents with hits for $query --&gt; $results.totalHits"
+var storedFields = searcher.storedFields()
+results.scoreDocs.each { ScoreDoc doc -&gt;
+    var document = storedFields.document(doc.doc)
+    println "${document.get('name')}"
+}</code></pre>
+</div>
+</div>
+<pre>
+apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
+classifying-iris-flowers-with-deep.adoc: [eclipse&nbsp;deeplearning4j:5, apache&nbsp;commons math:1, apache&nbsp;spark:2]
+community-over-code-eu-2024.adoc: [apache&nbsp;ofbiz:1, apache&nbsp;commons math:2, apache&nbsp;ignite:1]
+community-over-code-na-2023.adoc: [apache&nbsp;ignite:8, apache&nbsp;commons numbers:1, apache&nbsp;commons csv:1]
+deck-of-cards-with-groovy.adoc: [eclipse&nbsp;collections:5]
+deep-learning-and-eclipse-collections.adoc: [eclipse&nbsp;collections:7, eclipse&nbsp;deeplearning4j:2]
+detecting-objects-with-groovy-the.adoc: [apache&nbsp;mxnet:12]
+fruity-eclipse-collections.adoc: [eclipse&nbsp;collections:9, apache&nbsp;commons math:1]
+fun-with-obfuscated-groovy.adoc: [apache&nbsp;commons math:1]
+groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
+groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
+groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
+groovy-list-processing-cheat-sheet.adoc: [eclipse&nbsp;collections:4, apache&nbsp;commons collections:3]
+groovy-lucene.adoc: [apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-null-processing.adoc: [eclipse&nbsp;collections:6, apache&nbsp;commons collections:4]
+groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
+groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
+handling-byte-order-mark-characters.adoc: [apache&nbsp;commons io:1]
+lego-bricks-with-groovy.adoc: [eclipse&nbsp;collections:6]
+matrix-calculations-with-groovy-apache.adoc: [apache&nbsp;commons math:6, eclipse&nbsp;deeplearning4j:1, apache&nbsp;commons:1]
+natural-language-processing-with-groovy.adoc: [apache&nbsp;opennlp:2, apache&nbsp;spark:1]
+reading-and-writing-csv-files.adoc: [apache&nbsp;commons csv:1]
+set-operations-with-groovy.adoc: [eclipse&nbsp;collections:3]
+solving-simple-optimization-problems-with-groovy.adoc: [apache&nbsp;commons math:5, apache&nbsp;kie:1]
+using-groovy-with-apache-wayang.adoc: [apache&nbsp;wayang:9, apache&nbsp;spark:7, apache&nbsp;flink:1, apache&nbsp;commons csv:1, apache&nbsp;ignite:1]
+whiskey-clustering-with-groovy-and.adoc: [apache&nbsp;ignite:7, apache&nbsp;wayang:1, apache&nbsp;spark:2, apache&nbsp;commons csv:2]
+wordle-checker.adoc: [eclipse&nbsp;collections:3]
+zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
+
+dim=projectHitCounts path=[] value=-1 childCount=24
+  eclipse&nbsp;collections (50)
+  apache&nbsp;commons math (18)
+  apache&nbsp;ignite (17)
+  apache&nbsp;spark (12)
+  apache&nbsp;mxnet (12)
+  apache&nbsp;age (11)
+  apache&nbsp;wayang (10)
+  eclipse&nbsp;deeplearning4j (8)
+  apache&nbsp;commons collections (7)
+  apache&nbsp;nlpcraft (5)
+
+dim=projectFileCounts path=[] value=-1 childCount=24
+  eclipse&nbsp;collections (10)
+  apache&nbsp;commons math (7)
+  apache&nbsp;spark (4)
+  apache&nbsp;ignite (4)
+  apache&nbsp;commons csv (4)
+  eclipse&nbsp;deeplearning4j (3)
+  apache&nbsp;commons collections (2)
+  apache&nbsp;commons (2)
+  apache&nbsp;wayang (2)
+  apache&nbsp;nlpcraft (1)
+
+dim=projectNameCounts path=[] value=-1 childCount=2
+  apache (21)
+  eclipse (12)
+
+dim=projectNameCounts path=[apache] value=-1 childCount=15
+  commons (16)
+  spark (4)
+  ignite (4)
+  wayang (2)
+  nlpcraft (1)
+  ofbiz (1)
+  mxnet (1)
+  age (1)
+  hugegraph (1)
+  tinkerpop (1)
+
+dim=projectNameCounts path=[apache,&nbsp;commons] value=-1 childCount=7
+  math (7)
+  csv (4)
+  collections (2)
+  numbers (1)
+  cli (1)
+  codec (1)
+  io (1)
+
+Total documents with hits for +content:apache* +content:eclipse* --> 5 hits
+classifying-iris-flowers-with-deep.adoc
+fruity-eclipse-collections.adoc
+groovy-list-processing-cheat-sheet.adoc
+groovy-null-processing.adoc
+matrix-calculations-with-groovy-apache.adoc
+</pre>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have analyzed the Groovy blog posts looking for referenced projects
+using regular expressions and Apache Lucene.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2024 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
