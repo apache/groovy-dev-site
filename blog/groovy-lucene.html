@@ -272,23 +272,23 @@ which lets us reuse our existing regex.</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">var analyzer = new ApacheProjectAnalyzer() // <b class="conum">(1)</b>
 var indexDir = new ByteBuffersDirectory() // <b class="conum">(2)</b>
 var config = new IndexWriterConfig(analyzer)
-var writer = new IndexWriter(indexDir, config)
 
 var blogBaseDir = '/projects/apache-websites/groovy-website/site/src/site/blog'
-new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
-    file.withReader { br -&gt;
-        var document = new Document()
-        var fieldType = new FieldType(stored: true,
-            indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
-            storeTermVectors: true,
-            storeTermVectorPositions: true,
-            storeTermVectorOffsets: true)
-        document.add(new Field('content', br.text, fieldType)) // <b class="conum">(3)</b>
-        document.add(new StringField('name', file.name, Field.Store.YES)) // <b class="conum">(4)</b>
-        writer.addDocument(document)
+new IndexWriter(indexDir, config).withCloseable { writer -&gt;
+    new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
+        file.withReader { br -&gt;
+            var document = new Document()
+            var fieldType = new FieldType(stored: true,
+                indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
+                storeTermVectors: true,
+                storeTermVectorPositions: true,
+                storeTermVectorOffsets: true)
+            document.add(new Field('content', br.text, fieldType)) // <b class="conum">(3)</b>
+            document.add(new StringField('name', file.name, Field.Store.YES)) // <b class="conum">(4)</b>
+            writer.addDocument(document)
+        }
     }
 }
-writer.close()
 
 var reader = DirectoryReader.open(indexDir)
 var searcher = new IndexSearcher(reader)
@@ -306,7 +306,6 @@ results.scoreDocs.each { ScoreDoc doc -&gt; // <b class="conum">(7)</b>
     println "${document.get('name')}: ${found*.replaceAll('\n', ' ').countBy()}"
     found.each { histogram[it.replaceAll('\n', ' ')] += 1 } // <b class="conum">(9)</b>
 }
-
 println()
 
 histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(10)</b>
@@ -315,8 +314,8 @@ histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(10)</
 }
 
 List&lt;String&gt; handleHit(ScoreDoc hit, Query query, DirectoryReader dirReader) { // <b class="conum">(11)</b>
-    boolean phraseHighlight = Boolean.TRUE
-    boolean fieldMatch = Boolean.TRUE
+    boolean phraseHighlight = true
+    boolean fieldMatch = true
     FieldQuery fieldQuery = new FieldQuery(query, dirReader, phraseHighlight, fieldMatch)
     FieldTermStack stack = new FieldTermStack(dirReader, hit.doc, 'content', fieldQuery)
     FieldPhraseList phrases = new FieldPhraseList(stack, fieldQuery)
