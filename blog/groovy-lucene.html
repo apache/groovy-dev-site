@@ -100,6 +100,8 @@ so we won&#8217;t.</p>
                       | software
                       | projects
                       | https
+                      | or
+                      | prefixes
                       | technologies
                       )
                 )\w+                 # end capture #2
@@ -134,16 +136,16 @@ var histogram = [:].withDefault { 0 }
 
 new File(blogBaseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;  // <b class="conum">(2)</b>
     var m = file.text =~ tokenRegex // <b class="conum">(3)</b>
-    var projects = m*.get(2).grep()*.toLowerCase()*.replaceAll('\n', ' ').countBy() // <b class="conum">(4)</b>
-    if (projects) {
-        println "$file.name: $projects" // <b class="conum">(5)</b>
-        projects.each { k, v -&gt; histogram[k] += v } // <b class="conum">(6)</b>
+    var projects = m*.get(2).grep()*.toLowerCase()*.replaceAll('\n', ' ') // <b class="conum">(4)</b>
+    var counts = projects.countBy() // <b class="conum">(5)</b>
+    if (counts) {
+        println "$file.name: $counts" // <b class="conum">(6)</b>
+        counts.each { k, v -&gt; histogram[k] += v } // <b class="conum">(7)</b>
     }
 }
 
 println()
-
-histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(7)</b>
+histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(8)</b>
     var label = "$k ($v)"
     println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
 }</code></pre>
@@ -161,7 +163,10 @@ histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(7)</b
 <p>We define our matcher</p>
 </li>
 <li>
-<p>This pulls out project names (capture group 2) and ignores other words (using grep) then aggregates the hits for that file</p>
+<p>This pulls out project names (capture group 2), ignores other words (using grep), converts to lowercase, and removes newlines for the case where a term might span over the end of a line</p>
+</li>
+<li>
+<p>This aggregates the count hits for that file</p>
 </li>
 <li>
 <p>We print out each blog post file name and its project references</p>
@@ -238,7 +243,8 @@ apache&nbsp;flink (1)                 █▏
 <h2 id="_using_lucene">Using Lucene</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Okay, regular expressions weren&#8217;t that hard but in general we might want to search many things.
+<p><span class="image right"><img src="https://www.apache.org/logos/res/lucene/default.png" alt="lucene logo" width="100"></span>
+Okay, regular expressions weren&#8217;t that hard but in general we might want to search many things.
 Search frameworks like Lucene help with that. Let&#8217;s see what it looks like to apply
 Lucene to our problem.</p>
 </div>
