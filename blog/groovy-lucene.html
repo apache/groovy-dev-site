@@ -824,6 +824,15 @@ assert results.totalHits.value() == 1 &amp;&amp;
 <div class="sect1">
 <h2 id="_more_complex_queries">More complex queries</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>As a final example, we chose earlier to extract project names at index time.
+We could have instead used the normal analyzer at the cost of needing more
+complex span queries to pull out our project names at search time.
+Let&#8217;s have a look at what the could for that scenario could look like.</p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll do indexing with the <code>StandardAnalyzer</code>.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var analyzer = new StandardAnalyzer()
@@ -847,22 +856,37 @@ new IndexWriter(indexDir, config).withCloseable { writer -&gt;
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Now our queries will need to be more complex. We have a few options up our sleeve,
+but we&#8217;ll choose to put together our queries using some low level query classes.
+We&#8217;ll look for "apache commons &lt;namepart&gt;"
+or "(apache|eclipse) &lt;namepart&gt;",
+where <em>namepart</em> is the project name
+without the foundation prefix.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">IndexReader reader = DirectoryReader.open(indexDir)
 var searcher = new IndexSearcher(reader)
 
-var namepart = new SpanMultiTermQueryWrapper(new RegexpQuery(new Term("content", '''(
-math|spark|lucene|collections|deeplearning4j
-|beam|wayang|csv|io|numbers|ignite|mxnet|age
-|nlpcraft|pekko|hugegraph|tinkerpop|commons
-|cli|opennlp|ofbiz|codec|kie|flink
-)'''.replaceAll('\n', ''))))
+var projects = [
+    'math', 'spark', 'lucene', 'collections', 'deeplearning4j',
+    'beam', 'wayang', 'csv', 'io', 'numbers', 'ignite', 'mxnet', 'age',
+    'nlpcraft', 'pekko', 'hugegraph', 'tinkerpop', 'commons',
+    'cli', 'opennlp', 'ofbiz', 'codec', 'kie', 'flink'
+]
+var namepart = new SpanMultiTermQueryWrapper(new RegexpQuery(
+    new Term('content', "(${projects.join('|')})")))
 
-var (apache, commons) = ['apache', 'commons'].collect{ new Term('content', it) }
-var apacheCommons = new SpanNearQuery([new SpanTermQuery(apache), new SpanTermQuery(commons), namepart] as SpanQuery[], 0, true)
+// look for apache commons &lt;namepart&gt;
+SpanQuery[] spanTerms = ['apache', 'commons'].collect{
+    new SpanTermQuery(new Term('content', it))
+} + namepart
+var apacheCommons = new SpanNearQuery(spanTerms, 0, true)
 
-var foundation = new SpanMultiTermQueryWrapper(new RegexpQuery(new Term("content", "(apache|eclipse)")))
+// look for (apache|eclipse) &lt;namepart&gt;
+var foundation = new SpanMultiTermQueryWrapper(new RegexpQuery(
+    new Term('content', '(apache|eclipse)')))
 var otherProject = new SpanNearQuery([foundation, namepart] as SpanQuery[], 0, true)
 
 var builder = new BooleanQuery.Builder(minimumNumberShouldMatch: 1)
@@ -872,6 +896,9 @@ var query = builder.build()
 var results = searcher.search(query, 30)
 println "Total documents with hits for $query --&gt; $results.totalHits"</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>When we run this we see the same number of hits as before:</p>
 </div>
 <div class="listingblock">
 <div class="content">
