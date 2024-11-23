@@ -642,6 +642,16 @@ apache&nbsp;commons csv (6)           ██████▏
 <div class="sect1">
 <h2 id="_using_lucene_facets">Using Lucene Facets</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>As well as the metadata Lucene stores for its own purposes in the index,
+it provides a mechanism for storing custom metadata called facets. If we wanted to we could
+store referenced project names using this mechanism.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s use our regex to find project names and store the information in various facets.
+Lucene has a special taxonomy index which stores metadata about our metadata.
+We&#8217;ll also enable that.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var analyzer = new ProjectNameAnalyzer()
@@ -684,6 +694,9 @@ indexWriter.close()
 taxonWriter.close()</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Since we are collecting this data during indexing, we can print it out:</p>
+</div>
 <pre>
 apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
 classifying-iris-flowers-with-deep.adoc: [eclipse&nbsp;deeplearning4j:5, apache&nbsp;commons math:1, apache&nbsp;spark:2]
@@ -715,6 +728,10 @@ wordle-checker.adoc: [eclipse&nbsp;collections:3]
 zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
 
 </pre>
+<div class="paragraph">
+<p>Now when doing searches, we can extract the taxonomy information along with other info.
+With <code>projectHitCounts</code> we can gather the taxonomy metadata for the top hits from our search.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var reader = DirectoryReader.open(indexDir)
@@ -742,6 +759,9 @@ hitCounts.sort{ m -&gt; -m.files }.each { m -&gt;
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>When running this we can see the frequencies for the total hits and number of files:</p>
+</div>
 <pre>
 Frequency of total hits mentioning a project (top 5):
 eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
@@ -758,6 +778,23 @@ apache&nbsp;ignite (4)                ████████▏
 apache&nbsp;mxnet (1)                 ██▏
 
 </pre>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+At the time of writing, there is a bug in sorting for the second of these graphs.
+A <a href="https://github.com/apache/lucene/issues/14008">fix</a> is coming.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Now, the taxonomy information about file counts is for the selected top hits based on number of hits.
+One of our other facets (<code>projectFileCounts</code>) lets us look at the top frequencies of references in files. Let&#8217;s look at how we can query that information:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var facets = new FastTaxonomyFacetCounts(taxonReader, fConfig, fc)
@@ -767,6 +804,9 @@ var fileCounts = facets.getTopChildren(topN, "projectFileCounts")
 println fileCounts</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
 <pre>
 Frequency of documents mentioning a project (top 5):
 dim=projectFileCounts path=[] value=-1 childCount=27
@@ -774,9 +814,21 @@ dim=projectFileCounts path=[] value=-1 childCount=27
   apache&nbsp;commons math (7)
   apache&nbsp;spark (5)
   apache&nbsp;ignite (4)
-  apache commons csv (4)
+  apache&nbsp;commons csv (4)
 
 </pre>
+<div class="paragraph">
+<p>When comparing this result, with the result from our previous facet,
+we can see that commons csv is mentioned in more files than mxnet,
+even though mxnet is mentioned more times.</p>
+</div>
+<div class="paragraph">
+<p>Our final facet (<code>projectNameCounts</code>) is a hierarchical facet. These are typically used interactively
+when "browsing" search results. We can look at project names by first word, e.g. the foundation.
+We could then drill down into "Apache" and find referenced projects, and then in the
+case of commons, we could drill down into its subprojects.
+Here is the code which does that.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">['apache', 'commons'].inits().reverseEach { path -&gt;
@@ -785,6 +837,9 @@ dim=projectFileCounts path=[] value=-1 childCount=27
     println "$nameCounts"
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
 </div>
 <pre>
 Frequency of documents mentioning a project with path [] (top 5):
@@ -809,6 +864,10 @@ dim=projectNameCounts path=[apache, commons] value=-1 childCount=7
   cli (1)
 
 </pre>
+<div class="paragraph">
+<p>We now have a taxonomy index as well as the normal one, so we can still do adhoc queries
+which might just use the latter.</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var parser = new QueryParser("content", analyzer)
@@ -819,6 +878,10 @@ assert results.totalHits.value() == 1 &amp;&amp;
     storedFields.document(results.scoreDocs[0].doc).get('name') == 'fruity-eclipse-collections.adoc'</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>This query shows that there is exactly one blog post that mentions
+Apache projects, Eclipse projects and also emojis.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -828,7 +891,7 @@ assert results.totalHits.value() == 1 &amp;&amp;
 <p>As a final example, we chose earlier to extract project names at index time.
 We could have instead used the normal analyzer at the cost of needing more
 complex span queries to pull out our project names at search time.
-Let&#8217;s have a look at what the could for that scenario could look like.</p>
+Let&#8217;s have a look at what the code for that scenario could look like.</p>
 </div>
 <div class="paragraph">
 <p>First, we&#8217;ll do indexing with the <code>StandardAnalyzer</code>.</p>
@@ -904,6 +967,50 @@ println "Total documents with hits for $query --&gt; $results.totalHits"</code><
 <div class="content">
 <pre>Total documents with hits for (spanNear([SpanMultiTermQueryWrapper(content:/(apache|eclipse)/), SpanMultiTermQueryWrapper(content:/(math|spark|lucene|collections|deeplearning4j|beam|wayang|csv|io|numbers|ignite|mxnet|age|nlpcraft|pekko|hugegraph|tinkerpop|commons|cli|opennlp|ofbiz|codec|kie|flink)/)], 0, true) spanNear([content:apache, content:commons, SpanMultiTermQueryWrapper(content:/(math|spark|lucene|collections|deeplearning4j|beam|wayang|csv|io|numbers|ignite|mxnet|age|nlpcraft|pekko|hugegraph|tinkerpop|commons|cli|opennlp|ofbiz|codec|kie|flink)/)], 0, true))~1 --&gt; 28 hits</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Using the <code>StandardAnalyzer</code> has numerous advantages.
+It has baked into it the ability for stop words, smart word breaking, lowercasing
+and other features. Other built-in analyzers might also be useful. We could of course,
+also make our regex-based analyzer smarter. Many of Lucene&#8217;s features are in reusable
+pieces.</p>
+</div>
+<div class="paragraph">
+<p>Another advantage of the <code>StandardAnalyzer</code> is that it properly handles emojis in our index.
+Our regex analyzer in its current form only looks for "word" characters which doesn&#8217;t
+work with emoji characters, although it could be expanded to support them.</p>
+</div>
+<div class="paragraph">
+<p>Given that we&#8217;ve used <code>StandardAnalyzer</code> here, let&#8217;s look again look at terms
+in our index but this time pull out emojis instead of project names:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var vectors = reader.termVectors()
+var storedFields = reader.storedFields()
+
+var emojis = [:].withDefault { [] as Set }
+for (docId in 0..&lt;reader.maxDoc()) {
+    String name = storedFields.document(docId).get('name')
+    TermsEnum terms = vectors.get(docId, 'content').iterator()
+    while (terms.next() != null) {
+        PostingsEnum postingsEnum = terms.postings(null, PostingsEnum.ALL)
+        while (postingsEnum.nextDoc() != DocIdSetIterator.NO_MORE_DOCS) {
+            var string = terms.term().utf8ToString()
+            if (string.codePoints().allMatch(Character::isEmojiPresentation)) {
+                emojis[name] += string
+            }
+        }
+    }
+}
+emojis.collect { k, v -&gt; "$k: ${v.join(', ')}" }.each { println it }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, you should see something like this (flag emojis may not show up on some platforms):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/LuceneWithStandardAnalyzer.png" alt="LuceneWithStandardAnalyzer"></span></p>
 </div>
 </div>
 </div>
