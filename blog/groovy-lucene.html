@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_finding_project_names_with_a_regex' class='anchor-link'>Finding project names with a regex</a></li><li><a href='#_finding_project_names_using_regex_matching' class='anchor-link'>Finding project names using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-18 08:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_finding_project_names_with_a_regex' class='anchor-link'>Finding project names with a regex</a></li><li><a href='#_finding_project_names_using_regex_matching' class='anchor-link'>Finding project names using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-18 08:30PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Groovy <a href="https://groovy.apache.org/blog/">blog posts</a> often reference other Apache projects.
@@ -62,7 +62,7 @@ Given that these pages are published, we could use something like <a href="https
 For this post, we are going to search for the
 information we require from the original source (<a href="https://asciidoc.org/">AsciiDoc</a>) files.
 We&#8217;ll first look at how we can find project references using regular expressions
-and then using Apache Lucene.</p>
+and then using <a href="https://lucene.apache.org/">Apache Lucene</a>.</p>
 </div>
 </div>
 </div>
@@ -71,10 +71,10 @@ and then using Apache Lucene.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>For the sake of this post, let&#8217;s assume that project references will
-include the work "Apache" followed by the project name. To make it more
+include the word "Apache" followed by the project name. To make it more
 interesting, we&#8217;ll also include references to Eclipse projects.
-We&#8217;ll also make provision for project with subprojects, at least for
-Apache Commons, so this will pick up names like Apache Commons Math
+We&#8217;ll also make provision for projects with subprojects, at least for
+Apache Commons, so this will pick up names like "Apache Commons Math"
 for instance. We&#8217;ll exclude Apache Groovy since that would hit possibly
 every Groovy blog post. We&#8217;ll also exclude a bunch of words that appear in
 commonly used phrases like "Apache License" and "Apache Projects".</p>
@@ -332,7 +332,7 @@ new IndexWriter(indexDir, config).withCloseable { writer -&gt;
 </div>
 <div class="paragraph">
 <p>With an index defined, we&#8217;d typically now perform some kind of search.
-We&#8217;ll do just that shortly, but first for the kind of information we are interested in,
+We&#8217;ll do just that shortly, but first, for the kind of information we are interested in,
 part of the Lucene API lets us explore the index. Here is how we might do that:</p>
 </div>
 <div class="listingblock">
@@ -389,10 +389,10 @@ docFreq.sort(byReverseValue).take(10).each { k, v -&gt;
 <p>Look for terms which match project names, so we can save them to a set</p>
 </li>
 <li>
-<p>Grab hit frequency metadata for our term</p>
+<p>Grab hit frequency metadata for each term in our set of terms</p>
 </li>
 <li>
-<p>Grab document frequency metadata for our term</p>
+<p>Grab document frequency metadata for each term in our set of terms</p>
 </li>
 </ol>
 </div>
@@ -505,8 +505,8 @@ as part of some web search functionality. For us, we are going to just
 pick out the terms of interest, project names that matching our query.</p>
 </div>
 <div class="paragraph">
-<p>We the highlight functionality to work, we ask the indexer to store some additional information
-when indexing about term positions. The index code changes to look like this:</p>
+<p>For the highlight functionality to work, we ask the indexer to store some additional information
+when indexing, in particular term positions and offsets. The index code changes to look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -542,9 +542,19 @@ but it wasn&#8217;t needed previously.</p>
     var fieldQuery = new FieldQuery(query, dirReader, phraseHighlight, fieldMatch)
     var stack = new FieldTermStack(dirReader, hit.doc, 'content', fieldQuery)
     var phrases = new FieldPhraseList(stack, fieldQuery)
-    phrases.phraseList*.termsInfos*.text.flatten()
+    phrases.phraseList*.termsInfos*.text.flatten() // <b class="conum">(1)</b>
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Converts a <code>FieldPhraseList</code> into a list of <code>TermInfo</code> instances into a list of strings</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Now we can run our query code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -658,14 +668,14 @@ We&#8217;ll also enable that.</p>
 var indexDir = new ByteBuffersDirectory()
 var taxonDir = new ByteBuffersDirectory()
 var config = new IndexWriterConfig(analyzer)
-var indexWriter = new IndexWriter(indexDir, config)
-var taxonWriter = new DirectoryTaxonomyWriter(taxonDir)
+var indexWriter = new IndexWriter(indexDir, config) // <b class="conum">(1)</b>
+var taxonWriter = new DirectoryTaxonomyWriter(taxonDir) // <b class="conum">(2)</b>
 
-var fConfig = new FacetsConfig().tap {
-    setHierarchical("projectNameCounts", true)
-    setMultiValued("projectNameCounts", true)
-    setMultiValued("projectFileCounts", true)
-    setMultiValued("projectHitCounts", true)
+var fConfig = new FacetsConfig().tap { // <b class="conum">(3)</b>
+    setHierarchical('projectNameCounts', true)
+    setMultiValued('projectNameCounts', true)
+    setMultiValued('projectFileCounts', true)
+    setMultiValued('projectHitCounts', true)
     setIndexFieldName('projectHitCounts', '$projectHitCounts')
 }
 
@@ -681,10 +691,10 @@ new File(baseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
         document.add(new StringField('name', file.name, Field.Store.YES))
         if (projects) {
             println "$file.name: $projects"
-            projects.each { k, v -&gt;
-                document.add(new IntAssociationFacetField(v, "projectHitCounts", k))
-                document.add(new FacetField("projectFileCounts", k))
-                document.add(new FacetField("projectNameCounts", k.split()))
+            projects.each { k, v -&gt; // <b class="conum">(4)</b>
+                document.add(new IntAssociationFacetField(v, 'projectHitCounts', k))
+                document.add(new FacetField('projectFileCounts', k))
+                document.add(new FacetField('projectNameCounts', k.split()))
             }
         }
         indexWriter.addDocument(fConfig.build(taxonWriter, document))
@@ -693,6 +703,22 @@ new File(baseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;
 indexWriter.close()
 taxonWriter.close()</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Our normal index writer</p>
+</li>
+<li>
+<p>A writer for our taxonomy</p>
+</li>
+<li>
+<p>Define some properties for the facets we are interested in</p>
+</li>
+<li>
+<p>We add our facets of interest to our document</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>Since we are collecting this data during indexing, we can print it out:</p>
@@ -730,7 +756,9 @@ zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
 </pre>
 <div class="paragraph">
 <p>Now when doing searches, we can extract the taxonomy information along with other info.
-With <code>projectHitCounts</code> we can gather the taxonomy metadata for the top hits from our search.</p>
+With <code>projectHitCounts</code> we can gather the taxonomy metadata for the top hits from our search.
+We&#8217;ll use <code>MatchAllDocsQuery</code> to match all documents, i.e. the metadata will be for
+all documents.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -742,20 +770,18 @@ var fc = FacetsCollectorManager.search(searcher, new MatchAllDocsQuery(), 0, fcm
 
 var topN = 5
 var projects = new TaxonomyFacetIntAssociations('$projectHitCounts', taxonReader, fConfig, fc, AssociationAggregationFunction.SUM)
-var hitCounts = projects.getTopChildren(topN, "projectHitCounts").labelValues.collect{
-    [label: it.label, hits: it.value, files: it.count]
-}
+var hitData = projects.getTopChildren(topN, 'projectHitCounts').labelValues
 
 println "\nFrequency of total hits mentioning a project (top $topN):"
-hitCounts.sort{ m -&gt; -m.hits }.each { m -&gt;
-    var label = "$m.label ($m.hits)"
-    println "${label.padRight(32)} ${bar(m.hits, 0, 50, 50)}"
+hitData.each { m -&gt;
+    var label = "$m.label ($m.value)"
+    println "${label.padRight(32)} ${bar(m.value, 0, 50, 50)}"
 }
 
 println "\nFrequency of documents mentioning a project (top $topN):"
-hitCounts.sort{ m -&gt; -m.files }.each { m -&gt;
-    var label = "$m.label ($m.files)"
-    println "${label.padRight(32)} ${bar(m.files * 2, 0, 20, 20)}"
+hitData.each { m -&gt;
+    var label = "$m.label ($m.count)"
+    println "${label.padRight(32)} ${bar(m.count * 2, 0, 20, 20)}"
 }</code></pre>
 </div>
 </div>
@@ -792,16 +818,16 @@ A <a href="https://github.com/apache/lucene/issues/14008">fix</a> is coming.
 </table>
 </div>
 <div class="paragraph">
-<p>Now, the taxonomy information about file counts is for the selected top hits based on number of hits.
-One of our other facets (<code>projectFileCounts</code>) lets us look at the top frequencies of references in files. Let&#8217;s look at how we can query that information:</p>
+<p>Now, the taxonomy information about document frequency is for the top hits scored using the number of hits.
+One of our other facets (<code>projectFileCounts</code>) tracks document frequency independently.
+Let&#8217;s look at how we can query that information:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var facets = new FastTaxonomyFacetCounts(taxonReader, fConfig, fc)
 
 println "\nFrequency of documents mentioning a project (top $topN):"
-var fileCounts = facets.getTopChildren(topN, "projectFileCounts")
-println fileCounts</code></pre>
+println facets.getTopChildren(topN, 'projectFileCounts')</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -820,7 +846,9 @@ dim=projectFileCounts path=[] value=-1 childCount=27
 <div class="paragraph">
 <p>When comparing this result, with the result from our previous facet,
 we can see that commons csv is mentioned in more files than mxnet,
-even though mxnet is mentioned more times.</p>
+even though mxnet is mentioned more times. In general, you&#8217;d decide
+which document frequency is of more interest to you, and you&#8217;d skip
+the <code>projectFileCounts</code> facet if you didn&#8217;t need that extra information.</p>
 </div>
 <div class="paragraph">
 <p>Our final facet (<code>projectNameCounts</code>) is a hierarchical facet. These are typically used interactively
@@ -831,12 +859,18 @@ Here is the code which does that.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">['apache', 'commons'].inits().reverseEach { path -&gt;
+<pre class="prettyprint highlight"><code data-lang="groovy">['apache', 'commons'].inits().reverseEach { path -&gt; // <b class="conum">(1)</b>
     println "Frequency of documents mentioning a project with path $path (top $topN):"
-    var nameCounts = facets.getTopChildren(topN, "projectNameCounts", *path)
-    println "$nameCounts"
+    println "${facets.getTopChildren(topN, 'projectNameCounts', *path)}"
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>The <code>inits()</code> method returns all prefixes of a list including the empty list.</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>The output looks like this:</p>
@@ -870,7 +904,7 @@ which might just use the latter.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var parser = new QueryParser("content", analyzer)
+<pre class="prettyprint highlight"><code data-lang="groovy">var parser = new QueryParser('content', analyzer)
 var query = parser.parse(/apache\ * AND eclipse\ * AND emoji*/)
 var results = searcher.search(query, topN)
 var storedFields = searcher.storedFields()
@@ -880,7 +914,16 @@ assert results.totalHits.value() == 1 &amp;&amp;
 </div>
 <div class="paragraph">
 <p>This query shows that there is exactly one blog post that mentions
-Apache projects, Eclipse projects and also emojis.</p>
+Apache projects, Eclipse projects, and also emojis.</p>
+</div>
+<div class="paragraph">
+<p>Facets are a really powerful feature. Given that we are indexing asciidoc source
+files, we could even use libraries like <a href="https://github.com/asciidoctor/asciidoctorj">AsciidoctorJ</a>
+to extract more metadata from our source files and store them as facets.
+We could for instance extra titles, author(s), keywords, publication dates and so forth.
+This would allow us to make some pretty powerful searches.
+We leave this as an exercise for the reader.
+But if you try, please let us know how you go!</p>
 </div>
 </div>
 </div>
@@ -889,7 +932,7 @@ Apache projects, Eclipse projects and also emojis.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As a final example, we chose earlier to extract project names at index time.
-We could have instead used the normal analyzer at the cost of needing more
+We could have instead used a more typical analyzer at the cost of needing more
 complex span queries to pull out our project names at search time.
 Let&#8217;s have a look at what the code for that scenario could look like.</p>
 </div>
@@ -921,11 +964,34 @@ new IndexWriter(indexDir, config).withCloseable { writer -&gt;
 </div>
 <div class="paragraph">
 <p>Now our queries will need to be more complex. We have a few options up our sleeve,
-but we&#8217;ll choose to put together our queries using some low level query classes.
-We&#8217;ll look for "apache commons &lt;namepart&gt;"
-or "(apache|eclipse) &lt;namepart&gt;",
-where <em>namepart</em> is the project name
-without the foundation prefix.</p>
+but we&#8217;ll choose to put together our queries using some of Lucene&#8217;s low-level query classes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Before considering Lucene&#8217;s low-level query classes, you might
+want to look at some of Lucene&#8217;s higher-level query classes like the <code>QueryParser</code> class.
+It supports representing a query as a string and includes support for phrases,
+ranges, regex terms and so forth. As far as I am aware, it doesn&#8217;t support
+a regex within a phrase, hence the low-level classes we&#8217;ll explore below.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll look for expressions like "apache commons &lt;suffix&gt;"
+or "(apache|eclipse) &lt;suffix&gt;",
+where <em>suffix</em> is the project name
+without the foundation prefix, or in the case of Apache Commons, the subproject name.</p>
+</div>
+<div class="paragraph">
+<p>Instead of having a list of stop words (excluded words) like in our regex,
+we&#8217;ll just have a list of allowable project suffix names.
+It wouldn&#8217;t be hard to swap to the stop word approach if we wanted.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -938,19 +1004,19 @@ var projects = [
     'nlpcraft', 'pekko', 'hugegraph', 'tinkerpop', 'commons',
     'cli', 'opennlp', 'ofbiz', 'codec', 'kie', 'flink'
 ]
-var namepart = new SpanMultiTermQueryWrapper(new RegexpQuery(
+var suffix = new SpanMultiTermQueryWrapper(new RegexpQuery( // <b class="conum">(1)</b>
     new Term('content', "(${projects.join('|')})")))
 
-// look for apache commons &lt;namepart&gt;
+// look for apache commons &lt;suffix&gt;
 SpanQuery[] spanTerms = ['apache', 'commons'].collect{
     new SpanTermQuery(new Term('content', it))
-} + namepart
+} + suffix
 var apacheCommons = new SpanNearQuery(spanTerms, 0, true)
 
-// look for (apache|eclipse) &lt;namepart&gt;
+// look for (apache|eclipse) &lt;suffix&gt;
 var foundation = new SpanMultiTermQueryWrapper(new RegexpQuery(
     new Term('content', '(apache|eclipse)')))
-var otherProject = new SpanNearQuery([foundation, namepart] as SpanQuery[], 0, true)
+var otherProject = new SpanNearQuery([foundation, suffix] as SpanQuery[], 0, true)
 
 var builder = new BooleanQuery.Builder(minimumNumberShouldMatch: 1)
 builder.add(otherProject, BooleanClause.Occur.SHOULD)
@@ -959,6 +1025,13 @@ var query = builder.build()
 var results = searcher.search(query, 30)
 println "Total documents with hits for $query --&gt; $results.totalHits"</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<ol>
+<li>
+<p>Regex queries are wrapped to appear in a span query</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>When we run this we see the same number of hits as before:</p>
@@ -969,19 +1042,56 @@ println "Total documents with hits for $query --&gt; $results.totalHits"</code><
 </div>
 </div>
 <div class="paragraph">
-<p>Using the <code>StandardAnalyzer</code> has numerous advantages.
+<p>Another thing we might want to consider for this example is to make use of
+Groovy&#8217;s excellent Domain Specific Language (DSL) capabilities.
+By defining one helper method, <code>span</code>, and providing one metaprogramming
+extension for <code>or</code> on Lucene&#8217;s <code>Query</code> class, we can rewrite the last 20 lines
+of the previous example in a more compact and understandable form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var suffix = "(${projects.join('|')})"
+var query = span('apache', 'commons', ~suffix) | span(~'(apache|eclipse)', ~suffix)
+var results = searcher.search(query, 30)
+println "Total documents with hits for $query --&gt; $results.totalHits"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the code gives the same output as previously.</p>
+</div>
+<div class="paragraph">
+<p>We can try out our DSL on other terms:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">query = span('jackson', 'databind') | span(~'virt.*', 'threads')
+results = searcher.search(query, 30)
+println "Total documents with hits for $query --&gt; $results.totalHits"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, we&#8217;ll now see this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Total documents with hits for (spanNear([content:jackson, content:databind], 0, true) spanNear([SpanMultiTermQueryWrapper(content:/virt.*/), content:threads], 0, true))~1 --&gt; 8 hits</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the <code>StandardAnalyzer</code> with span queries certainly opens up the possibility
+of a much wider range of queries. But <code>StandardAnalyzer</code> also has other advantages.
 It has baked into it the ability for stop words, smart word breaking, lowercasing
 and other features. Other built-in analyzers might also be useful. We could of course,
-also make our regex-based analyzer smarter. Many of Lucene&#8217;s features are in reusable
-pieces.</p>
+also make our regex-based analyzer smarter. The fact that many of Lucene&#8217;s features
+are in reusable pieces certainly helps.</p>
 </div>
 <div class="paragraph">
-<p>Another advantage of the <code>StandardAnalyzer</code> is that it properly handles emojis in our index.
-Our regex analyzer in its current form only looks for "word" characters which doesn&#8217;t
-work with emoji characters, although it could be expanded to support them.</p>
+<p>A fun advantage of the <code>StandardAnalyzer</code> is that it properly handles emojis in our index.
+Our regex analyzer in its current form only looks for "regex word" characters which doesn&#8217;t
+include emoji characters, although it could be expanded to support them.</p>
 </div>
 <div class="paragraph">
-<p>Given that we&#8217;ve used <code>StandardAnalyzer</code> here, let&#8217;s look again look at terms
+<p>Given that we&#8217;ve used <code>StandardAnalyzer</code> here, let&#8217;s look again at terms
 in our index but this time pull out emojis instead of project names:</p>
 </div>
 <div class="listingblock">
@@ -1015,11 +1125,27 @@ emojis.collect { k, v -&gt; "$k: ${v.join(', ')}" }.each { println it }</code></
 </div>
 </div>
 <div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Lucene project <a href="https://lucene.apache.org/">website</a></p>
+</li>
+<li>
+<p>Source code <a href="https://github.com/paulk-asert/groovy-lucene">examples</a> for this blog post</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have analyzed the Groovy blog posts looking for referenced projects
-using regular expressions and Apache Lucene.</p>
+using regular expressions and Apache Lucene. Hopefully this gives you a taste
+of the Lucene APIs and some of Groovy&#8217;s features.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
