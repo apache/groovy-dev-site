@@ -502,7 +502,7 @@ When exploring query results, we are going to use some classes in the <code>vect
 package in the <code>lucene-highlight</code> module. You&#8217;d typically use functionality in that
 module to highlight hits as part of potentially displaying them on a web page
 as part of some web search functionality. For us, we are going to just
-pick out the terms of interest, project names that matching our query.</p>
+pick out the terms of interest, project names that match our query.</p>
 </div>
 <div class="paragraph">
 <p>For the highlight functionality to work, we ask the indexer to store some additional information
@@ -571,8 +571,8 @@ results.scoreDocs.each { ScoreDoc scoreDoc -&gt; // <b class="conum">(3)</b>
     found.each { histogram[it.replaceAll('\n', ' ')] += 1 } // <b class="conum">(5)</b>
 }
 
-println "\nFrequency of total hits mentioning a project:"
-histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(6)</b>
+println "\nFrequency of total hits mentioning a project (top 10):"
+histogram.sort { e -&gt; -e.value }.take(10).each { k, v -&gt; // <b class="conum">(6)</b>
     var label = "$k ($v)"
     println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
 }</code></pre>
@@ -596,7 +596,7 @@ histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(6)</b
 <p>Also aggregate the counts</p>
 </li>
 <li>
-<p>Display the aggregates as a pretty barchart</p>
+<p>Display the top 10 aggregates as a pretty barchart</p>
 </li>
 </ol>
 </div>
@@ -654,12 +654,38 @@ apache&nbsp;commons csv (6)           ██████▏
 <div class="sectionbody">
 <div class="paragraph">
 <p>As well as the metadata Lucene stores for its own purposes in the index,
-it provides a mechanism for storing custom metadata called facets. If we wanted to we could
-store referenced project names using this mechanism.</p>
+Lucene provides a mechanism, called facets, for storing custom metadata.
+Facets allow for more powerful searching. They are often used for grouping
+search results into categories. The search user can drill down into
+categories to refine their search.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s use our regex to find project names and store the information in various facets.
-Lucene has a special taxonomy index which stores metadata about our metadata.
+<p>Let&#8217;s use facets to store project names for each document.
+One facet capturing the project name information might be all we need,
+but to illustrate some Lucene features, we&#8217;ll use three facets and
+store slightly different information in each one.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Facets are a really powerful feature. Given that we are indexing asciidoc source
+files, we could even use libraries like <a href="https://github.com/asciidoctor/asciidoctorj">AsciidoctorJ</a>
+to extract more metadata from our source files and store them as facets.
+We could for instance extra titles, author(s), keywords, publication dates and so forth.
+This would allow us to make some pretty powerful searches.
+We leave this as an exercise for the reader.
+But if you try, please let us know how you go!
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use our regex to find project names and store the information in our facets.
+Lucene creates a special <em>taxonomy</em> index for indexing facet information.
 We&#8217;ll also enable that.</p>
 </div>
 <div class="listingblock">
@@ -721,7 +747,7 @@ taxonWriter.close()</code></pre>
 </ol>
 </div>
 <div class="paragraph">
-<p>Since we are collecting this data during indexing, we can print it out:</p>
+<p>Since we are collecting our project names during indexing, we can print then out:</p>
 </div>
 <pre>
 apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
@@ -831,7 +857,9 @@ println facets.getTopChildren(topN, 'projectFileCounts')</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The output looks like this:</p>
+<p>We could display our search result (a <code>FacetResult</code> instance) as a barchart
+like we&#8217;ve done before, but the <code>toString</code> for the result is also quite informative.
+Here is what running the above code looks like:</p>
 </div>
 <pre>
 Frequency of documents mentioning a project (top 5):
@@ -853,8 +881,8 @@ the <code>projectFileCounts</code> facet if you didn&#8217;t need that extra inf
 <div class="paragraph">
 <p>Our final facet (<code>projectNameCounts</code>) is a hierarchical facet. These are typically used interactively
 when "browsing" search results. We can look at project names by first word, e.g. the foundation.
-We could then drill down into "Apache" and find referenced projects, and then in the
-case of commons, we could drill down into its subprojects.
+We could then drill down into one of the foundations, e.g. "Apache", and find referenced projects,
+and then in the case of commons, we could drill down into its subprojects.
 Here is the code which does that.</p>
 </div>
 <div class="listingblock">
@@ -915,15 +943,6 @@ assert results.totalHits.value() == 1 &amp;&amp;
 <div class="paragraph">
 <p>This query shows that there is exactly one blog post that mentions
 Apache projects, Eclipse projects, and also emojis.</p>
-</div>
-<div class="paragraph">
-<p>Facets are a really powerful feature. Given that we are indexing asciidoc source
-files, we could even use libraries like <a href="https://github.com/asciidoctor/asciidoctorj">AsciidoctorJ</a>
-to extract more metadata from our source files and store them as facets.
-We could for instance extra titles, author(s), keywords, publication dates and so forth.
-This would allow us to make some pretty powerful searches.
-We leave this as an exercise for the reader.
-But if you try, please let us know how you go!</p>
 </div>
 </div>
 </div>
