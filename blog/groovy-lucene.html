@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='aggregation, search, lucene, groovy'/><meta name='description' content='This post looks at using Lucene to find references to other projects in Groovy&apos;s blog posts.'/><title>The Apache Groovy programming language - Blogs - Searching with Lucene</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='aggregation, search, lucene, groovy, emoji, regex'/><meta name='description' content='This post looks at using Lucene to find references to other projects in Groovy&apos;s blog posts.'/><title>The Apache Groovy programming language - Blogs - Searching with Lucene</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,14 +53,17 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_a_regular_expression_for_project_names' class='anchor-link'>A regular expression for project names</a></li><li><a href='#_collecting_project_name_statistics_using_regex_matching' class='anchor-link'>Collecting project name statistics using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-18 08:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_a_regular_expression_for_project_names' class='anchor-link'>A regular expression for project names</a></li><li><a href='#_collecting_project_name_statistics_using_regex_matching' class='anchor-link'>Collecting project name statistics using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-25 03:30PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Groovy <a href="https://groovy.apache.org/blog/">blog posts</a> often reference other Apache projects.
+Perhaps we&#8217;d like to know which other projects and which blog posts are involved.
 Given that these pages are published, we could use something like <a href="https://nutch.apache.org">Apache Nutch</a> or
 <a href="https://solr.apache.org">Apache Solr</a> to crawl/index those web pages and search using those tools.
 For this post, we are going to search for the
-information we require from the original source (<a href="https://asciidoc.org/">AsciiDoc</a>) files.
+information we require from the original source (<a href="https://asciidoc.org/">AsciiDoc</a>) files
+which can be found in the
+<a href="https://github.com/apache/groovy-website/tree/asf-site/site/src/site/blog">groovy-website</a> repo.
 We&#8217;ll first look at how we can find project references using regular expressions
 and then using <a href="https://lucene.apache.org/">Apache Lucene</a>.</p>
 </div>
@@ -77,36 +80,37 @@ We&#8217;ll also make provision for projects with subprojects, at least for
 Apache Commons, so this will pick up names like "Apache Commons Math"
 for instance. We&#8217;ll exclude Apache Groovy since that would hit possibly
 every Groovy blog post. We&#8217;ll also exclude a bunch of words that appear in
-commonly used phrases like "Apache License" and "Apache Projects".</p>
+commonly used phrases like "Apache License" and "Apache Projects" which
+could look like project names to our search queries but aren&#8217;t.</p>
 </div>
 <div class="paragraph">
 <p>This is by no means a perfect name reference finder, for example,
 we often refer to Apache Commons Math by its full name when first introduced
-but later in posts we fall back to the more friendly "Commons Math" reference
+in a blog post but later in the post we fall back to the more friendly "Commons Math" reference
 where the "Apache" is understood from the context. We could make the regex
-more elaborate to cater for such cases but there isn&#8217;t really any benefit,
-so we won&#8217;t.</p>
+more elaborate to cater for such cases but there isn&#8217;t really any benefit
+as far as this post is concerned, so we won&#8217;t.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">String tokenRegex = /(?ix)               # ignore case, enable whitespace &amp; comments
-    \b                                   # word boundary
-    (                                    # start capture of all terms
-        (                                # capture project name term
-            (apache|eclipse)\s           # foundation name
-            (commons\s)?                 # optional subproject name
+<pre class="prettyprint highlight"><code data-lang="groovy">String tokenRegex = /(?ix)             # ignore case, enable whitespace &amp; comments
+    \b                                 # word boundary
+    (                                  # start capture of all terms
+        (                              # capture project name term
+            (apache|eclipse)\s         # foundation name
+            (commons\s)?               # optional subproject name
             (
-                ?!(groovy                # negative lookahead for excluded words
+                ?!(groovy              # negative lookahead for excluded words
                 | and   | license  | users
                 | https | projects | software
                 | or    | prefixes | technologies)
             )\w+
-        )                                # end capture project name term
-        |                                # alternatively
-        (                                # capture non-project term
-            \w+?\b                       # non-greedily match any other words
-        )                                # end capture non-project term
-    )                                    # end capture term
+        )                              # end capture project name term
+        |                              # alternatively
+        (                              # capture non-project term
+            \w+?\b                     # non-greedily match any other word chars
+        )                              # end capture non-project term
+    )                                  # end capture term
 /</code></pre>
 </div>
 </div>
@@ -121,7 +125,7 @@ Feel free to make a compact (long) one-liner without comments if you prefer.</p>
 <h2 id="_collecting_project_name_statistics_using_regex_matching">Collecting project name statistics using regex matching</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>With our regex sorted, let&#8217;s look at how you could use a Groovy matcher
+<p>With our regex in hand, let&#8217;s look at how we could use a Groovy matcher
 to find all the project names. First we&#8217;ll define one other common constant,
 the base directory for our blogs, which you might need to change if you
 are wanting to follow along and run these examples:</p>
@@ -169,7 +173,7 @@ histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(8)</b
 <p>This is a map which provides a default value for non-existent keys</p>
 </li>
 <li>
-<p>This traverse the directory processing each AsciiDoc file</p>
+<p>This traverses the directory processing each AsciiDoc file</p>
 </li>
 <li>
 <p>We define our matcher</p>
@@ -192,7 +196,7 @@ histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(8)</b
 </ol>
 </div>
 <div class="paragraph">
-<p>The output looks like:</p>
+<p>When we run our script, the output looks like:</p>
 </div>
 <pre>
 apache-nlpcraft-with-groovy.adoc: [apache&nbsp;nlpcraft:5]
@@ -266,17 +270,18 @@ Lucene to our problem.</p>
 </div>
 <div class="paragraph">
 <p>First, we&#8217;ll define a custom analyzer. Lucene is very flexible and comes with builtin
-analyzers. In a typical scenario, we might just search on all words.
+analyzers. In a typical scenario, we might just index on all found words.
 There&#8217;s a builtin analyzer for that.
 If we used one of the builtin analyzers, to query for our project names,
-we&#8217;d construct a query that spanned multiple (word) terms.
+we&#8217;d need to construct a query that spanned multiple (word) terms.
 We&#8217;ll look at what that might look like later, but
 for the purposes of our little example, we are going to assume project names
 are indivisible terms and slice up our documents that way.</p>
 </div>
 <div class="paragraph">
 <p>Luckily, Lucene has a pattern tokenizer
-which lets us reuse our existing regex.</p>
+which lets us reuse our existing regex.
+Basically, our index will have project name terms and other found words.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -554,7 +559,7 @@ but it wasn&#8217;t needed previously.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>Now we can run our query code:</p>
+<p>With our helper method defined, we can now write our query code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -646,7 +651,11 @@ apache&nbsp;age (11)                  ███████████▏
 eclipse&nbsp;deeplearning4j (8)       ████████▏
 apache&nbsp;commons collections (7)   ███████▏
 apache&nbsp;commons csv (6)           ██████▏
+
 </pre>
+<div class="paragraph">
+<p>We could also aggregate file counts which mention project names. It too, would look the same as before.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -969,10 +978,10 @@ new IndexWriter(indexDir, config).withCloseable { writer -&gt;
         file.withReader { br -&gt;
             var document = new Document()
             var fieldType = new FieldType(stored: true,
-                indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
-                storeTermVectors: true,
-                storeTermVectorPositions: true,
-                storeTermVectorOffsets: true)
+              indexOptions: IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS,
+              storeTermVectors: true,
+              storeTermVectorPositions: true,
+              storeTermVectorOffsets: true)
             document.add(new Field('content', br.text, fieldType))
             document.add(new StringField('name', file.name, Field.Store.YES))
             writer.addDocument(document)
@@ -1076,7 +1085,8 @@ println "Total documents with hits for $query --&gt; $results.totalHits"</code><
 </div>
 </div>
 <div class="paragraph">
-<p>Running the code gives the same output as previously.</p>
+<p>Running the code gives the same output as previously. If you are interested in the DSL
+details, have a look at the <a href="https://github.com/paulk-asert/groovy-lucene/blob/main/src/main/groovy/LuceneDSL.groovy">source file</a>.</p>
 </div>
 <div class="paragraph">
 <p>We can try out our DSL on other terms:</p>
