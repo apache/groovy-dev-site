@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_a_regular_expression_for_project_names' class='anchor-link'>A regular expression for project names</a></li><li><a href='#_collecting_project_name_statistics_using_regex_matching' class='anchor-link'>Collecting project name statistics using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-25 03:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Searching with Lucene</a></li><li><a href='#_a_regular_expression_for_project_names' class='anchor-link'>A regular expression for project names</a></li><li><a href='#_collecting_project_name_statistics_using_regex_matching' class='anchor-link'>Collecting project name statistics using regex matching</a></li><li><a href='#_indexing_with_lucene' class='anchor-link'>Indexing with Lucene</a></li><li><a href='#_using_lucene_facets' class='anchor-link'>Using Lucene Facets</a></li><li><a href='#_more_complex_queries' class='anchor-link'>More complex queries</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Searching with Lucene</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-11-25 03:30PM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Groovy <a href="https://groovy.apache.org/blog/">blog posts</a> often reference other Apache projects.
@@ -668,12 +668,6 @@ Facets allow for more powerful searching. They are often used for grouping
 search results into categories. The search user can drill down into
 categories to refine their search.</p>
 </div>
-<div class="paragraph">
-<p>Let&#8217;s use facets to store project names for each document.
-One facet capturing the project name information might be all we need,
-but to illustrate some Lucene features, we&#8217;ll use three facets and
-store slightly different information in each one.</p>
-</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -692,6 +686,48 @@ But if you try, please let us know how you go!
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p>Let&#8217;s use facets to store project names for each document.
+One facet capturing the project name information might be all we need,
+but to illustrate some Lucene features, we&#8217;ll use three facets and
+store slightly different information in each one:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Facet</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description/Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>projectHitCounts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IntAssociationFacetField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Project reference hit counts, e.g.
+"Apache Lucene" has 2 hits in <code>groovy-lucene.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>projectFileCounts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FacetField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Documents which reference a project, e.g.
+"Apache Spark" is referenced by
+<code>classifying-iris-flowers-with-deep.adoc</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>projectNameCounts</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FacetField</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">As above but hierarchical, e.g.
+["Apache", "Commons", "Math"] is reference by
+<code>fruity-eclipse-collections.adoc</code></p></td>
+</tr>
+</tbody>
+</table>
 <div class="paragraph">
 <p>We&#8217;ll use our regex to find project names and store the information in our facets.
 Lucene creates a special <em>taxonomy</em> index for indexing facet information.
