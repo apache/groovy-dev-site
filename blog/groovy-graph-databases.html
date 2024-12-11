@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, tinkerpop, gremlin, neo4j, apache age, graph databases, apache hugegraph, arcadedb, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='tugraph, apache tinkerpop, gremlin, neo4j, apache age, graph databases, apache hugegraph, arcadedb, orientdb, groovy'/><meta name='description' content='This post illustrates using graph databases with Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Graph Databases with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-09-02 10:18PM (Last updated: 2024-09-18 10:20PM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Graph Databases with Groovy</a></li><li><a href='#_case_study' class='anchor-link'>Case Study</a></li><li><a href='#_why_graph_databases' class='anchor-link'>Why graph databases?</a></li><li><a href='#_apache_tinkerpop' class='anchor-link'>Apache TinkerPop</a></li><li><a href='#_neo4j' class='anchor-link'>Neo4j</a></li><li><a href='#_apache_age' class='anchor-link'>Apache AGE</a></li><li><a href='#_orientdb' class='anchor-link'>OrientDB</a></li><li><a href='#_arcadedb' class='anchor-link'>ArcadeDB</a></li><li><a href='#_tugraph' class='anchor-link'>TuGraph</a></li><li><a href='#_apache_hugegraph' class='anchor-link'>Apache HugeGraph</a></li><li><a href='#_static_typing' class='anchor-link'>Static typing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Graph Databases with Groovy</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2024-09-02 10:18PM (Last updated: 2024-12-11 10:19AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this blog post, we look at using property graph databases with Groovy.
@@ -1555,7 +1555,8 @@ ideas yourself!</p>
 <div class="title">Update history</div>
 <div class="paragraph">
 <p><strong>02/Sep/2024</strong>: Initial version.<br>
-<strong>18/Sep/2024</strong>: Updated for latest Groovy 5 version, updated for TuGraph 4.5.0 with thanks to Florian (GitHub: fanzhidongyzby) and Richard Bian (x: @RichSFO), TinkerPop tweaks with thanks to Stephen Mallette (ASF: spmallette).<br></p>
+<strong>18/Sep/2024</strong>: Updated for: latest Groovy 5 version, TuGraph 4.5.0 with thanks to Florian (GitHub: fanzhidongyzby) and Richard Bian (x: @RichSFO), TinkerPop tweaks with thanks to Stephen Mallette (ASF: spmallette).<br>
+<strong>11/Dec/2024</strong>: Updated for: latest Groovy 5 version, TuGraph 4.5.1, HugeGraph 1.5.0, ArcadeDB 24.11.1, Gremlin 3.7.3, Neo4J 5.26.0, OrientDB 3.2.36.<br></p>
 </div>
 </div>
 </div>
