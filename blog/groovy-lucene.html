@@ -138,13 +138,28 @@ are wanting to follow along and run these examples:</p>
 <div class="colist arabic">
 <ol>
 <li>
-<p>You&#8217;d need to check out the Groovy website and point to it here</p>
+<p>You&#8217;d need to check out the Groovy website and point <code>baseDir</code> to it here</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>Now our script will traverse all the files in that directory, processing them with our regex
-and track the hits we find.</p>
+<p>First, let&#8217;s create a little helper method for printing a pretty
+graph of our results (we&#8217;ll use the <code>colorize</code> method from <a href="https://github.com/dialex/JColor">JColor</a>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def display(Map&lt;String, Integer&gt; data, int max, int scale = 1) {
+    data.each { k, v -&gt;
+        var label = "$k ($v)"
+        var color = k.startsWith('apache') ? MAGENTA_TEXT() : BLUE_TEXT()
+        println "${label.padRight(32)} ${colorize(bar(v * scale, 0, max, max), color)}"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now our script will traverse all the files in that directory,
+processing them with our regex and track the hits we find.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -161,10 +176,7 @@ new File(baseDir).traverse(nameFilter: ~/.*\.adoc/) { file -&gt;  // <b class="c
 }
 
 println "\nFrequency of total hits mentioning a project:"
-histogram.sort { e -&gt; -e.value }.each { k, v -&gt; // <b class="conum">(8)</b>
-    var label = "$k ($v)"
-    println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
-}</code></pre>
+display(histogram.sort { e -&gt; -e.value }, 50) // <b class="conum">(8)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -212,7 +224,7 @@ groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
 groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
 groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
 groovy-list-processing-cheat-sheet.adoc: [eclipse&nbsp;collections:4, apache&nbsp;commons collections:3]
-groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:3, apache&nbsp;commons:4, apache&nbsp;commons math:2, apache&nbsp;spark:1]
 groovy-null-processing.adoc: [eclipse&nbsp;collections:6, apache&nbsp;commons collections:4]
 groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
 groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
@@ -229,33 +241,33 @@ wordle-checker.adoc: [eclipse&nbsp;collections:3]
 zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
 
 Frequency of total hits mentioning a project:
-eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
-apache&nbsp;commons math (18)         ██████████████████▏
-apache&nbsp;ignite (17)               █████████████████▏
-apache&nbsp;spark (13)                █████████████▏
-apache&nbsp;mxnet (12)                ████████████▏
-apache&nbsp;wayang (11)               ███████████▏
-apache&nbsp;age (11)                  ███████████▏
-eclipse&nbsp;deeplearning4j (8)       ████████▏
-apache&nbsp;commons collections (7)   ███████▏
-apache&nbsp;commons csv (6)           ██████▏
-apache&nbsp;nlpcraft (5)              █████▏
-apache&nbsp;pekko (4)                 ████▏
-apache&nbsp;hugegraph (3)             ███▏
-apache&nbsp;tinkerpop (3)             ███▏
-apache&nbsp;flink (2)                 ██▏
-apache&nbsp;commons cli (2)           ██▏
-apache&nbsp;lucene (2)                ██▏
-apache&nbsp;commons (2)               ██▏
-apache&nbsp;opennlp (2)               ██▏
-apache&nbsp;ofbiz (1)                 █▏
-apache&nbsp;beam (1)                  █▏
-apache&nbsp;commons numbers (1)       █▏
-apache&nbsp;nutch (1)                 █▏
-apache&nbsp;solr (1)                  █▏
-apache&nbsp;commons codec (1)         █▏
-apache&nbsp;commons io (1)            █▏
-apache&nbsp;kie (1)                   █▏
+eclipse&nbsp;collections (50)         <span style="color:blue">██████████████████████████████████████████████████</span>▏
+apache&nbsp;commons math (18)         <span style="color:purple">██████████████████</span>▏
+apache&nbsp;ignite (17)               <span style="color:purple">█████████████████</span>▏
+apache&nbsp;spark (14)                <span style="color:purple">██████████████</span>▏
+apache&nbsp;mxnet (12)                <span style="color:purple">████████████</span>▏
+apache&nbsp;wayang (11)               <span style="color:purple">███████████</span>▏
+apache&nbsp;age (11)                  <span style="color:purple">███████████</span>▏
+eclipse&nbsp;deeplearning4j (8)       <span style="color:blue">████████</span>▏
+apache&nbsp;commons collections (7)   <span style="color:purple">███████</span>▏
+apache&nbsp;commons csv (6)           <span style="color:purple">██████</span>▏
+apache&nbsp;nlpcraft (5)              <span style="color:purple">█████</span>▏
+apache&nbsp;pekko (4)                 <span style="color:purple">████</span>▏
+apache&nbsp;hugegraph (3)             <span style="color:purple">███</span>▏
+apache&nbsp;tinkerpop (3)             <span style="color:purple">███</span>▏
+apache&nbsp;lucene (3)                <span style="color:purple">███</span>▏
+apache&nbsp;flink (2)                 <span style="color:purple">██</span>▏
+apache&nbsp;commons cli (2)           <span style="color:purple">██</span>▏
+apache&nbsp;commons (2)               <span style="color:purple">██</span>▏
+apache&nbsp;opennlp (2)               <span style="color:purple">██</span>▏
+apache&nbsp;ofbiz (1)                 <span style="color:purple">█</span>▏
+apache&nbsp;beam (1)                  <span style="color:purple">█</span>▏
+apache&nbsp;commons numbers (1)       <span style="color:purple">█</span>▏
+apache&nbsp;nutch (1)                 <span style="color:purple">█</span>▏
+apache&nbsp;solr (1)                  <span style="color:purple">█</span>▏
+apache&nbsp;commons codec (1)         <span style="color:purple">█</span>▏
+apache&nbsp;commons io (1)            <span style="color:purple">█</span>▏
+apache&nbsp;kie (1)                   <span style="color:purple">█</span>▏
 </pre>
 </div>
 </div>
@@ -374,19 +386,13 @@ println "\nFrequency of total hits mentioning a project (top 10):"
 var termFreq = terms.collectEntries { term -&gt;
     [term.text(), reader.totalTermFreq(term)]  // <b class="conum">(3)</b>
 }
-termFreq.sort(byReverseValue).take(10).each { k, v -&gt;
-    var label = "$k ($v)"
-    println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
-}
+display(termFreq.sort(byReverseValue).take(10), 50)
 
 println "\nFrequency of documents mentioning a project (top 10):"
 var docFreq = terms.collectEntries { term -&gt;
     [term.text(), reader.docFreq(term)]  // <b class="conum">(4)</b>
 }
-docFreq.sort(byReverseValue).take(10).each { k, v -&gt;
-    var label = "$k ($v)"
-    println "${label.padRight(32)} ${bar(v * 2, 0, 20, 20)}"
-}</code></pre>
+display(docFreq.sort(byReverseValue).take(10), 20, 2)</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -422,7 +428,7 @@ groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
 groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
 groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
 groovy-list-processing-cheat-sheet.adoc: [apache&nbsp;commons collections:3, eclipse&nbsp;collections:4]
-groovy-lucene.adoc: [apache&nbsp;commons:1, apache&nbsp;commons math:2, apache&nbsp;lucene:2, apache&nbsp;nutch:1, apache&nbsp;solr:1]
+groovy-lucene.adoc: [apache&nbsp;commons:4, apache&nbsp;commons math:2, apache&nbsp;lucene:3, apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;spark:1]
 groovy-null-processing.adoc: [apache&nbsp;commons collections:4, eclipse&nbsp;collections:6]
 groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
 groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
@@ -439,28 +445,28 @@ wordle-checker.adoc: [eclipse&nbsp;collections:3]
 zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
 
 Frequency of total hits mentioning a project (top 10):
-eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
-apache&nbsp;commons math (17)         █████████████████▏
-apache&nbsp;ignite (17)               █████████████████▏
-apache&nbsp;spark (13)                █████████████▏
-apache&nbsp;mxnet (12)                ████████████▏
-apache&nbsp;wayang (11)               ███████████▏
-apache&nbsp;age (11)                  ███████████▏
-eclipse&nbsp;deeplearning4j (8)       ████████▏
-apache&nbsp;commons collections (7)   ███████▏
-apache&nbsp;commons csv (6)           ██████▏
+eclipse&nbsp;collections (50)         <span style="color:blue">██████████████████████████████████████████████████</span>▏
+apache&nbsp;commons math (17)         <span style="color:purple">█████████████████</span>▏
+apache&nbsp;ignite (17)               <span style="color:purple">█████████████████</span>▏
+apache&nbsp;spark (14)                <span style="color:purple">██████████████</span>▏
+apache&nbsp;mxnet (12)                <span style="color:purple">████████████</span>▏
+apache&nbsp;wayang (11)               <span style="color:purple">███████████</span>▏
+apache&nbsp;age (11)                  <span style="color:purple">███████████</span>▏
+eclipse&nbsp;deeplearning4j (8)       <span style="color:blue">████████</span>▏
+apache&nbsp;commons collections (7)   <span style="color:purple">███████</span>▏
+apache&nbsp;commons csv (6)           <span style="color:purple">██████</span>▏
 
 Frequency of documents mentioning a project (top 10):
-eclipse&nbsp;collections (10)         ████████████████████▏
-apache&nbsp;commons math (7)          ██████████████▏
-apache&nbsp;spark (5)                 ██████████▏
-apache&nbsp;ignite (4)                ████████▏
-apache&nbsp;commons csv (4)           ████████▏
-eclipse&nbsp;deeplearning4j (3)       ██████▏
-apache&nbsp;wayang (3)                ██████▏
-apache&nbsp;flink (2)                 ████▏
-apache&nbsp;commons collections (2)   ████▏
-apache&nbsp;commons (2)               ████▏
+eclipse&nbsp;collections (10)         <span style="color:blue">████████████████████</span>▏
+apache&nbsp;commons math (7)          <span style="color:purple">██████████████</span>▏
+apache&nbsp;spark (6)                 <span style="color:purple">██████████</span>▏
+apache&nbsp;ignite (4)                <span style="color:purple">████████</span>▏
+apache&nbsp;commons csv (4)           <span style="color:purple">████████</span>▏
+eclipse&nbsp;deeplearning4j (3)       <span style="color:blue">██████</span>▏
+apache&nbsp;wayang (3)                <span style="color:purple">██████</span>▏
+apache&nbsp;flink (2)                 <span style="color:purple">████</span>▏
+apache&nbsp;commons collections (2)   <span style="color:purple">████</span>▏
+apache&nbsp;commons (2)               <span style="color:purple">████</span>▏
 
 </pre>
 <div class="paragraph">
@@ -581,10 +587,7 @@ results.scoreDocs.each { ScoreDoc scoreDoc -&gt; // <b class="conum">(3)</b>
 }
 
 println "\nFrequency of total hits mentioning a project (top 10):"
-histogram.sort { e -&gt; -e.value }.take(10).each { k, v -&gt; // <b class="conum">(6)</b>
-    var label = "$k ($v)"
-    println "${label.padRight(32)} ${bar(v, 0, 50, 50)}"
-}</code></pre>
+display(histogram.sort { e -&gt; -e.value }.take(10), 50) // <b class="conum">(6)</b></code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -630,7 +633,7 @@ fun-with-obfuscated-groovy.adoc: [apache&nbsp;commons math:1]
 groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
 groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
 groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
-groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:3, apache&nbsp;commons:4, apache&nbsp;commons math:2, apache&nbsp;spark:1]
 groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
 groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
 handling-byte-order-mark-characters.adoc: [apache&nbsp;commons io:1]
@@ -645,16 +648,16 @@ wordle-checker.adoc: [eclipse&nbsp;collections:3]
 zipping-collections-with-groovy.adoc: [eclipse&nbsp;collections:4]
 
 Frequency of total hits mentioning a project (top 10):
-eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
-apache&nbsp;commons math (18)         ██████████████████▏
-apache&nbsp;ignite (17)               █████████████████▏
-apache&nbsp;spark (13)                █████████████▏
-apache&nbsp;mxnet (12)                ████████████▏
-apache&nbsp;wayang (11)               ███████████▏
-apache&nbsp;age (11)                  ███████████▏
-eclipse&nbsp;deeplearning4j (8)       ████████▏
-apache&nbsp;commons collections (7)   ███████▏
-apache&nbsp;commons csv (6)           ██████▏
+eclipse&nbsp;collections (50)         <span style="color:blue">██████████████████████████████████████████████████</span>▏
+apache&nbsp;commons math (18)         <span style="color:purple">██████████████████</span>▏
+apache&nbsp;ignite (17)               <span style="color:purple">█████████████████</span>▏
+apache&nbsp;spark (14)                <span style="color:purple">█████████████</span>▏
+apache&nbsp;mxnet (12)                <span style="color:purple">████████████</span>▏
+apache&nbsp;wayang (11)               <span style="color:purple">███████████</span>▏
+apache&nbsp;age (11)                  <span style="color:purple">███████████</span>▏
+eclipse&nbsp;deeplearning4j (8)       <span style="color:blue">████████</span>▏
+apache&nbsp;commons collections (7)   <span style="color:purple">███████</span>▏
+apache&nbsp;commons csv (6)           <span style="color:purple">██████</span>▏
 
 </pre>
 <div class="paragraph">
@@ -812,7 +815,7 @@ groovy-2-5-clibuilder-renewal.adoc: [apache&nbsp;commons cli:2]
 groovy-graph-databases.adoc: [apache&nbsp;age:11, apache&nbsp;hugegraph:3, apache&nbsp;tinkerpop:3]
 groovy-haiku-processing.adoc: [eclipse&nbsp;collections:3]
 groovy-list-processing-cheat-sheet.adoc: [eclipse&nbsp;collections:4, apache&nbsp;commons collections:3]
-groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:2, apache&nbsp;commons:1, apache&nbsp;commons math:2]
+groovy-lucene.adoc: [apache&nbsp;nutch:1, apache&nbsp;solr:1, apache&nbsp;lucene:3, apache&nbsp;commons:4, apache&nbsp;commons math:2, apache&nbsp;spark:1]
 groovy-null-processing.adoc: [eclipse&nbsp;collections:6, apache&nbsp;commons collections:4]
 groovy-pekko-gpars.adoc: [apache&nbsp;pekko:4]
 groovy-record-performance.adoc: [apache&nbsp;commons codec:1]
@@ -850,16 +853,10 @@ var projects = new TaxonomyFacetIntAssociations('$projectHitCounts', taxonReader
 var hitData = projects.getTopChildren(topN, 'projectHitCounts').labelValues
 
 println "\nFrequency of total hits mentioning a project (top $topN):"
-hitData.each { m -&gt;
-    var label = "$m.label ($m.value)"
-    println "${label.padRight(32)} ${bar(m.value, 0, 50, 50)}"
-}
+display(hitData.collectEntries{ lv -&gt; [lv.label, lv.value] }, 50)
 
 println "\nFrequency of documents mentioning a project (top $topN):"
-hitData.each { m -&gt;
-    var label = "$m.label ($m.count)"
-    println "${label.padRight(32)} ${bar(m.count * 2, 0, 20, 20)}"
-}</code></pre>
+display(hitData.collectEntries{ lv -&gt; [lv.label, lv.count] }, 20, 2)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -867,33 +864,20 @@ hitData.each { m -&gt;
 </div>
 <pre>
 Frequency of total hits mentioning a project (top 5):
-eclipse&nbsp;collections (50)         ██████████████████████████████████████████████████▏
-apache&nbsp;commons math (18)         ██████████████████▏
-apache&nbsp;ignite (17)               █████████████████▏
-apache&nbsp;spark (13)                █████████████▏
-apache&nbsp;mxnet (12)                ████████████▏
+eclipse&nbsp;collections (50)         <span style="color:blue">██████████████████████████████████████████████████</span>▏
+apache&nbsp;commons math (18)         <span style="color:purple">██████████████████</span>▏
+apache&nbsp;ignite (17)               <span style="color:purple">█████████████████</span>▏
+apache&nbsp;spark (14)                <span style="color:purple">██████████████</span>▏
+apache&nbsp;mxnet (12)                <span style="color:purple">████████████</span>▏
 
 Frequency of documents mentioning a project (top 5):
-eclipse&nbsp;collections (10)         ████████████████████▏
-apache&nbsp;commons math (7)          ██████████████▏
-apache&nbsp;spark (5)                 ██████████▏
-apache&nbsp;ignite (4)                ████████▏
-apache&nbsp;mxnet (1)                 ██▏
+eclipse&nbsp;collections (10)         <span style="color:blue">████████████████████</span>▏
+apache&nbsp;commons math (7)          <span style="color:purple">██████████████</span>▏
+apache&nbsp;ignite (4)                <span style="color:purple">████████</span>▏
+apache&nbsp;spark (6)                 <span style="color:purple">████████████</span>▏
+apache&nbsp;mxnet (1)                 <span style="color:purple">██</span>▏
 
 </pre>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-At the time of writing, there is a bug in sorting for the second of these graphs.
-A <a href="https://github.com/apache/lucene/issues/14008">fix</a> is coming.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Now, the taxonomy information about document frequency is for the top hits scored using the number of hits.
 One of our other facets (<code>projectFileCounts</code>) tracks document frequency independently.
@@ -917,7 +901,7 @@ Frequency of documents mentioning a project (top 5):
 dim=projectFileCounts path=[] value=-1 childCount=27
   eclipse&nbsp;collections (10)
   apache&nbsp;commons math (7)
-  apache&nbsp;spark (5)
+  apache&nbsp;spark (6)
   apache&nbsp;ignite (4)
   apache&nbsp;commons csv (4)
 
@@ -963,7 +947,7 @@ dim=projectNameCounts path=[] value=-1 childCount=2
 Frequency of documents mentioning a project with path [apache] (top 5):
 dim=projectNameCounts path=[apache] value=-1 childCount=18
   commons (16)
-  spark (5)
+  spark (6)
   ignite (4)
   wayang (3)
   flink (2)
