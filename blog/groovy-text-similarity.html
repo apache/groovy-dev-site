@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='maven, gmaven, groovy, release'/><meta name='description' content='GMavenPlus 1.6.2 Release Announcement.'/><title>The Apache Groovy programming language - Blogs - GMavenPlus 1.6.2 Released (Community Artifact)</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, deep learning, apache commons'/><meta name='description' content='This blog looks at processing some algorithms for testing text similarity.'/><title>The Apache Groovy programming language - Blogs - Groovy Text Similarity</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,22 +53,85 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='#_gmavenplus_1_6_2_has_been_released' class='anchor-link'>GMavenPlus 1.6.2 has been released.</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-2-5-4-windows'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta2'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-4-0-3-released'>Groovy 4.0.3 Released</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-2-5-2-windows'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-7-released'>Groovy 2.5.7 Released</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GMavenPlus 1.6.2 Released (Community Artifact)</h1><p><span>Author: <i>Remko Popma</i></span><br/><span>Published: 2018-10-14 10:00PM</span></p><hr/><div class="sect1">
-<h2 id="_gmavenplus_1_6_2_has_been_released">GMavenPlus 1.6.2 has been released.</h2>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_comparisons' class='anchor-link'>Simple comparisons</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>GMavenPlus Plugin is a rewrite of <a href="https://github.com/groovy/gmaven">GMaven</a>,
-a <a href="http://maven.apache.org/">Maven</a> plugin that allows you to
-integrate <a href="http://groovy-lang.org/">Groovy</a> into your Maven projects.</p>
+<p>String similarity helps answer questions like:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Are two Jira/GitHub issues duplicates of the same issue?</p>
+</li>
+<li>
+<p>Are two (or more) customer records actually for the same customer?</p>
+</li>
+<li>
+<p>Is some social media topic trending because multiple posts are really about the same thing?</p>
+</li>
+<li>
+<p>Can I understand some natural language customer request even when it contains spelling mistakes?</p>
+</li>
+<li>
+<p>As a doctor, can I find a medical journal paper discussing a patient&#8217;s medical diagnosis/symptoms/treatment?</p>
+</li>
+<li>
+<p>As a programmer, can I find a solution to my coding problem?</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_comparisons">Simple comparisons</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Examines three libraries for performing similarity matching:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>info.debatty:java-string-similarity</p>
+</li>
+<li>
+<p>org.apache.commons:commons-text Apache Commons Text</p>
+</li>
+<li>
+<p>commons-codec:commons-codec Apache Commons Codec for Soundex</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Source code for this post:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-string-similarity" class="bare">https://github.com/paulk-asert/groovy-string-similarity</a></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Basic usage can be found on the
-<a href="https://github.com/groovy/GMavenPlus/wiki/Usage">usage</a> page,
-with additional usage examples on the
-<a href="https://github.com/groovy/GMavenPlus/wiki/Examples">examples page</a>.</p>
+<p>Other referenced sites:</p>
 </div>
-<div class="paragraph">
-<p>For more information, consult the <a href="https://github.com/groovy/GMavenPlus/wiki">wiki</a>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://commons.apache.org/proper/commons-text/" class="bare">https://commons.apache.org/proper/commons-text/</a></p>
+</li>
+<li>
+<p><a href="https://commons.apache.org/proper/commons-codec/" class="bare">https://commons.apache.org/proper/commons-codec/</a></p>
+</li>
+<li>
+<p><a href="https://github.com/tdebatty/java-string-similarity" class="bare">https://github.com/tdebatty/java-string-similarity</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
