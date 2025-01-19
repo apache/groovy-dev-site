@@ -57,7 +57,11 @@
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>String similarity helps answer questions like:</p>
+<p>String similarity tries to answer the question: is one word
+(or phrase, sentence, paragraph, document) the same as another.
+This is an important capability in many scenarios involving searching
+or asking questions or invoking commands.
+It can help answer questions like:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -81,13 +85,29 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Very simple cases can typically be explicitly catered for by hand, e.g.
+using String library methods or regular expressions:</p>
+</div>
+<div class="listingblock groovy">
+<div class="content">
+<pre class="prettyprint highlight"><code>assert 'Cat'.equalsIgnoreCase('cat')
+
+assert ['color', 'Colour'].every { it =~ '[Cc]olou?r' }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Handling cases explicitly like this soon becomes tedious.
+We&#8217;ll look at some libraries which can help us handle comparisons
+in more general ways.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_simple_comparisons">Simple comparisons</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Examines three libraries for performing similarity matching:</p>
+<p>First, we&#8217;ll examine three libraries for performing similarity matching:</p>
 </div>
 <div class="ulist">
 <ul>
