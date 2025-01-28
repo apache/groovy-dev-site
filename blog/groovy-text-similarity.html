@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_comparisons' class='anchor-link'>Simple comparisons</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -101,11 +101,6 @@ assert ['color', 'Colour'].every { it =~ '[Cc]olou?r' }</code></pre>
 We&#8217;ll look at some libraries which can help us handle comparisons
 in more general ways.</p>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_simple_comparisons">Simple comparisons</h2>
-<div class="sectionbody">
 <div class="paragraph">
 <p>First, we&#8217;ll examine three libraries for performing similarity matching:</p>
 </div>
@@ -122,6 +117,34 @@ in more general ways.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Then we&#8217;ll look at some deep learning options.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_simple_string_metrics">Simple String Metrics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein</a>,
+<a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard</a>,
+<a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming</a>,
+<a href="https://en.wikipedia.org/wiki/Longest_common_subsequence">LongestCommonSubsequence</a>,
+<a href="https://en.wikipedia.org/wiki/Jaro_distance">JaroWinkler</a>.</p>
+</div>
+<pre>
+      there VS their
+JaroWinklerSimilarity                     0.91 <span style="color:green">██████████████████▏</span>
+JaroWinkler                               0.91 <span style="color:green">██████████████████▏</span>
+Jaccard (debatty k=1)                     0.80 <span style="color:green">████████████████▏</span>
+RatcliffObershelp                         0.80 <span style="color:green">████████████████▏</span>
+JaccardSimilarity (commons text k=1)      0.80 <span style="color:green">████████████████▏</span>
+NormalizedLevenshtein                     0.60 <span style="color:red">████████████▏</span>
+Cosine                                    0.33 <span style="color:red">██████▏</span>
+Jaccard (debatty k=2)                     0.33 <span style="color:red">██████▏</span>
+SorensenDice                              0.33 <span style="color:red">██████▏</span>
+Jaccard (debatty k=3)                     0.20 <span style="color:red">████▏</span>
+</pre>
 </div>
 </div>
 <div class="sect1">
@@ -219,6 +242,35 @@ hippo|hippopotamus  50%            40%            40%
 </div>
 </div>
 <div class="sect1">
+<h2 id="_deep_learning">Deep Learning</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre>    Cows eat grass
+Bovines convert grass to milk (0.80)
+Bulls consume hay (0.69)
+Bulls trample grass (0.68)
+Dogs play in the grass (0.65)
+The grass is green (0.62)
+
+    Poodles are cute
+Dachshunds are delightful (0.63)
+Dogs play in the grass (0.56)
+The grass is green (0.44)
+Bovines convert grass to milk (0.40)
+One two three (0.38)
+
+    The water is turquoise
+The sea is blue (0.72)
+The sky is blue (0.65)
+The grass is green (0.53)
+One two three (0.43)
+Dogs play in the grass (0.35)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_further_information">Further information</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -244,6 +296,12 @@ hippo|hippopotamus  50%            40%            40%
 </li>
 <li>
 <p><a href="https://github.com/tdebatty/java-string-similarity" class="bare">https://github.com/tdebatty/java-string-similarity</a></p>
+</li>
+<li>
+<p><a href="https://github.com/OpenRefine/OpenRefine" class="bare">https://github.com/OpenRefine/OpenRefine</a></p>
+</li>
+<li>
+<p><a href="https://djl.ai/" class="bare">https://djl.ai/</a></p>
 </li>
 </ul>
 </div>
