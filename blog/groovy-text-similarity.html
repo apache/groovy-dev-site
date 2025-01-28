@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_comparisons' class='anchor-link'>Simple comparisons</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_comparisons' class='anchor-link'>Simple comparisons</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -122,6 +122,100 @@ in more general ways.</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_phonetic_algorithms">Phonetic Algorithms</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Phonetic_algorithm">Phonetic algorithms</a> map words into representations of their pronunciation. They are often used for spell checkers, searching, data deduplication and speech to text systems.</p>
+</div>
+<div class="paragraph">
+<p>One of the earliest phonetic algorithms was <a href="https://en.wikipedia.org/wiki/Soundex">Soundex</a>.
+The idea is that similar sounding words will have the same soundex encoding despite minor differences in spelling, e.g. Claire, Clair, and Clare, all have the same soundex encoding.
+A summary of soundex is that (all but leading) vowels are dropped and similar sounding consonants are
+grouped together. Commons codec has several soundex algorithms. The most commonly used
+ones for the English language are shown below:</p>
+</div>
+<pre>
+Pair                Soundex                RefinedSoundex         DaitchMokotoffSoundex
+cat|hat             C300|H300              C306|H06               430000|530000
+bear|bare           <span style="color:green">B600|B600</span>              B109|B1090             <span style="color:green">790000|790000</span>
+pair|pare           <span style="color:green">P600|P600</span>              P109|P1090             <span style="color:green">790000|790000</span>
+there|their         <span style="color:green">T600|T600</span>              T6090|T609             <span style="color:green">390000|390000</span>
+sort|sought         S630|S230              S3096|S30406           493000|453000
+cow|bull            C000|B400              C30|B107               470000|780000
+winning|grinning    W552|G655              W08084|G4908084        766500|596650
+knows|nose          K520|N200              K3803|N8030            567400|640000
+ground|aground      G653|A265              G49086|A049086         596300|059630
+peeler|repeal       P460|R140              P10709|R90107          789000|978000
+hippo|hippopotamus  H100|H113              H010|H0101060803       570000|577364
+
+</pre>
+<div class="paragraph">
+<p>Another common phonetic algorithm is <a href="https://en.wikipedia.org/wiki/Metaphone">Metaphone</a>.
+This is similar in concept to Soundex but uses a more sophisticated algorithm for encoding.
+Various versions are available. Commons codec supports Metaphone and Double Metaphone.
+The <a href="https://github.com/OpenRefine/OpenRefine">openrefine</a> project includes an early version of Metaphone 3.</p>
+</div>
+<pre>
+Pair                Metaphone        Metaphone(8)     DblMetaphone(8)  Metaphone3
+cat|hat             KT|HT            KT|HT            KT|HT            KT|HT
+bear|bare           <span style="color:green">BR|BR            BR|BR            PR|PR            PR|PR</span>
+pair|pare           <span style="color:green">PR|PR            PR|PR            PR|PR            PR|PR</span>
+there|their         <span style="color:green">0R|0R            0R|0R            0R|0R            0R|0R</span>
+sort|sought         SRT|ST           SRT|ST           SRT|SKT          SRT|ST
+cow|bull            K|BL             K|BL             K|PL             K|PL
+winning|grinning    WNNK|KRNN        WNNK|KRNNK       ANNK|KRNNK       ANNK|KRNNK
+knows|nose          <span style="color:green">NS|NS            NS|NS            NS|NS            NS|NS</span>
+ground|aground      KRNT|AKRN        KRNT|AKRNT       KRNT|AKRNT       KRNT|AKRNT
+peeler|repeal       PLR|RPL          PLR|RPL          PLR|RPL          PLR|RPL
+hippo|hippopotamus  HP|HPPT          HP|HPPTMS        HP|HPPTMS        HP|HPPTMS
+
+</pre>
+<div class="paragraph">
+<p>Commons Codec includes some additional algorithms including <a href="https://en.wikipedia.org/wiki/New_York_State_Identification_and_Intelligence_System">Nysiis</a> and <a href="https://en.wikipedia.org/wiki/Caverphone">Caverphone</a>. They are shown below for completeness.</p>
+</div>
+<pre>
+Pair                Nysiis                 Caverphone2
+cat|hat             CAT|HAT                KT11111111|AT11111111
+bear|bare           <span style="color:green">BAR|BAR                PA11111111|PA11111111</span>
+pair|pare           <span style="color:green">PAR|PAR                PA11111111|PA11111111</span>
+there|their         <span style="color:green">TAR|TAR                TA11111111|TA11111111</span>
+sort|sought         SAD|SAGT               <span style="color:green">ST11111111|ST11111111</span>
+cow|bull            C|BAL                  KA11111111|PA11111111
+winning|grinning    WANANG|GRANAN          WNNK111111|KRNNK11111
+knows|nose          N|NAS                  KNS1111111|NS11111111
+ground|aground      GRAD|AGRAD             KRNT111111|AKRNT11111
+peeler|repeal       PALAR|RAPAL            PLA1111111|RPA1111111
+hippo|hippopotamus  HAP|HAPAPA             APA1111111|APPTMS1111
+
+</pre>
+<div class="paragraph">
+<p>The matching of <code>sort</code> with <code>sought</code> by Caverphone2 is useful but it didn&#8217;t match
+<code>knows</code> with <code>nose</code>. In summary, these
+algorithms don&#8217;t offer anything compelling compared with Metaphone.</p>
+</div>
+<div class="paragraph">
+<p>For our game, we don&#8217;t want users to have to understand the encoding algorithms of
+the various phonetic algorithms. We want to instead give them a metric that lets them know
+how closely their guess sounds like the hidden word.</p>
+</div>
+<pre>
+Pair                SoundexDiff    Metaphone5LCS  Metaphone5Lev
+cat|hat             75%            50%            50%
+bear|bare           <span style="color:green">100%           100%           100%</span>
+pair|pare           <span style="color:green">100%           100%           100%</span>
+there|their         <span style="color:green">100%           100%           100%</span>
+sort|sought         75%            67%            67%
+cow|bull            50%            0%             0%
+winning|grinning    25%            60%            60%
+knows|nose          25%            <span style="color:green">100%           100%</span>
+ground|aground      0%             <span style="color:green">80%            80%</span>
+peeler|repeal       25%            67%            33%
+hippo|hippopotamus  50%            40%            40%
+
+</pre>
 </div>
 </div>
 <div class="sect1">
