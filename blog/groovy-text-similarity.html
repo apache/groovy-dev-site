@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -131,6 +131,28 @@ in more general ways.</p>
 <a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming</a>,
 <a href="https://en.wikipedia.org/wiki/Longest_common_subsequence">LongestCommonSubsequence</a>,
 <a href="https://en.wikipedia.org/wiki/Jaro_distance">JaroWinkler</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">'foo'.toUpper()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>No signature of method: java.lang.String.toUpper() is applicable for argument types: () values: []
+Possible solutions: toUpperCase(), toURI(), toURL(), toURI(), toURL(), toSet()</pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">'foo'.touppercase()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>No signature of method: java.lang.String.touppercase() is applicable for argument types: () values: []
+Possible solutions: toUpperCase(), toUpperCase(java.util.Locale), toLowerCase(), toLowerCase(java.util.Locale)</pre>
+</div>
 </div>
 <pre>
       there VS their
@@ -242,7 +264,7 @@ hippo|hippopotamus  50%            40%            40%
 </div>
 </div>
 <div class="sect1">
-<h2 id="_deep_learning">Deep Learning</h2>
+<h2 id="_going_deeper">Going Deeper</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Using DJL with PyTorch and the Angle model:</p>
