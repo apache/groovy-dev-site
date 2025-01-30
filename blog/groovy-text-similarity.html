@@ -25,7 +25,7 @@
                 </li><li>
                     <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
                 </li><li>
-                    <a href='http://groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
                 </li>
             </ul>
         </nav><div class='st-pusher'>
@@ -102,23 +102,43 @@ We&#8217;ll look at some libraries which can help us handle comparisons
 in more general ways.</p>
 </div>
 <div class="paragraph">
-<p>First, we&#8217;ll examine three libraries for performing similarity matching:</p>
+<p>First, we&#8217;ll examine two libraries for performing similarity matching using string metrics:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>info.debatty:java-string-similarity</p>
+<p><code>info.debatty:java-string-similarity</code></p>
 </li>
 <li>
-<p>org.apache.commons:commons-text Apache Commons Text</p>
-</li>
-<li>
-<p>commons-codec:commons-codec Apache Commons Codec for Soundex</p>
+<p><code>org.apache.commons:commons-text</code> Apache Commons Text</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Then we&#8217;ll look at some deep learning options.</p>
+<p>Then we&#8217;ll look at some libraries for phonetic matching:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>commons-codec:commons-codec</code> Apache Commons Codec for Soundex and Metaphone</p>
+</li>
+<li>
+<p><code>org.openrefine:main</code> OpenRefine for Metaphone3</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Then we&#8217;ll look at some deep learning options for increased semantic matching:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for Glove and ConceptNet models</p>
+</li>
+<li>
+<p><code>ai.djl</code> with Pytorch for a universal-sentence-encoder model and Tensorflow with an Angle model</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -419,6 +439,22 @@ One two three (0.17)</pre>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>Related libraries and links:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/EdDuarte/similarity-search-java" class="bare">https://github.com/EdDuarte/similarity-search-java</a></p>
+</li>
+<li>
+<p><a href="https://github.com/intuit/fuzzy-matcher" class="bare">https://github.com/intuit/fuzzy-matcher</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=AHlnGId-Y-0" class="bare">https://www.youtube.com/watch?v=AHlnGId-Y-0</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
@@ -433,7 +469,7 @@ One two three (0.17)</pre>
                                         </ul>
                                     </div><div class='col-3'>
                                         <h1>Socialize</h1><ul>
-                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://groovycommunity.com/'>Slack Community</a></li>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
                                         </ul>
                                     </div><div class='col-right'>
                                         <p>
