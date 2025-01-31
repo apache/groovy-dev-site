@@ -53,12 +53,42 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 07:22PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 07:22PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>Let&#8217;s build a wordle-like word guessing game. But instead of telling you how many
+correct and misplaced letters, we&#8217;ll give you more hints, but slightly less obvious
+ones, to make it a little more challenging!</p>
+</div>
+<div class="paragraph">
+<p>We won&#8217;t (directly) even tell you how many letters are in the word,
+but we&#8217;ll give hints like:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>How close your guess sounds like the hidden word.</p>
+</li>
+<li>
+<p>How close your guess is to the meaning of the hidden word.</p>
+</li>
+<li>
+<p>Instead of correct and misplaced letters, we&#8217;ll give you some distance
+and similarity measures which will give you clues about how many
+correct letters you have, do you have the correct letters in order
+and so forth.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_background">Background</h2>
+<div class="sectionbody">
+<div class="paragraph">
 <p>String similarity tries to answer the question: is one word
-(or phrase, sentence, paragraph, document) the same as another.
+(or phrase, sentence, paragraph, document) the same as, or similar to, another.
 This is an important capability in many scenarios involving searching
 or asking questions or invoking commands.
 It can help answer questions like:</p>
@@ -72,7 +102,8 @@ It can help answer questions like:</p>
 <p>Are two (or more) customer records actually for the same customer?</p>
 </li>
 <li>
-<p>Is some social media topic trending because multiple posts are really about the same thing?</p>
+<p>Is some social media topic trending because multiple posts which, even though they contain
+slightly different words, are really about the same thing?</p>
 </li>
 <li>
 <p>Can I understand some natural language customer request even when it contains spelling mistakes?</p>
