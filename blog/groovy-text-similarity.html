@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-01-25 07:22PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 07:22PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -82,6 +82,37 @@ It can help answer questions like:</p>
 </li>
 <li>
 <p>As a programmer, can I find a solution to my coding problem?</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When comparing two things to see if they are the same,
+we often want to incorporate a certain amount of fuzziness:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Are two words the same except for case? E.g. <code>cat</code> and <code>Cat</code>.</p>
+</li>
+<li>
+<p>Are two words the same except for spelling variations?
+E.g. <code>Clare</code>, <code>Claire</code>, and <code>Clair</code>.</p>
+</li>
+<li>
+<p>Are two words the same except for a misspelling or typo?
+E.g. <code>mathematiks</code>, and <code>computter</code>.</p>
+</li>
+<li>
+<p>Are two phrases the same except for order and/or inconsequential words?
+E.g. <code>the red car</code> and <code>the car of colour red</code></p>
+</li>
+<li>
+<p>Do the words sound the same?
+E.g. <code>there</code> , <code>their</code>, and <code>they&#8217;re</code></p>
+</li>
+<li>
+<p>Are the words variations meaning the same (or similar) thing?
+E.g. <code>cow</code>, <code>bull</code>, <code>calf</code>, <code>bovine</code>, <code>cattle</code>, or <code>livestock</code></p>
 </li>
 </ul>
 </div>
@@ -146,16 +177,70 @@ in more general ways.</p>
 <h2 id="_simple_string_metrics">Simple String Metrics</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein</a>,
-<a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard</a>,
-<a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming</a>,
-<a href="https://en.wikipedia.org/wiki/Longest_common_subsequence">LongestCommonSubsequence</a>,
-<a href="https://en.wikipedia.org/wiki/Jaro_distance">JaroWinkler</a>.</p>
+<p>String metrics provide some sort of measure of the sameness of the characters in words (or phrases). These algorithms generally compute similarity or distance (inverse similarity).</p>
+</div>
+<div class="paragraph">
+<p>There are numerous tutorials that describe various string metric algorithms. We won&#8217;t replicate those tutorials but here is a summary of some common ones:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 77.7778%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Algorithm</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The minimum number of "edits" (inserts, deletes, or substitutions) required to convert from one word to another.
+Distance between <code>kitten</code> and <code>sitting</code> is 3 (swap <code>s</code> for <code>k</code>, swap <code>i</code> for <code>e</code>, add <code>g</code> at end).
+Distance between <code>grounds</code> and <code>aground</code> is 2 (add <code>a</code> at start, remove <code>s</code> at end).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defines a ratio between two sample sets. This could be sets of
+characters in a word, or words in a sentence. The ratio is the intersection of sets divided by the union of sets.
+<code>bear</code> vs <code>bare</code> would be 100%, <code>pair</code> vs <code>pear</code> would be 60%.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Similar to Levenshtein but insertions and deletions aren&#8217;t allowed.
+Distance between <code>black</code> and <code>block</code> is 1 (swap <code>o</code> for <code>a</code>).
+Distance between <code>grounds</code> and <code>aground</code> is 7 (swap all chars since none are in the correct position).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Longest_common_subsequence">LongestCommonSubsequence</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of characters appearing in order in the two words, not necessarily consecutively.
+LCS of <code>grounds</code> and <code>aground</code> is 6 (<code>ground</code>).
+LCS of <code>string</code> and <code>single</code> is 4 (<code>s</code>, <code>i</code>, <code>n</code>, <code>g</code>).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>You may be wondering what practical use these algorithms might have.
+Longest commons subsequence is the algorithm behind the popular <code>diff</code> tool.</p>
+</div>
+<div class="paragraph">
+<p>Groovy has in fact a built-in example of a variant of the Levenshtein measure
+it uses for error reporting. Groovy uses a variant known as the Damerau-Levenshtein distance.
+This variant counts transposing two characters within the original word as one "edit".
+The Levenshtein distance of <code>fish</code> and ifsh` is 2.
+The Damerau-Levenshtein distance of <code>fish</code> and ifsh` is 1.</p>
+</div>
+<div class="paragraph">
+<p>As an example, for this code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">'foo'.toUpper()</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Groovy will give this error message:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -163,16 +248,47 @@ in more general ways.</p>
 Possible solutions: toUpperCase(), toURI(), toURL(), toURI(), toURL(), toSet()</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>And this code:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">'foo'.touppercase()</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Gives this error:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>No signature of method: java.lang.String.touppercase() is applicable for argument types: () values: []
 Possible solutions: toUpperCase(), toUpperCase(java.util.Locale), toLowerCase(), toLowerCase(java.util.Locale)</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The values returned as possible solutions are the best methods found for the String
+class according the Damerau-Levenshtein distance but with some smarts added to
+cater for closest matching parameters. This includes Groovy&#8217;s String extension methods
+and (if using dynamic metaprogramming) any methods added at runtime.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+You&#8217;ll frequently get feedback about using incorrect methods from your IDE
+or the Groovy compiler (with static checking enabled). But having this feedback
+provides a great fallback especially when using Groovy scripts outside an IDE.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now look at some examples of running various string metric algorithms.
+We&#8217;ll use algorithm from Apache Commons Text and the <code>info.debatty:java-string-similarity</code>
+library.</p>
 </div>
 <pre>
       there VS their
