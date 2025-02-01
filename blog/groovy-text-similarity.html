@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 07:20PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:20PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -548,6 +548,107 @@ One two three (0.17)</pre>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/AnimalSemanticMeaningPcaBubblePlot.png" alt="AnimalSemanticMeaningPcaBubblePlot"></span></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Algorithm       angle                use                  conceptnet           glove                fasttext
+
+              bovine    ████████▏  bovine    ███████▏   bovine    ███████▏   bovine    ██████▏    bovine    ███████▏
+              cattle    ████████▏  cattle    ███████▏   cattle    ███████▏   cattle    ██████▏    cattle    ███████▏
+cow           calf      ████████▏  calf      ██████▏    livestock ██████▏    milk      ████▏      calf      ██████▏
+              milk      ███████▏   livestock ██████▏    bull      █████▏     livestock ████▏      bull      ██████▏
+              bull      ███████▏   bull      █████▏     calf      █████▏     calf      ████▏      milk      ██████▏
+
+              bear      ███████▏   cow       █████▏     cow       █████▏     cow       ███▏       cow       ██████▏
+              cow       ███████▏   cattle    █████▏     cattle    █████▏     bear      ███▏       cattle    █████▏
+bull          cattle    ███████▏   bovine    █████▏     bovine    ████▏      calf      ███▏       bovine    █████▏
+              bovine    ███████▏   livestock ████▏      livestock ███▏       cattle    ███▏       calf      █████▏
+              calf      ██████▏    calf      ████▏      calf      ███▏       cat       ███▏       bear      █████▏
+
+              bovine    ████████▏  cow       ██████▏    cow       █████▏     cow       ████▏      cow       ██████▏
+              cow       ████████▏  cattle    ██████▏    bovine    █████▏     bovine    ███▏       cattle    █████▏
+calf          cattle    ███████▏   bovine    █████▏     cattle    ████▏      bull      ███▏       bull      █████▏
+              bear      ██████▏    livestock █████▏     livestock ███▏       cattle    ███▏       bovine    █████▏
+              bull      ██████▏    bull      ████▏      bull      ███▏       hippo     ██▏        livestock █████▏
+
+              cow       ████████▏  cattle    ███████▏   cow       ███████▏   cow       ██████▏    cow       ███████▏
+              cattle    ████████▏  cow       ███████▏   cattle    ███████▏   cattle    ████▏      cattle    ██████▏
+bovine        calf      ████████▏  livestock ██████▏    livestock ██████▏    feline    ███▏       bull      █████▏
+              livestock ███████▏   calf      █████▏     calf      █████▏     calf      ███▏       calf      █████▏
+              bull      ███████▏   bull      █████▏     bull      ████▏      milk      ██▏        livestock █████▏
+
+              bovine    ████████▏  livestock ████████▏  livestock ████████▏  livestock ███████▏   livestock ████████▏
+              livestock ████████▏  bovine    ███████▏   cow       ███████▏   cow       ██████▏    cow       ███████▏
+cattle        cow       ████████▏  cow       ███████▏   bovine    ███████▏   bovine    ████▏      bovine    ██████▏
+              calf      ███████▏   calf      ██████▏    bull      █████▏     milk      ███▏       calf      █████▏
+              bull      ███████▏   bull      █████▏     calf      ████▏      bull      ███▏       bull      █████▏
+
+              cattle    ████████▏  cattle    ████████▏  cattle    ████████▏  cattle    ███████▏   cattle    ████████▏
+              bovine    ███████▏   bovine    ██████▏    cow       ██████▏    cow       ████▏      cow       ██████▏
+livestock     cow       ███████▏   cow       ██████▏    bovine    ██████▏    milk      ███▏       water     █████▏
+              bull      ██████▏    calf      █████▏     calf      ███▏       water     ██▏        bovine    █████▏
+              calf      ██████▏    bull      ████▏      bull      ███▏       bovine    ██▏        calf      █████▏
+
+              feline    █████████▏ kitten    ███████▏   kitten    ████████▏  feline    ████▏      kitten    ███████▏
+              kitten    ████████▏  feline    ███████▏   feline    ████████▏  kitten    ████▏      feline    ███████▏
+cat           bear      ███████▏   bear      ████▏      bull      ██▏        cow       ███▏       cow       ████▏
+              milk      ██████▏    cow       ████▏      bear      ██▏        bear      ███▏       hippo     ████▏
+              bull      ██████▏    grass     ███▏       cow       ██▏        bull      ███▏       bull      ████▏
+
+              feline    ████████▏  cat       ███████▏   cat       ████████▏  cat       ████▏      cat       ███████▏
+              cat       ████████▏  feline    ██████▏    feline    ███████▏   feline    ███▏       feline    ██████▏
+kitten        bear      ██████▏    cow       ████▏      bear      ██▏        hippo     ██▏        hippo     ████▏
+              milk      █████▏     milk      ████▏      bull      ██▏        cow       ██▏        cow       ████▏
+              bovine    █████▏     bear      ███▏       hippo     ██▏        calf      ██▏        calf      ████▏
+
+              cat       █████████▏ cat       ███████▏   cat       ████████▏  cat       ████▏      cat       ███████▏
+              kitten    ████████▏  kitten    ██████▏    kitten    ███████▏   kitten    ███▏       kitten    ██████▏
+feline        bear      ██████▏    cow       ███▏       bear      ██▏        bovine    ███▏       bovine    ████▏
+              bovine    ██████▏    livestock ███▏       hippo     ██▏        hippo     ██▏        hippo     ████▏
+              bull      ██████▏    grass     ███▏       livestock ██▏        cow       █▏         cow       ████▏
+
+              bull      ██████▏    cow       ███▏       cow       ███▏       calf      ██▏        cow       ████▏
+              calf      ██████▏    feline    ███▏       bovine    ███▏       feline    ██▏        calf      ████▏
+hippo         bear      ██████▏    bull      ███▏       bear      ██▏        kitten    ██▏        kitten    ████▏
+              bovine    █████▏     bear      ███▏       calf      ██▏        bull      ██▏        feline    ████▏
+              cat       █████▏     calf      ███▏       bull      ██▏        cow       ██▏        cat       ████▏
+
+              bull      ███████▏   bare      █████▏     bull      ███▏       bull      ███▏       bull      █████▏
+              cat       ███████▏   cat       ████▏      hippo     ██▏        cat       ███▏       bare      ████▏
+bear          bovine    ██████▏    cow       ████▏      feline    ██▏        cow       ██▏        kitten    ████▏
+              calf      ██████▏    bull      ████▏      kitten    ██▏        livestock ██▏        calf      ████▏
+              milk      ██████▏    kitten    ███▏       cat       ██▏        cattle    ██▏        livestock ████▏
+
+              bear      █████▏     bear      █████▏     grass     █▏         grass     ██▏        bear      ████▏
+              milk      █████▏     calf      ███▏       bear      █▏         water     ██▏        grass     ████▏
+bare          green     █████▏     cat       ███▏       kitten    ▏          green     █▏         green     ████▏
+              grass     █████▏     grass     ███▏       cat       ▏          calf      █▏         bull      ███▏
+              water     █████▏     green     ███▏       cattle    ▏          cat       █▏         water     ███▏
+
+              cow       ███████▏   cow       █████▏     cow       █████▏     cow       ████▏      cow       ██████▏
+              bear      ██████▏    water     █████▏     bovine    ███▏       water     ████▏      water     █████▏
+milk          bovine    ██████▏    calf      ████▏      cattle    ███▏       cattle    ███▏       cattle    █████▏
+              cattle    ██████▏    kitten    ████▏      livestock ███▏       livestock ███▏       livestock █████▏
+              water     ██████▏    bovine    ████▏      water     ██▏        bovine    ██▏        calf      █████▏
+
+              milk      ██████▏    milk      █████▏     milk      ██▏        milk      ████▏      milk      █████▏
+              green     ██████▏    grass     ████▏      hippo     ██▏        green     ███▏       grass     █████▏
+water         grass     ██████▏    green     ███▏       grass     █▏         grass     ██▏        livestock █████▏
+              cat       ██████▏    cow       ███▏       green     █▏         livestock ██▏        green     ████▏
+              bear      █████▏     cat       ███▏       livestock ▏          bare      ██▏        cattle    ████▏
+
+              green     ███████▏   cow       ████▏      green     ███▏       green     ███▏       green     █████▏
+              water     ██████▏    water     ████▏      livestock ██▏        water     ██▏        water     █████▏
+grass         cat       █████▏     livestock ████▏      water     █▏         bare      ██▏        livestock ████▏
+              livestock █████▏     calf      ████▏      cattle    █▏         livestock ██▏        cow       ████▏
+              cattle    █████▏     cattle    ████▏      calf      █▏         cattle    ██▏        cattle    ████▏
+
+              grass     ███████▏   grass     ███▏       grass     ███▏       grass     ███▏       grass     █████▏
+              water     ██████▏    water     ███▏       water     █▏         water     ███▏       water     ████▏
+green         cat       ██████▏    cat       ███▏       hippo     █▏         milk      ██▏        bare      ████▏
+              bear      ██████▏    bear      ███▏       milk      ▏          bear      █▏         cow       ███▏
+              feline    █████▏     bare      ███▏       bear      ▏          cow       █▏         bear      ███▏</pre>
+</div>
 </div>
 </div>
 </div>
