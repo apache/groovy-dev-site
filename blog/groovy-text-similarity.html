@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:30PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:30PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -321,18 +321,139 @@ provides a great fallback especially when using Groovy scripts outside an IDE.
 We&#8217;ll use algorithm from Apache Commons Text and the <code>info.debatty:java-string-similarity</code>
 library.</p>
 </div>
+<div class="paragraph">
+<p>Both these libraries support numerous string metric classes.
+Methods to calculate both similarity and distance are provided.
+We&#8217;ll look at both in turn.</p>
+</div>
+<div class="paragraph">
+<p>First, let&#8217;s look at some similarity measures.
+These typically range from 0 (meaning no similarity)
+to 1 (meaning they are the same).</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll look at the following subset of similarity measures
+from the two libraries. Note that there is a fair bit of overlap
+between the two libraries. We&#8217;ll do a little cross-checking
+between the two libraries but won&#8217;t compare them exhaustively.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var simAlgs = [
+    NormalizedLevenshtein: new NormalizedLevenshtein()::similarity,
+    'Jaccard (debatty k=1)': new Jaccard(1)::similarity,
+    'Jaccard (debatty k=2)': new Jaccard(2)::similarity,
+    'Jaccard (debatty k=3)': new Jaccard()::similarity,
+    'Jaccard (commons text k=1)': new JaccardSimilarity()::apply,
+    'JaroWinkler (debatty)': new JaroWinkler()::similarity,
+    'JaroWinkler (commons text)': new JaroWinklerSimilarity()::apply,
+    RatcliffObershelp: new RatcliffObershelp()::similarity,
+    SorensenDice: new SorensenDice()::similarity,
+    Cosine: new Cosine()::similarity,
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the sample code, we run these measures for the following pairs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var pairs = [
+    ['there', 'their'],
+    ['cat', 'hat'],
+    ['cat', 'kitten'],
+    ['cat', 'dog'],
+    ['bear', 'bare'],
+    ['bear', 'bean'],
+    ['pair', 'pear'],
+    ['sort', 'sought'],
+    ['cow', 'bull'],
+    ['winning', 'grinning'],
+    ['knows', 'nose'],
+    ['ground', 'aground'],
+    ['grounds', 'aground'],
+    ['peeler', 'repeal'],
+    ['hippo', 'hippopotamus'],
+    ['kangaroo', 'kangarxx'],
+    ['kangaroo', 'xxngaroo'],
+    ['elton john', 'john elton'],
+    ['elton john', 'nhoj notle'],
+    ['my name is Yoda', 'Yoda my name is'],
+    ['the cat sat on the mat', 'the fox jumped over the dog'],
+    ['poodles are cute', 'dachshunds are delightful']
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is the output from the first pair:</p>
+</div>
 <pre>
       there VS their
-JaroWinklerSimilarity                     0.91 <span style="color:green">██████████████████</span>
-JaroWinkler                               0.91 <span style="color:green">██████████████████</span>
-Jaccard (debatty k=1)                     0.80 <span style="color:green">████████████████</span>
-RatcliffObershelp                         0.80 <span style="color:green">████████████████</span>
-JaccardSimilarity (commons text k=1)      0.80 <span style="color:green">████████████████</span>
-NormalizedLevenshtein                     0.60 <span style="color:red">████████████</span>
-Cosine                                    0.33 <span style="color:red">██████</span>
-Jaccard (debatty k=2)                     0.33 <span style="color:red">██████</span>
-SorensenDice                              0.33 <span style="color:red">██████</span>
-Jaccard (debatty k=3)                     0.20 <span style="color:red">████</span>
+JaroWinkler (commons text)      0.91 <span style="color:green">██████████████████</span>
+JaroWinkler (debatty)           0.91 <span style="color:green">██████████████████</span>
+Jaccard (debatty k=1)           0.80 <span style="color:green">████████████████</span>
+Jaccard (commons text k=1)      0.80 <span style="color:green">████████████████</span>
+RatcliffObershelp               0.80 <span style="color:green">████████████████</span>
+NormalizedLevenshtein           0.60 <span style="color:red">████████████</span>
+Cosine                          0.33 <span style="color:red">██████</span>
+Jaccard (debatty k=2)           0.33 <span style="color:red">██████</span>
+SorensenDice                    0.33 <span style="color:red">██████</span>
+Jaccard (debatty k=3)           0.20 <span style="color:red">████</span>
+</pre>
+<div class="paragraph">
+<p>We have color coded the bars in the chart with 80% and above colored green deeming it a "match" in terms of similarity.
+You could choose some different threshold for matching depending on your use case.</p>
+</div>
+<div class="paragraph">
+<p>We can see that the different algorithms rank the similarity of the two words differently.</p>
+</div>
+<div class="paragraph">
+<p>Rather than show the results of all algorithms for all pairs, let&#8217;s just show a few highlights
+that give us insight into which similarity measures might be most useful for our game.</p>
+</div>
+<div class="paragraph">
+<p>A first observation is the usefulness of Jaccard with k=1 (looking at the set of individual letters).</p>
+</div>
+<pre>
+      bear VS bare
+Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
+</pre>
+<div class="paragraph">
+<p>Here we know that we have correctly guessed all the letters!</p>
+</div>
+<div class="paragraph">
+<p>For another example:</p>
+</div>
+<pre>
+      cow VS bull
+Jaccard (debatty k=1)           0.00 <span style="color:green">▏</span>
+</pre>
+<div class="paragraph">
+<p>We can rule out all letters from our guess!</p>
+</div>
+<pre>
+      elton john VS john elton
+Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
+Jaccard (debatty k=2)           0.80 <span style="color:green">████████████████</span>
+Jaccard (debatty k=3)           0.45 <span style="color:red">█████████</span>
+
+      elton john VS nhoj notle
+Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
+Jaccard (debatty k=2)           0.00 <span style="color:red">▏</span>
+Jaccard (debatty k=3)           0.00 <span style="color:red">▏</span>
+</pre>
+<pre>
+      bear VS bean
+JaroWinkler (commons text)      0.88 <span style="color:green">█████████████████</span>
+JaroWinkler (debatty)           0.88 <span style="color:green">█████████████████</span>
+NormalizedLevenshtein           0.75 <span style="color:red">███████████████</span>
+RatcliffObershelp               0.75 <span style="color:red">███████████████</span>
+Jaccard (debatty k=1)           0.60 <span style="color:red">████████████</span>
+Jaccard (commons text k=1)      0.60 <span style="color:red">████████████</span>
+Jaccard (debatty k=2)           0.50 <span style="color:red">██████████</span>
+SorensenDice                    0.50 <span style="color:red">██████████</span>
+Cosine                          0.50 <span style="color:red">█████████</span>
+Jaccard (debatty k=3)           0.33 <span style="color:red">██████</span>
 </pre>
 </div>
 </div>
