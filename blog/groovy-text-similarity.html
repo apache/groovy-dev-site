@@ -412,7 +412,8 @@ You could choose some different threshold for matching depending on your use cas
 that give us insight into which similarity measures might be most useful for our game.</p>
 </div>
 <div class="paragraph">
-<p>A first observation is the usefulness of Jaccard with k=1 (looking at the set of individual letters).</p>
+<p>A first observation is the usefulness of Jaccard with k=1 (looking at the set of individual letters).
+Here we can imagine that <code>bear</code> might be our guess and <code>bare</code> might be the hidden word.</p>
 </div>
 <pre>
       bear VS bare
@@ -431,6 +432,11 @@ Jaccard (debatty k=1)           0.00 <span style="color:green">▏</span>
 <div class="paragraph">
 <p>We can rule out all letters from our guess!</p>
 </div>
+<div class="paragraph">
+<p>What about Jaccard looking at multi-letter sequences? Well, if you were trying to determine
+whether a social media account <code>@elton_john</code> might be the same person as the email <code>john.elton@gmail.com</code>,
+Jaccard with higher indexes would help you out.</p>
+</div>
 <pre>
       elton john VS john elton
 Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
@@ -442,6 +448,11 @@ Jaccard (debatty k=1)           1.00 <span style="color:green">█████�
 Jaccard (debatty k=2)           0.00 <span style="color:red">▏</span>
 Jaccard (debatty k=3)           0.00 <span style="color:red">▏</span>
 </pre>
+<div class="paragraph">
+<p>Note that for "Elton John" backwards, Jaccard with higher values of k quickly drops to zero but just swapping
+the words (like our social media account and email with punctuation removed) remains high. So higher value
+values of k for Jaccard definitely have there place but perhaps not needed for our game.</p>
+</div>
 <pre>
       bear VS bean
 JaroWinkler (commons text)      0.88 <span style="color:green">█████████████████</span>
