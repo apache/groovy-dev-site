@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:30PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:30PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -229,12 +229,15 @@ in more general ways.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The minimum number of "edits" (inserts, deletes, or substitutions) required to convert from one word to another.
 Distance between <code>kitten</code> and <code>sitting</code> is 3 (swap <code>s</code> for <code>k</code>, swap <code>i</code> for <code>e</code>, add <code>g</code> at end).
-Distance between <code>grounds</code> and <code>aground</code> is 2 (add <code>a</code> at start, remove <code>s</code> at end).</p></td>
+Distance between <code>grounds</code> and <code>aground</code> is 2 (add <code>a</code> at start, remove <code>s</code> at end).
+<a href="https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance">Damerau–Levenshtein distance</a>
+is a variant that allows transposition of two adjacent letters to count as a single edit.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Jaccard_index">Jaccard</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines a ratio between two sample sets. This could be sets of
-characters in a word, or words in a sentence. The ratio is the intersection of sets divided by the union of sets.
+characters in a word, or words in a sentence, or sets of <code>k</code> consecutive characters in a phrase.
+The ratio is the <em>intersection</em> of sets divided by the <em>union</em> of sets.
 <code>bear</code> vs <code>bare</code> would be 100%, <code>pair</code> vs <code>pear</code> would be 60%.</p></td>
 </tr>
 <tr>
@@ -247,7 +250,15 @@ Distance between <code>grounds</code> and <code>aground</code> is 7 (swap all ch
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Longest_common_subsequence">LongestCommonSubsequence</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The maximum number of characters appearing in order in the two words, not necessarily consecutively.
 LCS of <code>grounds</code> and <code>aground</code> is 6 (<code>ground</code>).
-LCS of <code>string</code> and <code>single</code> is 4 (<code>s</code>, <code>i</code>, <code>n</code>, <code>g</code>).</p></td>
+LCS of <code>string</code> and <code>single</code> is 4 (<code>s</code>, <code>i</code>, <code>n</code>, <code>g</code>).
+It accounts for insertions and deletions but not substitutions.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance">Jaro–Winkler</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is a metric also measuring edit distance but weights edits to favor
+words with common prefixes.
+JaroWinkler of <code>ground</code> and <code>groudn</code> (last two letters swapped) is 0.97.
+JaroWinkler of <code>ground</code> and <code>rgound</code> (first two letters swapped) is 0.94.</p></td>
 </tr>
 </tbody>
 </table>
@@ -258,7 +269,7 @@ Longest commons subsequence is the algorithm behind the popular <code>diff</code
 <div class="paragraph">
 <p>Groovy has in fact a built-in example of a variant of the Levenshtein measure
 it uses for error reporting. Groovy uses a variant known as the Damerau-Levenshtein distance.
-This variant counts transposing two characters within the original word as one "edit".
+This variant counts transposing two adjacent characters within the original word as one "edit".
 The Levenshtein distance of <code>fish</code> and ifsh` is 2.
 The Damerau-Levenshtein distance of <code>fish</code> and ifsh` is 1.</p>
 </div>
@@ -888,6 +899,9 @@ green         cat       ██████▏    cat       ███▏       hi
 <li>
 <p><a href="https://djl.ai/" class="bare">https://djl.ai/</a></p>
 </li>
+<li>
+<p><a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec" class="bare">https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec</a></p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -903,6 +917,9 @@ green         cat       ██████▏    cat       ███▏       hi
 </li>
 <li>
 <p><a href="https://www.youtube.com/watch?v=AHlnGId-Y-0" class="bare">https://www.youtube.com/watch?v=AHlnGId-Y-0</a></p>
+</li>
+<li>
+<p><a href="https://opensource.com/article/20/12/groovy" class="bare">https://opensource.com/article/20/12/groovy</a></p>
 </li>
 </ul>
 </div>
