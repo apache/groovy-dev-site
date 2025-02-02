@@ -195,7 +195,7 @@ in more general ways.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for Glove and ConceptNet models</p>
+<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for Glove, ConceptNet, and FastText models</p>
 </li>
 <li>
 <p><code>ai.djl</code> with Pytorch for a universal-sentence-encoder model and Tensorflow with an Angle model</p>
@@ -208,10 +208,12 @@ in more general ways.</p>
 <h2 id="_simple_string_metrics">Simple String Metrics</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>String metrics provide some sort of measure of the sameness of the characters in words (or phrases). These algorithms generally compute similarity or distance (inverse similarity).</p>
+<p>String metrics provide some sort of measure of the sameness of the characters in words (or phrases).
+These algorithms generally compute similarity or distance (inverse similarity).</p>
 </div>
 <div class="paragraph">
-<p>There are numerous tutorials that describe various string metric algorithms. We won&#8217;t replicate those tutorials but here is a summary of some common ones:</p>
+<p>There are numerous tutorials that describe various string metric algorithms.
+We won&#8217;t replicate those tutorials but here is a summary of some common ones:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -263,12 +265,24 @@ JaroWinkler of <code>ground</code> and <code>rgound</code> (first two letters sw
 </tbody>
 </table>
 <div class="paragraph">
-<p>You may be wondering what practical use these algorithms might have.
-Longest commons subsequence is the algorithm behind the popular <code>diff</code> tool.</p>
+<p>You may be wondering what practical use these algorithms might have. Here is just a few use cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Longest commons subsequence is the algorithm behind the popular <code>diff</code> tool</p>
+</li>
+<li>
+<p>Hamming distance is an important metric when designing algorithms for error detection, error correction and checksums</p>
+</li>
+<li>
+<p>Levenshtein is used in search engines (like Apache Lucene and Apache Solr)
+for fuzzy matching searches and for spelling correction software</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Groovy has in fact a built-in example of a variant of the Levenshtein measure
-it uses for error reporting. Groovy uses a variant known as the Damerau-Levenshtein distance.
+<p>Groovy has in fact a built-in example of using the Damerau-Levenshtein distance metric.
 This variant counts transposing two adjacent characters within the original word as one "edit".
 The Levenshtein distance of <code>fish</code> and ifsh` is 2.
 The Damerau-Levenshtein distance of <code>fish</code> and ifsh` is 1.</p>
