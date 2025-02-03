@@ -53,7 +53,19 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><span>Author: <i>Paul King</i></span><br/><span>Published: 2025-02-01 08:30PM</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="https://github.com/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        <span style="width:2ex"></span>
+<a href="https://github.com/jakingy/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="https://github.com/jakingy.png" alt="James King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/jakingy/" target="_blank" rel="noopener noreferrer"><span>James King</span></a></div>
+  <div><small><i>Contributor</i></small></div>
+</div>
+        </div><br/><span>Published: 2025-02-03 08:30PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -80,6 +92,10 @@ correct letters you have, do you have the correct letters in order
 and so forth.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>If you are new to Groovy, consider checking out this
+<a href="https://opensource.com/article/20/12/groovy">Groovy game building tutorial</a> first.</p>
 </div>
 </div>
 </div>
@@ -209,10 +225,18 @@ in more general ways.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>String metrics provide some sort of measure of the sameness of the characters in words (or phrases).
-These algorithms generally compute similarity or distance (inverse similarity).</p>
+These algorithms generally compute similarity or distance (inverse similarity). The two are related.
+Consider <code>cat</code> vs <code>hat</code>. There is one "edit" to change from one word to the other according
+to the Levenshtein algorithm (described shortly). So, we give this a distance of 1.
+We can alternatively produce a normalized similarity value using <code>(word_size - distance) / word_size</code>,
+where <code>word_size</code> is the size of the largest of the two words. So we&#8217;d get a Levenshtein
+similarity measure of 2/3 (or 0.67) for <code>cat</code> vs <code>hat</code>.</p>
 </div>
 <div class="paragraph">
-<p>There are numerous tutorials that describe various string metric algorithms.
+<p>For our game, we&#8217;ll sometimes want the distance, other times we&#8217;ll use the similarity.</p>
+</div>
+<div class="paragraph">
+<p>There are numerous tutorials (see <a href="#further_info">further information</a>) that describe various string metric algorithms.
 We won&#8217;t replicate those tutorials but here is a summary of some common ones:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -393,20 +417,29 @@ between the two libraries but won&#8217;t compare them exhaustively.</p>
     ['pair', 'pear'],
     ['sort', 'sought'],
     ['cow', 'bull'],
-    ['winning', 'grinning'],
+    ['winners', 'grinners'],
     ['knows', 'nose'],
     ['ground', 'aground'],
     ['grounds', 'aground'],
     ['peeler', 'repeal'],
     ['hippo', 'hippopotamus'],
-    ['kangaroo', 'kangarxx'],
-    ['kangaroo', 'xxngaroo'],
     ['elton john', 'john elton'],
     ['elton john', 'nhoj notle'],
     ['my name is Yoda', 'Yoda my name is'],
     ['the cat sat on the mat', 'the fox jumped over the dog'],
     ['poodles are cute', 'dachshunds are delightful']
 ]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can run our algorithms on our pairs like follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">pairs.each { wordPair -&gt;
+    var results = simAlgs.collectValues { alg -&gt; alg(*wordPair) }
+    // display results ...
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -424,6 +457,7 @@ Cosine                          0.33 <span style="color:red">██████<
 Jaccard (debatty k=2)           0.33 <span style="color:red">██████</span>
 SorensenDice                    0.33 <span style="color:red">██████</span>
 Jaccard (debatty k=3)           0.20 <span style="color:red">████</span>
+
 </pre>
 <div class="paragraph">
 <p>We have color coded the bars in the chart with 80% and above colored green deeming it a "match" in terms of similarity.
@@ -443,6 +477,7 @@ Here we can imagine that <code>bear</code> might be our guess and <code>bare</co
 <pre>
       bear VS bare
 Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
+
 </pre>
 <div class="paragraph">
 <p>Here we know that we have correctly guessed all the letters!</p>
@@ -453,6 +488,7 @@ Jaccard (debatty k=1)           1.00 <span style="color:green">█████�
 <pre>
       cow VS bull
 Jaccard (debatty k=1)           0.00 <span style="color:green">▏</span>
+
 </pre>
 <div class="paragraph">
 <p>We can rule out all letters from our guess!</p>
@@ -472,25 +508,221 @@ Jaccard (debatty k=3)           0.45 <span style="color:red">██████�
 Jaccard (debatty k=1)           1.00 <span style="color:green">████████████████████</span>
 Jaccard (debatty k=2)           0.00 <span style="color:red">▏</span>
 Jaccard (debatty k=3)           0.00 <span style="color:red">▏</span>
+
 </pre>
 <div class="paragraph">
 <p>Note that for "Elton John" backwards, Jaccard with higher values of k quickly drops to zero but just swapping
 the words (like our social media account and email with punctuation removed) remains high. So higher value
-values of k for Jaccard definitely have there place but perhaps not needed for our game.</p>
+values of k for Jaccard definitely have there place but perhaps not needed for our game.
+Dealing with k sequential letters (also referred to as n sequential letters) is common.
+There is in fact a special term <em>n-grams</em> for such sequences.
+While n-grams play an important role in measuring similarity, it doesn&#8217;t add
+a lot of value for our game. <span class="fuchsia">So we&#8217;ll just use Jaccard with k=1 in the game.</span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now look at JaroWinkler. This measure looks at the number of edits but
+calculates a weighted score penalising changes at the start, which in turn
+means that words with common prefixes have higher similarity scores.</p>
+</div>
+<div class="paragraph">
+<p>If we look at the words 'superstar' and 'supersonic', 5 of the 11 distinct letters
+are in common (hence the Jaccard score of 5/11 or 0.45), but since they both start
+with the same 6 letters, it scores a high JaroWinkler value of 0.90.</p>
+</div>
+<div class="paragraph">
+<p>Swapping to 'partnership' and 'leadership', 7 of the 11 distinct letters are
+in common hence the higher Jaccard score of 0.64, but even though they both end
+with the same 6 characters, it gives us a lower JaroWinkler score of 0.73.</p>
 </div>
 <pre>
-      bear VS bean
-JaroWinkler (commons text)      0.88 <span style="color:green">█████████████████</span>
-JaroWinkler (debatty)           0.88 <span style="color:green">█████████████████</span>
-NormalizedLevenshtein           0.75 <span style="color:red">███████████████</span>
-RatcliffObershelp               0.75 <span style="color:red">███████████████</span>
-Jaccard (debatty k=1)           0.60 <span style="color:red">████████████</span>
-Jaccard (commons text k=1)      0.60 <span style="color:red">████████████</span>
-Jaccard (debatty k=2)           0.50 <span style="color:red">██████████</span>
-SorensenDice                    0.50 <span style="color:red">██████████</span>
-Cosine                          0.50 <span style="color:red">█████████</span>
-Jaccard (debatty k=3)           0.33 <span style="color:red">██████</span>
+      superstar VS supersonic
+JaroWinkler (debatty)           0.90 <span style="color:green">██████████████████</span>
+Jaccard (debatty k=1)           0.45 <span style="color:red">█████████</span>
+
+      partnership VS leadership
+JaroWinkler (debatty)           0.73 <span style="color:red">██████████████</span>
+Jaccard (debatty k=1)           0.64 <span style="color:red">████████████</span>
+
 </pre>
+<div class="paragraph">
+<p>Perhaps it could be interesting to know if the start of our guess is close to the hidden word. <span class="fuchsia">So we&#8217;ll use the JaroWinkler measure in our game.</span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now swap over to distance measures.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s first explore the range of distance measures we have available to us by looking at the following distance measures:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var distAlgs = [
+    NormalizedLevenshtein: new NormalizedLevenshtein()::distance,
+    'WeightedLevenshtein (t is near r)': new WeightedLevenshtein({ char c1, char c2 -&gt;
+        c1 == 't' &amp;&amp; c2 == 'r' ? 0.5 : 1.0
+    })::distance,
+    Damerau: new Damerau()::distance,
+    OptimalStringAlignment: new OptimalStringAlignment()::distance,
+    LongestCommonSubsequence: new LongestCommonSubsequence()::distance,
+    MetricLCS: new MetricLCS()::distance,
+    'NGram(2)': new NGram(2)::distance,
+    'NGram(4)': new NGram(4)::distance,
+    QGram: new QGram(2)::distance,
+    CosineDistance: new CosineDistance()::apply,
+    HammingDistance: new HammingDistance()::apply,
+    JaccardDistance: new JaccardDistance()::apply,
+    JaroWinklerDistance: new JaroWinklerDistance()::apply,
+    LevenshteinDistance: LevenshteinDistance.defaultInstance::apply,
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Not all of these metrics are normalized, so graphing them like before isn&#8217;t as useful.
+Instead, we will have a set of predefined phrases (similar to the index of a search engine),
+and we will find the closest phrases to some query.</p>
+</div>
+<div class="paragraph">
+<p>Here are our predefined phrases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var phrases = [
+    'The sky is blue',
+    'The blue sky',
+    'The blue cat',
+    'The sea is blue',
+    'Blue skies following me',
+    'My ferrari is red',
+    'Apples are red',
+    'I read a book',
+    'The wind blew',
+    'Numbers are odd or even',
+    'Red noses',
+    'Read knows',
+    'Hippopotamus',
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s use the query <code>The blue car</code>. We&#8217;ll find the distance from the query to each of the
+candidates phrases and return the closest three. Here are the results for <code>The blue car</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>NormalizedLevenshtein: The blue cat (0.08), The blue sky (0.25), The wind blew (0.62)
+WeightedLevenshtein (t is near r): The blue cat (0.50), The blue sky (3.00), The wind blew (8.00)
+Damerau: The blue cat (1.00), The blue sky (3.00), The wind blew (8.00)
+OptimalStringAlignment: The blue cat (1.00), The blue sky (3.00), The wind blew (8.00)
+LongestCommonSubsequence (debatty): The blue cat (2.00), The blue sky (6.00), The sky is blue (11.00)
+MetricLCS: The blue cat (0.08), The blue sky (0.25), The wind blew (0.46)
+NGram(2): The blue cat (0.04), The blue sky (0.21), The wind blew (0.58)
+NGram(4): The blue cat (0.02), The blue sky (0.13), The wind blew (0.50)
+QGram: The blue cat (2.00), The blue sky (6.00), The sky is blue (11.00)
+CosineDistance: The blue sky (0.33), The blue cat (0.33), The sky is blue (0.42)
+HammingDistance: The blue cat (1), The blue sky (3), Hippopotamus (12)
+JaccardDistance: The blue cat (0.18), The sea is blue (0.33), The blue sky (0.46)
+JaroWinklerDistance: The blue cat (0.03), The blue sky (0.10), The wind blew (0.32)
+LevenshteinDistance: The blue cat (1), The blue sky (3), The wind blew (8)
+LongestCommonSubsequenceDistance  (commons text): The blue cat (2), The blue sky (6), The sky is blue (11)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As another example, let&#8217;s query <code>Red roses</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>NormalizedLevenshtein: Red noses (0.11), Read knows (0.50), Apples are red (0.71)
+WeightedLevenshtein (t is near r): Red noses (1.00), Read knows (5.00), The blue sky (9.00)
+Damerau: Red noses (1.00), Read knows (5.00), The blue sky (9.00)
+OptimalStringAlignment: Red noses (1.00), Read knows (5.00), The blue sky (9.00)
+MetricLCS: Red noses (0.11), Read knows (0.40), The blue sky (0.67)
+NGram(2): Red noses (0.11), Read knows (0.55), Apples are red (0.75)
+NGram(4): Red noses (0.11), Read knows (0.53), Apples are red (0.82)
+QGram: Red noses (4.00), Read knows (13.00), Apples are red (15.00)
+CosineDistance: Red noses (0.50), The sky is blue (1.00), The blue sky (1.00)
+HammingDistance: Red noses (1), The sky is blue (-), The blue sky (-)
+JaccardDistance: Red noses (0.25), Read knows (0.45), Apples are red (0.55)
+JaroWinklerDistance: Red noses (0.04), Read knows (0.20), The sea is blue (0.37)
+LevenshteinDistance: Red noses (1), Read knows (5), The blue sky (9)
+LongestCommonSubsequenceDistance  (commons text): Red noses (2), Read knows (7), The blue sky (13)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s examine these results. Firstly, there are way too many measures
+for most folks to comfortably reason about. We want to shrink the set down.</p>
+</div>
+<div class="paragraph">
+<p>We have various Levenshtein values on display.
+Some are the actual "edit" distance, others are a metric.
+For our game, since we don&#8217;t know the length of the word initially,
+we thought it might be useful to know the exact number of edits.
+A normalized value of 0.5 could mean any of
+1 letter wrong in a 2-letter word,
+2 letters wrong in a 4-letter word,
+3 letters wrong in a 6-letter word,
+and so forth.</p>
+</div>
+<div class="paragraph">
+<p>We also think the actual distance measure might be something that wordle players
+could relate to. Once you know the size of the hidden word,
+the distance indirectly gives you the number of correct letters
+(which is something wordle players are used to - just here we don&#8217;t know
+which ares are correct).</p>
+</div>
+<div class="paragraph">
+<p>We also thought about Damerau-Levenshtein. It allows transposition of adjacent
+characters and, while that adds value in most spell-checking scenarios,
+for our game it might be harder to keep visualize what the distance measure
+might mean with that additional possible change.</p>
+</div>
+<div class="paragraph">
+<p><span class="fuchsia">So, we&#8217;ll use the standard Levenshtein distance in the game.</span></p>
+</div>
+<div class="paragraph">
+<p>We could continue reasoning in this way about the other measures,
+but we&#8217;ll jump to our solution, and try to give you examples of why
+we think they are useful. <span class="fuchsia">We added Hamming distance and LongestCommonSubsequence</span>
+(similarity measure not a distance measure) to our list.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at some examples to highlight our thinking.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at some examples for hamming distance. Consider these results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cat vs dog: LongestCommonSubsequence (0) Hamming (3) Levenshtein (3)
+cow vs bull: LongestCommonSubsequence (0) Hamming (-) Levenshtein (4)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For <code>cat</code> vs <code>dog</code>, the LCS value tells us we didn&#8217;t have any correct letters in our guess.
+We&#8217;d have at least an LCS value of 1 if we had one correct character somewhere.
+The fact that Hamming is now 3, means that the hidden word (like our guess) must
+have 3 letters in it - since we can substitute 3 times. The Levenshtein value confirms this.</p>
+</div>
+<div class="paragraph">
+<p>For <code>cow</code> vs <code>bull</code>, because Hamming didn&#8217;t return a result we know that the guess and
+hidden word are different sizes (remember it&#8217;s an algorithm that requires the sizes to be the same).
+We also know that our guess also has no correct letters. But the Levenshtein value of 4
+tells us less in this case. If <code>cow</code> was our guess, the hidden word could be <code>bull</code>
+or <code>cowbell</code>. We do know that the size of the hidden word is between 4 and 7.</p>
+</div>
+<div class="paragraph">
+<p>Consider now this example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>grounds vs aground: LongestCommonSubsequence (6) Hamming(7) Levenshtein(2)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fact that Hamming returned 7 means that our guess has the correct number of letters.
+The fact that the LCS value was 6 means that there is one spurious letter in our guess.
+If the spurious letter was somewhere in the middle of our guess, then Hamming shouldn&#8217;t
+show that all letters are incorrect. Hence, we know that the spurious letter is the first
+or last. The Levenshtein value confirms this (one insertion at one end and one delete at one end).</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -881,7 +1113,7 @@ green         cat       ██████▏    cat       ███▏       hi
 </div>
 </div>
 <div class="sect1">
-<h2 id="_further_information">Further information</h2>
+<h2 id="further_info">Further information</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Source code for this post:</p>
