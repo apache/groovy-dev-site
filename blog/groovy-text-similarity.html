@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="https://github.com/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -1108,6 +1108,362 @@ grass         cat       █████▏     livestock ████▏      wa
 green         cat       ██████▏    cat       ███▏       hippo     █▏         milk      ██▏        bare      ████▏
               bear      ██████▏    bear      ███▏       milk      ▏          bear      █▏         cow       ███▏
               feline    █████▏     bare      ███▏       bear      ▏          cow       █▏         bear      ███▏</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_playing_the_game">Playing the game</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_round_1">Round 1</h3>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 1): aftershock
+LongestCommonSubsequence       0
+Levenshtein                    Distance: 10, Insert: 0, Delete: 3, Substitute: 7
+Jaccard                        0%
+JaroWinkler                    PREFIX 0% / SUFFIX 0%
+Phonetic                       Metaphone=AFTRXK 47% / Soundex=A136 0%
+Meaning                        Angle 45% / Use 21% / ConceptNet 2% / Glove -4% / FastText 19%
+
+Possible letters: b d g i j l m n p q u v w x y z
+Guess the hidden word (turn 2): fruit
+LongestCommonSubsequence       2
+Levenshtein                    Distance: 6, Insert: 2, Delete: 0, Substitute: 4
+Jaccard                        22%
+JaroWinkler                    PREFIX 56% / SUFFIX 45%
+Phonetic                       Metaphone=FRT 39% / Soundex=F630 0%
+Meaning                        Angle 64% / Use 41% / ConceptNet 37% / Glove 31% / FastText 44%
+
+Possible letters: b d g i j l m n p q u v w x y z
+Guess the hidden word (turn 3): buzzing
+LongestCommonSubsequence       4
+Levenshtein                    Distance: 3, Insert: 0, Delete: 0, Substitute: 3
+Jaccard                        50%
+JaroWinkler                    PREFIX 71% / SUFFIX 80%
+Phonetic                       Metaphone=BSNK 58% / Soundex=B252 50%
+Meaning                        Angle 44% / Use 19% / ConceptNet -9% / Glove -2% / FastText 24%
+
+Possible letters: b d g i j l m n p q u v w x y z
+Guess the hidden word (turn 4): pulling
+LongestCommonSubsequence       5
+Levenshtein                    Distance: 2, Insert: 0, Delete: 0, Substitute: 2
+Jaccard                        71%
+JaroWinkler                    PREFIX 85% / SUFFIX 87%
+Phonetic                       Metaphone=PLNK 80% / Soundex=P452 75%
+Meaning                        Angle 48% / Use 25% / ConceptNet -8% / Glove 3% / FastText 29%
+
+Possible letters: b d g i j l m n p q u v w x y z
+Guess the hidden word (turn 5): pudding
+LongestCommonSubsequence       7
+Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                        100%
+JaroWinkler                    PREFIX 100% / SUFFIX 100%
+Phonetic                       Metaphone=PTNK 100% / Soundex=P352 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+
+Congratulations, you guessed correctly!</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_round_2">Round 2</h3>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 1): bail
+LongestCommonSubsequence       1
+Levenshtein                    Distance: 7, Insert: 4, Delete: 0, Substitute: 3
+Jaccard                        22%  (2/9) 2 / 9
+JaroWinkler                    PREFIX 42% / SUFFIX 46%
+Phonetic                       Metaphone=BL 38% / Soundex=B400 25%
+Meaning                        Angle 46% / Use 40% / ConceptNet 0% / Glove 0% / FastText 31%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 2): leg
+LongestCommonSubsequence       2
+Levenshtein                    Distance: 6, Insert: 5, Delete: 0, Substitute: 1
+Jaccard                        25%  (2/8) 1 / 4
+JaroWinkler                    PREFIX 47% / SUFFIX 0%
+Phonetic                       Metaphone=LK 38% / Soundex=L200 0%
+Meaning                        Angle 50% / Use 18% / ConceptNet 11% / Glove 13% / FastText 37%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 3): languish
+LongestCommonSubsequence       2
+Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
+Jaccard                        15%  (2/13) 2 / 13
+JaroWinkler                    PREFIX 50% / SUFFIX 50%
+Phonetic                       Metaphone=LNKX 34% / Soundex=L522 0%
+Meaning                        Angle 46% / Use 12% / ConceptNet -11% / Glove -4% / FastText 25%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 4): election
+LongestCommonSubsequence       5
+Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
+Jaccard                        40%  (4/10) 2 / 5
+JaroWinkler                    PREFIX 83% / SUFFIX 75%
+Phonetic                       Metaphone=ELKXN 50% / Soundex=E423 75%
+Meaning                        Angle 47% / Use 13% / ConceptNet -5% / Glove -7% / FastText 26%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 5): elevator
+LongestCommonSubsequence       8
+Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                        100%  (7/7) 1
+JaroWinkler                    PREFIX 100% / SUFFIX 100%
+Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+
+Congratulations, you guessed correctly!</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_round_3">Round 3</h3>
+<div class="paragraph">
+<p>Let&#8217;s take a first guess with a 10-letter (all distinct) word.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 1): aftershock
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 8, Insert: 1, Delete: 3, Substitute: 4
+Jaccard                        33%
+JaroWinkler                    PREFIX 56% / SUFFIX 56%
+Phonetic                       Metaphone=AFTRXK 32% / Soundex=A136 25%
+Meaning                        Angle 41% / Use 20% / ConceptNet -4% / Glove -13% / FastText 11%</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tells us:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We did two more deletes than inserts, so
+<span class="fuchsia">the hidden word has 8 characters</span>.</p>
+</li>
+<li>
+<p>If the hidden word is size 8, why would we ever do inserts, i.e. make it longer? Doing the insert (and subsequent deletes) must have made it possible to get 3 letters into the correct position.</p>
+</li>
+<li>
+<p>Soundex tells use that it either starts with A and the other consonant
+groupings are wrong, or it doesn&#8217;t start with A and one consonant grouping is correct. Metaphone of 32% means we probably have two consonant groupings correct.</p>
+</li>
+<li>
+<p>Our guess has 10 distinct letters. Jaccard of 33% tells
+that we have 4/12 or 5/15 letters correct. If we have 5 letters correct
+there would be up to 3 letters we don&#8217;t have, but adding 3 to the 10 in our guess
+doesn&#8217;t give 15. So we have 4 of 12 letters. There must be up to 4 letters we don&#8217;t have. Add those 4 to our 10 gives 14, but we know there is only 12 distinct letters, so the answer has two duplicates or a triple.
+I.e. <span class="fuchsia">the answer has 6 distinct letters</span>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The letters <code>e</code> and <code>s</code> are very common. Let&#8217;s pick a word with
+2 of each that matches what we know from LCS.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 1): aftershock
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 8, Insert: 1, Delete: 3, Substitute: 4
+Jaccard                        33%  (4/12) 1 / 3
+JaroWinkler                    PREFIX 56% / SUFFIX 56%
+Phonetic                       Metaphone=AFTRXK 32% / Soundex=A136 25%
+Meaning                        Angle 41% / Use 20% / ConceptNet -4% / Glove -13% / FastText 11%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 2): patriate
+LongestCommonSubsequence       2
+Levenshtein                    Distance: 7, Insert: 0, Delete: 0, Substitute: 7
+Jaccard                        20%  (2/10) 1 / 5
+JaroWinkler                    PREFIX 47% / SUFFIX 47%
+Phonetic                       Metaphone=PTRT 38% / Soundex=P363 0%
+Meaning                        Angle 39% / Use 23% / ConceptNet 13% / Glove 0% / FastText 27%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 3): tarragon
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 5, Insert: 0, Delete: 0, Substitute: 5
+Jaccard                        71%  (5/7) 5 / 7
+JaroWinkler                    PREFIX 68% / SUFFIX 68%
+Phonetic                       Metaphone=TRKN 50% / Soundex=T625 25%
+Meaning                        Angle 46% / Use 4% / ConceptNet -7% / Glove 5% / FastText 26%
+
+Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 4): kangaroo
+LongestCommonSubsequence       8
+Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                        100%  (6/6) 1
+JaroWinkler                    PREFIX 100% / SUFFIX 100%
+Phonetic                       Metaphone=KNKR 100% / Soundex=K526 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+
+Congratulations, you guessed correctly!</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Our Jaccard is now 1/11. That must be the 6 letters we tried plus
+5 others in the hidden word, so our correct letter isn&#8217;t one of the duplicates.
+I.e. <span class="fuchsia">there is no S or E in the word</span>.</p>
+</li>
+<li>
+<p>Our soundex indicates the word doesn&#8217;t start with S which confirms our previous derived fact.</p>
+</li>
+<li>
+<p>Our metaphone has dropped markedly. We know the S shouldn&#8217;t be there
+but with only 10%, only one of F or R is probably correct, and we
+probably need a K or T from turn 1.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try duplicates for <code>o</code> and <code>r</code>, and also match LCS from previous guesses.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 3): motorcar
+LongestCommonSubsequence       2
+Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
+Jaccard                        33%  (3/9) 1 / 3
+JaroWinkler                    PREFIX 47% / SUFFIX 47%
+Phonetic                       Metaphone=MTRKR 43% / Soundex=M362 0%
+Meaning                        Angle 44% / Use 20% / ConceptNet -4% / Glove 6% / FastText 33%</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Soundex indicates that the word doesn&#8217;t start with M</p>
+</li>
+<li>
+<p>Our Jaccard is now 3/9. That must mean .</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_round_4">Round 4</h3>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 1): aftershock
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 8, Insert: 0, Delete: 4, Substitute: 4
+Jaccard                        50%
+JaroWinkler                    PREFIX 61% / SUFFIX 49%
+Phonetic                       Metaphone=AFTRXK 33% / Soundex=A136 25%
+Meaning                        Angle 44% / Use 11% / ConceptNet -7% / Glove 1% / FastText 15%</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What do we know?</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>we deleted 4 letters, so <span class="fuchsia">the hidden word has 6 letters</span></p>
+</li>
+<li>
+<p>Jaccard of 50% is either 5/10 or 6/12. If the latter, we&#8217;d have all the letters, so there can&#8217;t be 2 additional letters in the hidden word, so it&#8217;s 5/10. That means we need to pick 5 letter
+from aftershock, duplicate one of them, and we&#8217;ll have all the letters</p>
+</li>
+<li>
+<p>phonetic clues suggest it probably doesn&#8217;t start with A</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In aftershock, F, H, and K, are probably least common. Let&#8217;s pick a 6-letter word from
+the remaining 7 letters that abides by our LCS clue. We know this can&#8217;t be right because
+we aren&#8217;t duplicating a letter yet, but we just want to narrow down the possibilities.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 2): coarse
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
+Jaccard                        57%  (4/7) 4 / 7
+JaroWinkler                    PREFIX 67% / SUFFIX 67%
+Phonetic                       Metaphone=KRS 74% / Soundex=C620 75%
+Meaning                        Angle 51% / Use 12% / ConceptNet 5% / Glove 23% / FastText 26%</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This tells us:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We now have 4 of the 5 distinct letters (we should discard 2)</p>
+</li>
+<li>
+<p>Phonetics indicates we are close but not very close yet,
+from the Metaphone value of KRS we should drop one and keep two.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s assume C and E are wrong and bring in the other common letter, T.
+We need to find a word that matches the LCS conditions from previous guesses,
+and we&#8217;ll duplicate one letter, S.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 3): roasts
+LongestCommonSubsequence       3
+Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
+Jaccard                        67%  (4/6) 2 / 3
+JaroWinkler                    PREFIX 56% / SUFFIX 56%
+Phonetic                       Metaphone=RSTS 61% / Soundex=R232 25%
+Meaning                        Angle 54% / Use 25% / ConceptNet 18% / Glove 18% / FastText 31%</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We learned:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Phonetics dropped, so maybe S wasn&#8217;t the correct letter to bring in,
+we want the K (from letter C) and R from the previous guess.</p>
+</li>
+<li>
+<p>Also, the semantic meaning has bumped up to warm (from cold for previous guesses).
+Maybe the hidden word is related to roasts.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try to word starting with C, related to roasts.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Guess the hidden word (turn 4): carrot
+LongestCommonSubsequence       6
+Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                        100%  (5/5) 1
+JaroWinkler                    PREFIX 100% / SUFFIX 100%
+Phonetic                       Metaphone=KRT 100% / Soundex=C630 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+
+Congratulations, you guessed correctly!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Success!</p>
 </div>
 </div>
 </div>
