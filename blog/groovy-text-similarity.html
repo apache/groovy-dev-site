@@ -94,8 +94,10 @@ and so forth.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>If you are new to Groovy, consider checking out this
-<a href="https://opensource.com/article/20/12/groovy">Groovy game building tutorial</a> first.</p>
+<p>So, we&#8217;re thinking of a game that is a cross between
+<a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>,
+<a href="https://en.wikipedia.org/wiki/Mastermind_(board_game)">Master Mind</a>, and
+<a href="https://semantle.com/">Semantle</a>.</p>
 </div>
 <div class="paragraph">
 <p>Our goals here aren&#8217;t to polish a production ready version of the game, but to:</p>
@@ -118,6 +120,10 @@ and so forth.</p>
 <p>To highlight how easy it is to play with the above technologies using Apache Groovy</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>If you are new to Groovy, consider checking out this
+<a href="https://opensource.com/article/20/12/groovy">Groovy game building tutorial</a> first.</p>
 </div>
 </div>
 </div>
@@ -233,7 +239,7 @@ in more general ways.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for Glove, ConceptNet, and FastText models</p>
+<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for GloVe, ConceptNet, and FastText models</p>
 </li>
 <li>
 <p><code>ai.djl</code> with Pytorch for a universal-sentence-encoder model and Tensorflow with an Angle model</p>
@@ -850,26 +856,87 @@ hippo|hippopotamus  50%            40%            40%
 Related words tend to cluster in similar positions within that space.
 Typically rule-based, statistical, or neural-based approaches are used to perform the embedding
 and distance measures like <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a>
-are used to find related words (or phrases). We won&#8217;t go into further NLP theory in any great detail,
-but we&#8217;ll give some brief explanation as we go.</p>
+are used to find related words (or phrases).
+We won&#8217;t go into further NLP theory in any great detail, but we&#8217;ll give some brief
+explanation as we go. We&#8217;ll look at several models and split them into two groups:</p>
 </div>
-<div class="paragraph">
-<p>In very rough terms, context independent approaches focus on embeddings that
-are applicable in all contexts. We&#8217;ll look at three models which use this approach.
+<div class="ulist">
+<ul>
+<li>
+<p>Context-independent approaches focus on embeddings that
+are applicable in all contexts (very roughly).
+We&#8217;ll look at three models which use this approach.
 <a href="https://en.wikipedia.org/wiki/Word2vec">Word2vec</a> by Google Research,
 <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> by Stanford NLP, and
 <a href="https://fasttext.cc/">FastText</a> by Facebook Research.
-We&#8217;ll use <a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a> to load and use these models.</p>
-</div>
-<div class="paragraph">
-<p>Very roughly, context dependent approaches can provide more accurate matching if the context is
-known, but require more in-depth analysis. We&#8217;ll look at two models which use this approach.
-<a href="https://github.com/SeanLee97/AnglE">Universal AnglE</a> BERT/LLM-based sentence embeddings
-are used in conjunction with <a href="https://pytorch.org/">PyTorch</a>.
+We&#8217;ll use
+<a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a>
+to load and use these models.</p>
+</li>
+<li>
+<p>Context-dependent approaches can provide more accurate matching if the context is
+known, but require more in-depth analysis. For example, if we see "monopoly" we might think of a company with no competition. If we see "money" we might think of currency.
+But if we see those two words together, we immediately switch context to board games.
+We&#8217;ll look at two models which use this approach.
+<a href="https://github.com/SeanLee97/AnglE">Universal AnglE</a> is a model based on BERT/LLM-based
+sentence embeddings and is used in conjunction with <a href="https://pytorch.org/">PyTorch</a>.
 Google&#8217;s <a href="https://www.kaggle.com/models/google/universal-sentence-encoder">Universal Sentence Encoder</a>
 model is trained and optimized for greater-than-word length text, such as sentences, phrases or short paragraphs, and is used in conjunction with
 <a href="https://www.tensorflow.org/">TensorFlow</a>.
-We&#8217;ll use the <a href="https://djl.ai/">Deep Java Library</a> to load and use these models.</p>
+We&#8217;ll use the <a href="https://djl.ai/">Deep Java Library</a> to load and use both of these models.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_glove">GloVe</h3>
+<div class="paragraph">
+<p>The
+<a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a>
+library makes it easy to use <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> models. The <a href="https://huggingface.co/fse/glove-wiki-gigaword-300">model we used</a> is pre-trained on
+2B tweets, 27B tokens, 1.2M vocab, uncased.</p>
+</div>
+<div class="paragraph">
+<p>We simply serialize the model into our word2vec representation,
+and can then call methods like <code>similarity</code> and <code>wordsNearest</code> as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var path = Paths.get(ConceptNet.classLoader.getResource('glove-wiki-gigaword-300.bin').toURI()).toFile()
+Word2Vec model = WordVectorSerializer.readWord2VecModel(path)
+String[] words = ['bull', 'calf', 'bovine', 'cattle', 'livestock', 'horse']
+println """GloVe similarity to cow: ${
+    words
+        .collectEntries { [it, model.similarity('cow', it)] }
+        .sort { -it.value }
+        .collectValues{ sprintf '%4.2f', it }
+}"""
+println "Nearest words in vocab: " + model.wordsNearest('cow', 4)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which gives this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GloVe similarity to cow: [bovine:0.67, cattle:0.62, livestock:0.47, calf:0.44, horse:0.42, bull:0.38]
+Nearest words in vocab: [cows, mad, bovine, cattle]</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fasttext">FastText</h3>
+<div class="paragraph">
+<p>We can swap to a <a href="https://fasttext.cc/">FastText</a> model. We used [this model] which has
+1 million word vectors trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).</p>
+</div>
+<div class="paragraph">
+<p>It has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>FastText similarity to cow: [bovine:0.72, cattle:0.70, calf:0.67, bull:0.67, livestock:0.61, horse:0.60]
+Nearest words in vocab: [cows, goat, pig, bovine]</pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Using DJL with PyTorch and the Angle model:</p>
@@ -1161,6 +1228,7 @@ green         cat       ██████▏    cat       ███▏       hi
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
 <h2 id="_playing_the_game">Playing the game</h2>
 <div class="sectionbody">
@@ -1179,7 +1247,7 @@ Levenshtein                    Distance: 10, Insert: 0, Delete: 3, Substitute: 7
 Jaccard                        0%
 JaroWinkler                    PREFIX 0% / SUFFIX 0%
 Phonetic                       Metaphone=AFTRXK 47% / Soundex=A136 0%
-Meaning                        Angle 45% / Use 21% / ConceptNet 2% / Glove -4% / FastText 19%</pre>
+Meaning                        Angle 45% / Use 21% / ConceptNet 2% / GloVe -4% / FastText 19%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1219,7 +1287,7 @@ Levenshtein                    Distance: 6, Insert: 2, Delete: 0, Substitute: 4
 Jaccard                        22%
 JaroWinkler                    PREFIX 56% / SUFFIX 45%
 Phonetic                       Metaphone=FRT 39% / Soundex=F630 0%
-Meaning                        Angle 64% / Use 41% / ConceptNet 37% / Glove 31% / FastText 44%</pre>
+Meaning                        Angle 64% / Use 41% / ConceptNet 37% / GloVe 31% / FastText 44%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1259,7 +1327,7 @@ Levenshtein                    Distance: 1, Insert: 0, Delete: 0, Substitute: 1
 Jaccard                        71%  (5/7)
 JaroWinkler                    PREFIX 90% / SUFFIX 96%
 Phonetic                       Metaphone=BTNK 79% / Soundex=B352 75%
-Meaning                        Angle 52% / Use 35% / ConceptNet 2% / Glove 4% / FastText 25%</pre>
+Meaning                        Angle 52% / Use 35% / ConceptNet 2% / GloVe 4% / FastText 25%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1277,7 +1345,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%  (6/6)
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=PTNK 100% / Soundex=P352 100%
-Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1294,7 +1362,7 @@ Levenshtein                    Distance: 7, Insert: 4, Delete: 0, Substitute: 3
 Jaccard                        22%  (2/9) 2 / 9
 JaroWinkler                    PREFIX 42% / SUFFIX 46%
 Phonetic                       Metaphone=BL 38% / Soundex=B400 25%
-Meaning                        Angle 46% / Use 40% / ConceptNet 0% / Glove 0% / FastText 31%
+Meaning                        Angle 46% / Use 40% / ConceptNet 0% / GloVe 0% / FastText 31%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 2): leg
@@ -1303,7 +1371,7 @@ Levenshtein                    Distance: 6, Insert: 5, Delete: 0, Substitute: 1
 Jaccard                        25%  (2/8) 1 / 4
 JaroWinkler                    PREFIX 47% / SUFFIX 0%
 Phonetic                       Metaphone=LK 38% / Soundex=L200 0%
-Meaning                        Angle 50% / Use 18% / ConceptNet 11% / Glove 13% / FastText 37%
+Meaning                        Angle 50% / Use 18% / ConceptNet 11% / GloVe 13% / FastText 37%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 3): languish
@@ -1312,7 +1380,7 @@ Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
 Jaccard                        15%  (2/13) 2 / 13
 JaroWinkler                    PREFIX 50% / SUFFIX 50%
 Phonetic                       Metaphone=LNKX 34% / Soundex=L522 0%
-Meaning                        Angle 46% / Use 12% / ConceptNet -11% / Glove -4% / FastText 25%
+Meaning                        Angle 46% / Use 12% / ConceptNet -11% / GloVe -4% / FastText 25%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 4): election
@@ -1321,7 +1389,7 @@ Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
 Jaccard                        40%  (4/10) 2 / 5
 JaroWinkler                    PREFIX 83% / SUFFIX 75%
 Phonetic                       Metaphone=ELKXN 50% / Soundex=E423 75%
-Meaning                        Angle 47% / Use 13% / ConceptNet -5% / Glove -7% / FastText 26%
+Meaning                        Angle 47% / Use 13% / ConceptNet -5% / GloVe -7% / FastText 26%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 5): elevator
@@ -1330,7 +1398,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%  (7/7) 1
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
-Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1350,7 +1418,7 @@ Levenshtein                    Distance: 8, Insert: 1, Delete: 3, Substitute: 4
 Jaccard                        33%
 JaroWinkler                    PREFIX 56% / SUFFIX 56%
 Phonetic                       Metaphone=AFTRXK 32% / Soundex=A136 25%
-Meaning                        Angle 41% / Use 20% / ConceptNet -4% / Glove -13% / FastText 11%</pre>
+Meaning                        Angle 41% / Use 20% / ConceptNet -4% / GloVe -13% / FastText 11%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1391,7 +1459,7 @@ Levenshtein                    Distance: 7, Insert: 0, Delete: 0, Substitute: 7
 Jaccard                        20%  (2/10) 1 / 5
 JaroWinkler                    PREFIX 47% / SUFFIX 47%
 Phonetic                       Metaphone=PTRT 38% / Soundex=P363 0%
-Meaning                        Angle 39% / Use 23% / ConceptNet 13% / Glove 0% / FastText 27%
+Meaning                        Angle 39% / Use 23% / ConceptNet 13% / GloVe 0% / FastText 27%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 3): tarragon
@@ -1400,7 +1468,7 @@ Levenshtein                    Distance: 5, Insert: 0, Delete: 0, Substitute: 5
 Jaccard                        71%  (5/7) 5 / 7
 JaroWinkler                    PREFIX 68% / SUFFIX 68%
 Phonetic                       Metaphone=TRKN 50% / Soundex=T625 25%
-Meaning                        Angle 46% / Use 4% / ConceptNet -7% / Glove 5% / FastText 26%
+Meaning                        Angle 46% / Use 4% / ConceptNet -7% / GloVe 5% / FastText 26%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 4): kangaroo
@@ -1409,7 +1477,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%  (6/6) 1
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=KNKR 100% / Soundex=K526 100%
-Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1426,7 +1494,7 @@ Levenshtein                    Distance: 8, Insert: 0, Delete: 4, Substitute: 4
 Jaccard                        50%
 JaroWinkler                    PREFIX 61% / SUFFIX 49%
 Phonetic                       Metaphone=AFTRXK 33% / Soundex=A136 25%
-Meaning                        Angle 44% / Use 11% / ConceptNet -7% / Glove 1% / FastText 15%</pre>
+Meaning                        Angle 44% / Use 11% / ConceptNet -7% / GloVe 1% / FastText 15%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1460,7 +1528,7 @@ Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
 Jaccard                        57%  (4/7) 4 / 7
 JaroWinkler                    PREFIX 67% / SUFFIX 67%
 Phonetic                       Metaphone=KRS 74% / Soundex=C620 75%
-Meaning                        Angle 51% / Use 12% / ConceptNet 5% / Glove 23% / FastText 26%</pre>
+Meaning                        Angle 51% / Use 12% / ConceptNet 5% / GloVe 23% / FastText 26%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1491,7 +1559,7 @@ Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
 Jaccard                        67%  (4/6) 2 / 3
 JaroWinkler                    PREFIX 56% / SUFFIX 56%
 Phonetic                       Metaphone=RSTS 61% / Soundex=R232 25%
-Meaning                        Angle 54% / Use 25% / ConceptNet 18% / Glove 18% / FastText 31%</pre>
+Meaning                        Angle 54% / Use 25% / ConceptNet 18% / GloVe 18% / FastText 31%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1521,7 +1589,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%  (5/5) 1
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=KRT 100% / Soundex=C630 100%
-Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1538,7 +1606,7 @@ Levenshtein                    Distance: 6, Insert: 3, Delete: 1, Substitute: 2
 Jaccard                        33%  (3/9)
 JaroWinkler                    PREFIX 72% / SUFFIX 72%
 Phonetic                       Metaphone=SLR 46% / Soundex=C460 25%
-Meaning                        Angle 44% / Use 20% / ConceptNet -7% / Glove 1% / FastText 33%
+Meaning                        Angle 44% / Use 20% / ConceptNet -7% / GloVe 1% / FastText 33%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 2): explorer
@@ -1547,7 +1615,7 @@ Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
 Jaccard                        44%  (4/9)
 JaroWinkler                    PREFIX 67% / SUFFIX 58%
 Phonetic                       Metaphone=EKSPLRR 50% / Soundex=E214 50%
-Meaning                        Angle 50% / Use 14% / ConceptNet 1% / Glove 9% / FastText 29%
+Meaning                        Angle 50% / Use 14% / ConceptNet 1% / GloVe 9% / FastText 29%
 
 Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 3): elevator
@@ -1556,7 +1624,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%  (7/7)
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
-Meaning                        Angle 100% / Use 100% / ConceptNet 100% / Glove 100% / FastText 100%
+Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
