@@ -53,7 +53,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_implementation_details' class='anchor-link'>Implementation Details</a></li><li><a href='#_running_with_the_java_streams_backed_platform' class='anchor-link'>Running with the Java streams-backed platform</a></li><li><a href='#_running_with_apache_spark' class='anchor-link'>Running with Apache Spark</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./groovy-record-performance'>Groovy Record Performance</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Groovy with Apache Wayang and Apache Spark</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-19 01:01PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_implementation_details' class='anchor-link'>Implementation Details</a></li><li><a href='#_running_with_the_java_streams_backed_platform' class='anchor-link'>Running with the Java streams-backed platform</a></li><li><a href='#_running_with_apache_spark' class='anchor-link'>Running with Apache Spark</a></li><li><a href='#_using_ml4all' class='anchor-link'>Using ML4all</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./groovy-record-performance'>Groovy Record Performance</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Groovy with Apache Wayang and Apache Spark</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="https://github.com/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2022-06-19 01:01PM (Last updated: 2025-02-15 02:30PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://www.apache.org/logos/res/wayang/default.png" alt="wayang logo" width="100"></span>
@@ -115,34 +121,35 @@ in that cluster.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">record Point(double[] pts) implements Serializable {
-    static Point fromLine(String line) { new Point(line.split(',')[2..-1]*.toDouble() as double[]) }
-}</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(double[] pts) implements Serializable { }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ve made it <code>Serializable</code> (more on that later) and included
-a <code>fromLine</code> factory method to help us make points from a CSV
-file. We&#8217;ll do that ourselves rather than rely on other libraries
-which could assist. It&#8217;s not a 2D or 3D point for us but 12D
+<p>We&#8217;ve made it <code>Serializable</code> (more on that later).
+It&#8217;s not a 2D or 3D point for us but 12D
 corresponding to the 12 criteria. We just use a <code>double</code> array,
 so any dimension would be supported but the 12 comes from the
 number of columns in our data file.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll define a related <code>TaggedPointCounter</code> record. It&#8217;s like
+<p>We&#8217;ll define a related <code>PointGrouping</code> record. It&#8217;s like
 <code>Point</code> but tracks an <code>int</code> cluster id and <code>long</code> count used
 when clustering the points:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">record TaggedPointCounter(double[] pts, int cluster, long count) implements Serializable {
-    TaggedPointCounter plus(TaggedPointCounter that) {
-        new TaggedPointCounter((0..&lt;pts.size()).collect{ pts[it] + that.pts[it] } as double[], cluster, count + that.count)
+<pre class="prettyprint highlight"><code data-lang="groovy">record PointGrouping(double[] pts, int cluster, long count) implements Serializable {
+    PointGrouping(List&lt;Double&gt; pts, int cluster, long count) {
+        this(pts as double[], cluster, count)
     }
 
-    TaggedPointCounter average() {
-        new TaggedPointCounter(pts.collect{ double d -&gt; d/count } as double[], cluster, 0)
+    PointGrouping plus(PointGrouping that) {
+        var newPts = pts.indices.collect{ pts[it] + that.pts[it] }
+        new PointGrouping(newPts, cluster, count + that.count)
+    }
+
+    PointGrouping average() {
+        new PointGrouping(pts.collect{ double d -&gt; d/count }, cluster, 1)
     }
 }</code></pre>
 </div>
@@ -162,24 +169,26 @@ class to capture this part of the algorithm:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">class SelectNearestCentroid implements ExtendedSerializableFunction&lt;Point, TaggedPointCounter&gt; {
-    Iterable&lt;TaggedPointCounter&gt; centroids
+<pre class="prettyprint highlight"><code data-lang="groovy">class SelectNearestCentroid implements ExtendedSerializableFunction&lt;Point, PointGrouping&gt; {
+    Iterable&lt;PointGrouping&gt; centroids
 
     void open(ExecutionContext context) {
-        centroids = context.getBroadcast("centroids")
+        centroids = context.getBroadcast('centroids')
     }
 
-    TaggedPointCounter apply(Point p) {
-        def minDistance = Double.POSITIVE_INFINITY
-        def nearestCentroidId = -1
+    PointGrouping apply(Point p) {
+        var minDistance = Double.POSITIVE_INFINITY
+        var nearestCentroidId = -1
         for (c in centroids) {
-            def distance = sqrt((0..&lt;p.pts.size()).collect{ p.pts[it] - c.pts[it] }.sum{ it ** 2 } as double)
+            var distance = sqrt(p.pts.indices
+                .collect{ p.pts[it] - c.pts[it] }
+                .sum{ it ** 2 } as double)
             if (distance &lt; minDistance) {
                 minDistance = distance
                 nearestCentroidId = c.cluster
             }
         }
-        new TaggedPointCounter(p.pts, nearestCentroidId, 1)
+        new PointGrouping(p.pts, nearestCentroidId, 1)
     }
 }</code></pre>
 </div>
@@ -191,25 +200,15 @@ functionality where an optimization decision can be made about
 where to run the operation.</p>
 </div>
 <div class="paragraph">
-<p>Once we get to using Spark, the classes in the map/reduce part
-of our algorithm will need to be serializable. Method closures
-in dynamic Groovy aren&#8217;t serializable. We have a few options to
-avoid using them. I&#8217;ll show one approach here which is to use
-some helper classes in places where we might typically use method
-references. Here are the helper classes:</p>
+<p>To make our pipeline definitions a little shorter,
+we&#8217;ll define some useful operators in a <code>PipelineOps</code> helper class:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">class Cluster implements SerializableFunction&lt;TaggedPointCounter, Integer&gt; {
-    Integer apply(TaggedPointCounter tpc) { tpc.cluster() }
-}
-
-class Average implements SerializableFunction&lt;TaggedPointCounter, TaggedPointCounter&gt; {
-    TaggedPointCounter apply(TaggedPointCounter tpc) { tpc.average() }
-}
-
-class Plus implements SerializableBinaryOperator&lt;TaggedPointCounter&gt; {
-    TaggedPointCounter apply(TaggedPointCounter tpc1, TaggedPointCounter tpc2) { tpc1.plus(tpc2) }
+<pre class="prettyprint highlight"><code data-lang="groovy">class PipelineOps {
+    public static SerializableFunction&lt;PointGrouping, Integer&gt; cluster = tpc -&gt; tpc.cluster
+    public static SerializableFunction&lt;PointGrouping, PointGrouping&gt; average = tpc -&gt; tpc.average()
+    public static SerializableBinaryOperator&lt;PointGrouping&gt; plus = (tpc1, tpc2) -&gt; tpc1 + tpc2
 }</code></pre>
 </div>
 </div>
@@ -219,42 +218,43 @@ class Plus implements SerializableBinaryOperator&lt;TaggedPointCounter&gt; {
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">int k = 5
-int iterations = 20
+int iterations = 10
 
 // read in data from our file
-def url = WhiskeyWayang.classLoader.getResource('whiskey.csv').file
-def pointsData = new File(url).readLines()[1..-1].collect{ Point.fromLine(it) }
-def dims = pointsData[0].pts().size()
+var url = WhiskeyWayang.classLoader.getResource('whiskey.csv').file
+def rows = new File(url).readLines()[1..-1]*.split(',')
+var distilleries = rows*.getAt(1)
+var pointsData = rows.collect{ new Point(it[2..-1] as double[]) }
+var dims = pointsData[0].pts.size()
 
 // create some random points as initial centroids
-def r = new Random()
-def initPts = (1..k).collect { (0..&lt;dims).collect { r.nextGaussian() + 2 } as double[] }
+var r = new Random()
+var randomPoint = { (0..&lt;dims).collect { r.nextGaussian() + 2 } as double[] }
+var initPts = (1..k).collect(randomPoint)
 
-// create planbuilder with Java and Spark enabled
-def configuration = new Configuration()
-def context = new WayangContext(configuration)
+var context = new WayangContext()
     .withPlugin(Java.basicPlugin())
     .withPlugin(Spark.basicPlugin())
-def planBuilder = new JavaPlanBuilder(context, "KMeans ($url, k=$k, iterations=$iterations)")
+var planBuilder = new JavaPlanBuilder(context, "KMeans ($url, k=$k, iterations=$iterations)")
 
-def points = planBuilder
+var points = planBuilder
     .loadCollection(pointsData).withName('Load points')
 
-def initialCentroids = planBuilder
-    .loadCollection((0..&lt;k).collect{ idx -&gt; new TaggedPointCounter(initPts[idx], idx, 0) })
-    .withName("Load random centroids")
+var initialCentroids = planBuilder
+    .loadCollection((0..&lt;k).collect{ idx -&gt; new PointGrouping(initPts[idx], idx, 0) })
+    .withName('Load random centroids')
 
-def finalCentroids = initialCentroids
-    .repeat(iterations, currentCentroids -&gt;
-        points.map(new SelectNearestCentroid())
-            .withBroadcast(currentCentroids, "centroids").withName("Find nearest centroid")
-            .reduceByKey(new Cluster(), new Plus()).withName("Add up points")
-            .map(new Average()).withName("Average points")
-            .withOutputClass(TaggedPointCounter)).withName("Loop").collect()
+var finalCentroids = initialCentroids.repeat(iterations, currentCentroids -&gt;
+    points.map(new SelectNearestCentroid())
+        .withBroadcast(currentCentroids, 'centroids').withName('Find nearest centroid')
+        .reduceByKey(cluster, plus).withName('Aggregate points')
+        .map(average).withName('Average points')
+        .withOutputClass(PointGrouping)
+).withName('Loop').collect()
 
 println 'Centroids:'
 finalCentroids.each { c -&gt;
-    println "Cluster$c.cluster: ${c.pts.collect{ sprintf('%.3f', it) }.join(', ')}"
+    println "Cluster $c.cluster: ${c.pts.collect('%.2f'::formatted).join(', ')}"
 }</code></pre>
 </div>
 </div>
@@ -271,6 +271,21 @@ have no points assigned.Our algorithm works by assigning,
 at each iteration, all the points to their closest current
 centroid and then calculating the new centroids given those
 assignments. Finally, we output the results.</p>
+</div>
+<div class="paragraph">
+<p>Optionally, we might want to print out the distilleries allocated to each cluster.
+The code looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var allocator = new SelectNearestCentroid(centroids: finalCentroids)
+var allocations = pointsData.withIndex()
+    .collect{ pt, idx -&gt; [allocator.apply(pt).cluster, distilleries[idx]] }
+    .groupBy{ cluster, ds -&gt; "Cluster $cluster" }
+    .collectValues{ v -&gt; v.collect{ it[1] } }
+    .sort{ it.key }
+allocations.each{ c, ds -&gt; println "$c (${ds.size()} members): ${ds.join(', ')}" }</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -295,10 +310,10 @@ the script is run, but here is one output:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="shell">&gt; Task :WhiskeyWayang:run
 Centroids:
-Cluster0: 2.548, 2.419, 1.613, 0.194, 0.097, 1.871, 1.742, 1.774, 1.677, 1.935, 1.806, 1.613
-Cluster2: 1.464, 2.679, 1.179, 0.321, 0.071, 0.786, 1.429, 0.429, 0.964, 1.643, 1.929, 2.179
-Cluster3: 3.250, 1.500, 3.250, 3.000, 0.500, 0.250, 1.625, 0.375, 1.375, 1.375, 1.250, 0.250
-Cluster4: 1.684, 1.842, 1.211, 0.421, 0.053, 1.316, 0.632, 0.737, 1.895, 2.000, 1.842, 1.737
+Cluster0: 2.55, 2.42, 1.61, 0.19, 0.10, 1.87, 1.74, 1.77, 1.68, 1.93, 1.81, 1.61
+Cluster2: 1.46, 2.68, 1.18, 0.32, 0.07, 0.79, 1.43, 0.43, 0.96, 1.64, 1.93, 2.18
+Cluster3: 3.25, 1.50, 3.25, 3.00, 0.50, 0.25, 1.62, 0.37, 1.37, 1.37, 1.25, 0.25
+Cluster4: 1.68, 1.84, 1.21, 0.42, 0.05, 1.32, 0.63, 0.74, 1.89, 2.00, 1.84, 1.74
 ...</code></pre>
 </div>
 </div>
@@ -331,11 +346,9 @@ change in our code:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">...
-def configuration = new Configuration()
-def context = new WayangContext(configuration)
-//    .withPlugin(Java.basicPlugin())                <b class="conum">(1)</b>
+var context = new WayangContext()
+//    .withPlugin(Java.basicPlugin())     <b class="conum">(1)</b>
     .withPlugin(Spark.basicPlugin())
-def planBuilder = new JavaPlanBuilder(context, "KMeans ($url, k=$k, iterations=$iterations)")
 ...</code></pre>
 </div>
 </div>
@@ -353,18 +366,77 @@ Spark and Wayang log information - truncated for presentation purposes):</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>[main] INFO org.apache.spark.SparkContext - Running Spark version 3.3.0
+<pre>[main] INFO org.apache.spark.SparkContext - Running Spark version 3.5.4
 [main] INFO org.apache.spark.util.Utils - Successfully started service 'sparkDriver' on port 62081.
 ...
 Centroids:
-Cluster4: 1.414, 2.448, 0.966, 0.138, 0.034, 0.862, 1.000, 0.483, 1.345, 1.690, 2.103, 2.138
-Cluster0: 2.773, 2.455, 1.455, 0.000, 0.000, 1.909, 1.682, 1.955, 2.091, 2.045, 2.136, 1.818
-Cluster1: 1.762, 2.286, 1.571, 0.619, 0.143, 1.714, 1.333, 0.905, 1.190, 1.952, 1.095, 1.524
-Cluster2: 3.250, 1.500, 3.250, 3.000, 0.500, 0.250, 1.625, 0.375, 1.375, 1.375, 1.250, 0.250
-Cluster3: 2.167, 2.000, 2.167, 1.000, 0.333, 0.333, 2.000, 0.833, 0.833, 1.500, 2.333, 1.667
+Cluster 4: 1.63, 2.26, 1.68, 0.63, 0.16, 1.47, 1.42, 0.89, 1.16, 1.95, 0.89, 1.58
+Cluster 0: 2.76, 2.44, 1.44, 0.04, 0.00, 1.88, 1.68, 1.92, 1.92, 2.04, 2.16, 1.72
+Cluster 1: 3.11, 1.44, 3.11, 2.89, 0.56, 0.22, 1.56, 0.44, 1.44, 1.44, 1.33, 0.44
+Cluster 2: 1.52, 2.42, 1.09, 0.24, 0.06, 0.91, 1.09, 0.45, 1.30, 1.64, 2.18, 2.09
 ...
 [shutdown-hook-0] INFO org.apache.spark.SparkContext - Successfully stopped SparkContext
 [shutdown-hook-0] INFO org.apache.spark.util.ShutdownHookManager - Shutdown hook called</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_ml4all">Using ML4all</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In recent versions of Wayang, a new abstraction, called ML4all has been introduced.
+It frees users from the burden of machine learning algorithm selection and low-level implementation details. Many readers will be familiar with how systems supporting
+<em>MapReduce</em> split functionality into <code>map</code>, <code>filter</code> or <code>shuffle</code>, and <code>reduce</code> steps.
+ML4all abstracts machine learning algorithm functionality into 7 operators:
+<code>Transform</code>, <code>Stage</code>, <code>Compute</code>, <code>Update</code>, <code>Sample</code>, <code>Converge</code>, and <code>Loop</code>.</p>
+</div>
+<div class="paragraph">
+<p>Wayang comes bundled with implementations for many of these operators, but
+you can write your own like we have here for the Transform operator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class TransformCSV extends Transform&lt;double[], String&gt; {
+    double[] transform(String input) {
+        input.split(',')[2..-1] as double[]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With this operator defined, we can now write our</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var dims = 12
+var context = new WayangContext()
+    .withPlugin(Spark.basicPlugin())
+    .withPlugin(Java.basicPlugin())
+
+var plan = new ML4allPlan(
+    transformOp: new TransformCSV(),
+    localStage: new KMeansStageWithRandoms(k: k, dimension: dims),
+    computeOp: new KMeansCompute(),
+    updateOp: new KMeansUpdate(),
+    loopOp: new KMeansConvergeOrMaxIterationsLoop(accuracy, maxIterations)
+)
+
+var model = plan.execute('file:' + url, context)
+model.getByKey("centers").eachWithIndex { center, idx -&gt;
+    var pts = center.collect('%.2f'::formatted).join(', ')
+    println "Cluster$idx: $pts"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run we get this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Cluster0: 1.57, 2.32, 1.32, 0.45, 0.09, 1.08, 1.19, 0.60, 1.26, 1.74, 1.72, 1.85
+Cluster1: 3.43, 1.57, 3.43, 3.14, 0.57, 0.14, 1.71, 0.43, 1.29, 1.43, 1.29, 0.14
+Cluster2: 2.73, 2.42, 1.46, 0.04, 0.04, 1.88, 1.69, 1.88, 1.92, 2.04, 2.12, 1.81</pre>
 </div>
 </div>
 </div>
@@ -379,10 +451,9 @@ the abstractions aren&#8217;t perfect. As an example, if I know I
 am only using the streams-backed platform, I don&#8217;t need to worry
 about making any of my classes serializable (which is a Spark
 requirement). In our example, we could have omitted the
-<code>implements Serializable</code> part of the <code>TaggedPointCounter</code> record,
-and we could have used a method reference
-<code>TaggedPointCounter::average</code> instead of our <code>Average</code>
-helper class. This isn&#8217;t meant to be a criticism of Wayang,
+<code>implements Serializable</code> part of the <code>PointGrouping</code> record,
+and several of our pipeline operators may have reduced to simple closures.
+This isn&#8217;t meant to be a criticism of Wayang,
 after all if you want to write cross-platform UDFs, you might
 expect to have to follow some rules. Instead, it is meant to
 just indicate that abstractions often have leaks around the edges.
@@ -390,13 +461,9 @@ Sometimes those leaks can be beneficially used, other times they
 are traps waiting for unknowing developers.</p>
 </div>
 <div class="paragraph">
-<p>To summarise, if using the Java streams-backed platform, you can
-run the application on JDK17 (which uses native records) as well
-as JDK11 and JDK8 (where Groovy provides emulated records).
-Also, we could make numerous simplifications if we desired.
-When using the Spark processing platform, the potential
-simplifications aren&#8217;t applicable, and we can run on JDK8 and
-JDK11 (Spark isn&#8217;t yet supported on JDK17).</p>
+<p>We ran this example using JDK17, but on earlier
+JDK versions, Groovy will use emulated records
+instead of native records without changing the source code.</p>
 </div>
 </div>
 </div>
@@ -434,15 +501,31 @@ in achieving this goal.</p>
 <p>Repo containing the source code: <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeyWayang">WhiskeyWayang</a></p>
 </li>
 <li>
-<p>Repo containing similar examples using a variety of libraries including Apache Commons CSV, Weka, Smile, Tribuo and others: <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Whiskey">Whiskey</a></p>
+<p>Repo containing solutions to this problem using a variety of non-distributed libraries including Apache Commons CSV, Weka, Smile, Tribuo and others:
+<a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/Whiskey">Whiskey</a></p>
 </li>
 <li>
-<p>A similar example using Apache Spark directly but with a built-in parallelized KMeans from the <code>spark-mllib</code> library rather than a hand-crafted algorithm: <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeySpark">WhiskeySpark</a></p>
+<p>A similar example using <a href="https://spark.apache.org/">Apache Spark</a> directly but with a built-in parallelized KMeans from the <code>spark-mllib</code> library:
+<a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeySpark">WhiskeySpark</a></p>
 </li>
 <li>
-<p>A similar example using Apache Ignite directly but with a built-in clustered KMeans from the <code>ignite-ml</code> library rather than a hand-crafted algorithm: <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeyIgnite">WhiskeyIgnite</a></p>
+<p>A similar example using <a href="https://ignite.apache.org/">Apache Ignite</a> using the built-in clustered KMeans from the <code>ignite-ml</code> library:
+<a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeyIgnite">WhiskeyIgnite</a></p>
+</li>
+<li>
+<p>A similar example using <a href="https://flink.apache.org/">Apache Flink</a> using KMeans from the Flink ML (<code>flink-ml-uber</code>) library:
+<a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeyFlink">WhiskeyFlink</a></p>
 </li>
 </ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>19/Jun/2022</strong>: Initial version.<br>
+<strong>15/Feb/2025</strong>: Updated for Apache Wayang 1.0.0.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
