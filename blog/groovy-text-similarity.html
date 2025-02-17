@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -133,8 +133,8 @@ and so forth.</p>
 <div class="paragraph">
 <p>String similarity tries to answer the question: is one word
 (or phrase, sentence, paragraph, document) the same as, or similar to, another.
-This is an important capability in many scenarios involving searching
-or asking questions or invoking commands.
+This is an important capability in many scenarios involving searching,
+asking questions, or invoking commands.
 It can help answer questions like:</p>
 </div>
 <div class="ulist">
@@ -186,7 +186,7 @@ E.g. <code>the red car</code> and <code>the car of colour red</code></p>
 E.g. <code>there</code> , <code>their</code>, and <code>they&#8217;re</code></p>
 </li>
 <li>
-<p>Are the words variations meaning the same (or similar) thing?
+<p>Are the words variations that mean the same (or similar) thing?
 E.g. <code>cow</code>, <code>bull</code>, <code>calf</code>, <code>bovine</code>, <code>cattle</code>, or <code>livestock</code></p>
 </li>
 </ul>
@@ -234,7 +234,7 @@ in more general ways.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Then we&#8217;ll look at some deep learning options for increased semantic matching:</p>
+<p>Then we&#8217;ll look at some deep learning options for semantic matching:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -252,13 +252,13 @@ in more general ways.</p>
 <h2 id="_simple_string_metrics">Simple String Metrics</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>String metrics provide some sort of measure of the sameness of the characters in words (or phrases).
+<p>String metrics provide some measure of the sameness of the characters in words (or phrases).
 These algorithms generally compute similarity or distance (inverse similarity). The two are related.
-Consider <code>cat</code> vs <code>hat</code>. There is one "edit" to change from one word to the other according
-to the Levenshtein algorithm (described shortly). So, we give this a distance of 1.
+Consider <code>cat</code> vs <code>hat</code>. One "edit" is required to change from one word to the other according
+to the Levenshtein algorithm (described shortly). So, we say <code>cat</code> is distance one away from <code>hat</code>.
 We can alternatively produce a normalized similarity value using <code>(word_size - distance) / word_size</code>,
 where <code>word_size</code> is the size of the largest of the two words. So we&#8217;d get a Levenshtein
-similarity measure of 2/3 (or 0.67) for <code>cat</code> vs <code>hat</code>.</p>
+similarity measure of 2/3 (or 0.67). In other words, <code>cat</code> is 67% similar to <code>hat</code>.</p>
 </div>
 <div class="paragraph">
 <p>For our game, we&#8217;ll sometimes want the distance, other times we&#8217;ll use the similarity.</p>
@@ -292,7 +292,7 @@ is a variant that allows transposition of two adjacent letters to count as a sin
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defines a ratio between two sample sets. This could be sets of
 characters in a word, or words in a sentence, or sets of <code>k</code> consecutive characters in a phrase.
 The ratio is the <em>intersection</em> of sets divided by the <em>union</em> of sets.
-<code>bear</code> vs <code>bare</code> would be 100%, <code>pair</code> vs <code>pear</code> would be 60%.</p></td>
+<code>bear</code> vs <code>bare</code> would be 100%. <code>pair</code> vs <code>pear</code> would be 60% as there are 3 shared letters (<code>a</code>,<code>p</code>,<code>r</code>) out of 5 letters total (<code>a</code>,<code>e</code>,<code>i</code>,<code>p</code>,<code>r</code>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming</a></p></td>
@@ -395,7 +395,7 @@ provides a great fallback especially when using Groovy scripts outside an IDE.
 </div>
 <div class="paragraph">
 <p>Let&#8217;s now look at some examples of running various string metric algorithms.
-We&#8217;ll use algorithm from Apache Commons Text and the <code>info.debatty:java-string-similarity</code>
+We&#8217;ll use algorithms from Apache Commons Text and the <code>info.debatty:java-string-similarity</code>
 library.</p>
 </div>
 <div class="paragraph">
@@ -541,7 +541,7 @@ Jaccard (debatty k=3)           0.00 <span style="color:red">▏</span>
 <div class="paragraph">
 <p>Note that for "Elton John" backwards, Jaccard with higher values of k quickly drops to zero but just swapping
 the words (like our social media account and email with punctuation removed) remains high. So higher value
-values of k for Jaccard definitely have there place but perhaps not needed for our game.
+values of k for Jaccard definitely have their place but are perhaps not needed for our game.
 Dealing with k sequential letters (also referred to as n sequential letters) is common.
 There is in fact a special term <em>n-grams</em> for such sequences.
 While n-grams play an important role in measuring similarity, it doesn&#8217;t add
@@ -579,7 +579,7 @@ Jaccard (debatty k=1)           0.64 <span style="color:red">██████�
 <p>Let&#8217;s now swap over to distance measures.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s first explore the range of distance measures we have available to us by looking at the following distance measures:</p>
+<p>Let&#8217;s first explore the range of distance measures we have available to us:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -694,62 +694,37 @@ and so forth.</p>
 could relate to. Once you know the size of the hidden word,
 the distance indirectly gives you the number of correct letters
 (which is something wordle players are used to - just here we don&#8217;t know
-which ares are correct).</p>
+which specific letters are correct).</p>
 </div>
 <div class="paragraph">
 <p>We also thought about Damerau-Levenshtein. It allows transposition of adjacent
 characters and, while that adds value in most spell-checking scenarios,
-for our game it might be harder to keep visualize what the distance measure
-might mean with that additional possible change.</p>
+for our game it might be harder to conceptualise what the distance measure
+means with that additional possible change.</p>
 </div>
 <div class="paragraph">
 <p><span class="fuchsia">So, we&#8217;ll use the standard Levenshtein distance in the game.</span></p>
 </div>
 <div class="paragraph">
-<p>We could continue reasoning in this way about the other measures,
-but we&#8217;ll jump to our solution, and try to give you examples of why
-we think they are useful. <span class="fuchsia">We added Hamming distance and LongestCommonSubsequence</span>
-(similarity measure not a distance measure) to our list.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s look at some examples to highlight our thinking.</p>
-</div>
-<div class="paragraph">
-<p>Let&#8217;s look at some examples for hamming distance. Consider these results:</p>
+<p>The last measure added to our list was the longest common subsequence. Let&#8217;s look at some examples to highlight our thinking as to why:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>cat vs dog: LongestCommonSubsequence (0) Hamming (3) Levenshtein (3)
-cow vs bull: LongestCommonSubsequence (0) Hamming (-) Levenshtein (4)</pre>
+<pre>bat vs tab: LongestCommonSubsequence (1), Jaccard (3/3)
+back vs buck: LongestCommonSubsequence (3) Jaccard (3/5)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>For <code>cat</code> vs <code>dog</code>, the LCS value tells us we didn&#8217;t have any correct letters in our guess.
-We&#8217;d have at least an LCS value of 1 if we had one correct character somewhere.
-The fact that Hamming is now 3, means that the hidden word (like our guess) must
-have 3 letters in it - since we can substitute 3 times. The Levenshtein value confirms this.</p>
+<p>For <code>bat</code> vs <code>tab</code>, the Jaccard similarity of 100% tells us that the guess contains exactly all the (distinct) letters of the hidden word.
+The LCS value of 1 tells us that no two letters appear in the correct order. The only
+way this is possible is if the letters appear in reverse order.</p>
 </div>
 <div class="paragraph">
-<p>For <code>cow</code> vs <code>bull</code>, because Hamming didn&#8217;t return a result we know that the guess and
-hidden word are different sizes (remember it&#8217;s an algorithm that requires the sizes to be the same).
-We also know that our guess also has no correct letters. But the Levenshtein value of 4
-tells us less in this case. If <code>cow</code> was our guess, the hidden word could be <code>bull</code>
-or <code>cowbell</code>. We do know that the size of the hidden word is between 4 and 7.</p>
+<p>For <code>back</code> vs <code>buck</code>, the LCS of 3 combined with the Jaccard of 3/5 tells us that the three shared letters
+also appear in the same order in both the guess and hidden words.</p>
 </div>
 <div class="paragraph">
-<p>Consider now this example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>grounds vs aground: LongestCommonSubsequence (6) Hamming(7) Levenshtein(2)</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>The fact that Hamming returned 7 means that our guess has the correct number of letters.
-The fact that the LCS value was 6 means that there is one spurious letter in our guess.
-If the spurious letter was somewhere in the middle of our guess, then Hamming shouldn&#8217;t
-show that all letters are incorrect. Hence, we know that the spurious letter is the first
-or last. The Levenshtein value confirms this (one insertion at one end and one delete at one end).</p>
+<p><span class="fuchsia">We&#8217;ll use the LongestCommonSubsequence distance in the game to capture some ordering information.</span></p>
 </div>
 </div>
 </div>
