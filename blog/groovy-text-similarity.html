@@ -831,7 +831,8 @@ hippo|hippopotamus  50%            40%            40%
 <div class="sectionbody">
 <div class="paragraph">
 <p>Rather than finding similarity based on a word&#8217;s individual letters, or phonetic mappings,
-<em>machine learning</em>/<em>deep learning</em> tries to relate words with similar semantic meaning. The approach maps each word (or phrase) in n-dimensional space (called a <em>word vector</em> or <em>word embedding</em>).
+<em>machine learning</em> and <em>deep learning</em> try to relate words with similar semantic meaning.
+The approach maps each word (or phrase) in n-dimensional space (called a <em>word vector</em> or <em>word embedding</em>).
 Related words tend to cluster in similar positions within that space.
 Typically rule-based, statistical, or neural-based approaches are used to perform the embedding
 and distance measures like <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a>
@@ -880,16 +881,18 @@ and can then call methods like <code>similarity</code> and <code>wordsNearest</c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var path = Paths.get(ConceptNet.classLoader.getResource('glove-wiki-gigaword-300.bin').toURI()).toFile()
+<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'glove-wiki-gigaword-300.bin'
+var path = Paths.get(ConceptNet.classLoader.getResource(modelName).toURI()).toFile()
 Word2Vec model = WordVectorSerializer.readWord2VecModel(path)
 String[] words = ['bull', 'calf', 'bovine', 'cattle', 'livestock', 'horse']
 println """GloVe similarity to cow: ${
     words
         .collectEntries { [it, model.similarity('cow', it)] }
         .sort { -it.value }
-        .collectValues{ sprintf '%4.2f', it }
-}"""
-println "Nearest words in vocab: " + model.wordsNearest('cow', 4)</code></pre>
+        .collectValues('%4.2f'::formatted)
+}
+Nearest words in vocab: ${model.wordsNearest('cow', 4)}
+"""</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -905,11 +908,19 @@ Nearest words in vocab: [cows, mad, bovine, cattle]</pre>
 <div class="sect2">
 <h3 id="_fasttext">FastText</h3>
 <div class="paragraph">
-<p>We can swap to a <a href="https://fasttext.cc/">FastText</a> model. We used [this model] which has
+<p>We can swap to a <a href="https://fasttext.cc/">FastText</a> model, simply by switching to that model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'fasttext-wiki-news-subwords-300.bin'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We used <a href="https://huggingface.co/fse/fasttext-wiki-news-subwords-300">this model</a> which has
 1 million word vectors trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).</p>
 </div>
 <div class="paragraph">
-<p>It has this output:</p>
+<p>When run with the FastText model, the script has this output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -917,121 +928,38 @@ Nearest words in vocab: [cows, mad, bovine, cattle]</pre>
 Nearest words in vocab: [cows, goat, pig, bovine]</pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_conceptnet">ConceptNet</h3>
 <div class="paragraph">
-<p>Using DJL with PyTorch and the Angle model:</p>
+<p>Similarly, we can switch to a ConceptNet model through a change of the model name.
+This model also supports multiple languages and incorporates the language used into terms, e.g. for English,
+we use "/c/en/cow" instead of "cow":</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>    cow
-bovine (0.86)
-bull (0.73)
-Bovines convert grass to milk (0.60)
-hay (0.59)
-Bulls consume hay (0.56)
-
-    cat
-kitten (0.82)
-bull (0.63)
-bovine (0.60)
-One two three (0.59)
-hay (0.55)
-
-    dog
-bull (0.69)
-bovine (0.68)
-kitten (0.58)
-Dogs play in the grass (0.58)
-Dachshunds are delightful (0.55)
-
-    grass
-The grass is green (0.83)
-hay (0.68)
-Dogs play in the grass (0.65)
-Bovines convert grass to milk (0.61)
-Bulls trample grass (0.59)
-
-    Cows eat grass
-Bovines convert grass to milk (0.80)
-Bulls consume hay (0.69)
-Bulls trample grass (0.68)
-Dogs play in the grass (0.65)
-bovine (0.62)
-
-    Poodles are cute
-Dachshunds are delightful (0.63)
-Dogs play in the grass (0.56)
-bovine (0.49)
-The grass is green (0.44)
-kitten (0.44)
-
-    The water is turquoise
-The sea is blue (0.72)
-The sky is blue (0.65)
-The grass is green (0.53)
-One two three (0.43)
-bovine (0.39)</pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'conceptnet-numberbatch-17-06-300.bin'
+...
+println """ConceptNet similarity to /c/en/cow: ${
+    words
+        .collectEntries { ["/c/en/$it", model.similarity('/c/en/cow', "/c/en/$it")] }
+        .sort { -it.value }
+        .collectValues('%4.2f'::formatted)
+}
+Nearest words in vocab: ${model.wordsNearest('/c/en/cow', 4)}
+"""</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>Using DJL with Tensorflow and the UAE model:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>    cow
-bovine (0.72)
-bull (0.57)
-Bulls consume hay (0.46)
-hay (0.45)
-kitten (0.44)
-
-    cat
-kitten (0.75)
-bull (0.35)
-hay (0.31)
-bovine (0.26)
-Dogs play in the grass (0.22)
-
-    dog
-kitten (0.54)
-Dogs play in the grass (0.45)
-bull (0.39)
-hay (0.35)
-Dachshunds are delightful (0.27)
-
-    grass
-The grass is green (0.61)
-Bulls trample grass (0.56)
-Dogs play in the grass (0.52)
-hay (0.51)
-Bulls consume hay (0.47)
-
-    Cows eat grass
-Bovines convert grass to milk (0.60)
-Bulls trample grass (0.58)
-Dogs play in the grass (0.56)
-Bulls consume hay (0.53)
-bovine (0.44)
-
-    Poodles are cute
-Dachshunds are delightful (0.54)
-Dogs play in the grass (0.27)
-Bulls consume hay (0.19)
-bovine (0.16)
-Bulls trample grass (0.15)
-
-    The water is turquoise
-The sea is blue (0.56)
-The grass is green (0.39)
-The sky is blue (0.38)
-kitten (0.17)
-One two three (0.17)</pre>
+<pre>ConceptNet similarity to /c/en/cow: [/c/en/bovine:0.77, /c/en/cattle:0.77, /c/en/livestock:0.63, /c/en/bull:0.54, /c/en/calf:0.53, /c/en/horse:0.50]
+Nearest words in vocab: [/c/ast/vaca, /c/be/карова, /c/ur/گای, /c/gv/booa]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/AnimalSemanticSimilarity.png" alt="AnimalSemanticSimilarity"></span></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/AnimalSemanticMeaningPcaBubblePlot.png" alt="AnimalSemanticMeaningPcaBubblePlot"></span></p>
+<p>There are benefits and costs with using a multilingual model. The model itself is bigger and takes longer to load.
+It will typically need more memory to use, but it does allow us to consider multilingual options if we wanted to
+as the following results show:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1104,6 +1032,135 @@ One two three (0.17)</pre>
                /c/fr/taureau  ██▏</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>We won&#8217;t use this feature for our game, but it would be a great thing to add
+if you speak multiple languages or if you were learning a new language.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_angle">AnglE</h3>
+<div class="paragraph">
+<p>Using DJL with PyTorch and the AnglE model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    cow
+bovine (0.86)
+bull (0.73)
+Bovines convert grass to milk (0.60)
+hay (0.59)
+Bulls consume hay (0.56)
+
+    cat
+kitten (0.82)
+bull (0.63)
+bovine (0.60)
+One two three (0.59)
+hay (0.55)
+
+    dog
+bull (0.69)
+bovine (0.68)
+kitten (0.58)
+Dogs play in the grass (0.58)
+Dachshunds are delightful (0.55)
+
+    grass
+The grass is green (0.83)
+hay (0.68)
+Dogs play in the grass (0.65)
+Bovines convert grass to milk (0.61)
+Bulls trample grass (0.59)
+
+    Cows eat grass
+Bovines convert grass to milk (0.80)
+Bulls consume hay (0.69)
+Bulls trample grass (0.68)
+Dogs play in the grass (0.65)
+bovine (0.62)
+
+    Poodles are cute
+Dachshunds are delightful (0.63)
+Dogs play in the grass (0.56)
+bovine (0.49)
+The grass is green (0.44)
+kitten (0.44)
+
+    The water is turquoise
+The sea is blue (0.72)
+The sky is blue (0.65)
+The grass is green (0.53)
+One two three (0.43)
+bovine (0.39)</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_uae">UAE</h3>
+<div class="paragraph">
+<p>Using DJL with Tensorflow and the UAE model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    cow
+bovine (0.72)
+bull (0.57)
+Bulls consume hay (0.46)
+hay (0.45)
+kitten (0.44)
+
+    cat
+kitten (0.75)
+bull (0.35)
+hay (0.31)
+bovine (0.26)
+Dogs play in the grass (0.22)
+
+    dog
+kitten (0.54)
+Dogs play in the grass (0.45)
+bull (0.39)
+hay (0.35)
+Dachshunds are delightful (0.27)
+
+    grass
+The grass is green (0.61)
+Bulls trample grass (0.56)
+Dogs play in the grass (0.52)
+hay (0.51)
+Bulls consume hay (0.47)
+
+    Cows eat grass
+Bovines convert grass to milk (0.60)
+Bulls trample grass (0.58)
+Dogs play in the grass (0.56)
+Bulls consume hay (0.53)
+bovine (0.44)
+
+    Poodles are cute
+Dachshunds are delightful (0.54)
+Dogs play in the grass (0.27)
+Bulls consume hay (0.19)
+bovine (0.16)
+Bulls trample grass (0.15)
+
+    The water is turquoise
+The sea is blue (0.56)
+The grass is green (0.39)
+The sky is blue (0.38)
+kitten (0.17)
+One two three (0.17)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/AnimalSemanticSimilarity.png" alt="AnimalSemanticSimilarity"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/AnimalSemanticMeaningPcaBubblePlot.png" alt="AnimalSemanticMeaningPcaBubblePlot"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_comparing_algorithm_choices">Comparing Algorithm Choices</h3>
 <div class="listingblock">
 <div class="content">
 <pre>Algorithm       angle                use                  conceptnet           glove                fasttext
@@ -1303,7 +1360,7 @@ a kind of food. It&#8217;s a 50/50 guess. Let&#8217;s try the first.</p>
 Guess the hidden word (turn 4): budding
 LongestCommonSubsequence       6
 Levenshtein                    Distance: 1, Insert: 0, Delete: 0, Substitute: 1
-Jaccard                        71%  (5/7)
+Jaccard                        71%
 JaroWinkler                    PREFIX 90% / SUFFIX 96%
 Phonetic                       Metaphone=BTNK 79% / Soundex=B352 75%
 Meaning                        Angle 52% / Use 35% / ConceptNet 2% / GloVe 4% / FastText 25%</pre>
@@ -1321,7 +1378,7 @@ Our other guess of pudding sounds right. Let&#8217;s try it.</p>
 Guess the hidden word (turn 5): pudding
 LongestCommonSubsequence       7
 Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
-Jaccard                        100%  (6/6)
+Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=PTNK 100% / Soundex=P352 100%
 Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
@@ -1338,7 +1395,7 @@ Congratulations, you guessed correctly!</pre>
 Guess the hidden word (turn 1): bail
 LongestCommonSubsequence       1
 Levenshtein                    Distance: 7, Insert: 4, Delete: 0, Substitute: 3
-Jaccard                        22%  (2/9) 2 / 9
+Jaccard                        22%
 JaroWinkler                    PREFIX 42% / SUFFIX 46%
 Phonetic                       Metaphone=BL 38% / Soundex=B400 25%
 Meaning                        Angle 46% / Use 40% / ConceptNet 0% / GloVe 0% / FastText 31%</pre>
@@ -1363,7 +1420,7 @@ Meaning                        Angle 46% / Use 40% / ConceptNet 0% / GloVe 0% / 
 Guess the hidden word (turn 2): leg
 LongestCommonSubsequence       2
 Levenshtein                    Distance: 6, Insert: 5, Delete: 0, Substitute: 1
-Jaccard                        25%  (2/8) 1 / 4
+Jaccard                        25%
 JaroWinkler                    PREFIX 47% / SUFFIX 0%
 Phonetic                       Metaphone=LK 38% / Soundex=L200 0%
 Meaning                        Angle 50% / Use 18% / ConceptNet 11% / GloVe 13% / FastText 37%</pre>
@@ -1395,7 +1452,7 @@ encoded to either an 'L' or 'K'.</p>
 Guess the hidden word (turn 3): languish
 LongestCommonSubsequence       2
 Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
-Jaccard                        15%  (2/13) 2 / 13
+Jaccard                        15%
 JaroWinkler                    PREFIX 50% / SUFFIX 50%
 Phonetic                       Metaphone=LNKX 34% / Soundex=L522 0%
 Meaning                        Angle 46% / Use 12% / ConceptNet -11% / GloVe -4% / FastText 25%</pre>
@@ -1417,7 +1474,7 @@ Meaning                        Angle 46% / Use 12% / ConceptNet -11% / GloVe -4%
 Guess the hidden word (turn 4): election
 LongestCommonSubsequence       5
 Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
-Jaccard                        40%  (4/10) 2 / 5
+Jaccard                        40%
 JaroWinkler                    PREFIX 83% / SUFFIX 75%
 Phonetic                       Metaphone=ELKXN 50% / Soundex=E423 75%
 Meaning                        Angle 47% / Use 13% / ConceptNet -5% / GloVe -7% / FastText 26%</pre>
@@ -1448,7 +1505,7 @@ Meaning                        Angle 47% / Use 13% / ConceptNet -5% / GloVe -7% 
 Guess the hidden word (turn 5): elevator
 LongestCommonSubsequence       8
 Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
-Jaccard                        100%  (7/7) 1
+Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
 Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
@@ -1499,7 +1556,7 @@ we aren&#8217;t duplicating a letter yet, but we just want to narrow down the po
 Guess the hidden word (turn 2): coarse
 LongestCommonSubsequence       3
 Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
-Jaccard                        57%  (4/7) 4 / 7
+Jaccard                        57%
 JaroWinkler                    PREFIX 67% / SUFFIX 67%
 Phonetic                       Metaphone=KRS 74% / Soundex=C620 75%
 Meaning                        Angle 51% / Use 12% / ConceptNet 5% / GloVe 23% / FastText 26%</pre>
@@ -1530,7 +1587,7 @@ and we&#8217;ll duplicate one letter, S.</p>
 Guess the hidden word (turn 3): roasts
 LongestCommonSubsequence       3
 Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
-Jaccard                        67%  (4/6) 2 / 3
+Jaccard                        67%
 JaroWinkler                    PREFIX 56% / SUFFIX 56%
 Phonetic                       Metaphone=RSTS 61% / Soundex=R232 25%
 Meaning                        Angle 54% / Use 25% / ConceptNet 18% / GloVe 18% / FastText 31%</pre>
@@ -1560,7 +1617,7 @@ Maybe the hidden word is related to roasts.</p>
 Guess the hidden word (turn 4): carrot
 LongestCommonSubsequence       6
 Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
-Jaccard                        100%  (5/5) 1
+Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=KRT 100% / Soundex=C630 100%
 Meaning                        Angle 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
@@ -1570,6 +1627,53 @@ Congratulations, you guessed correctly!</pre>
 </div>
 <div class="paragraph">
 <p>Success!</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hints">Hints</h3>
+<div class="paragraph">
+<p>Some word guessing games allow the player to ask for hints.
+For our game, we decided to provide hints at regular intervals,
+giving stronger hints as the game progressed. We used the
+20 nearest similar words as returned by the <code>wordsNearest</code> method
+for the three word2vec models and then selected a subset.</p>
+</div>
+<div class="paragraph">
+<p>Although not needed in the games we have shown,
+here are what the hints would have been for Round 3.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>After round 8: root_vegetable, daucus
+After round 16: diced, cauliflower, cucumber
+After round 24: celery, onion, sticks, zucchini</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_further_evolution">Further Evolution</h3>
+<div class="paragraph">
+<p>Our goal was to introduce you to a number of algorithms that you might use in a word game,
+rather than create a fully-polished game. If we were going to progress such a game, one of the
+challenges would be how to represent the large number of parameters to the user after each round.
+We could work on some pretty bar-charts like in <a href="https://semantle.com/">Semantle</a>:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/semantle.png" alt="semantle game" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>And we could add a prettier representation of available letters, e.g. greyed out keys on a keyboard, like in <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/wordle.png" alt="world game" width="30%"></span></p>
+</div>
+<div class="paragraph">
+<p>But we might also just use a bubble-chart, like we showed earlier,
+and let datascience condense the results for us. We might end up with
+a chart something like this (some guesses and hints for Round 3 shown):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/gameBubble.png" alt="Game BubleChart" width="70%"></span></p>
 </div>
 </div>
 </div>
