@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -68,6 +68,8 @@
         </div><br/><span>Published: 2025-02-18 08:30PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
 <div class="paragraph">
 <p>Let&#8217;s build a wordle-like word guessing game. But instead of telling you how many
 correct and misplaced letters, we&#8217;ll give you more hints, but slightly less obvious
@@ -93,6 +95,8 @@ and so forth.</p>
 </li>
 </ul>
 </div>
+</blockquote>
+</div>
 <div class="paragraph">
 <p>So, we&#8217;re thinking of a game that is a cross between other games.
 Guessing letters of a word like
@@ -110,7 +114,8 @@ It also will incorporate some of the ideas behind word-guessing games like
 <div class="ulist">
 <ul>
 <li>
-<p>Show off the latest releases from Apache Commons Text and Apache Commons Codec</p>
+<p>Show off the latest releases from <a href="https://commons.apache.org/proper/commons-text/">Apache Commons Text</a> and
+<a href="https://commons.apache.org/proper/commons-codec/">Apache Commons Codec</a></p>
 </li>
 <li>
 <p>Give you insight into string-metric similarity algorithms</p>
@@ -119,10 +124,10 @@ It also will incorporate some of the ideas behind word-guessing games like
 <p>Give you insight into phonetic similarity algorithms</p>
 </li>
 <li>
-<p>Give you insight into semantic textual similarity (STS) algorithms powered by machine learning and deep neural networks using technologies like PyTorch, Tensorflow, and Word2vec</p>
+<p>Give you insight into semantic textual similarity (STS) algorithms powered by machine learning and deep neural networks using frameworks like PyTorch, TensorFlow, and Word2vec, and technologies like large language models (LLMs) and BERT</p>
 </li>
 <li>
-<p>Highlight how easy it is to play with the above technologies using Apache Groovy</p>
+<p>Highlight how easy it is to play with the above technologies using <a href="https://groovy.apache.org">Apache Groovy</a></p>
 </li>
 </ul>
 </div>
@@ -244,7 +249,7 @@ in more general ways.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for GloVe, ConceptNet, and FastText models</p>
+<p><code>org.deeplearning4j:deeplearning4j-nlp</code> for GloVe, ConceptNet, and fastText models</p>
 </li>
 <li>
 <p><code>ai.djl</code> with Pytorch for a universal-sentence-encoder model and Tensorflow with an AnglE model</p>
@@ -853,7 +858,7 @@ are applicable in all contexts (very roughly).
 We&#8217;ll look at three models which use this approach.
 <a href="https://en.wikipedia.org/wiki/Word2vec">Word2vec</a> by Google Research,
 <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> by Stanford NLP, and
-<a href="https://fasttext.cc/">FastText</a> by Facebook Research.
+<a href="https://fasttext.cc/">fastText</a> by Facebook Research.
 We&#8217;ll use
 <a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a>
 to load and use these models.</p>
@@ -878,7 +883,7 @@ We&#8217;ll use the <a href="https://djl.ai/">Deep Java Library</a> to load and 
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_fasttext">FastText</h3>
+<h3 id="_fasttext">fastText</h3>
 <div class="paragraph">
 <p>Many Word2Vec libraries can read and write models to a standard file format based on the original <a href="https://github.com/tmikolov/word2vec">Google implementation</a>.</p>
 </div>
@@ -893,11 +898,11 @@ glove_vectors.save_word2vec_format("fasttext-wiki-news-subwords-300.bin", binary
 </div>
 </div>
 <div class="paragraph">
-<p><a href="https://huggingface.co/fse/fasttext-wiki-news-subwords-300">This model</a> has
+<p>This <a href="https://huggingface.co/fse/fasttext-wiki-news-subwords-300">fastText model</a> has
 1 million word vectors trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).</p>
 </div>
 <div class="paragraph">
-<p>We simply serialize the <a href="https://fasttext.cc/">FastText</a> model into our Word2Vec representation,
+<p>We simply serialize the <a href="https://fasttext.cc/">fastText</a> model into our Word2Vec representation,
 and can then call methods like <code>similarity</code> and <code>wordsNearest</code> as shown here:</p>
 </div>
 <div class="listingblock">
@@ -906,7 +911,7 @@ and can then call methods like <code>similarity</code> and <code>wordsNearest</c
 var path = Paths.get(ConceptNet.classLoader.getResource(modelName).toURI()).toFile()
 Word2Vec model = WordVectorSerializer.readWord2VecModel(path)
 String[] words = ['bull', 'calf', 'bovine', 'cattle', 'livestock', 'horse']
-println """GloVe similarity to cow: ${
+println """fastText similarity to cow: ${
     words
         .collectEntries { [it, model.similarity('cow', it)] }
         .sort { -it.value }
@@ -921,7 +926,7 @@ Nearest words in vocab: ${model.wordsNearest('cow', 4)}
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>FastText similarity to cow: [bovine:0.72, cattle:0.70, calf:0.67, bull:0.67, livestock:0.61, horse:0.60]
+<pre>fastText similarity to cow: [bovine:0.72, cattle:0.70, calf:0.67, bull:0.67, livestock:0.61, horse:0.60]
 Nearest words in vocab: [cows, goat, pig, bovine]</pre>
 </div>
 </div>
@@ -1461,7 +1466,7 @@ Levenshtein                    Distance: 10, Insert: 0, Delete: 3, Substitute: 7
 Jaccard                        0%
 JaroWinkler                    PREFIX 0% / SUFFIX 0%
 Phonetic                       Metaphone=AFTRXK 47% / Soundex=A136 0%
-Meaning                        AnglE 45% / Use 21% / ConceptNet 2% / GloVe -4% / FastText 19%</pre>
+Meaning                        AnglE 45% / Use 21% / ConceptNet 2% / GloVe -4% / fastText 19%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1501,7 +1506,7 @@ Levenshtein                    Distance: 6, Insert: 2, Delete: 0, Substitute: 4
 Jaccard                        22%
 JaroWinkler                    PREFIX 56% / SUFFIX 45%
 Phonetic                       Metaphone=FRT 39% / Soundex=F630 0%
-Meaning                        AnglE 64% / Use 41% / ConceptNet 37% / GloVe 31% / FastText 44%</pre>
+Meaning                        AnglE 64% / Use 41% / ConceptNet 37% / GloVe 31% / fastText 44%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1541,7 +1546,7 @@ Levenshtein                    Distance: 1, Insert: 0, Delete: 0, Substitute: 1
 Jaccard                        71%
 JaroWinkler                    PREFIX 90% / SUFFIX 96%
 Phonetic                       Metaphone=BTNK 79% / Soundex=B352 75%
-Meaning                        AnglE 52% / Use 35% / ConceptNet 2% / GloVe 4% / FastText 25%</pre>
+Meaning                        AnglE 52% / Use 35% / ConceptNet 2% / GloVe 4% / fastText 25%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1559,7 +1564,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=PTNK 100% / Soundex=P352 100%
-Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
+Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1576,7 +1581,7 @@ Levenshtein                    Distance: 7, Insert: 4, Delete: 0, Substitute: 3
 Jaccard                        22%
 JaroWinkler                    PREFIX 42% / SUFFIX 46%
 Phonetic                       Metaphone=BL 38% / Soundex=B400 25%
-Meaning                        AnglE 46% / Use 40% / ConceptNet 0% / GloVe 0% / FastText 31%</pre>
+Meaning                        AnglE 46% / Use 40% / ConceptNet 0% / GloVe 0% / fastText 31%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1601,7 +1606,7 @@ Levenshtein                    Distance: 6, Insert: 5, Delete: 0, Substitute: 1
 Jaccard                        25%
 JaroWinkler                    PREFIX 47% / SUFFIX 0%
 Phonetic                       Metaphone=LK 38% / Soundex=L200 0%
-Meaning                        AnglE 50% / Use 18% / ConceptNet 11% / GloVe 13% / FastText 37%</pre>
+Meaning                        AnglE 50% / Use 18% / ConceptNet 11% / GloVe 13% / fastText 37%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1633,7 +1638,7 @@ Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
 Jaccard                        15%
 JaroWinkler                    PREFIX 50% / SUFFIX 50%
 Phonetic                       Metaphone=LNKX 34% / Soundex=L522 0%
-Meaning                        AnglE 46% / Use 12% / ConceptNet -11% / GloVe -4% / FastText 25%</pre>
+Meaning                        AnglE 46% / Use 12% / ConceptNet -11% / GloVe -4% / fastText 25%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1655,7 +1660,7 @@ Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
 Jaccard                        40%
 JaroWinkler                    PREFIX 83% / SUFFIX 75%
 Phonetic                       Metaphone=ELKXN 50% / Soundex=E423 75%
-Meaning                        AnglE 47% / Use 13% / ConceptNet -5% / GloVe -7% / FastText 26%</pre>
+Meaning                        AnglE 47% / Use 13% / ConceptNet -5% / GloVe -7% / fastText 26%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1686,7 +1691,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
-Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
+Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1703,7 +1708,7 @@ Levenshtein                    Distance: 8, Insert: 0, Delete: 4, Substitute: 4
 Jaccard                        50%
 JaroWinkler                    PREFIX 61% / SUFFIX 49%
 Phonetic                       Metaphone=AFTRXK 33% / Soundex=A136 25%
-Meaning                        AnglE 44% / Use 11% / ConceptNet -7% / GloVe 1% / FastText 15%</pre>
+Meaning                        AnglE 44% / Use 11% / ConceptNet -7% / GloVe 1% / fastText 15%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1737,7 +1742,7 @@ Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
 Jaccard                        57%
 JaroWinkler                    PREFIX 67% / SUFFIX 67%
 Phonetic                       Metaphone=KRS 74% / Soundex=C620 75%
-Meaning                        AnglE 51% / Use 12% / ConceptNet 5% / GloVe 23% / FastText 26%</pre>
+Meaning                        AnglE 51% / Use 12% / ConceptNet 5% / GloVe 23% / fastText 26%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1768,7 +1773,7 @@ Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
 Jaccard                        67%
 JaroWinkler                    PREFIX 56% / SUFFIX 56%
 Phonetic                       Metaphone=RSTS 61% / Soundex=R232 25%
-Meaning                        AnglE 54% / Use 25% / ConceptNet 18% / GloVe 18% / FastText 31%</pre>
+Meaning                        AnglE 54% / Use 25% / ConceptNet 18% / GloVe 18% / fastText 31%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1798,7 +1803,7 @@ Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%
 JaroWinkler                    PREFIX 100% / SUFFIX 100%
 Phonetic                       Metaphone=KRT 100% / Soundex=C630 100%
-Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / FastText 100%
+Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1852,6 +1857,10 @@ a chart something like this (some guesses and hints for Round 3 shown):</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/gameBubble.png" alt="Game BubleChart" width="70%"></span></p>
+</div>
+<div class="paragraph">
+<p>But these are just ideas. A production ready game is for another time.
+We hope you have enjoyed playing along and learning a little more about text similarity.</p>
 </div>
 </div>
 </div>
