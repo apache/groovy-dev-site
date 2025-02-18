@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -878,20 +878,31 @@ We&#8217;ll use the <a href="https://djl.ai/">Deep Java Library</a> to load and 
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_glove">GloVe</h3>
+<h3 id="_fasttext">FastText</h3>
 <div class="paragraph">
-<p>The
-<a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a>
-library makes it easy to use <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> models. The <a href="https://huggingface.co/fse/glove-wiki-gigaword-300">model we used</a> is pre-trained on
-2B tweets, 27B tokens, 1.2M vocab, uncased.</p>
+<p>Many Word2Vec libraries can read and write models to a standard file format based on the original <a href="https://github.com/tmikolov/word2vec">Google implementation</a>.</p>
 </div>
 <div class="paragraph">
-<p>We simply serialize the model into our word2vec representation,
+<p>For example, we can download some of the pre-trained models from the <a href="https://radimrehurek.com/gensim/models/word2vec.html">Gensim Python library</a>, convert them to the Word2Vec format, and then open them with <a href="https://deeplearning4j.konduit.ai/deeplearning4j/reference/word2vec-glove-doc2vec">DeepLearning4J</a>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="python">import gensim.downloader
+glove_vectors = gensim.downloader.load('fasttext-wiki-news-subwords-300')
+glove_vectors.save_word2vec_format("fasttext-wiki-news-subwords-300.bin", binary=True)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://huggingface.co/fse/fasttext-wiki-news-subwords-300">This model</a> has
+1 million word vectors trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).</p>
+</div>
+<div class="paragraph">
+<p>We simply serialize the <a href="https://fasttext.cc/">FastText</a> model into our Word2Vec representation,
 and can then call methods like <code>similarity</code> and <code>wordsNearest</code> as shown here:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'glove-wiki-gigaword-300.bin'
+<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'fasttext-wiki-news-subwords-300.bin'
 var path = Paths.get(ConceptNet.classLoader.getResource(modelName).toURI()).toFile()
 Word2Vec model = WordVectorSerializer.readWord2VecModel(path)
 String[] words = ['bull', 'calf', 'bovine', 'cattle', 'livestock', 'horse']
@@ -910,8 +921,8 @@ Nearest words in vocab: ${model.wordsNearest('cow', 4)}
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>GloVe similarity to cow: [bovine:0.67, cattle:0.62, livestock:0.47, calf:0.44, horse:0.42, bull:0.38]
-Nearest words in vocab: [cows, mad, bovine, cattle]</pre>
+<pre>FastText similarity to cow: [bovine:0.72, cattle:0.70, calf:0.67, bull:0.67, livestock:0.61, horse:0.60]
+Nearest words in vocab: [cows, goat, pig, bovine]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -921,34 +932,34 @@ We could use the bar-charts we used previously, or something like a heat-map:</p
 <div class="paragraph">
 <p><span class="image"><img src="img/AnimalSemanticSimilarity.png" alt="animal semantic similarity" width="60%"></span></p>
 </div>
+<div class="paragraph">
+<p>Groupings of similar words can be seen as the larger orange and red regions. We can also quickly check
+that there is a stronger relationship between <code>cow</code> and <code>milk</code> vs <code>cow</code> and <code>water</code>.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_fasttext">FastText</h3>
+<h3 id="_glove">GloVe</h3>
 <div class="paragraph">
-<p>We can swap to a <a href="https://fasttext.cc/">FastText</a> model, simply by switching to that model:</p>
+<p>We can swap to a <a href="https://nlp.stanford.edu/projects/glove/">GloVe</a> model, simply by changing the file we read from:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'fasttext-wiki-news-subwords-300.bin'</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">var modelName = 'glove-wiki-gigaword-300.bin'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We used <a href="https://huggingface.co/fse/fasttext-wiki-news-subwords-300">this model</a> which has
-1 million word vectors trained on Wikipedia 2017, UMBC webbase corpus and statmt.org news dataset (16B tokens).</p>
-</div>
-<div class="paragraph">
-<p>When run with the FastText model, the script has this output:</p>
+<p>With this model, the script has the following output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>FastText similarity to cow: [bovine:0.72, cattle:0.70, calf:0.67, bull:0.67, livestock:0.61, horse:0.60]
-Nearest words in vocab: [cows, goat, pig, bovine]</pre>
+<pre>GloVe similarity to cow: [bovine:0.67, cattle:0.62, livestock:0.47, calf:0.44, horse:0.42, bull:0.38]
+Nearest words in vocab: [cows, mad, bovine, cattle]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Again, we have numerous options to visualise the data returned from this model.
-Instead of look for nearest words or the similarity measure, we could return the actual word embeddings and then visualise
-those using principal component analysis (PCA), as shown here:</p>
+<p>Another way to visualise word embeddings is to display the word vectors as positions in space. However,
+the raw vectors contain far too many dimensions for us mere mortals to comprehend. We can use principal component
+analysis (PCA) to reduce the number of dimensions whilst capturing the most important information as shown here:</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/AnimalSemanticMeaningPcaBubblePlot.png" alt="principal component analysis of animal-related word embeddings" width="75%"></span></p>
