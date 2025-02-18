@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -861,13 +861,18 @@ to load and use these models.</p>
 <p>Context-dependent approaches can provide more accurate matching if the context is
 known, but require more in-depth analysis. For example, if we see "monopoly" we might think of a company with no competition. If we see "money" we might think of currency.
 But if we see those two words together, we immediately switch context to board games.
-We&#8217;ll look at two models which use this approach.
+As another example, the phrases "What is your age?" and "How old are you?" should match highly
+even though individual words like "old" and "age" may only have moderate semantic
+similarity using the word2vec approaches.</p>
+<div class="paragraph">
+<p>We&#8217;ll look at two models which use this approach.
 <a href="https://github.com/SeanLee97/AnglE">Universal AnglE</a> is a model based on BERT/LLM-based
 sentence embeddings and is used in conjunction with <a href="https://pytorch.org/">PyTorch</a>.
 Google&#8217;s <a href="https://www.kaggle.com/models/google/universal-sentence-encoder">Universal Sentence Encoder</a>
 model is trained and optimized for greater-than-word length text, such as sentences, phrases or short paragraphs, and is used in conjunction with
 <a href="https://www.tensorflow.org/">TensorFlow</a>.
 We&#8217;ll use the <a href="https://djl.ai/">Deep Java Library</a> to load and use both of these models on the JDK.</p>
+</div>
 </li>
 </ul>
 </div>
@@ -1066,7 +1071,7 @@ This model has one various state-of-the-art (SOTA) awards in the STS field.</p>
 </div>
 <div class="paragraph">
 <p>Unlike the previous models, AnglE supports conceptual embeddings.
-Therefore, we can feed in phrases not just words and it will match up similar phrases
+Therefore, we can feed in phrases not just words, and it will match up similar phrases
 taking into account the context information about the word usage in that phrase.</p>
 </div>
 <div class="paragraph">
@@ -1171,7 +1176,58 @@ bovine (0.39)</pre>
 <div class="sect2">
 <h3 id="_uae">UAE</h3>
 <div class="paragraph">
-<p>Using DJL with Tensorflow and the UAE model:</p>
+<p>The <a href="https://djl.ai/">Deep Java Library</a>
+also has <a href="https://www.tensorflow.org/[TensorFlow]"><a href="https://pytorch.org/">Tensorflow</a></a> integration
+to load and use the <a href="https://research.google/pubs/universal-sentence-encoder/">USE</a> <a href="https://www.kaggle.com/models/google/universal-sentence-encoder">model</a>.</p>
+</div>
+<div class="paragraph">
+<p>The USE model also supports conceptual embeddings, so we&#8217;ll use the same phrases as we did for AngleE.</p>
+</div>
+<div class="paragraph">
+<p>Here is what the code looks like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">String[] samplePhrases = [
+    'bull', 'bovine', 'kitten', 'hay', 'The sky is blue',
+    'The sea is blue', 'The grass is green', 'One two three',
+    'Bulls consume hay', 'Bovines convert grass to milk',
+    'Dogs play in the grass', 'Bulls trample grass',
+    'Dachshunds are delightful', 'I like cats and dogs']
+
+String[] queries = [
+    'cow', 'cat', 'dog', 'grass', 'Cows eat grass',
+    'Poodles are cute', 'The water is turquoise']
+
+String tensorFlowHub = "https://storage.googleapis.com/tfhub-modules"
+String modelUrl = "$tensorFlowHub/google/universal-sentence-encoder/4.tar.gz"
+var criteria = Criteria.builder()
+    .optApplication(Application.NLP.TEXT_EMBEDDING)
+    .setTypes(String[], float[][])
+    .optModelUrls(modelUrl)
+    .optTranslator(new UseTranslator())
+    .optEngine("TensorFlow")
+    .optProgress(new ProgressBar())
+    .build()
+
+var model = criteria.loadModel()
+var predictor = model.newPredictor()
+var sampleEmbeddings = predictor.predict(samplePhrases)
+
+var queryEmbeddings = predictor.predict(queries)
+queryEmbeddings.eachWithIndex { s, i -&gt;
+    println "\n    ${queries[i]}"
+    sampleEmbeddings
+        .collect { MathUtil.cosineSimilarity(it, s) }
+        .withIndex()
+        .sort { -it.v1 }
+        .take(5)
+        .each { printf '%s (%4.2f)%n', samplePhrases[it.v2], it.v1 }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is the output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1184,17 +1240,17 @@ kitten (0.44)
 
     cat
 kitten (0.75)
+I like cats and dogs (0.39)
 bull (0.35)
 hay (0.31)
 bovine (0.26)
-Dogs play in the grass (0.22)
 
     dog
 kitten (0.54)
 Dogs play in the grass (0.45)
 bull (0.39)
+I like cats and dogs (0.37)
 hay (0.35)
-Dachshunds are delightful (0.27)
 
     grass
 The grass is green (0.61)
@@ -1212,10 +1268,10 @@ bovine (0.44)
 
     Poodles are cute
 Dachshunds are delightful (0.54)
+I like cats and dogs (0.42)
 Dogs play in the grass (0.27)
 Bulls consume hay (0.19)
 bovine (0.16)
-Bulls trample grass (0.15)
 
     The water is turquoise
 The sea is blue (0.56)
@@ -1228,6 +1284,12 @@ One two three (0.17)</pre>
 </div>
 <div class="sect2">
 <h3 id="_comparing_algorithm_choices">Comparing Algorithm Choices</h3>
+<div class="paragraph">
+<p>We have looked at 5 different STS algorithms but which one should we use for our game?</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at the results of some common word for all 5 algorithms:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>Algorithm       angle                use                  conceptnet           glove                fasttext
@@ -1328,6 +1390,33 @@ green         cat       ██████▏    cat       ███▏       hi
               bear      ██████▏    bear      ███▏       milk      ▏          bear      █▏         cow       ███▏
               feline    █████▏     bare      ███▏       bear      ▏          cow       █▏         bear      ███▏</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>All the algorithms do reasonably well at recognizing related words, but here are some observations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Even though the AnglE and USE models could potentially provide more accurate matching due to context,
+the fact that we are using single words means that there is no context.
+So maybe they are overkill for the scenario of our game.</p>
+</li>
+<li>
+<p>The different models have different baselines for what "related" means.
+AnglE for instance seems to hover around the 40-50% region for words that have an "average" semantic relationship.
+ConceptNet stays around 0% for such words and can even go negative.</p>
+</li>
+<li>
+<p>Different models do better in different situations at recognizing similarity, i.e. there is no perfect model
+that seems to always outperform the others.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Looking at these results, if we were doing a production ready game, we&#8217;d just pick ConceptNet, and
+we&#8217;d probably look for an English only model since the multilingual one takes the longest of all 5
+models to load. But given the educational tone of this post, <span class="fuchsia">we&#8217;ll include the semantic similarity
+measure from all 5 models in our game</span>.</p>
 </div>
 </div>
 </div>
