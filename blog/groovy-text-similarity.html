@@ -53,7 +53,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy Text Similarity</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_simple_string_metrics' class='anchor-link'>Simple String Metrics</a></li><li><a href='#_phonetic_algorithms' class='anchor-link'>Phonetic Algorithms</a></li><li><a href='#_going_deeper' class='anchor-link'>Going Deeper</a></li><li><a href='#_playing_the_game' class='anchor-link'>Playing the game</a></li><li><a href='#further_info' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy Text Similarity</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -1006,71 +1006,71 @@ as the following results show:</p>
 <div class="content">
 <pre>Algorithm            conceptnet
 
-               /c/fr/vache    █████████▏
-               /c/de/kuh      █████████▏
-/c/en/cow      /c/en/bovine   ███████▏
-               /c/fr/bovin    ███████▏
-               /c/en/bull     █████▏
+               /c/fr/vache    █████████
+               /c/de/kuh      █████████
+/c/en/cow      /c/en/bovine   ███████
+               /c/fr/bovin    ███████
+               /c/en/bull     █████
 
-               /c/fr/taureau  █████████▏
-               /c/en/cow      █████▏
-/c/en/bull     /c/fr/vache    █████▏
-               /c/de/kuh      █████▏
-               /c/fr/bovin    █████▏
+               /c/fr/taureau  █████████
+               /c/en/cow      █████
+/c/en/bull     /c/fr/vache    █████
+               /c/de/kuh      █████
+               /c/fr/bovin    █████
 
-               /c/de/kuh      █████▏
-               /c/en/cow      █████▏
-/c/en/calf     /c/fr/vache    █████▏
-               /c/en/bovine   █████▏
-               /c/fr/bovin    █████▏
+               /c/de/kuh      █████
+               /c/en/cow      █████
+/c/en/calf     /c/fr/vache    █████
+               /c/en/bovine   █████
+               /c/fr/bovin    █████
 
-               /c/fr/bovin    █████████▏
-               /c/en/cow      ███████▏
-/c/en/bovine   /c/de/kuh      ███████▏
-               /c/fr/vache    ███████▏
-               /c/en/calf     █████▏
+               /c/fr/bovin    █████████
+               /c/en/cow      ███████
+/c/en/bovine   /c/de/kuh      ███████
+               /c/fr/vache    ███████
+               /c/en/calf     █████
 
-               /c/en/bovine   █████████▏
-               /c/fr/vache    ███████▏
-/c/fr/bovin    /c/de/kuh      ███████▏
-               /c/en/cow      ███████▏
-               /c/fr/taureau  █████▏
+               /c/en/bovine   █████████
+               /c/fr/vache    ███████
+/c/fr/bovin    /c/de/kuh      ███████
+               /c/en/cow      ███████
+               /c/fr/taureau  █████
 
-               /c/en/cow      █████████▏
-               /c/de/kuh      █████████▏
-/c/fr/vache    /c/fr/bovin    ███████▏
-               /c/en/bovine   ███████▏
-               /c/fr/taureau  █████▏
+               /c/en/cow      █████████
+               /c/de/kuh      █████████
+/c/fr/vache    /c/fr/bovin    ███████
+               /c/en/bovine   ███████
+               /c/fr/taureau  █████
 
-               /c/en/bull     █████████▏
-               /c/fr/bovin    █████▏
-/c/fr/taureau  /c/fr/vache    █████▏
-               /c/en/cow      █████▏
-               /c/de/kuh      █████▏
+               /c/en/bull     █████████
+               /c/fr/bovin    █████
+/c/fr/taureau  /c/fr/vache    █████
+               /c/en/cow      █████
+               /c/de/kuh      █████
 
-               /c/en/cow      █████████▏
-               /c/fr/vache    █████████▏
-/c/de/kuh      /c/fr/bovin    ███████▏
-               /c/en/bovine   ███████▏
-               /c/en/calf     █████▏
+               /c/en/cow      █████████
+               /c/fr/vache    █████████
+/c/de/kuh      /c/fr/bovin    ███████
+               /c/en/bovine   ███████
+               /c/en/calf     █████
 
-               /c/en/cat      ████████▏
-               /c/de/katze    ████████▏
-/c/en/kitten   /c/en/bull     ██▏
-               /c/en/cow      █▏
-               /c/de/kuh      █▏
+               /c/en/cat      ████████
+               /c/de/katze    ████████
+/c/en/kitten   /c/en/bull     ██
+               /c/en/cow      █
+               /c/de/kuh      █
 
-               /c/de/katze    █████████▏
-               /c/en/kitten   ████████▏
-/c/en/cat      /c/en/bull     ██▏
-               /c/en/cow      ██▏
-               /c/fr/taureau  █▏
+               /c/de/katze    █████████
+               /c/en/kitten   ████████
+/c/en/cat      /c/en/bull     ██
+               /c/en/cow      ██
+               /c/fr/taureau  █
 
-               /c/en/cat      █████████▏
-               /c/en/kitten   ████████▏
-/c/de/katze    /c/en/bull     ██▏
-               /c/de/kuh      ██▏
-               /c/fr/taureau  ██▏</pre>
+               /c/en/cat      █████████
+               /c/en/kitten   ████████
+/c/de/katze    /c/en/bull     ██
+               /c/de/kuh      ██
+               /c/fr/taureau  ██</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1461,12 +1461,12 @@ It has some common vowels and consonants. Let&#8217;s start with that.</p>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 1): aftershock
-LongestCommonSubsequence       0
-Levenshtein                    Distance: 10, Insert: 0, Delete: 3, Substitute: 7
-Jaccard                        0%
-JaroWinkler                    PREFIX 0% / SUFFIX 0%
-Phonetic                       Metaphone=AFTRXK 47% / Soundex=A136 0%
-Meaning                        AnglE 45% / Use 21% / ConceptNet 2% / GloVe -4% / fastText 19%</pre>
+LongestCommonSubsequence     0
+Levenshtein                  Distance: 10, Insert: 0, Delete: 3, Substitute: 7
+Jaccard                      0%
+JaroWinkler                  PREFIX 0% / SUFFIX 0%
+Phonetic                     Metaphone=AFTRXK 47% / Soundex=A136 0%
+Meaning                      AnglE 45% / Use 21% / ConceptNet 2% / GloVe -4% / fastText 19%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1501,12 +1501,12 @@ what we might learn about the vowels.</p>
 <div class="content">
 <pre>Possible letters: b d g i j l m n p q u v w x y z
 Guess the hidden word (turn 2): fruit
-LongestCommonSubsequence       2
-Levenshtein                    Distance: 6, Insert: 2, Delete: 0, Substitute: 4
-Jaccard                        22%
-JaroWinkler                    PREFIX 56% / SUFFIX 45%
-Phonetic                       Metaphone=FRT 39% / Soundex=F630 0%
-Meaning                        AnglE 64% / Use 41% / ConceptNet 37% / GloVe 31% / fastText 44%</pre>
+LongestCommonSubsequence     2
+Levenshtein                  Distance: 6, Insert: 2, Delete: 0, Substitute: 4
+Jaccard                      22%
+JaroWinkler                  PREFIX 56% / SUFFIX 45%
+Phonetic                     Metaphone=FRT 39% / Soundex=F630 0%
+Meaning                      AnglE 64% / Use 41% / ConceptNet 37% / GloVe 31% / fastText 44%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1540,13 +1540,13 @@ a kind of food. It&#8217;s a 50/50 guess. Let&#8217;s try the first.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
-Guess the hidden word (turn 4): budding
-LongestCommonSubsequence       6
-Levenshtein                    Distance: 1, Insert: 0, Delete: 0, Substitute: 1
-Jaccard                        71%
-JaroWinkler                    PREFIX 90% / SUFFIX 96%
-Phonetic                       Metaphone=BTNK 79% / Soundex=B352 75%
-Meaning                        AnglE 52% / Use 35% / ConceptNet 2% / GloVe 4% / fastText 25%</pre>
+Guess the hidden word (turn 3): budding
+LongestCommonSubsequence     6
+Levenshtein                  Distance: 1, Insert: 0, Delete: 0, Substitute: 1
+Jaccard                      71%
+JaroWinkler                  PREFIX 90% / SUFFIX 96%
+Phonetic                     Metaphone=BTNK 79% / Soundex=B352 75%
+Meaning                      AnglE 52% / Use 35% / ConceptNet 2% / GloVe 4% / fastText 25%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1558,7 +1558,7 @@ Our other guess of pudding sounds right. Let&#8217;s try it.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
-Guess the hidden word (turn 5): pudding
+Guess the hidden word (turn 4): pudding
 LongestCommonSubsequence       7
 Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
 Jaccard                        100%
@@ -1576,12 +1576,12 @@ Congratulations, you guessed correctly!</pre>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 1): bail
-LongestCommonSubsequence       1
-Levenshtein                    Distance: 7, Insert: 4, Delete: 0, Substitute: 3
-Jaccard                        22%
-JaroWinkler                    PREFIX 42% / SUFFIX 46%
-Phonetic                       Metaphone=BL 38% / Soundex=B400 25%
-Meaning                        AnglE 46% / Use 40% / ConceptNet 0% / GloVe 0% / fastText 31%</pre>
+LongestCommonSubsequence     1
+Levenshtein                  Distance: 7, Insert: 4, Delete: 0, Substitute: 3
+Jaccard                      22%
+JaroWinkler                  PREFIX 42% / SUFFIX 46%
+Phonetic                     Metaphone=BL 38% / Soundex=B400 25%
+Meaning                      AnglE 46% / Use 40% / ConceptNet 0% / GloVe 0% / fastText 31%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1601,12 +1601,12 @@ Meaning                        AnglE 46% / Use 40% / ConceptNet 0% / GloVe 0% / 
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 2): leg
-LongestCommonSubsequence       2
-Levenshtein                    Distance: 6, Insert: 5, Delete: 0, Substitute: 1
-Jaccard                        25%
-JaroWinkler                    PREFIX 47% / SUFFIX 0%
-Phonetic                       Metaphone=LK 38% / Soundex=L200 0%
-Meaning                        AnglE 50% / Use 18% / ConceptNet 11% / GloVe 13% / fastText 37%</pre>
+LongestCommonSubsequence     2
+Levenshtein                  Distance: 6, Insert: 5, Delete: 0, Substitute: 1
+Jaccard                      25%
+JaroWinkler                  PREFIX 47% / SUFFIX 0%
+Phonetic                     Metaphone=LK 38% / Soundex=L200 0%
+Meaning                      AnglE 50% / Use 18% / ConceptNet 11% / GloVe 13% / fastText 37%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1633,12 +1633,12 @@ encoded to either an 'L' or 'K'.</p>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 3): languish
-LongestCommonSubsequence       2
-Levenshtein                    Distance: 8, Insert: 0, Delete: 0, Substitute: 8
-Jaccard                        15%
-JaroWinkler                    PREFIX 50% / SUFFIX 50%
-Phonetic                       Metaphone=LNKX 34% / Soundex=L522 0%
-Meaning                        AnglE 46% / Use 12% / ConceptNet -11% / GloVe -4% / fastText 25%</pre>
+LongestCommonSubsequence     2
+Levenshtein                  Distance: 8, Insert: 0, Delete: 0, Substitute: 8
+Jaccard                      15%
+JaroWinkler                  PREFIX 50% / SUFFIX 50%
+Phonetic                     Metaphone=LNKX 34% / Soundex=L522 0%
+Meaning                      AnglE 46% / Use 12% / ConceptNet -11% / GloVe -4% / fastText 25%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1655,12 +1655,12 @@ Meaning                        AnglE 46% / Use 12% / ConceptNet -11% / GloVe -4%
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 4): election
-LongestCommonSubsequence       5
-Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
-Jaccard                        40%
-JaroWinkler                    PREFIX 83% / SUFFIX 75%
-Phonetic                       Metaphone=ELKXN 50% / Soundex=E423 75%
-Meaning                        AnglE 47% / Use 13% / ConceptNet -5% / GloVe -7% / fastText 26%</pre>
+LongestCommonSubsequence     5
+Levenshtein                  Distance: 4, Insert: 0, Delete: 0, Substitute: 4
+Jaccard                      40%
+JaroWinkler                  PREFIX 83% / SUFFIX 75%
+Phonetic                     Metaphone=ELKXN 50% / Soundex=E423 75%
+Meaning                      AnglE 47% / Use 13% / ConceptNet -5% / GloVe -7% / fastText 26%</pre>
 </div>
 </div>
 <div class="ulist">
@@ -1686,12 +1686,12 @@ Meaning                        AnglE 47% / Use 13% / ConceptNet -5% / GloVe -7% 
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 5): elevator
-LongestCommonSubsequence       8
-Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
-Jaccard                        100%
-JaroWinkler                    PREFIX 100% / SUFFIX 100%
-Phonetic                       Metaphone=ELFTR 100% / Soundex=E413 100%
-Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
+LongestCommonSubsequence     8
+Levenshtein                  Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                      100%
+JaroWinkler                  PREFIX 100% / SUFFIX 100%
+Phonetic                     Metaphone=ELFTR 100% / Soundex=E413 100%
+Meaning                      AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>
@@ -1703,12 +1703,12 @@ Congratulations, you guessed correctly!</pre>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 1): aftershock
-LongestCommonSubsequence       3
-Levenshtein                    Distance: 8, Insert: 0, Delete: 4, Substitute: 4
-Jaccard                        50%
-JaroWinkler                    PREFIX 61% / SUFFIX 49%
-Phonetic                       Metaphone=AFTRXK 33% / Soundex=A136 25%
-Meaning                        AnglE 44% / Use 11% / ConceptNet -7% / GloVe 1% / fastText 15%</pre>
+LongestCommonSubsequence     3
+Levenshtein                  Distance: 8, Insert: 0, Delete: 4, Substitute: 4
+Jaccard                      50%
+JaroWinkler                  PREFIX 61% / SUFFIX 49%
+Phonetic                     Metaphone=AFTRXK 33% / Soundex=A136 25%
+Meaning                      AnglE 44% / Use 11% / ConceptNet -7% / GloVe 1% / fastText 15%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1737,12 +1737,12 @@ we aren&#8217;t duplicating a letter yet, but we just want to narrow down the po
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 2): coarse
-LongestCommonSubsequence       3
-Levenshtein                    Distance: 4, Insert: 0, Delete: 0, Substitute: 4
-Jaccard                        57%
-JaroWinkler                    PREFIX 67% / SUFFIX 67%
-Phonetic                       Metaphone=KRS 74% / Soundex=C620 75%
-Meaning                        AnglE 51% / Use 12% / ConceptNet 5% / GloVe 23% / fastText 26%</pre>
+LongestCommonSubsequence     3
+Levenshtein                  Distance: 4, Insert: 0, Delete: 0, Substitute: 4
+Jaccard                      57%
+JaroWinkler                  PREFIX 67% / SUFFIX 67%
+Phonetic                     Metaphone=KRS 74% / Soundex=C620 75%
+Meaning                      AnglE 51% / Use 12% / ConceptNet 5% / GloVe 23% / fastText 26%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1768,12 +1768,12 @@ and we&#8217;ll duplicate one letter, S.</p>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 3): roasts
-LongestCommonSubsequence       3
-Levenshtein                    Distance: 6, Insert: 0, Delete: 0, Substitute: 6
-Jaccard                        67%
-JaroWinkler                    PREFIX 56% / SUFFIX 56%
-Phonetic                       Metaphone=RSTS 61% / Soundex=R232 25%
-Meaning                        AnglE 54% / Use 25% / ConceptNet 18% / GloVe 18% / fastText 31%</pre>
+LongestCommonSubsequence     3
+Levenshtein                  Distance: 6, Insert: 0, Delete: 0, Substitute: 6
+Jaccard                      67%
+JaroWinkler                  PREFIX 56% / SUFFIX 56%
+Phonetic                     Metaphone=RSTS 61% / Soundex=R232 25%
+Meaning                      AnglE 54% / Use 25% / ConceptNet 18% / GloVe 18% / fastText 31%</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1798,12 +1798,12 @@ Maybe the hidden word is related to roasts.</p>
 <div class="content">
 <pre>Possible letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
 Guess the hidden word (turn 4): carrot
-LongestCommonSubsequence       6
-Levenshtein                    Distance: 0, Insert: 0, Delete: 0, Substitute: 0
-Jaccard                        100%
-JaroWinkler                    PREFIX 100% / SUFFIX 100%
-Phonetic                       Metaphone=KRT 100% / Soundex=C630 100%
-Meaning                        AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
+LongestCommonSubsequence     6
+Levenshtein                  Distance: 0, Insert: 0, Delete: 0, Substitute: 0
+Jaccard                      100%
+JaroWinkler                  PREFIX 100% / SUFFIX 100%
+Phonetic                     Metaphone=KRT 100% / Soundex=C630 100%
+Meaning                      AnglE 100% / Use 100% / ConceptNet 100% / GloVe 100% / fastText 100%
 
 Congratulations, you guessed correctly!</pre>
 </div>

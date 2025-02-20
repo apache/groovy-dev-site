@@ -53,13 +53,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_implementation_details' class='anchor-link'>Implementation Details</a></li><li><a href='#_running_with_the_java_streams_backed_platform' class='anchor-link'>Running with the Java streams-backed platform</a></li><li><a href='#_running_with_apache_spark' class='anchor-link'>Running with Apache Spark</a></li><li><a href='#_using_ml4all' class='anchor-link'>Using ML4all</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-record-performance'>Groovy Record Performance</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Groovy with Apache Wayang and Apache Spark</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_implementation_details' class='anchor-link'>Implementation Details</a></li><li><a href='#_running_with_the_java_streams_backed_platform' class='anchor-link'>Running with the Java streams-backed platform</a></li><li><a href='#_running_with_apache_spark' class='anchor-link'>Running with Apache Spark</a></li><li><a href='#_using_ml4all' class='anchor-link'>Using ML4all</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./groovy-record-performance'>Groovy Record Performance</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy</a></li><li><a href='./groovy-records'>Groovy Records</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Groovy with Apache Wayang and Apache Spark</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2022-06-19 01:01PM (Last updated: 2025-02-15 02:30PM)</span></p><hr/><div id="preamble">
+        </div><br/><span>Published: 2022-06-19 01:01PM (Last updated: 2025-02-20 02:10PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://www.apache.org/logos/res/wayang/default.png" alt="wayang logo" width="100"></span>
@@ -405,7 +405,27 @@ you can write your own like we have here for the Transform operator:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>With this operator defined, we can now write our</p>
+<p>ML4all includes a pre-defined <code>KMeansStageWithZeros</code> localStage operator, but
+we&#8217;ll initialize our KMeans using random centroids with a custom operator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class KMeansStageWithRandoms extends LocalStage {
+    int k, dimension
+    private r = new Random()
+
+    void staging(ML4allModel model) {
+        double[][] centers = new double[k][]
+        for (i in 0..&lt;k) {
+            centers[i] = (0..&lt;dimension).collect { r.nextGaussian() + 2 } as double[]
+        }
+        model.put('centers', centers)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With these operators defined, we can now write our scripts:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -523,7 +543,7 @@ in achieving this goal.</p>
 <div class="title">Update history</div>
 <div class="paragraph">
 <p><strong>19/Jun/2022</strong>: Initial version.<br>
-<strong>15/Feb/2025</strong>: Updated for Apache Wayang 1.0.0.</p>
+<strong>20/Feb/2025</strong>: Updated for Apache Wayang 1.0.0.</p>
 </div>
 </div>
 </div>
