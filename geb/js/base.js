@@ -16,7 +16,7 @@ $('.menu .mailing-lists').click(function() {
     $('#mailing-lists-menu').transition('swing down');
 });
 
-$.get('https://api.github.com/repos/apache/groovy-geb')
+$.get('https://api.github.com/repos/geb/geb')
     .done(function(body) {
         var watchers = body.subscribers_count;
         var stars = body.stargazers_count;
