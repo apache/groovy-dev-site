@@ -53,13 +53,19 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Australian Time Zones</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groundhog-day'>Groundhog Day</a></li><li><a href='./groovy-dates-and-times-cheat'>Groovy Dates And Times Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Australian Time Zones</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-02-20 08:00PM</span></p><hr/><div class="paragraph">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Australian Time Zones</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groundhog-day'>Groundhog Day</a></li><li><a href='./groovy-dates-and-times-cheat'>Groovy Dates And Times Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Australian Time Zones</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2023-02-20 08:00PM</span></p><hr/><div class="paragraph">
 <p><a href="https://kenkousen.substack.com/">Ken Kousen</a> posted another
 <a href="https://t.co/VM4f4lpM7a">Tales from the jar side</a> episode
 covering among other things, time zones in Antarctica.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://external-preview.redd.it/16_JjhwH0lSETAc7LMNvulifXMrs-43lWIs_nr2OPIs.jpg?width=960&amp;crop=smart&amp;auto=webp&amp;v=enabled&amp;s=7fe189e9ed24d481d3445fad245bd6ae18ee5740" alt="Research stations and timezones in Antarctica"></span></p>
+<p><span class="image"><img src="img/stations_antarctica.png" alt="Research stations and timezones in Antarctica" width="800"></span></p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s replicate his example in Groovy before looking at time zones
@@ -100,7 +106,14 @@ Antarctic research stations, Casey, Davis, and Mawson
 (seen on the right of the above map).</p>
 </div>
 <div class="paragraph">
-<p>Before we dive into coding, let&#8217;s look at the timezones we&#8217;re interested in:</p>
+<p>Before we dive into coding, let&#8217;s look at the timezones we&#8217;re interested in.
+First a picture showing the main timezones (source: wikipedia):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/autimezones.png" alt="Australian timezones" width="500"></span></p>
+</div>
+<div class="paragraph">
+<p>And now a more complete table:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -280,7 +293,7 @@ then the Nullarbor plain is the place to be, but otherwise it&#8217;s not high
 on most folks tourist attractions must-see list.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Highway_sign%2C_Nullarbor%2C_2017_%2802%29.jpg/1920px-Highway_sign%2C_Nullarbor%2C_2017_%2802%29.jpg" alt="Nullarbor plain" width="600"></span></p>
+<p><span class="image"><img src="img/nullarbor.png" alt="Nullarbor plain" width="600"></span></p>
 </div>
 <div class="paragraph">
 <p>But the Nullarbor is the place to be if you want to know about another obscure timezone fact!
@@ -307,7 +320,7 @@ Being that far East of the mainland, it&#8217;s not surprising to find out that
 it has a timezone 30 minutes earlier than the mainland.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://www.thesenior.com.au/images/transform/v1/crop/frm/ezJUJGp6GbYvhKygBYtWTb/90dd6397-e247-4c3f-aacf-bd15b7cf8586.jpg/r0_31_600_371_w1200_h678_fmax.jpg" alt="Lord Howe Island"></span></p>
+<p><span class="image"><img src="img/lordhoweisland.jpg" alt="Lord Howe Island" width="500"></span></p>
 </div>
 <div class="paragraph">
 <p>Apparently, some years back,
@@ -368,23 +381,31 @@ println offsets</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Just one final timezone obscurity to wrap up.</p>
+<p>Let&#8217;s head to the Gold Coast at the Queensland-New South Wales border to wrap up.</p>
 </div>
 <div class="paragraph">
 <p>The Queensland-New South Wales border actually cuts Gold Coast Airport almost
 precisely in half, including the runway. Technically, flights departing in the summer
-months leave the terminal in one time zone and take off from the ground in another.
-This has the potential to severely muck up the airlines <em>departed-on-time</em> statistics!
+months leave the terminal in one time zone and take off from the ground in another.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/goldcoast_airport.png" alt="Fireworks on the Gold Coast" width="400"></span></p>
+</div>
+<div class="paragraph">
+<p>This has the potential to severely muck up the airlines <em>departed-on-time</em> statistics!
 Thankfully the airport chooses to operate exclusively on Queensland time to avoid
 any potential confusion.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://www.wearegoldcoast.com.au/wp-content/uploads/2021/04/ryanfowlerphotography.jpg" alt="Fireworks on the Gold Coast" width="600"></span></p>
+<p>Incidentally, if you love to celebrate New Year&#8217;s Eve, Gold Coast might be the
+perfect destination.</p>
 </div>
 <div class="paragraph">
-<p>Incidentally, if you love to celebrate New Year&#8217;s Eve, Gold Coast might be the
-perfect destination. You can party and watch fireworks in Tweed Heads before heading
-just 10s of metres North to count down to midnight all over again, just one hour later.</p>
+<p><span class="image"><img src="img/fireworks_beach.png" alt="Fireworks on the Gold Coast" width="400"></span></p>
+</div>
+<div class="paragraph">
+<p>You can party and watch fireworks in Tweed Heads before walking a handful of steps North
+to Coolangatta where you can count down to midnight all over again, just one hour later.</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
