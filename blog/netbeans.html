@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='netbeans, groovy, apache, debug, gradle'/><meta name='description' content='This post looks at using NetBeans and Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Apache NetBeans with Apache Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache NetBeans with Apache Groovy</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache NetBeans with Apache Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2025-02-25 10:15PM</span></p><hr/><div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><em>Let&#8217;s try using the latest Apache NetBeans with Apache Groovy.</em></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>The <a href="https://netbeans.apache.org/">Apache NetBeans</a> project recently
+<a href="https://netbeans.apache.org/front/main/blogs/entry/announce-apache-netbeans-25-released/">announced</a> the release of Apache NetBeans 25. Let&#8217;s take it for a spin with
+<a href="https://groovy.apache.org/">Apache Groovy</a>.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll assume you have downloaded it as per the
+<a href="https://netbeans.apache.org/front/main/download/nb25/">NetBeans download page</a>.
+If you haven&#8217;t used NetBeans with Groovy before, you might need to enable
+to Groovy plugin. Select <code>Tools &#8594; Plugins &#8594; Installed</code>, Check <code>Groovy</code> and click on <code>Activate</code>, when finished, you should see a screen like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_enable_groovy_plugin.png" alt="enabling the groovy plugin" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>Next, we are going to create a new project, select <code>File &#8594; New Project&#8230;&#8203; &#8594; Groovy with Gradle</code>.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_create_groovy_application.png" alt="creating a new project" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>Select <code>Groovy Application</code> then click <code>Next</code>.</p>
+</div>
+<div class="paragraph">
+<p>Now, fill in the project details:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_new_application_details.png" alt="entering project details" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>We are going to create a little script that uses some fraction functionality from the
+<a href="https://commons.apache.org/proper/commons-numbers/">Apache Commons Number</a> library.
+We&#8217;ll call the project fractions. Click <code>Finish</code> when ready.</p>
+</div>
+<div class="paragraph">
+<p>This now creates a partially filled out project using the Gradle <code>init</code> task.
+It defines some useful libraries, sets up <code>test</code> and <code>main</code> source sets for us,
+creates a versions catalog, and creates an <code>app</code> subproject.
+It has set up some nice dependencies like the
+<a href="https://spockframework.org/">Spock testing framework</a>,
+but we won&#8217;t use that in this post.</p>
+</div>
+<div class="paragraph">
+<p>So, for our little script, we&#8217;ll prune back the dependencies to just those we need.
+The versions toml file becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="toml">[versions]
+groovy = "3.0.22"
+commons-numbers-fraction = "1.2"
+
+[libraries]
+groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
+numbers-fraction = { module = "org.apache.commons:commons-numbers-fraction", version.ref = "commons-numbers-fraction" }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll also prune the Gradle build file slightly to this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">plugins {
+    id 'groovy'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation libs.groovy
+    implementation libs.numbers.fraction
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+application {
+    mainClass = 'App'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can now create our script. It&#8217;s just one <em>import</em> statement
+and then one line of code:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_simple_fractions_script.png" alt="NetBeans IDE showing simple script"></span></p>
+</div>
+<div class="paragraph">
+<p>Running the script shows the expected output of <code>5 / 6</code>. The fractions library
+is good at getting exact results which might otherwise be prone to rounding errors.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s try a bit of Groovy fun. We&#8217;ll define a category to make working with fractions a little nicer. Groovy supports a number of <em>metapgramming</em> mechanisms that let you
+add methods to classes at compile time or runtime. In this case, we&#8217;ll add a
+<code>div</code> method to the <code>Integer</code> class and a <code>plus</code> method to the <code>Fraction</code> class.
+These happen to be methods designed to work with Groovy&#8217;s operator overloading.</p>
+</div>
+<div class="paragraph">
+<p>The <code>use</code> method lets us apply this change to a select code block.
+That way we won&#8217;t impact using the <code>Integer</code> and <code>Fraction</code> classes
+without these changes in other places.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_script_with_category.png" alt="NetBeans IDE showing script with category"></span></p>
+</div>
+<div class="paragraph">
+<p>The magic is in the code fragment <code>println 1 / 3 + 1 / 2</code>. The expression <code>1 / 3</code>
+works like a factory method for fractions. The <code>+</code> operator adds the fractions.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+As an aside, Groovy&#8217;s compiler configuration and scripting support
+means that we could hide away the definition of the <code>FractionCategory</code>
+class and the <code>use</code> call if we wanted to, leaving a script with
+just the <code>println 1 / 3 + 1 / 2</code> statement. This might be appropriate
+if we were setting up an environment for data scientists to write
+script with fractions.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>But we haven&#8217;t finished yet. IDE&#8217;s should let us debug our code.
+Let&#8217;s put a breakpoint on the statement in the <code>plus</code> method of the
+<code>FractionCategory</code> class, and then run with debug.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_debug.png" alt="NetBeans IDE showing script debugging"></span></p>
+</div>
+<div class="paragraph">
+<p>Execution has halted. We can inspect the <code>self</code> and <code>other</code> variables and
+set up add watch expressions like <code>other.doubleValue()</code>.</p>
+</div>
+<div class="paragraph">
+<p>The default Groovy version generated by the Gradle init invocation earlier
+was the latest Groovy 3 version.
+But we can easily change that. Let&#8217;s swap to Groovy 5 (currently in alpha releases)
+and look at a new Groovy 5 feature, the <code>OperatorRename</code> AST transform.</p>
+</div>
+<div class="paragraph">
+<p>If provides an alternative to our earlier category. Simplify slightly,
+it changes operator overloading in early parsing. You can use operator
+overloading in the source code, and it is renamed to normal method
+calls, removing the need for subsequent metaprogramming.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nb_groovy5.png" alt="using Groovy 5"></span></p>
+</div>
+<div class="paragraph">
+<p>So, the <code>+</code> in the assert statement at line 6 is converted into
+an <code>add</code> method call instead of Groovy&#8217;s normal <code>plus</code> method call.
+You can read more about this new feature in the
+<a href="https://groovy-lang.org/releasenotes/groovy-5.0.html">Groovy 5 release notes</a>.</p>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
