@@ -171,7 +171,22 @@ Operator testLabel = testSource.field1</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll define a model.</p>
+<p>Next up we&#8217;ll define a model for our deep-learning network.
+Recall that such networks have inputs (the features),
+one or more hidden layers, and outputs (in this case, labels).</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/deep_network.png" alt="Iris neural net layers" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>The nodes can be activated by linear or non-linear functions.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/deep_node.png" alt="Neural net node" width="600"></span></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll have 4 inputs going to 32 hidden nodes to 3 outputs
+with Sigmoid activation.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -180,6 +195,10 @@ Op s1 = new Sigmoid().with(l1.with(new Input(Input.Type.FEATURES)))
 Op l2 = new Linear(32, 3, true).with(s1)
 DLModel model = new DLModel(l2)</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>We define an operator, providing some needed options, that will do
+our training.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -191,36 +210,51 @@ Optimizer optimizer = new Adam(0.1f) // optimizer with learning rate
 int batchSize = 45
 int epoch = 10
 var option = new DLTrainingOperator.Option(criterion, optimizer, batchSize, epoch)
-option.setAccuracyCalculation(new Mean(0).with(new Cast(Op.DType.FLOAT32).with(new Eq().with(
-    new ArgMax(1).with(new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
-    new Input(Input.Type.LABEL, Op.DType.INT32)
+option.setAccuracyCalculation(new Mean(0).with(
+    new Cast(Op.DType.FLOAT32).with(new Eq().with(
+        new ArgMax(1).with(new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
+        new Input(Input.Type.LABEL, Op.DType.INT32)
 ))))
 var trainingOp = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Now we&#8217;ll define a few more operators to work out and collect results:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var predictOp = new PredictOperator&lt;&gt;(float[], float[])
 
-/* map to label */
-var bestFitOp = new MapOperator&lt;&gt;(array -&gt; array.toList().indexed().max{ it.value }.key, float[], Integer)
+var bestFitOp = new MapOperator&lt;&gt;(array -&gt;
+    array.indexed().max{ it.value }.key, float[], Integer)
 
-/* sink */
 var predicted = []
 var predictedSink = createCollectingSink(predicted, Integer)
 
 var groundTruth = []
-var groundTruthSink = createCollectingSink(groundTruth, Integer)
-
-trainData.connectTo(0, trainingOp, 0)
+var groundTruthSink = createCollectingSink(groundTruth, Integer)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With operators defined, let&#8217;s connect them together:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trainData.connectTo(0, trainingOp, 0)
 trainLabel.connectTo(0, trainingOp, 1)
 trainingOp.connectTo(0, predictOp, 0)
 testData.connectTo(0, predictOp, 1)
 predictOp.connectTo(0, bestFitOp, 0)
 bestFitOp.connectTo(0, predictedSink, 0)
-testLabel.connectTo(0, groundTruthSink, 0)
-
-var wayangPlan = new WayangPlan(predictedSink, groundTruthSink)
+testLabel.connectTo(0, groundTruthSink, 0)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now define a plan and execute it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var wayangPlan = new WayangPlan(predictedSink, groundTruthSink)
 
 new WayangContext().with {
     register(Java.basicPlugin())
