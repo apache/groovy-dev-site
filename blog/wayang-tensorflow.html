@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='netbeans, groovy, apache, debug, gradle'/><meta name='description' content='This post looks at using NetBeans and Groovy.'/><title>The Apache Groovy programming language - Blogs - Using Apache NetBeans with Apache Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, wayang, iris, classification'/><meta name='description' content='This post looks at using TensorFlow and Apache Wayang with Apache Groovy.'/><title>The Apache Groovy programming language - Blogs - Using TensorFlow from Apache Wayang</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,184 +53,202 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache NetBeans with Apache Groovy</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy</a></li><li><a href='./groovy-null-processing'>Groovy Processing Nulls In Lists</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy List Processing Cheat Sheet</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache NetBeans with Apache Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using TensorFlow from Apache Wayang</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-oracle23ai'>Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using TensorFlow from Apache Wayang</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-02-25 10:15PM</span></p><hr/><div class="quoteblock">
+        </div><br/><span>Published: 2025-02-28 09:30AM</span></p><hr/><div class="paragraph">
+<p>In previous blog posts, we have looked at:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Clustering whisky flavor profiles using
+<a href="https://groovy.apache.org/blog/using-groovy-with-apache-wayang">Apache Wayang&#8217;s cross-platform machine learning</a></p>
+</li>
+<li>
+<p>Classifying iris flowers with
+<a href="https://groovy.apache.org/blog/classifying-iris-flowers-with-deep">Deep Learning and GraalVM</a></p>
+</li>
+<li>
+<p>Classifying iris flowers using the
+<a href="https://groovy.apache.org/blog/groovy-oracle23ai">Oracle 23ai Vector data type</a></p>
+</li>
+</ul>
+</div>
+<div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p><em>Let&#8217;s try using the latest Apache NetBeans with Apache Groovy.</em></p>
+<p>Let&#8217;s look at classifying iris flowers using Apache Wayang
+and TensorFlow with Groovy</p>
 </div>
 </blockquote>
 </div>
 <div class="paragraph">
-<p>The <a href="https://netbeans.apache.org/">Apache NetBeans</a> project recently
-<a href="https://netbeans.apache.org/front/main/blogs/entry/announce-apache-netbeans-25-released/">announced</a> the release of Apache NetBeans 25. Let&#8217;s take it for a spin with
-<a href="https://groovy.apache.org/">Apache Groovy</a>.</p>
+<p>We&#8217;ll look at an implementation heavily based on the
+Java test in the Apache Wayang
+<a href="https://github.com/apache/incubator-wayang/blob/main/wayang-tests-integration/src/test/java/org/apache/wayang/tests/TensorflowIrisIT.java">repo</a>.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;ll assume you have downloaded it as per the
-<a href="https://netbeans.apache.org/front/main/download/nb25/">NetBeans download page</a>.
-If you haven&#8217;t used NetBeans with Groovy before, you might need to enable
-to Groovy plugin. Select <code>Tools &#8594; Plugins &#8594; Installed</code>, Check <code>Groovy</code> and click on <code>Activate</code>, when finished, you should see a screen like this:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_enable_groovy_plugin.png" alt="enabling the groovy plugin" width="600"></span></p>
-</div>
-<div class="paragraph">
-<p>Next, we are going to create a new project, select <code>File &#8594; New Project&#8230;&#8203; &#8594; Groovy with Gradle</code>.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_create_groovy_application.png" alt="creating a new project" width="600"></span></p>
-</div>
-<div class="paragraph">
-<p>Select <code>Groovy Application</code> then click <code>Next</code>.</p>
-</div>
-<div class="paragraph">
-<p>Now, fill in the project details:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_new_application_details.png" alt="entering project details" width="600"></span></p>
-</div>
-<div class="paragraph">
-<p>We are going to create a little script that uses some fraction functionality from the
-<a href="https://commons.apache.org/proper/commons-numbers/">Apache Commons Number</a> library.
-We&#8217;ll call the project fractions. Click <code>Finish</code> when ready.</p>
-</div>
-<div class="paragraph">
-<p>This now creates a partially filled out project using the Gradle <code>init</code> task.
-It defines some useful libraries, sets up <code>test</code> and <code>main</code> source sets for us,
-creates a versions catalog, and creates an <code>app</code> subproject.
-It has set up some nice dependencies like the
-<a href="https://spockframework.org/">Spock testing framework</a>,
-but we won&#8217;t use that in this post.</p>
-</div>
-<div class="paragraph">
-<p>So, for our little script, we&#8217;ll prune back the dependencies to just those we need.
-The versions toml file becomes:</p>
+<p>Let&#8217;s first define a helper method.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="toml">[versions]
-groovy = "3.0.22"
-commons-numbers-fraction = "1.2"
+<pre class="prettyprint highlight"><code data-lang="groovy">def fileOperation(URI uri, boolean random) {
+    var textFileSource = new TextFileSource(uri.toString())
+    var mapOperator = new MapOperator&lt;&gt;(line -&gt; line.split(",").with{
+        new Tuple(it[0..-2]*.toFloat() as float[], LABEL_MAP[it[-1]]) }, String, Tuple)
 
-[libraries]
-groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
-numbers-fraction = { module = "org.apache.commons:commons-numbers-fraction", version.ref = "commons-numbers-fraction" }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>We&#8217;ll also prune the Gradle build file slightly to this:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">plugins {
-    id 'groovy'
-    id 'application'
-}
+    var mapX = new MapOperator&lt;&gt;(tuple -&gt; (float[]) tuple.field0, Tuple, float[])
+    var mapY = new MapOperator&lt;&gt;(tuple -&gt; (Integer) tuple.field1, Tuple, Integer)
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation libs.groovy
-    implementation libs.numbers.fraction
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+    if (random) {
+        Random r = new Random()
+        var randomOperator = new SortOperator&lt;&gt;(e -&gt; r.nextInt(), String, Integer)
+        textFileSource.connectTo(0, randomOperator, 0)
+        randomOperator.connectTo(0, mapOperator, 0)
+    } else {
+        textFileSource.connectTo(0, mapOperator, 0)
     }
-}
 
-application {
-    mainClass = 'App'
+    mapOperator.connectTo(0, mapX, 0)
+    mapOperator.connectTo(0, mapY, 0)
+
+    new Tuple&lt;&gt;(mapX, mapY)
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can now create our script. It&#8217;s just one <em>import</em> statement
-and then one line of code:</p>
+<p>We can now write our script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var TEST_PATH = getClass().classLoader.getResource("iris_test.csv").toURI()
+var TRAIN_PATH = getClass().classLoader.getResource("iris_train.csv").toURI()
+var LABEL_MAP = ["Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2]
+
+var trainSource = fileOperation(TRAIN_PATH, true)
+var testSource = fileOperation(TEST_PATH, false)
+
+/* labels &amp; features */
+Operator trainXSource = trainSource.field0
+Operator trainYSource = trainSource.field1
+Operator testXSource = testSource.field0
+Operator testYSource = testSource.field1
+
+/* model */
+Op l1 = new Linear(4, 32, true)
+Op s1 = new Sigmoid()
+Op l2 = new Linear(32, 3, true)
+s1.with(l1.with(new Input(Input.Type.FEATURES)))
+l2.with(s1)
+DLModel model = new DLModel(l2)
+
+/* training options */
+Op criterion = new CrossEntropyLoss(3).with(
+    new Input(Input.Type.PREDICTED, Op.DType.FLOAT32),
+    new Input(Input.Type.LABEL, Op.DType.INT32)
+)
+Optimizer optimizer = new Adam(0.1f) // optimizer with learning rate
+int batchSize = 45
+int epoch = 10
+var option = new DLTrainingOperator.Option(criterion, optimizer, batchSize, epoch)
+option.setAccuracyCalculation(new Mean(0).with(new Cast(Op.DType.FLOAT32).with(new Eq().with(
+    new ArgMax(1).with(new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
+    new Input(Input.Type.LABEL, Op.DType.INT32)
+))))
+
+var trainingOperator = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)
+var predictOperator = new PredictOperator&lt;&gt;(float[], float[])
+
+/* map to label */
+var mapOperator = new MapOperator&lt;&gt;(array -&gt; array.toList().indexed().max{ it.value }.key, float[], Integer)
+
+/* sink */
+var predicted = []
+var predictedSink = createCollectingSink(predicted, Integer)
+
+var groundTruth = []
+var groundTruthSink = createCollectingSink(groundTruth, Integer)
+
+trainXSource.connectTo(0, trainingOperator, 0)
+trainYSource.connectTo(0, trainingOperator, 1)
+trainingOperator.connectTo(0, predictOperator, 0)
+testXSource.connectTo(0, predictOperator, 1)
+predictOperator.connectTo(0, mapOperator, 0)
+mapOperator.connectTo(0, predictedSink, 0)
+testYSource.connectTo(0, groundTruthSink, 0)
+
+var wayangPlan = new WayangPlan(predictedSink, groundTruthSink)
+
+new WayangContext().with {
+    register(Java.basicPlugin())
+    register(Tensorflow.plugin())
+    execute(wayangPlan)
+}
+
+println "predicted:    $predicted"
+println "ground truth: $groundTruth"
+
+var correct = predicted.indices.count{ predicted[it] == groundTruth[it] }
+println "test accuracy: ${correct / predicted.size()}"</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/nb_simple_fractions_script.png" alt="NetBeans IDE showing simple script"></span></p>
+<p>When run we get the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Start training:
+[epoch 1, batch 1] loss: 6.300267 accuracy: 0.111111
+[epoch 1, batch 2] loss: 2.127365 accuracy: 0.488889
+[epoch 1, batch 3] loss: 1.647756 accuracy: 0.333333
+[epoch 2, batch 1] loss: 1.245312 accuracy: 0.333333
+[epoch 2, batch 2] loss: 1.901310 accuracy: 0.422222
+[epoch 2, batch 3] loss: 1.388500 accuracy: 0.244444
+[epoch 3, batch 1] loss: 0.593732 accuracy: 0.888889
+[epoch 3, batch 2] loss: 0.856900 accuracy: 0.466667
+[epoch 3, batch 3] loss: 0.595979 accuracy: 0.755556
+[epoch 4, batch 1] loss: 0.749081 accuracy: 0.666667
+[epoch 4, batch 2] loss: 0.945480 accuracy: 0.577778
+[epoch 4, batch 3] loss: 0.611283 accuracy: 0.755556
+[epoch 5, batch 1] loss: 0.625158 accuracy: 0.666667
+[epoch 5, batch 2] loss: 0.717461 accuracy: 0.577778
+[epoch 5, batch 3] loss: 0.525020 accuracy: 0.600000
+[epoch 6, batch 1] loss: 0.308523 accuracy: 0.888889
+[epoch 6, batch 2] loss: 0.830118 accuracy: 0.511111
+[epoch 6, batch 3] loss: 0.637414 accuracy: 0.600000
+[epoch 7, batch 1] loss: 0.265740 accuracy: 0.888889
+[epoch 7, batch 2] loss: 0.676369 accuracy: 0.511111
+[epoch 7, batch 3] loss: 0.443011 accuracy: 0.622222
+[epoch 8, batch 1] loss: 0.345936 accuracy: 0.666667
+[epoch 8, batch 2] loss: 0.599690 accuracy: 0.577778
+[epoch 8, batch 3] loss: 0.395788 accuracy: 0.755556
+[epoch 9, batch 1] loss: 0.342955 accuracy: 0.688889
+[epoch 9, batch 2] loss: 0.477057 accuracy: 0.933333
+[epoch 9, batch 3] loss: 0.376597 accuracy: 0.822222
+[epoch 10, batch 1] loss: 0.202404 accuracy: 0.888889
+[epoch 10, batch 2] loss: 0.515777 accuracy: 0.600000
+[epoch 10, batch 3] loss: 0.318649 accuracy: 0.911111
+Finish training.
+
+predicted:    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+ground truth: [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
+test accuracy: 1</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>Running the script shows the expected output of <code>5 / 6</code>. The fractions library
-is good at getting exact results which might otherwise be prone to rounding errors.</p>
+<p>There is an element of randomness in our use case,
+so you might get slightly different results for each run.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s try a bit of Groovy fun. We&#8217;ll define a category to make working with fractions a little nicer. Groovy supports a number of <em>metapgramming</em> mechanisms that let you
-add methods to classes at compile time or runtime. In this case, we&#8217;ll add a
-<code>div</code> method to the <code>Integer</code> class and a <code>plus</code> method to the <code>Fraction</code> class.
-These happen to be methods designed to work with Groovy&#8217;s operator overloading.</p>
-</div>
-<div class="paragraph">
-<p>The <code>use</code> method lets us apply this change to a select code block.
-That way we won&#8217;t impact using the <code>Integer</code> and <code>Fraction</code> classes
-without these changes in other places.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_script_with_category.png" alt="NetBeans IDE showing script with category"></span></p>
-</div>
-<div class="paragraph">
-<p>The magic is in the code fragment <code>println 1 / 3 + 1 / 2</code>. The expression <code>1 / 3</code>
-works like a factory method for fractions. The <code>+</code> operator adds the fractions.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-As an aside, Groovy&#8217;s compiler configuration and scripting support
-means that we could hide away the definition of the <code>FractionCategory</code>
-class and the <code>use</code> call if we wanted to, leaving a script with
-just the <code>println 1 / 3 + 1 / 2</code> statement. This might be appropriate
-if we were setting up an environment for data scientists to write
-script with fractions.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>But we haven&#8217;t finished yet. IDE&#8217;s should let us debug our code.
-Let&#8217;s put a breakpoint on the statement in the <code>plus</code> method of the
-<code>FractionCategory</code> class, and then run with debug.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_debug.png" alt="NetBeans IDE showing script debugging"></span></p>
-</div>
-<div class="paragraph">
-<p>Execution has halted. We can inspect the <code>self</code> and <code>other</code> variables and
-add watch expressions like <code>other.doubleValue()</code>.</p>
-</div>
-<div class="paragraph">
-<p>The default Groovy version generated by the Gradle init invocation earlier
-was the latest Groovy 3 version.
-But we can easily change that. Let&#8217;s swap to Groovy 5 (currently in alpha releases)
-and look at a new Groovy 5 feature, the <code>OperatorRename</code> AST transform.</p>
-</div>
-<div class="paragraph">
-<p>If provides an alternative to our earlier category. Simplify slightly,
-it changes operator overloading in early parsing. You can use operator
-overloading in the source code, and it is renamed to normal method
-calls, removing the need for subsequent metaprogramming.</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/nb_groovy5.png" alt="using Groovy 5"></span></p>
-</div>
-<div class="paragraph">
-<p>So, the <code>+</code> in the assert statement at line 6 is converted into
-an <code>add</code> method call instead of Groovy&#8217;s normal <code>plus</code> operator overloading method call.
-You can read more about this new feature in the
-<a href="https://groovy-lang.org/releasenotes/groovy-5.0.html">Groovy 5 release notes</a>.</p>
+<p>We hope you learned a little about
+<a href="https://groovy.apache.org/">Apache Groovy</a>
+and
+<a href="https://wayang.apache.org/">Apache Wayang</a>!
+Why not get involved!</p>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
