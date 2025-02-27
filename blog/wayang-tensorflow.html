@@ -81,9 +81,10 @@
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p><span class="image right"><img src="https://www.apache.org/logos/res/wayang/default.png" alt="wayang logo" width="100"></span>
+<p><span class="image right"><img src="https://www.apache.org/logos/res/wayang/default.png" alt="wayang logo" width="120"></span>
 <em class="blue">Let&#8217;s look at classifying iris flowers using Apache Wayang
-and TensorFlow with Groovy</em></p>
+and TensorFlow with Groovy</em>
+&nbsp;</p>
 </div>
 </blockquote>
 </div>
@@ -108,7 +109,8 @@ Java test in the Apache Wayang
 <pre class="prettyprint highlight"><code data-lang="groovy">def fileOperation(URI uri, boolean random) {
     var textFileSource = new TextFileSource(uri.toString()) // <b class="conum">(1)</b>
     var line2tupleOp = new MapOperator&lt;&gt;(line -&gt; line.split(",").with{ // <b class="conum">(2)</b>
-        new Tuple(it[0..-2]*.toFloat() as float[], LABEL_MAP[it[-1]]) }, String, Tuple)
+        new Tuple(it[0..-2]*.toFloat() as float[], LABEL_MAP[it[-1]])
+    }, String, Tuple)
 
     var mapData = new MapOperator&lt;&gt;(tuple -&gt; (float[]) tuple.field0, Tuple, float[]) // <b class="conum">(3)</b>
     var mapLabel = new MapOperator&lt;&gt;(tuple -&gt; (Integer) tuple.field1, Tuple, Integer) // <b class="conum">(3)</b>
@@ -211,9 +213,10 @@ int batchSize = 45
 int epoch = 10
 var option = new DLTrainingOperator.Option(criterion, optimizer, batchSize, epoch)
 option.setAccuracyCalculation(new Mean(0).with(
-    new Cast(Op.DType.FLOAT32).with(new Eq().with(
-        new ArgMax(1).with(new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
-        new Input(Input.Type.LABEL, Op.DType.INT32)
+    new Cast(Op.DType.FLOAT32).with(
+        new Eq().with(new ArgMax(1).with(
+            new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
+            new Input(Input.Type.LABEL, Op.DType.INT32)
 ))))
 var trainingOp = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)</code></pre>
 </div>
