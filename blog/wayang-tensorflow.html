@@ -102,7 +102,10 @@ Java test in the Apache Wayang
 </div>
 </div>
 <div class="paragraph">
-<p>Now we can define a helper method to convert from our test and training CSV files into our data types.</p>
+<p>Now we can create a helper method to define the operators we&#8217;ll use to
+convert from our test and training CSV files into our datasets.
+Operators are the chunks of work that can be allocated to our processing platform.
+Ultimately, we&#8217;ll have a graph of operators that form our plan of work.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -112,8 +115,8 @@ Java test in the Apache Wayang
         new Tuple(it[0..-2]*.toFloat() as float[], LABEL_MAP[it[-1]])
     }, String, Tuple)
 
-    var mapData = new MapOperator&lt;&gt;(tuple -&gt; (float[]) tuple.field0, Tuple, float[]) // <b class="conum">(3)</b>
-    var mapLabel = new MapOperator&lt;&gt;(tuple -&gt; (Integer) tuple.field1, Tuple, Integer) // <b class="conum">(3)</b>
+    var mapData = new MapOperator&lt;&gt;(tuple -&gt; tuple.field0, Tuple, float[]) // <b class="conum">(3)</b>
+    var mapLabel = new MapOperator&lt;&gt;(tuple -&gt; tuple.field1, Tuple, Integer) // <b class="conum">(3)</b>
 
     if (random) {
         Random r = new Random()
@@ -140,7 +143,7 @@ Java test in the Apache Wayang
 <p><code>line2tupleOp</code> converts a line into a Tuple containing our <code>float[]</code> data in <code>field0</code> and an <code>Integer</code> label in <code>field1</code></p>
 </li>
 <li>
-<p>We also have <code>mapData</code> and <code>mapLabe</code> operators for
+<p>We also have <code>mapData</code> and <code>mapLabel</code> operators for
 getting the two parts from our Tuple</p>
 </li>
 <li>
@@ -173,7 +176,7 @@ Operator testLabel = testSource.field1</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Next up we&#8217;ll define a model for our deep-learning network.
+<p>Next up, we&#8217;ll define a model for our deep-learning network.
 Recall that such networks have inputs (the features),
 one or more hidden layers, and outputs (in this case, labels).</p>
 </div>
@@ -188,7 +191,9 @@ one or more hidden layers, and outputs (in this case, labels).</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll have 4 inputs going to 32 hidden nodes to 3 outputs
-with Sigmoid activation.</p>
+with Sigmoid activation. These classes are all platform-agnostic.
+Nowhere here do we mention TensorFlow or use any TensorFlow
+classes.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -199,8 +204,8 @@ DLModel model = new DLModel(l2)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We define an operator, providing some needed options, that will do
-our training.</p>
+<p>We define a platform-agnostic deep learning training operator,
+providing some needed options, that will do our training.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -239,7 +244,7 @@ var groundTruthSink = createCollectingSink(groundTruth, Integer)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>With operators defined, let&#8217;s connect them together:</p>
+<p>With operators defined, let&#8217;s connect them together (define our graph of work):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -253,7 +258,7 @@ testLabel.connectTo(0, groundTruthSink, 0)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s now define a plan and execute it:</p>
+<p>Let&#8217;s now place everything in a plan and execute it:</p>
 </div>
 <div class="listingblock">
 <div class="content">
