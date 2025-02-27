@@ -60,13 +60,13 @@
   <div><small><i>PMC Member</i></small></div>
 </div>
         </div><br/><span>Published: 2025-02-28 09:30AM</span></p><hr/><div class="paragraph">
-<p>In previous blog posts, we have looked at:</p>
+<p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="200"></span>In previous blog posts, we have looked at:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>Clustering whisky flavor profiles using
-<a href="https://groovy.apache.org/blog/using-groovy-with-apache-wayang">Apache Wayang&#8217;s cross-platform machine learning</a></p>
+<a href="https://groovy.apache.org/blog/using-groovy-with-apache-wayang">Apache Wayang&#8217;s cross-platform machine learning</a> with Apache Spark</p>
 </li>
 <li>
 <p>Classifying iris flowers with
@@ -81,8 +81,9 @@
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p>Let&#8217;s look at classifying iris flowers using Apache Wayang
-and TensorFlow with Groovy</p>
+<p><span class="image right"><img src="https://www.apache.org/logos/res/wayang/default.png" alt="wayang logo" width="100"></span>
+<em class="blue">Let&#8217;s look at classifying iris flowers using Apache Wayang
+and TensorFlow with Groovy</em></p>
 </div>
 </blockquote>
 </div>
@@ -92,62 +93,97 @@ Java test in the Apache Wayang
 <a href="https://github.com/apache/incubator-wayang/blob/main/wayang-tests-integration/src/test/java/org/apache/wayang/tests/TensorflowIrisIT.java">repo</a>.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s first define a helper method.</p>
+<p>First, we&#8217;ll define a map of string constants to label values.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var LABEL_MAP = ["Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can define a helper method to convert from our test and training CSV files into our data types.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def fileOperation(URI uri, boolean random) {
-    var textFileSource = new TextFileSource(uri.toString())
-    var mapOperator = new MapOperator&lt;&gt;(line -&gt; line.split(",").with{
+    var textFileSource = new TextFileSource(uri.toString()) // <b class="conum">(1)</b>
+    var line2tupleOp = new MapOperator&lt;&gt;(line -&gt; line.split(",").with{ // <b class="conum">(2)</b>
         new Tuple(it[0..-2]*.toFloat() as float[], LABEL_MAP[it[-1]]) }, String, Tuple)
 
-    var mapX = new MapOperator&lt;&gt;(tuple -&gt; (float[]) tuple.field0, Tuple, float[])
-    var mapY = new MapOperator&lt;&gt;(tuple -&gt; (Integer) tuple.field1, Tuple, Integer)
+    var mapData = new MapOperator&lt;&gt;(tuple -&gt; (float[]) tuple.field0, Tuple, float[]) // <b class="conum">(3)</b>
+    var mapLabel = new MapOperator&lt;&gt;(tuple -&gt; (Integer) tuple.field1, Tuple, Integer) // <b class="conum">(3)</b>
 
     if (random) {
         Random r = new Random()
-        var randomOperator = new SortOperator&lt;&gt;(e -&gt; r.nextInt(), String, Integer)
-        textFileSource.connectTo(0, randomOperator, 0)
-        randomOperator.connectTo(0, mapOperator, 0)
+        var randomOp = new SortOperator&lt;&gt;(e -&gt; r.nextInt(), String, Integer) // <b class="conum">(4)</b>
+        textFileSource.connectTo(0, randomOp, 0)
+        randomOp.connectTo(0, line2tupleOp, 0)
     } else {
-        textFileSource.connectTo(0, mapOperator, 0)
+        textFileSource.connectTo(0, line2tupleOp, 0)
     }
 
-    mapOperator.connectTo(0, mapX, 0)
-    mapOperator.connectTo(0, mapY, 0)
+    line2tupleOp.connectTo(0, mapData, 0)
+    line2tupleOp.connectTo(0, mapLabel, 0)
 
-    new Tuple&lt;&gt;(mapX, mapY)
+    new Tuple&lt;&gt;(mapData, mapLabel)
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<ol>
+<li>
+<p><code>TextFileSource</code> converts a text file into lines</p>
+</li>
+<li>
+<p><code>line2tupleOp</code> converts a line into a Tuple containing our <code>float[]</code> data in <code>field0</code> and an <code>Integer</code> label in <code>field1</code></p>
+</li>
+<li>
+<p>We also have <code>mapData</code> and <code>mapLabe</code> operators for
+getting the two parts from our Tuple</p>
+</li>
+<li>
+<p>We can optionally randomly sort the incoming dataset</p>
+</li>
+</ol>
+</div>
 <div class="paragraph">
-<p>We can now write our script:</p>
+<p>We&#8217;ll use that helper method to create our test and training
+data sources:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var TEST_PATH = getClass().classLoader.getResource("iris_test.csv").toURI()
 var TRAIN_PATH = getClass().classLoader.getResource("iris_train.csv").toURI()
-var LABEL_MAP = ["Iris-setosa": 0, "Iris-versicolor": 1, "Iris-virginica": 2]
-
 var trainSource = fileOperation(TRAIN_PATH, true)
-var testSource = fileOperation(TEST_PATH, false)
-
-/* labels &amp; features */
-Operator trainXSource = trainSource.field0
-Operator trainYSource = trainSource.field1
-Operator testXSource = testSource.field0
-Operator testYSource = testSource.field1
-
-/* model */
-Op l1 = new Linear(4, 32, true)
-Op s1 = new Sigmoid()
-Op l2 = new Linear(32, 3, true)
-s1.with(l1.with(new Input(Input.Type.FEATURES)))
-l2.with(s1)
-DLModel model = new DLModel(l2)
-
-/* training options */
-Op criterion = new CrossEntropyLoss(3).with(
+var testSource = fileOperation(TEST_PATH, false)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can now write the rest of our script.
+First, we&#8217;ll define features and labels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Operator trainData = trainSource.field0
+Operator trainLabel = trainSource.field1
+Operator testData = testSource.field0
+Operator testLabel = testSource.field1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll define a model.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Op l1 = new Linear(4, 32, true)
+Op s1 = new Sigmoid().with(l1.with(new Input(Input.Type.FEATURES)))
+Op l2 = new Linear(32, 3, true).with(s1)
+DLModel model = new DLModel(l2)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Op criterion = new CrossEntropyLoss(3).with(
     new Input(Input.Type.PREDICTED, Op.DType.FLOAT32),
     new Input(Input.Type.LABEL, Op.DType.INT32)
 )
@@ -159,12 +195,15 @@ option.setAccuracyCalculation(new Mean(0).with(new Cast(Op.DType.FLOAT32).with(n
     new ArgMax(1).with(new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
     new Input(Input.Type.LABEL, Op.DType.INT32)
 ))))
-
-var trainingOperator = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)
-var predictOperator = new PredictOperator&lt;&gt;(float[], float[])
+var trainingOp = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var predictOp = new PredictOperator&lt;&gt;(float[], float[])
 
 /* map to label */
-var mapOperator = new MapOperator&lt;&gt;(array -&gt; array.toList().indexed().max{ it.value }.key, float[], Integer)
+var bestFitOp = new MapOperator&lt;&gt;(array -&gt; array.toList().indexed().max{ it.value }.key, float[], Integer)
 
 /* sink */
 var predicted = []
@@ -173,13 +212,13 @@ var predictedSink = createCollectingSink(predicted, Integer)
 var groundTruth = []
 var groundTruthSink = createCollectingSink(groundTruth, Integer)
 
-trainXSource.connectTo(0, trainingOperator, 0)
-trainYSource.connectTo(0, trainingOperator, 1)
-trainingOperator.connectTo(0, predictOperator, 0)
-testXSource.connectTo(0, predictOperator, 1)
-predictOperator.connectTo(0, mapOperator, 0)
-mapOperator.connectTo(0, predictedSink, 0)
-testYSource.connectTo(0, groundTruthSink, 0)
+trainData.connectTo(0, trainingOp, 0)
+trainLabel.connectTo(0, trainingOp, 1)
+trainingOp.connectTo(0, predictOp, 0)
+testData.connectTo(0, predictOp, 1)
+predictOp.connectTo(0, bestFitOp, 0)
+bestFitOp.connectTo(0, predictedSink, 0)
+testLabel.connectTo(0, groundTruthSink, 0)
 
 var wayangPlan = new WayangPlan(predictedSink, groundTruthSink)
 
