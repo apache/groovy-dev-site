@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk24, chop, collate, inject, ginq, streams, fold, scan'/><meta name='description' content='This post looks at using Gatherers4J (relies on JDK24 stream gatherer API) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Exploring Gatherers4j with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk24, chop, collate, inject, streams, fold, scan'/><meta name='description' content='This post looks at using Gatherers4J (relies on JDK24 stream gatherer API) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Exploring Gatherers4J with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,11 +53,11 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring Gatherers4j with Groovy</a></li><li><a href='#_revisiting_collate_with_gatherers4j' class='anchor-link'>Revisiting Collate with Gatherers4J</a></li><li><a href='#_exploring_gatherers4j_other_functionality' class='anchor-link'>Exploring Gatherers4J other functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring Gatherers4j with Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-04-10 03:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring Gatherers4J with Groovy</a></li><li><a href='#_revisiting_collate_with_gatherers4j' class='anchor-link'>Revisiting Collate with Gatherers4J</a></li><li><a href='#_exploring_gatherers4j_other_functionality' class='anchor-link'>Exploring Gatherers4J other functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring Gatherers4J with Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-04-11 10:30AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
 <div class="paragraph">
-<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4J library. It relies on the gatherer stream enhancements in JDK 24. We&#8217;ll also look at iterator variants for JDK 8/11+ users!</em></span></p>
+<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4J library and the JDK 24 gatherers API. We&#8217;ll also look at iterator variants for JDK 8/11+ users!</em></span></p>
 </div>
 </td></tr></table>
 <div class="paragraph">
@@ -76,7 +76,8 @@ your own gatherer equivalents for chop, collate and other built-in Groovy functi
 <p>Other folks have also been looking at useful gatherers and libraries
 are starting to emerge.
 <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J</a>
-is one such library. We&#8217;ll use 0.11.0 (pre-release) and Groovy 5 snapshot (pre-release).</p>
+is one such library. We&#8217;ll use 0.11.0 (pre-release) and Groovy 5 snapshot (pre-release)
+and JDK 24.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s now look at numerous other gatherers (and their Groovy iterator equivalents)
