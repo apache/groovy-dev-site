@@ -884,7 +884,6 @@ but you can achieve a similar thing using either <code>filterWithIndex</code> or
 assert Stream.from('A'..'G')
     .filterWithIndex { next, idx -&gt; idx % 3 }
     .toList() == ['B', 'C', 'E', 'F']
-<br/></div>
 
 // take every 3rd
 assert Stream.from('A'..'G')
@@ -895,12 +894,16 @@ assert Stream.from('A'..'G')
 var result = []
 Stream.from('A'..'G').tapEvery(3) { result &lt;&lt; it }.toList()
 assert result == ['C', 'F']
-result = []</code></pre>
+result = []
+<br/></div></code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_droplast_dropright">dropLast, dropRight</h3>
+<div class="paragraph">
+<p>The <code>dropLast</code> gatherer removes the last n elements from the stream:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
@@ -909,6 +912,9 @@ assert abcde.stream()
     .toList() == abc
 <br/></div></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Groovy provides <code>dropRight</code> for this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
