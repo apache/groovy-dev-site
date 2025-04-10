@@ -225,7 +225,7 @@ assert abc.stream()
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert Iterators.combine(letter: abc.iterator(), number: nums.iterator())
-    .collect(map -&gt; map.letter + map.number)
+    .collectLazy(map -&gt; map.letter + map.number)
     .toList() == ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3']
 <br/></div></code></pre>
 </div>
@@ -295,7 +295,7 @@ assert abc.iterator()
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mapindexed_collectwithindex_mapwithindex">mapIndexed, collect+withIndex, mapWithIndex</h3>
+<h3 id="_mapindexed_collectlazywithindex_mapwithindex">mapIndexed, collectLazy+withIndex, mapWithIndex</h3>
 <div class="paragraph">
 <p>The <code>mapIndexed</code> gatherer in Gatherers4j provides access to each element and its index:</p>
 </div>
@@ -311,14 +311,14 @@ assert abc.stream()
 </div>
 </div>
 <div class="paragraph">
-<p>In Groovy, you&#8217;d typically use <code>withIndex</code> and <code>collect</code> for this functionality:</p>
+<p>In Groovy, you&#8217;d typically use <code>withIndex</code> and <code>collectLazy</code> for this functionality:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abc.iterator()
     .withIndex()
-    .collect {  s, i -&gt; s + i }
+    .collectLazy {  s, i -&gt; s + i }
     .toList() == ['A0', 'B1', 'C2']
 <br/></div></code></pre>
 </div>
@@ -733,7 +733,7 @@ assert abc.stream()
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abc.iterator()
     .zip(nums.iterator())
-    .collectLazy{ s, n -&gt; s + n }
+    .collectLazy { s, n -&gt; s + n }
     .toList() == ['A1', 'B2', 'C3']
 <br/></div></code></pre>
 </div>
@@ -744,13 +744,19 @@ assert abc.iterator()
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
-assert Stream.from(abc).zip(nums){ s, i -&gt; s + i }.collect() == ['A1', 'B2', 'C3']
+assert Stream.from(abc)
+    .zip(nums) { s, i -&gt; s + i }
+    .toList() == ['A1', 'B2', 'C3']
 <br/></div></code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_distinctby_tounique">distinctBy, toUnique</h3>
+<div class="paragraph">
+<p>Gatherers4j has a <code>distinctBy</code> gatherer that finds unique elements
+using a predicate to determine equality:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
@@ -760,30 +766,24 @@ assert Stream.of('A', 'BB', 'CC', 'D')
 <br/></div></code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Groovy provides <code>toUnique</code> for this:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
-int idx = abc.size()
-assert Stream.generate {
-    idx %= abc.size()
-    abc[idx++]
-}
-.limit(5)
-.toList() == ['A', 'B', 'C', 'A', 'B']
-<br/></div></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
-assert Stream.from(abc).repeat().take(5).collect()
-  == ['A', 'B', 'C', 'A', 'B']
+assert ['A', 'BB', 'CC', 'D'].iterator()
+    .toUnique(String::size)
+    .toList() == ['A', 'BB']
 <br/></div></code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_dropeverynthtakeeverynth">dropEveryNth/takeEveryNth</h3>
+<div class="paragraph">
+<p>Gatherers4j has special gatherers to take or drop every nth element:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
@@ -818,7 +818,7 @@ assert ('A'..'G').iterator().withIndex()
 
 // also take every 3rd
 var result = []
-('A'..'G').iterator().tapEvery(3) { result &lt;&lt; it }.collect()
+('A'..'G').iterator().tapEvery(3) { result &lt;&lt; it }.toList()
 assert result == ['A', 'D', 'G']
 <br/></div></code></pre>
 </div>
@@ -843,7 +843,7 @@ assert Stream.from('A'..'G')
 
 // also take every 3rd (starting from 3rd)
 var result = []
-Stream.from('A'..'G').tapEvery(3) { result &lt;&lt; it }.collect()
+Stream.from('A'..'G').tapEvery(3) { result &lt;&lt; it }.toList()
 assert result == ['C', 'F']
 result = []</code></pre>
 </div>
