@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk24, chop, collate, inject, ginq, streams, fold, scan'/><meta name='description' content='This post looks at using Gatherers4J (relies on JDK24 stream gatherer API) with Groovy.'/><title>The Apache Groovy programming language - Blogs - Exploring Gatherers4j with Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring Gatherers4j with Groovy</a></li><li><a href='#_revisiting_collate_with_gatherers4j' class='anchor-link'>Revisiting Collate with Gatherers4J</a></li><li><a href='#_exploring_gatherers4j_other_functionality' class='anchor-link'>Exploring Gatherers4J other functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring Gatherers4j with Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-04-10 03:30PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
+<div class="paragraph">
+<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4j library (relies on the gatherer stream enhancements in JFK24) plus we&#8217;ll look iterator variants for JDK 8/11+ users!</em></span></p>
+</div>
+</td></tr></table>
+<div class="paragraph">
+<p>An interesting feature in recent JDK versions is <em>Gatherers</em>.
+JDK 24 includes a bunch of built-in gatherers, but their main goal
+was to provide an API that allowed custom intermediate operations
+to be developed rather than provide a huge range of in-built
+gatherers.</p>
+</div>
+<div class="paragraph">
+<p>We looked in an
+<a href="https://groovy.apache.org/blog/groovy-gatherers">earlier blog post</a> at how to write
+your own gatherer equivalents for chop, collate and other built-in Groovy functionality.</p>
+</div>
+<div class="paragraph">
+<p>Other folks have also been looking at useful gatherers and libraries
+are starting to emerge.
+<a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j</a>
+is one such library. We&#8217;ll use 0.11.0 (pre-release) and Groovy 5 snapshot (pre-release).</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now look at numerous other gatherers (and their Groovy iterator equivalents)
+in the <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j</a> library.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_revisiting_collate_with_gatherers4j">Revisiting Collate with Gatherers4J</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In an
+<a href="https://groovy.apache.org/blog/groovy-gatherers">earlier blog post</a> we showed how to emulate
+Groovy&#8217;s <code>collate</code> extension method. Some of its functionality is supported by the
+built-in <code>windowFixed</code> and <code>windowSliding</code> gatherers, and
+we showed how to write some custom gatherers, <code>windowSlidingByStep</code> and <code>windowFixedTruncating</code>,
+to handle the remaining functionality.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at instead using the <code>window</code> gatherer from Gatherers4j:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).stream().gather(Gatherers4j.window(3, 1, true)).toList() ==
+    [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5], [5]]
+assert (1..8).stream().gather(Gatherers4j.window(3, 2, true)).toList() ==
+    [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8]]
+assert (1..8).stream().gather(Gatherers4j.window(3, 2, false)).toList() ==
+    [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+assert (1..8).stream().gather(Gatherers4j.window(3, 4, false)).toList() ==
+    [[1, 2, 3], [5, 6, 7]]
+assert (1..8).stream().gather(Gatherers4j.window(3, 3, true)).toList() ==
+    [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For comparison, here was the output shown using Groovy&#8217;s <code>collate</code> extension method on collections:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert (1..5).collate(3, 1) == [[1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5], [5]]
+assert (1..8).collate(3, 2) == [[1, 2, 3], [3, 4, 5], [5, 6, 7], [7, 8]]
+assert (1..8).collate(3, 2, false) == [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+assert (1..8).collate(3, 4, false) == [[1, 2, 3], [5, 6, 7]]
+assert (1..8).collate(3, 3) == [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These aren&#8217;t exact equivalents. The Groovy versions operate eagerly on collections, while the
+gatherer ones are stream-based. We can show a more "apples with apples" comparison by looking at some
+infinite stream variants.</p>
+</div>
+<div class="paragraph">
+<p>The gatherer version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Stream.iterate(0, n -&gt; n + 1)
+    .gather(Gatherers4j.window(3, 3, true))
+    .limit(3)
+    .toList() == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because we weren&#8217;t worried about remainders or different step sizes,
+we could have just used the built-in <code>Gatherers.windowFixed(3)</code> gatherer here.</p>
+</div>
+<div class="paragraph">
+<p>Now, let&#8217;s look at Groovy&#8217;s iterator equivalent:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Iterators.iterate(0, n -&gt; n + 1)
+    .collate(3)
+    .take(3)
+    .toList() == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When we say equivalent, we aren&#8217;t implying that Iterators offer
+the same power or flexibility as streams, but for many simple scenarios
+they will achieve the same results and can be more efficient.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_exploring_gatherers4j_other_functionality">Exploring Gatherers4J other functionality</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s now explore some of the other gatherers in Gatherers4j.
+For a somewhat "apples vs apples" comparison, we&#8217;ll compare against the equivalent Groovy
+Iterator functionality, unless otherwise stated. There are some case
+where Groovy doesn&#8217;t offer an iterator-based equivalent,
+so we&#8217;ll look at collection-based solutions in those cases.</p>
+</div>
+<div class="paragraph">
+<p>Just recall that using the collection variants of these examples
+might be simpler and equally suitable depending on your scenario.
+Streaming solutions really shine for larger streams, but we need
+to keep the examples simple in a blog post like this.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use a
+<span style="background-color:#ddeedd">light green</span>
+background for Gatherers4j
+examples and a
+<span style="background-color:#ddddee">light blue</span>
+background for standard Groovy iterator functionality.
+For some of the examples, we&#8217;ll also look at using the
+<a href="https://timyates.github.io/groovy-stream/">Groovy-stream</a> library where we&#8217;ll use a
+<span style="background-color:#ffeecc">light orange</span>
+background.</p>
+</div>
+<div class="paragraph">
+<p>Before, starting, let&#8217;s create some variables we&#8217;ll use in later examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var abc = 'A'..'C'
+var abcde = 'A'..'E'
+var nums = 1..3</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_crosswith_combine">crossWith, combine</h3>
+<div class="paragraph">
+<p>Let&#8217;s look at creating all pairs of combinations between two sources, the <em>cross product</em>.</p>
+</div>
+<div class="paragraph">
+<p>Gatherers4j provides the <code>crossWith</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.crossWith(nums.stream()))
+    .map(pair -&gt; pair.first + pair.second)
+    .toList() == ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For collections, Groovy provides <code>combinations</code> or <code>eachCombination</code>, but for iterators you can do the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert Iterators.combine(letter: abc.iterator(), number: nums.iterator())
+    .collect(map -&gt; map.letter + map.number)
+    .toList() == ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_foldindexed_injectwithindex">foldIndexed, inject+withIndex</h3>
+<div class="paragraph">
+<p>Let&#8217;s explore a variant of the <em>fold</em> (aka <em>inject</em> and <em>reduce</em>) operation
+that also provides the index of the item.</p>
+</div>
+<div class="paragraph">
+<p>Gatherers4j provides the <code>foldIndexed</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.foldIndexed(
+        () -&gt; '', // initialValue
+        (index, carry, next) -&gt; carry + next + index
+    ))
+    .findFirst().get() == 'A0B1C2'
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy uses the name <code>inject</code> for <em>fold</em>, but doesn&#8217;t offer a special variant
+with index values. Instead, you use normal inject in combination with either <code>withIndex</code>
+or <code>indexed</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator().withIndex().inject('') { carry, next -&gt;
+    carry + next.first + next.last
+} == 'A0B1C2'
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interleavewith_interleave">interleaveWith, interleave</h3>
+<div class="paragraph">
+<p>The <code>interleaveWith</code> gatherer interleaves the elements from two streams:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.interleaveWith(nums.stream()))
+    .toList() == ['A', 1, 'B', 2, 'C', 3]
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy supports <code>interleave</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .interleave(nums.iterator())
+    .toList() == ['A', 1, 'B', 2, 'C', 3]
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mapindexed_collectwithindex_mapwithindex">mapIndexed, collect+withIndex, mapWithIndex</h3>
+<div class="paragraph">
+<p>The <code>mapIndexed</code> gatherer in Gatherers4j provides access to each element and its index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.mapIndexed (
+        (i, s) -&gt; s + i
+    ))
+    .toList() == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Groovy, you&#8217;d typically use <code>withIndex</code> and <code>collect</code> for this functionality:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .withIndex()
+    .collect {  s, i -&gt; s + i }
+    .toList() == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream has a <code>mapWithIndex</code> method for this scenario:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc)
+    .mapWithIndex { s, i -&gt; s + i }
+    .toList() == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_orderbyfrequency_countby">orderByFrequency, countBy</h3>
+<div class="paragraph">
+<p>The <code>orderByFrequency</code> gatherer in Gatherers4j counts elements in a stream
+then, once the stream is complete, returns the unique values from the stream
+(and their frequency count) in frequency count order (ascending or descending).
+Given this behavior, it could be implemented as a collector.
+We&#8217;ll look at using the built-in collectors, and then for completeness,
+show the ascending and descending variations from Gatherers4j:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+var letters = ['A', 'A', 'A', 'B', 'B', 'B', 'B', 'C', 'C']
+assert letters.stream()
+    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+    .toString() == '[A:3, B:4, C:2]'
+assert letters.stream()
+    .gather(Gatherers4j.orderByFrequency(Frequency.Ascending))
+    .map(withCount -&gt; [withCount.value, withCount.count])
+    .toList()
+    .collectEntries()
+    .toString() == '[C:2, A:3, B:4]'
+assert letters.stream()
+    .gather(Gatherers4j.orderByFrequency(Frequency.Descending))
+    .map(withCount -&gt; [withCount.value, withCount.count])
+    .toList()
+    .collectEntries()
+    .toString() == '[B:4, A:3, C:2]'
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>countBy</code> method on collections does a similar thing but, by default,
+returns the unique items in order of first appearance. Since it is somewhat like a terminal
+operator, we&#8217;ll just use the Groovy collection methods here.
+The ascending and descending behaviors can be achieved with sorting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert letters.countBy().toString() == '[A:3, B:4, C:2]'
+assert letters.countBy()
+    .sort{ e -&gt; e.value }
+    .toString() == '[C:2, A:3, B:4]'
+assert letters
+    .countBy()
+    .sort{ e -&gt; -e.value }
+    .toString() == '[B:4, A:3, C:2]'
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_peekindexed_tapeverywithindex_tapwithindex">peekIndexed, tapEvery+withIndex, tapWithIndex</h3>
+<div class="paragraph">
+<p>The <code>peekIndexed</code> gatherer in Gatherers4j is similar to the JDK Streams <code>peek</code>
+intermediate operation but also provides access to the index value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.peekIndexed(
+        (index, element) -&gt; println "Element $element at index $index"
+    ))
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>eachWithIndex</code> provides similar functionality but exhausts the iterator. Instead, you can use <code>withIndex</code> with <code>tapEvery</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator().withIndex().tapEvery { tuple -&gt;
+    println "Element $tuple.first at index $tuple.last"
+}*.first() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream provides a <code>tapWithIndex</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc)
+    .tapWithIndex { s, i -&gt; println "Element $s at index $i" }
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of the above produce the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Element A at index 0
+Element B at index 1
+Element C at index 2</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_repeat">repeat</h3>
+<div class="paragraph">
+<p>Gatherers4j has a <code>repeat</code> gatherer that allows a source of elements to be repeated a given number of times:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.repeat(3))
+    .toList() == ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy offers a <code>multiply</code> operator for this for collections, but also has a <code>repeat</code> method for iterators:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc * 3 == ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B', 'C']
+assert abc.iterator()
+    .repeat(3)
+    .toList() == ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-streams also has a <code>repeat</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc)
+    .repeat(3)
+    .toList() == ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_repeatinfinitely">repeatInfinitely</h3>
+<div class="paragraph">
+<p>Gatherers4j has a <code>repeatInfinitely</code> gatherer that allows a source of elements to be repeated in a cycle indefinitely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.repeatInfinitely())
+    .limit(5)
+    .toList() == ['A', 'B', 'C', 'A', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy provides a <code>repeat</code> method for this scenario:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .repeat()
+    .take(5)
+    .toList() == ['A', 'B', 'C', 'A', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream has a <code>repeat</code> method for this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc)
+    .repeat()
+    .take(5)
+    .toList() == ['A', 'B', 'C', 'A', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reverse">reverse</h3>
+<div class="paragraph">
+<p>The <code>reverse</code> gatherer in Gatherers4j returns the elements from the stream,
+in reverse order, once all elements have been received:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.reverse())
+    .toList() == 'C'..'A'
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since the whole stream is examined before outputting elements,
+there is no significant benefit to using streams here and it isn&#8217;t suitable
+for processing infinite streams.</p>
+</div>
+<div class="paragraph">
+<p>The same applies for Groovy&#8217;s iterator implementation,
+but Groovy, like Gatherers4j, offers a <code>reverse</code> extension method anyway:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .reverse()
+    .toList() == 'C'..'A'
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rotate">rotate</h3>
+<div class="paragraph">
+<p>The <code>rotate</code> gatherer in Gatherers4j returns the elements from the stream,
+in rotated positions, once all elements have been received.
+Again, since the whole stream is processed, there is no significant benefit
+here compared to working with collections. We can rotate in either direction:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+var abcde = ['A', 'B', 'C', 'D', 'E']
+var shift = 2
+assert abcde.stream()
+    .gather(Gatherers4j.rotate(Rotate.Left, shift))
+    .toList() == ['C', 'D', 'E', 'A', 'B']
+assert abcde.stream()
+    .gather(Gatherers4j.rotate(Rotate.Right, shift))
+    .toList() == ['D', 'E', 'A', 'B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t provide any iterator-based equivalent methods.
+For collections, users could piggyback on the JDK libraries using <code>Collections.rotate</code>
+if a mutating method is acceptable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+var temp = abcde.clone() // unless mutating original is okay
+Collections.rotate(temp, -shift) // -ve for left
+assert temp == ['C', 'D', 'E', 'A', 'B']
+
+temp = abcde.clone()
+Collections.rotate(temp, shift) // +ve for right
+assert temp == ['D', 'E', 'A', 'B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or otherwise Groovy&#8217;s indexing allows for very flexible slicing of collections,
+so rotation can be achieved via such index mangling:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abcde[shift..-1] + abcde[0..&lt;shift] == ['C', 'D', 'E', 'A', 'B'] // left
+assert abcde[shift&lt;..-1] + abcde[0..shift] == ['D', 'E', 'A', 'B', 'C'] // right
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An iterator-based rotate extension method might be a possible future Groovy feature.
+For shifting to the left, it would seem possible to not store the whole list, like the
+current Gatherers4j implementation does, but only the "shift" distance number of elements.
+For shifting to the right, you&#8217;d need the stream size minus the "shift" distance, and
+you won&#8217;t know the size ahead of time.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scanindexed_injectallwithindex">scanIndexed, injectAll+withIndex</h3>
+<div class="paragraph">
+<p>Gatherers4j provides the <code>scanIndexed</code> gatherer. It&#8217;s like the JDK&#8217;s built-in <code>scan</code> gatherer
+but also provides access to the index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(
+        Gatherers4j.scanIndexed(
+            () -&gt; '',
+            (index, carry, next) -&gt; carry + next + index
+        )
+    )
+    .toList() == ['A0', 'A0B1', 'A0B1C2']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For Groovy, the <code>injectAll</code> method in combination with <code>withIndex</code> can be used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .withIndex()
+    .injectAll('') { carry, next -&gt;
+        carry + next.first + next.last
+    }
+    .toList() == ['A0', 'A0B1', 'A0B1C2']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shuffle">shuffle</h3>
+<div class="paragraph">
+<p>Gatherers4j offers the <code>shuffle</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+int seed = 42
+assert Stream.of(*'A'..'G')
+    .gather(Gatherers4j.shuffle(new Random(seed)))
+    .toList() == [ 'B', 'D', 'F', 'A', 'E', 'G', 'C' ]
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is another gatherer which consumes the entire stream and holds it in memory
+before producing values.
+There is no significant advantage compared to using collections.
+Groovy only offers collection-based functionality for this feature using the <code>shuffled</code> extension method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert ('A'..'G').shuffled(new Random(seed)) == ['C', 'G', 'E', 'A', 'F', 'D', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_withindex">withIndex</h3>
+<div class="paragraph">
+<p>Gatherers4j and Groovy both provide <code>withIndex</code>. Here is the gatherer version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.withIndex())
+    .map(withIndex -&gt; "$withIndex.value$withIndex.index")
+    .toList() == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is the iterator version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator().withIndex()
+    .collectLazy(tuple -&gt; "$tuple.v1$tuple.v2")
+    .toList() == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_zipwith_zip">zipWith, zip</h3>
+<div class="paragraph">
+<p>Gatherers4j provides a <code>zipWith</code> gatherer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abc.stream()
+    .gather(Gatherers4j.zipWith(nums.stream()))
+    .map(pair -&gt; "$pair.first$pair.second")
+    .toList() == ['A1', 'B2', 'C3']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy provides <code>zip</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .zip(nums.iterator())
+    .collectLazy{ s, n -&gt; s + n }
+    .toList() == ['A1', 'B2', 'C3']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream, offers the same:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc).zip(nums){ s, i -&gt; s + i }.collect() == ['A1', 'B2', 'C3']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_distinctby_tounique">distinctBy, toUnique</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert Stream.of('A', 'BB', 'CC', 'D')
+    .gather(Gatherers4j.distinctBy(String::size))
+    .toList() == ['A', 'BB']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+int idx = abc.size()
+assert Stream.generate {
+    idx %= abc.size()
+    abc[idx++]
+}
+.limit(5)
+.toList() == ['A', 'B', 'C', 'A', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abc).repeat().take(5).collect()
+  == ['A', 'B', 'C', 'A', 'B']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dropeverynthtakeeverynth">dropEveryNth/takeEveryNth</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+// drop every 3rd
+assert ('A'..'G').stream()
+    .gather(Gatherers4j.dropEveryNth(3))
+    .toList() == ['B', 'C', 'E', 'F']
+
+// take every 3rd
+assert ('A'..'G').stream()
+    .gather(Gatherers4j.takeEveryNth(3))
+    .toList() == ['A', 'D', 'G']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t have a specific method for taking/dropping the nth element
+but you either use <code>findAllLazy</code> with <code>withIndex</code>, or <code>tapEvery</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+// drop every 3rd
+assert ('A'..'G').iterator().withIndex()
+    .findAllLazy { mext, i -&gt; i % 3 }
+    .toList()*.first == ['B', 'C', 'E', 'F']
+
+// take every 3rd
+assert ('A'..'G').iterator().withIndex()
+    .findAllLazy { mext, i -&gt; i % 3 == 0 }
+    .toList()*.first == ['A', 'D', 'G']
+
+// also take every 3rd
+var result = []
+('A'..'G').iterator().tapEvery(3) { result &lt;&lt; it }.collect()
+assert result == ['A', 'D', 'G']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream doesn&#8217;t have a specific method either,
+but you can achieve a similar thing using either <code>filterWithIndex</code> or <code>tapEvery</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+// drop every 3rd
+assert Stream.from('A'..'G')
+    .filterWithIndex { next, idx -&gt; idx % 3 }
+    .toList() == ['B', 'C', 'E', 'F']
+<br/></div>
+
+// take every 3rd
+assert Stream.from('A'..'G')
+    .filterWithIndex { next, idx -&gt; idx % 3 == 0 }
+    .toList() == ['A', 'D', 'G']
+
+// also take every 3rd (starting from 3rd)
+var result = []
+Stream.from('A'..'G').tapEvery(3) { result &lt;&lt; it }.collect()
+assert result == ['C', 'F']
+result = []</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_droplast_dropright">dropLast, dropRight</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abcde.stream()
+    .gather(Gatherers4j.dropLast(2))
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abcde.iterator().dropRight(2).toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filterindexed">filterIndexed</h3>
+<div class="paragraph">
+<p>The <code>filterWithIndex</code> gatherer allows filtering elements with access to the index:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abcde.stream()
+    .gather(Gatherers4j.filterIndexed{ n, s -&gt; n % 2 == 0 })
+    .toList() == ['A', 'C', 'E']
+assert abcde.stream()
+    .gather(Gatherers4j.filterIndexed{ n, s -&gt; n &lt; 2 || s == 'E' })
+    .toList() == ['A', 'B', 'E']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t have an all-in-one equivalent, but you can use <code>withIndex</code> plus <code>findAllLazy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abcde.iterator().withIndex()
+    .findAllLazy { s, n -&gt; n % 2 == 0 }*.first == ['A', 'C', 'E']
+assert abcde.iterator().withIndex()
+    .findAllLazy { s, n -&gt; n &lt; 2 || s == 'E' }*.first == ['A', 'B', 'E']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream provides a <code>filterWithIndex</code> method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abcde)
+    .filterWithIndex{ s, n -&gt; n % 2 == 0 }
+    .toList() == ['A', 'C', 'E']
+assert Stream.from(abcde)
+    .filterWithIndex{ s, n -&gt; n &lt; 2 || s == 'E' }
+    .toList() == ['A', 'B', 'E']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_filterinstanceof">filterInstanceOf</h3>
+<div class="paragraph">
+<p>The <code>filterInstanceOf</code> gatherer combines <code>filter</code> with <code>instanceof</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+var mixed = [(byte)1, (short)2, 3, (long)4, 5.0, 6.0d, '7', '42']
+assert mixed.stream()
+    .gather(Gatherers4j.filterInstanceOf(Integer))
+    .toList() == [3]
+assert mixed.stream()
+    .gather(Gatherers4j.filterInstanceOf(Number))
+    .toList() == [1, 2, 3, 4, 5.0, 6.0]
+assert mixed.stream()
+    .gather(Gatherers4j.filterInstanceOf(Integer, Short))
+    .toList() == [2, 3]
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t have an exact equivalent but does have an eager <code>grep</code>
+which lets you do similar things, and other functionality like matching
+regex patterns. You can also use <code>findAllLazy</code> in combination with
+<code>getClass()</code> or <code>instanceof</code> as needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+var mixed = [(byte)1, (short)2, 3, (long)4, 5.0, 6.0d, '7', '42']
+assert mixed.iterator().grep(Integer) == [3]
+assert mixed.iterator().grep(Number) == [1, 2, 3, 4, 5.0, 6.0]
+assert mixed.iterator().grep(~/\d/).toString() == '[1, 2, 3, 4, 7]'
+assert mixed.iterator()
+    .findAllLazy{ it.getClass() in [Integer, Short] }
+    .toList() == [2, 3]
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_takelasttakeright">takeLast/takeRight</h3>
+<div class="paragraph">
+<p>The <code>takeLast</code> gatherer returns the last n elements from a stream:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abcde.stream()
+    .gather(Gatherers4j.takeLast(3))
+    .toList() == ['C', 'D', 'E']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It reads the entire stream before emitting elements.</p>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t have an iterator equivalent but does have a <code>takeRight</code> collections method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abcde.takeRight(3) == 'C'..'E'
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_takeuntil_takewhile_until">takeUntil, takeWhile, until</h3>
+<div class="paragraph">
+<p>The <code>takeUntil</code> gatherer takes elements until some condition is satisfied
+including the element that satisfied the condition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert abcde.stream()
+    .gather(Gatherers4j.takeUntil{ it == 'C' })
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>takeWhile</code> extension method takes elements while some condition is satisfied
+(so needs the reverse condition):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abcde.iterator()
+    .takeWhile { it != 'D' }
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy-stream&#8217;s <code>until</code> method has a condition similar to gatherers4j,
+but doesn&#8217;t include the element that triggers the condition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ffeecc">
+assert Stream.from(abcde)
+    .until { it == 'D' }
+    .toList() == abc
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_uniquelyoccurring">uniquelyOccurring</h3>
+<div class="paragraph">
+<p>The <code>uniquelyOccurring</code> gatherer reads the entire stream before returning the elements
+that occur only once:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+assert Stream.of('A', 'B', 'C', 'A')
+    .gather(Gatherers4j.uniquelyOccurring())
+    .toList() == ['B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy doesn&#8217;t have an equivalent, but <code>countBy</code> could be used to achieve similar functionality.
+Groovy&#8217;s <code>countBy</code> method is an eager (think terminal) operator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert ['A', 'B', 'C', 'A'].iterator()
+    .countBy()
+    .findAll{ it.value == 1 }*.key == ['B', 'C']
+<br/></div></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjdk.org/jeps/461">JEP 461: Stream Gatherers (Preview in JDK 22)</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/473">JEP 473: Stream Gatherers (Second Preview in JDK 23)</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/485">JEP 485: Stream Gatherers (JDK 24)</a></p>
+</li>
+<li>
+<p><a href="https://nipafx.dev/inside-java-newscast-57/">Better Java Streams with Gatherers - Inside Java Newscast #57</a></p>
+</li>
+<li>
+<p><a href="https://nipafx.dev/implementing-gatherers/">Implementing New Java Stream Operations</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-gatherers">Source code on GitHub</a></p>
+</li>
+<li>
+<p><a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j GitHub site</a></p>
+</li>
+<li>
+<p><a href="https://timyates.github.io/groovy-stream/">Groovy-stream GitHub site</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at how to use gatherers, and how to achieve similar functionality using iterators.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>10/Apr/2025</strong>: Initial version<br></p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
