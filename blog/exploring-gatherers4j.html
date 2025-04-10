@@ -57,7 +57,7 @@
 <div class="sectionbody">
 <table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
 <div class="paragraph">
-<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4j library. It relies on the gatherer stream enhancements in JDK 24. We&#8217;ll also look at iterator variants for JDK 8/11+ users!</em></span></p>
+<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4J library. It relies on the gatherer stream enhancements in JDK 24. We&#8217;ll also look at iterator variants for JDK 8/11+ users!</em></span></p>
 </div>
 </td></tr></table>
 <div class="paragraph">
@@ -75,12 +75,12 @@ your own gatherer equivalents for chop, collate and other built-in Groovy functi
 <div class="paragraph">
 <p>Other folks have also been looking at useful gatherers and libraries
 are starting to emerge.
-<a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j</a>
+<a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J</a>
 is one such library. We&#8217;ll use 0.11.0 (pre-release) and Groovy 5 snapshot (pre-release).</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s now look at numerous other gatherers (and their Groovy iterator equivalents)
-in the <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j</a> library.</p>
+in the <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J</a> library.</p>
 </div>
 </div>
 </div>
@@ -97,7 +97,7 @@ we showed how to write some custom gatherers, <code>windowSlidingByStep</code> a
 to handle the remaining functionality.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s look at instead using the <code>window</code> gatherer from Gatherers4j:</p>
+<p>Let&#8217;s look at instead using the <code>window</code> gatherer from Gatherers4J:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -177,7 +177,7 @@ they will achieve the same results and can be more efficient.</p>
 <h2 id="_exploring_gatherers4j_other_functionality">Exploring Gatherers4J other functionality</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let&#8217;s now explore some of the other gatherers in Gatherers4j.
+<p>Let&#8217;s now explore some of the other gatherers in Gatherers4J.
 For a somewhat "apples vs apples" comparison, we&#8217;ll compare against the equivalent Groovy
 Iterator functionality, unless otherwise stated. There are some case
 where Groovy doesn&#8217;t offer an iterator-based equivalent,
@@ -192,7 +192,7 @@ to keep the examples simple in a blog post like this.</p>
 <div class="paragraph">
 <p>We&#8217;ll use a
 <span style="background-color:#ddeedd">light green</span>
-background for Gatherers4j
+background for Gatherers4J
 examples and a
 <span style="background-color:#ddddee">light blue</span>
 background for standard Groovy iterator functionality.
@@ -200,6 +200,41 @@ For some of the examples, we&#8217;ll also look at using the
 <a href="https://timyates.github.io/groovy-stream/">Groovy-stream</a> library where we&#8217;ll use a
 <span style="background-color:#ffeecc">light orange</span>
 background.</p>
+</div>
+<div class="paragraph">
+<p>Gatherers4J has over 50 gatherers organised into five different categories:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Sequence Operations - Reorder, combine, or manipulate the sequence of elements.</p>
+</li>
+<li>
+<p>Filtering and Selection - Select or remove elements based on some criteria.</p>
+</li>
+<li>
+<p>Grouping and Windowing - Collect elements into groups or windows.</p>
+</li>
+<li>
+<p>Mathematical Operations - Perform calculations over the stream.</p>
+</li>
+<li>
+<p>Validation and Constraints - Enforce conditions on the stream.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll explore about half of them and subjectively pick what might be the more
+commonly occurring scenarios, but if you are using streams, the whole library
+is worth looking at. It is worth remembering that the JDK has built-in functionality
+that Gatherers4J doesn&#8217;t try to replicate. In that sense, Gatherers4J
+does have some less-used gatherers, but many are still very useful.</p>
+</div>
+<div class="paragraph">
+<p>Our goal in performing these comparisons isn&#8217;t to pitch gatherer solutions
+or iterator solutions as competitors. Streams and iterators each have their
+benefits. If using either one, it is good to recognise what the other
+might look like and what it might have to offer.</p>
 </div>
 <div class="paragraph">
 <p>Before, starting, let&#8217;s create some variables we&#8217;ll use in later examples:</p>
@@ -217,7 +252,7 @@ var nums = 1..3</code></pre>
 <p>Let&#8217;s look at creating all pairs of combinations between two sources, the <em>cross product</em>.</p>
 </div>
 <div class="paragraph">
-<p>Gatherers4j provides the <code>crossWith</code> gatherer:</p>
+<p>Gatherers4J provides the <code>crossWith</code> gatherer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -245,11 +280,11 @@ assert Iterators.combine(letter: abc.iterator(), number: nums.iterator())
 <div class="sect2">
 <h3 id="_foldindexed_injectwithindex">foldIndexed, inject+withIndex</h3>
 <div class="paragraph">
-<p>Let&#8217;s explore a variant of the <em>fold</em> (aka <em>inject</em> and <em>reduce</em>) operation
-that also provides the index of the item.</p>
+<p>The <em>fold</em> (aka <em>inject</em> and <em>reduce</em>) operation <em>folds</em> a stream of items into a single value.
+Let&#8217;s explore a variant of fold that also provides the index of the item.</p>
 </div>
 <div class="paragraph">
-<p>Gatherers4j provides the <code>foldIndexed</code> gatherer:</p>
+<p>Gatherers4J provides the <code>foldIndexed</code> gatherer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -308,7 +343,10 @@ assert abc.iterator()
 <div class="sect2">
 <h3 id="_mapindexed_collectlazywithindex_mapwithindex">mapIndexed, collectLazy+withIndex, mapWithIndex</h3>
 <div class="paragraph">
-<p>The <code>mapIndexed</code> gatherer in Gatherers4j provides access to each element and its index:</p>
+<p>The <em>map</em> (also called <em>transform</em> or <em>collect</em>) operation transforms elements in a stream into a stream of new values.</p>
+</div>
+<div class="paragraph">
+<p>The <code>mapIndexed</code> gatherer in Gatherers4J provides access to each element and its index:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -350,12 +388,12 @@ assert Stream.from(abc)
 <div class="sect2">
 <h3 id="_orderbyfrequency_countby">orderByFrequency, countBy</h3>
 <div class="paragraph">
-<p>The <code>orderByFrequency</code> gatherer in Gatherers4j counts elements in a stream
+<p>The <code>orderByFrequency</code> gatherer in Gatherers4J counts elements in a stream
 then, once the stream is complete, returns the unique values from the stream
 (and their frequency count) in frequency count order (ascending or descending).
 Given this behavior, it could be implemented as a collector.
 We&#8217;ll look at using the built-in collectors, and then for completeness,
-show the ascending and descending variations from Gatherers4j:</p>
+show the ascending and descending variations from Gatherers4J:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -403,7 +441,7 @@ assert letters
 <div class="sect2">
 <h3 id="_peekindexed_tapeverywithindex_tapwithindex">peekIndexed, tapEvery+withIndex, tapWithIndex</h3>
 <div class="paragraph">
-<p>The <code>peekIndexed</code> gatherer in Gatherers4j is similar to the JDK Streams <code>peek</code>
+<p>The <code>peekIndexed</code> gatherer in Gatherers4J is similar to the JDK Streams <code>peek</code>
 intermediate operation but also provides access to the index value:</p>
 </div>
 <div class="listingblock">
@@ -455,7 +493,7 @@ Element C at index 2</pre>
 <div class="sect2">
 <h3 id="_repeat">repeat</h3>
 <div class="paragraph">
-<p>Gatherers4j has a <code>repeat</code> gatherer that allows a source of elements to be repeated a given number of times:</p>
+<p>Gatherers4J has a <code>repeat</code> gatherer that allows a source of elements to be repeated a given number of times:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -495,7 +533,7 @@ assert Stream.from(abc)
 <div class="sect2">
 <h3 id="_repeatinfinitely">repeatInfinitely</h3>
 <div class="paragraph">
-<p>Gatherers4j has a <code>repeatInfinitely</code> gatherer that allows a source of elements to be repeated in a cycle indefinitely:</p>
+<p>Gatherers4J has a <code>repeatInfinitely</code> gatherer that allows a source of elements to be repeated in a cycle indefinitely:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -537,7 +575,7 @@ assert Stream.from(abc)
 <div class="sect2">
 <h3 id="_reverse">reverse</h3>
 <div class="paragraph">
-<p>The <code>reverse</code> gatherer in Gatherers4j returns the elements from the stream,
+<p>The <code>reverse</code> gatherer in Gatherers4J returns the elements from the stream,
 in reverse order, once all elements have been received:</p>
 </div>
 <div class="listingblock">
@@ -556,7 +594,7 @@ for use when processing infinite streams.</p>
 </div>
 <div class="paragraph">
 <p>The same applies for Groovy&#8217;s iterator implementation,
-but Groovy, like Gatherers4j, offers a <code>reverse</code> extension method anyway:</p>
+but Groovy, like Gatherers4J, offers a <code>reverse</code> extension method anyway:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -571,7 +609,7 @@ assert abc.iterator()
 <div class="sect2">
 <h3 id="_rotate">rotate</h3>
 <div class="paragraph">
-<p>The <code>rotate</code> gatherer in Gatherers4j returns the elements from the stream,
+<p>The <code>rotate</code> gatherer in Gatherers4J returns the elements from the stream,
 in rotated positions, once all elements have been received.
 Again, since the whole stream is processed, there is no significant benefit
 here compared to working with collections. We can rotate in either direction:</p>
@@ -623,7 +661,7 @@ assert abcde[shift&lt;..-1] + abcde[0..shift] == ['D', 'E', 'A', 'B', 'C'] // ri
 <div class="paragraph">
 <p>An iterator-based rotate extension method might be a possible future Groovy feature.
 For shifting to the left, it would seem possible to not store the whole list, like the
-current Gatherers4j implementation does, but only the "shift" distance number of elements.
+current Gatherers4J implementation does, but only the "shift" distance number of elements.
 For shifting to the right, you&#8217;d need the stream size minus the "shift" distance, and
 you won&#8217;t know the size ahead of time.</p>
 </div>
@@ -631,7 +669,7 @@ you won&#8217;t know the size ahead of time.</p>
 <div class="sect2">
 <h3 id="_scanindexed_injectallwithindex">scanIndexed, injectAll+withIndex</h3>
 <div class="paragraph">
-<p>Gatherers4j provides the <code>scanIndexed</code> gatherer. It&#8217;s like the JDK&#8217;s built-in <code>scan</code> gatherer
+<p>Gatherers4J provides the <code>scanIndexed</code> gatherer. It&#8217;s like the JDK&#8217;s built-in <code>scan</code> gatherer
 but also provides access to the index:</p>
 </div>
 <div class="listingblock">
@@ -667,7 +705,7 @@ assert abc.iterator()
 <div class="sect2">
 <h3 id="_shuffle">shuffle</h3>
 <div class="paragraph">
-<p>Gatherers4j offers the <code>shuffle</code> gatherer:</p>
+<p>Gatherers4J offers the <code>shuffle</code> gatherer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -696,7 +734,7 @@ assert ('A'..'G').shuffled(new Random(seed)) == ['C', 'G', 'E', 'A', 'F', 'D', '
 <div class="sect2">
 <h3 id="_withindex">withIndex</h3>
 <div class="paragraph">
-<p>Gatherers4j and Groovy both provide <code>withIndex</code>. Here is the gatherer version:</p>
+<p>Gatherers4J and Groovy both provide <code>withIndex</code>. Here is the gatherer version:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -724,7 +762,7 @@ assert abc.iterator().withIndex()
 <div class="sect2">
 <h3 id="_zipwith_zip">zipWith, zip</h3>
 <div class="paragraph">
-<p>Gatherers4j provides a <code>zipWith</code> gatherer:</p>
+<p>Gatherers4J provides a <code>zipWith</code> gatherer:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -765,7 +803,7 @@ assert Stream.from(abc)
 <div class="sect2">
 <h3 id="_distinctby_tounique">distinctBy, toUnique</h3>
 <div class="paragraph">
-<p>Gatherers4j has a <code>distinctBy</code> gatherer that finds unique elements
+<p>Gatherers4J has a <code>distinctBy</code> gatherer that finds unique elements
 using a predicate to determine equality:</p>
 </div>
 <div class="listingblock">
@@ -793,7 +831,7 @@ assert ['A', 'BB', 'CC', 'D'].iterator()
 <div class="sect2">
 <h3 id="_dropeverynthtakeeverynth">dropEveryNth/takeEveryNth</h3>
 <div class="paragraph">
-<p>Gatherers4j has special gatherers to take or drop every nth element:</p>
+<p>Gatherers4J has special gatherers to take or drop every nth element:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1091,7 +1129,7 @@ assert ['A', 'B', 'C', 'A'].iterator()
 <p><a href="https://github.com/paulk-asert/groovy-gatherers">Source code on GitHub</a></p>
 </li>
 <li>
-<p><a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j GitHub site</a></p>
+<p><a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J GitHub site</a></p>
 </li>
 <li>
 <p><a href="https://timyates.github.io/groovy-stream/">Groovy-stream GitHub site</a></p>
