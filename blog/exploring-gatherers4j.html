@@ -462,7 +462,7 @@ assert abc.stream()
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abc.iterator().withIndex().tapEvery { tuple -&gt;
     println "Element $tuple.first at index $tuple.last"
-}*.first() == abc
+}*.first == abc
 <br/></div></code></pre>
 </div>
 </div>
@@ -856,12 +856,12 @@ but you either use <code>findAllLazy</code> with <code>withIndex</code>, or <cod
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 // drop every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAllLazy { mext, i -&gt; i % 3 }
+    .findAllLazy { next, i -&gt; i % 3 }
     .toList()*.first == ['B', 'C', 'E', 'F']
 
 // take every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAllLazy { mext, i -&gt; i % 3 == 0 }
+    .findAllLazy { next, i -&gt; i % 3 == 0 }
     .toList()*.first == ['A', 'D', 'G']
 
 // also take every 3rd
