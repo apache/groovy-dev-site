@@ -57,13 +57,13 @@
 <div class="sectionbody">
 <table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
 <div class="paragraph">
-<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4j library (relies on the gatherer stream enhancements in JFK24) plus we&#8217;ll look iterator variants for JDK 8/11+ users!</em></span></p>
+<p><span class="blue"><em>Let&#8217;s explore using Groovy with the Gatherers4j library. It relies on the gatherer stream enhancements in JDK 24. We&#8217;ll also look at iterator variants for JDK 8/11+ users!</em></span></p>
 </div>
 </td></tr></table>
 <div class="paragraph">
 <p>An interesting feature in recent JDK versions is <em>Gatherers</em>.
-JDK 24 includes a bunch of built-in gatherers, but their main goal
-was to provide an API that allowed custom intermediate operations
+JDK 24 includes a bunch of built-in gatherers, but the main goal
+of the gatherers API was to allow custom intermediate operations
 to be developed rather than provide a huge range of in-built
 gatherers.</p>
 </div>
@@ -89,8 +89,9 @@ in the <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4j</a> librar
 <div class="sectionbody">
 <div class="paragraph">
 <p>In an
-<a href="https://groovy.apache.org/blog/groovy-gatherers">earlier blog post</a> we showed how to emulate
-Groovy&#8217;s <code>collate</code> extension method. Some of its functionality is supported by the
+<a href="https://groovy.apache.org/blog/groovy-gatherers">earlier blog post</a> we showed how to provide
+a streams equivalent of Groovy&#8217;s <code>collate</code> extension method on collections and iterators.
+Some of its functionality is supported by the
 built-in <code>windowFixed</code> and <code>windowSliding</code> gatherers, and
 we showed how to write some custom gatherers, <code>windowSlidingByStep</code> and <code>windowFixedTruncating</code>,
 to handle the remaining functionality.</p>
@@ -126,8 +127,9 @@ assert (1..8).collate(3, 3) == [[1, 2, 3], [4, 5, 6], [7, 8]]</code></pre>
 </div>
 <div class="paragraph">
 <p>These aren&#8217;t exact equivalents. The Groovy versions operate eagerly on collections, while the
-gatherer ones are stream-based. We can show a more "apples with apples" comparison by looking at some
-infinite stream variants.</p>
+gatherer ones are stream-based. We can show a more "apples with apples" comparison by Groovy&#8217;s
+iterator variants of the <code>collate</code> method. Let&#8217;s look at some
+infinite stream examples.</p>
 </div>
 <div class="paragraph">
 <p>The gatherer version:</p>
@@ -140,9 +142,18 @@ infinite stream variants.</p>
     .toList() == [[0, 1, 2], [3, 4, 5], [6, 7, 8]]</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Because we weren&#8217;t worried about remainders or different step sizes,
-we could have just used the built-in <code>Gatherers.windowFixed(3)</code> gatherer here.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Because we aren&#8217;t worried about remainders or different step sizes,
+we could have just used the JDK 24&#8217;s built-in <code>Gatherers.windowFixed(3)</code> gatherer here.
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Now, let&#8217;s look at Groovy&#8217;s iterator equivalent:</p>
