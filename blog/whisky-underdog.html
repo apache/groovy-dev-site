@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, windows installer, release'/><meta name='description' content='Groovy 2.5.2 Windows Installer Release Announcement.'/><title>The Apache Groovy programming language - Blogs - Groovy 2.5.2 Windows Installer Released (Community Artifact)</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='whisky, groovy, kmeans, clustering'/><meta name='description' content='This post looks at using the Underdog data science library.'/><title>The Apache Groovy programming language - Blogs - A first look at Underdog</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -53,9 +53,181 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 2.5.2 Windows Installer Released (Community Artifact)</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-2-5-4-windows'>Groovy 2.5.4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-5-windows'>Groovy 2.5.5 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-2-released'>Groovy 2.5.2 released</a></li><li><a href='./groovy-2-5-7-and'>Groovy 2.5.7 and 3.0.0-beta-1 Windows Installers Released (Community Artifacts)</a></li><li><a href='./groovy-2-5-3-windows'>Groovy 2.5.3 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-beta2'>Groovy 3.0.0-beta-2 Windows Installer Released (Community Release)</a></li><li><a href='./groovy-2-5-clibuilder-renewal'>Apache Groovy 2.5 CliBuilder Renewal</a></li><li><a href='./groovy-2-5-4-released'>Groovy 2.5.4 Released</a></li><li><a href='./groovy-2-5-5-released'>Groovy 2.5.5 released</a></li><li><a href='./groovy-2-5-0-released'>Groovy 2.5.0 released</a></li><li><a href='./groovy-2-4-16-windows'>Groovy 2.4.16 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-2-5-1-released'>Groovy 2.5.1 released</a></li><li><a href='./groovy-2-5-3-released'>Groovy 2.5.3 Released</a></li><li><a href='./groovy-2-5-6-released'>Groovy 2.5.6 Released</a></li><li><a href='./groovy-2-5-7-released'>Groovy 2.5.7 Released</a></li><li><a href='./groovy-3-0-0-alpha1'>Groovy 3.0.0-alpha-4 Windows Installer Released (Community Artifact)</a></li><li><a href='./groovy-3-0-0-alpha'>Groovy 3.0.0-alpha-4 Released</a></li><li><a href='./groovy-3-0-0-beta'>Groovy 3.0.0-beta-1 Released</a></li><li><a href='./groovy-2-4-16-released'>Groovy 2.4.16 Released</a></li><li><a href='./groovy-2-4-17-released'>Groovy 2.4.17 Released</a></li><li><a href='./groovy-3-0-0-beta1'>Groovy 3.0.0-beta-2 Released</a></li><li><a href='./groovy-4-0-3-released'>Groovy 4.0.3 Released</a></li><li><a href='./gmavenplus-1-6-2-released'>GMavenPlus 1.6.2 Released (Community Artifact)</a></li><li><a href='./groovy-release-train-4-0'>Groovy release train: 4.0.4, 3.0.12, 2.5.18</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 2.5.2 Windows Installer Released (Community Artifact)</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Remko Popma</i></div><br/><span>Published: 2018-08-19 09:50AM</span></p><hr/><div class="paragraph">
-<p>The Windows installer for Groovy 2.5.2 (community artifact) is available from:
-<a href="https://groovy.jfrog.io/artifactory/dist-release-local/groovy-windows-installer/groovy-2.5.2/" class="bare">https://groovy.jfrog.io/artifactory/dist-release-local/groovy-windows-installer/groovy-2.5.2/</a></p>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>A first look at Underdog</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>A first look at Underdog</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-04-17 10:30PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
+<div class="paragraph">
+<p><span class="blue"><em>Let&#8217;s explore Whisky profiles using Underdog!</em></span></p>
+</div>
+</td></tr></table>
+<div class="paragraph">
+<p>A relatively new data science library is
+<a href="https://grooviter.github.io/underdog/">Underdog</a>.
+Let&#8217;s use it to explore Whiskey profiles.
+It has many Groovy-powered features delivering a very expressive developer experience.</p>
+</div>
+<div class="paragraph">
+<p>Underdog sits on top of some well-known data-science libraries like Smile, Tablesaw, and Apache eCharts.
+If you have used any of those libraries, you&#8217;ll recognise parts of the functionality.</p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll load our CSV file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def file = new File(getClass().classLoader.getResource('whiskey.csv').file)
+def df = Underdog.df().read_csv(file.path).drop('RowID')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at the shape of and schema for the data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println df.shape()
+println df.schema()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It gives this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>86 rows X 13 cols
+        Structure of whiskey.csv
+ Index  |  Column Name  |  Column Type  |
+-----------------------------------------
+     0  |   Distillery  |       STRING  |
+     1  |         Body  |      INTEGER  |
+     2  |    Sweetness  |      INTEGER  |
+     3  |        Smoky  |      INTEGER  |
+     4  |    Medicinal  |      INTEGER  |
+     5  |      Tobacco  |      INTEGER  |
+     6  |        Honey  |      INTEGER  |
+     7  |        Spicy  |      INTEGER  |
+     8  |        Winey  |      INTEGER  |
+     9  |        Nutty  |      INTEGER  |
+    10  |        Malty  |      INTEGER  |
+    11  |       Fruity  |      INTEGER  |
+    12  |       Floral  |      INTEGER  |</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at a correlation matrix plot of the data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def plot = Underdog.plots()
+def features = df.columns - 'Distillery'
+plot.correlationMatrix(df[features]).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogCorrelationPlot.png" alt="correlation plot" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>We can also look at the data for any individual distillery using a radar plot. Let&#8217;s look at it for row 0:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def data = df[features] as double[][]
+plot.radar(
+    features,
+    [4] * features.size(),
+    data[0].toList(),
+    df['Distillery'][0]
+).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogRadarPlot.png" alt="radar plot" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now cluster the distilleries using k-means:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def ml = Underdog.ml()
+def clusters = ml.clustering.kMeans(data, nClusters: 3)
+df['Cluster'] = clusters.toList()
+
+println 'Clusters'
+for (int i in clusters.toSet()) {
+    println "$i:${df[df['Cluster'] == i]['Distillery'].join(', ')}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It gives the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Clusters
+0:Aberfeldy, Aberlour, Auchroisk, Balmenach, Belvenie, BenNevis, Benrinnes, Benromach, BlairAthol, Dailuaine, Dalmore, Edradour, GlenOrd, Glendronach, Glendullan, Glenfarclas, Glenlivet, Glenrothes, Glenturret, Knochando, Longmorn, Macallan, Mortlach, RoyalLochnagar, Strathisla
+1:Ardbeg, Balblair, Bowmore, Bruichladdich, Caol Ila, Clynelish, GlenGarioch, GlenScotia, Highland Park, Isle of Jura, Lagavulin, Laphroig, Oban, OldPulteney, Springbank, Talisker, Teaninich
+2:AnCnoc, Ardmore, ArranIsleOf, Auchentoshan, Aultmore, Benriach, Bladnoch, Bunnahabhain, Cardhu, Craigallechie, Craigganmore, Dalwhinnie, Deanston, Dufftown, GlenDeveronMacduff, GlenElgin, GlenGrant, GlenKeith, GlenMoray, GlenSpey, Glenallachie, Glenfiddich, Glengoyne, Glenkinchie, Glenlossie, Glenmorangie, Inchgower, Linkwood, Loch Lomond, Mannochmore, Miltonduff, OldFettercairn, RoyalBrackla, Scapa, Speyburn, Speyside, Strathmill, Tamdhu, Tamnavulin, Tobermory, Tomatin, Tomintoul, Tomore, Tullibardine</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Finally, let&#8217;s project our data onto 2 dimensions using PCA and plot that as a scatter plot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def pca = ml.features.pca(data, 2)
+def projected = pca.apply(data)
+
+df['X'] = projected*.getAt(0)
+df['Y'] = projected*.getAt(1)
+
+plot.scatter(
+    df['X'],
+    df['Y'],
+    df['Cluster'],
+    'Whiskey Clusters'
+).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogScatterPlot.png" alt="scatter plot" width="50%"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://grooviter.github.io/underdog/">Underdog</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at how to use Underdog.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>17/Apr/2025</strong>: Initial version<br></p>
+</div>
+</div>
+</div>
+</div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
