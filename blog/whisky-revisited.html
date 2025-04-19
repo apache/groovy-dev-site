@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='whisky, whiskey, groovy, kmeans, clustering, apache echarts'/><meta name='description' content='This post looks at using the Underdog data science library.'/><title>The Apache Groovy programming language - Blogs - Whisky flavor profiles revisited</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa fa-star'></i> Apache Groovy
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa fa-search'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Whisky flavor profiles revisited</a></li><li><a href='#_the_case_study' class='anchor-link'>The Case Study</a></li><li><a href='#_a_first_look_at_underdog' class='anchor-link'>A first look at Underdog</a></li><li><a href='#_a_first_look_at_matrix' class='anchor-link'>A first look at Matrix</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy with Apache Wayang and Apache Spark</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whisky flavor profiles revisited</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-04-17 10:30PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
+<div class="paragraph">
+<p><span class="blue"><em>Let&#8217;s take a first look at Underdog and Matrix, two new Groovy powered dataframe libraries.
+We&#8217;ll explore Whisky flavor profiles!</em></span></p>
+</div>
+</td></tr></table>
+<div class="paragraph">
+<p>In previous blog posts, we have looked at clustering whisky profiles using:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy.apache.org/blog/using-groovy-with-apache-wayang">Apache Wayang&#8217;s cross-platform machine learning</a> supporting native and Apache Spark™ data processing platforms</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/whiskey-clustering-with-groovy-and">Apache Ignite&#8217;s distributed machine learning</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <a href="https://github.com/paulk-asert/groovy-data-science">groovy-data-science</a> repo also has examples of this case study using other technologies including:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Data manipulation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tablesaw, Datumbox, Apache Commons CSV, Tribuo</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clustering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Smile, Apache Commons Math, Datumbox, Weka, Encog, Elki, Tribuo</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Visualization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XChart, Tablesaw Plot.ly, Smile visualization, JFreeChart</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scaling clustering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Ignite, Apache Spark, Apache Wayang, Apache Flink, Apache Beam</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Let&#8217;s take a first look at two new Groovy powered dataframe libraries,
+<a href="https://grooviter.github.io/underdog/">Underdog</a> and
+<a href="https://github.com/Alipsa/matrix">Matrix</a>,
+to explore the same case study.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_case_study">The Case Study</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="img/whiskey_bottles.jpg" alt="whisky bottles" width="180"></span>
+In the quest to find the perfect single-malt Scotch whisky,
+the whiskies produced from
+<a href="https://www.niss.org/sites/default/files/ScotchWhisky01.txt">86 distilleries</a>
+have been ranked by expert tasters according to 12 criteria
+(Body, Sweetness, Malty, Smoky, Fruity, etc.).
+We&#8217;ll use algorithms, like <a href="https://en.wikipedia.org/wiki/K-means_clustering">KMeans</a>, to cluster the whiskies
+into related groups.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_first_look_at_underdog">A first look at Underdog</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A relatively new data science library is
+<a href="https://grooviter.github.io/underdog/">Underdog</a>.
+Let&#8217;s use it to explore Whisky profiles.
+It has many Groovy-powered features delivering a very expressive developer experience.</p>
+</div>
+<div class="paragraph">
+<p>Underdog sits on top of some well-known data-science libraries in the JVM ecosystem
+like Smile, Tablesaw, and <a href="https://echarts.apache.org/">Apache ECharts</a>.
+If you have used any of those libraries, you&#8217;ll recognise parts of the functionality
+shining through.</p>
+</div>
+<div class="paragraph">
+<p>First, we&#8217;ll load our CSV file into an Underdog dataframe:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def file = getClass().getResource('whisky.csv').file
+def df = Underdog.df().read_csv(file).drop('RowID')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at the shape of and schema for the data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println df.shape()
+println df.schema()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It gives this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>86 rows X 13 cols
+         Structure of whisky.csv
+ Index  |  Column Name  |  Column Type  |
+-----------------------------------------
+     0  |   Distillery  |       STRING  |
+     1  |         Body  |      INTEGER  |
+     2  |    Sweetness  |      INTEGER  |
+     3  |        Smoky  |      INTEGER  |
+     4  |    Medicinal  |      INTEGER  |
+     5  |      Tobacco  |      INTEGER  |
+     6  |        Honey  |      INTEGER  |
+     7  |        Spicy  |      INTEGER  |
+     8  |        Winey  |      INTEGER  |
+     9  |        Nutty  |      INTEGER  |
+    10  |        Malty  |      INTEGER  |
+    11  |       Fruity  |      INTEGER  |
+    12  |       Floral  |      INTEGER  |</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at a correlation matrix plot of the data:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def plot = Underdog.plots()
+def features = df.columns - 'Distillery'
+plot.correlationMatrix(df[features]).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogCorrelationPlot.png" alt="correlation plot" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now explore searching for whiskies of a particular flavor,
+in this case profiles that are somewhat <em>fruity</em> and somewhat <em>sweet</em> in flavor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def selected = df[df['Fruity'] &gt; 2 &amp; df['Sweetness'] &gt; 2]
+println selected.shape()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can see that there are 6 such whiskies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>6 rows X 13 cols</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s have a look at the flavor profiles as a radar plot.
+The <code>underdog-plots</code> module has shortcuts making it easy to access the Apache ECharts library.
+There is one such shortcut for a radar plot of a single series. Let&#8217;s look at row 0 of our selected whiskies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">plot.radar(
+    features,
+    [4] * features.size(),
+    selected[features].toList()[0],
+    selected['Distillery'][0]
+).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogAberlourRadar.png" alt="radar plot for Aberlour" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>This pops up in a browser window for the code shown above, but other output options are also available.</p>
+</div>
+<div class="paragraph">
+<p>This shows one of our 6 selected whiskies of interest. We could certainly do 5 other similar plots.
+The library (currently) doesn&#8217;t have a pre-built chart with multiple series all displayed together,
+but the library is built in a fairly flexible manner, and we can reach down one layer and
+build such a chart ourselves with not too much work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def multiRadar = Chart.createGridOptions('Whisky flavor profiles',
+    'Somewhat sweet, somewhat fruity') +
+create {
+    radar {
+        radius('50%')
+        indicator(features.zip([4] * features.size())
+            .collect { n, mx -&gt; [name: n, max: mx] })
+    }
+    selected.toList().each { row -&gt;
+        series(RadarSeries) {
+            data([[name: row[0], value: row[1..-1]]])
+        }
+    }
+}.customize {
+    legend {
+        show(true)
+    }
+}
+plot.show(multiRadar)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogWhiskySelectionsRadar.png" alt="radar plot for six whiskies" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>It can often be infuriating when a library doesn&#8217;t offer a feature you need,
+so it&#8217;s great that we can add such a feature on the fly!</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now cluster the distilleries using k-means, and place the cluster allocations back into the dataframe:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def ml = Underdog.ml()
+def d = df[features] as double[][]
+def clusters = ml.clustering.kMeans(d, nClusters: 3)
+df['Cluster'] = clusters.toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Underdog offers some aggregation functions, so we can check the counts for the cluster allocation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println df.agg([Distillery:'count'])
+    .by('Cluster')
+    .rename('Whisky Cluster Sizes')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or, we can easily print out the distilleries in each cluster:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println 'Clusters'
+for (int i in clusters.toSet()) {
+    println "$i:${df[df['Cluster'] == i]['Distillery'].join(', ')}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which gives the following output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Clusters
+0:Aberfeldy, Aberlour, Auchroisk, Balmenach, Belvenie, BenNevis, Benrinnes, Benromach, BlairAthol, Dailuaine, Dalmore, Edradour, GlenOrd, Glendronach, Glendullan, Glenfarclas, Glenlivet, Glenrothes, Glenturret, Knochando, Longmorn, Macallan, Mortlach, RoyalLochnagar, Strathisla
+1:Ardbeg, Balblair, Bowmore, Bruichladdich, Caol Ila, Clynelish, GlenGarioch, GlenScotia, Highland Park, Isle of Jura, Lagavulin, Laphroig, Oban, OldPulteney, Springbank, Talisker, Teaninich
+2:AnCnoc, Ardmore, ArranIsleOf, Auchentoshan, Aultmore, Benriach, Bladnoch, Bunnahabhain, Cardhu, Craigallechie, Craigganmore, Dalwhinnie, Deanston, Dufftown, GlenDeveronMacduff, GlenElgin, GlenGrant, GlenKeith, GlenMoray, GlenSpey, Glenallachie, Glenfiddich, Glengoyne, Glenkinchie, Glenlossie, Glenmorangie, Inchgower, Linkwood, Loch Lomond, Mannochmore, Miltonduff, OldFettercairn, RoyalBrackla, Scapa, Speyburn, Speyside, Strathmill, Tamdhu, Tamnavulin, Tobermory, Tomatin, Tomintoul, Tomore, Tullibardine</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s very hard to visualize 12 dimensional data,
+so let&#8217;s project our data onto 2 dimensions using PCA and store those projections back into the dataframe:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def pca = ml.features.pca(d, 2)
+def projected = pca.apply(d)
+df['X'] = projected*.getAt(0)
+df['Y'] = projected*.getAt(1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can now create a scatter plot of this data as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">plot.scatter(
+    df['X'],
+    df['Y'],
+    df['Cluster'],
+    'Whisky Clusters (kMeans)'
+).show()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogClusterKmeans.png" alt="scatter plot kmeans" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>We can go and change our clustering algorithm, e.g. <code>ml.clustering.agglomerative(d, nClusters: 3)</code>,
+in which case the cluster allocation counts will look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>       Whisky Cluster Sizes
+ Cluster  |  Count [Distillery]  |
+----------------------------------
+       1  |                  39  |
+       2  |                  41  |
+       0  |                   6  |</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the scatter plot looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/underdogClustersAgglomerative.png" alt="scatter plot agglomerative" width="50%"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_first_look_at_matrix">A first look at Matrix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The
+<a href="https://github.com/Alipsa/matrix/tree/main">Matrix</a>
+library makes it easy to work with a matrix of tabular data.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s read in our data and explore its size:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def url = getClass().getResource('whisky.csv')
+Matrix m = CsvImporter.importCsv(url).dropColumns('RowID')
+println m.dimensions()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This outputs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[observations:86, variables:13]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Currently, the data is all strings. Matrix provides a <code>convert</code> option for getting data
+into the right type including handling missing values. It also has powerful normalization
+functionality. We&#8217;ll want to normalize our data because some of the algorithms and certainly
+the radar plot assume normalized data (values between 0 and 1).</p>
+</div>
+<div class="paragraph">
+<p>But, here we&#8217;ll show off the <code>apply</code> functionality which will convert and normalize all-in-one
+by hand:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def features = m.columnNames() - 'Distillery'
+def size = features.size()
+features.each { feature -&gt;
+    m.apply(feature) { it.toDouble() / 4 }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now, like we did with Underdog, we want to perform a query to find the
+whiskies which are somewhat <em>fruity</em> and somewhat <em>sweet</em> in flavor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def selected= m.subset{ it.Fruity &gt; 0.5 &amp;&amp; it.Sweetness &gt; 0.5 }
+println selected.dimensions()
+println selected.head(10)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[observations:6, variables:13]
+Distillery  	Body	Sweetness	Smoky	Medicinal	Tobacco	Honey	Spicy	Winey	Nutty	Malty	Fruity	Floral
+Aberlour    	0.75	     0.75	 0.25	      0.0	    0.0	  1.0	 0.75	  0.5	  0.5	 0.75	  0.75	   0.5
+AnCnoc      	0.25	     0.75	  0.5	      0.0	    0.0	  0.5	  0.0	  0.0	  0.5	  0.5	  0.75	   0.5
+Linkwood    	 0.5	     0.75	 0.25	      0.0	    0.0	 0.25	 0.25	  0.5	  0.0	 0.25	  0.75	   0.5
+Macallan    	 1.0	     0.75	 0.25	      0.0	    0.0	  0.5	 0.25	  1.0	  0.5	  0.5	  0.75	  0.25
+RoyalBrackla	 0.5	     0.75	  0.5	     0.25	   0.25	 0.25	  0.5	 0.25	  0.0	  0.5	  0.75	   0.5
+Strathmill  	 0.5	     0.75	 0.25	      0.0	    0.0	  0.0	  0.5	  0.0	  0.5	 0.25	  0.75	   0.5</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can do a radar plot for just the first:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def transparency = 80
+def aberlour = selected.subset(0..0)
+def rc = RadarChart.create(aberlour).addSeries('Distillery', transparency)
+new SwingWrapper(rc.exportSwing().chart).displayChart()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/matrixAberlourRadar.png" alt="aberlour profile" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>Or, for all selected whiskies:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">rc = RadarChart.create(selected).addSeries('Distillery', transparency)
+new SwingWrapper(rc.exportSwing().chart).displayChart()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which looks like this:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/matrixWhiskySelectionsRadar.png" alt="selected whisky profiles" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s now apply K-Means, placing the allocated clusters back into the matrix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def iterations = 20
+def data = m.selectColumns(*features) as double[][]
+def model = KMeans.fit(data,3, iterations)
+m['Cluster'] = model.group().toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also project onto two dimensions using PCA:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def pca = PCA.fit(data)
+def projected = pca.getProjection(2).apply(data)
+m['X'] = projected*.getAt(0)
+m['Y'] = projected*.getAt(1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ve placed the projected coordinates back into the matrix.
+Let&#8217;s now create a scatter plot with the distilleries for each cluster
+added in distinct series:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def clusters = m['Cluster'].toSet()
+def sc = ScatterChart.create(m)
+sc.title = 'Whisky Flavor Clusters'
+for (i in clusters) {
+    def series = m.subset('Cluster', i)
+    sc.addSeries("Cluster $i", series.column('X'), series.column('Y'))
+}
+new SwingWrapper(sc.exportSwing().chart).displayChart()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When run, we get the following output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/matrixWhiskyScatterPlot.png" alt="scatter plot" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>Matrix doesn&#8217;t have a correlation heatmap out of the box, but it does have heatmap plots,
+and it does have correlation functionality.
+It&#8217;s easy enough to roll our own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def corr = [size&lt;..0, 0..&lt;size].combinations().collect { i, j -&gt;
+    Correlation.cor(data*.getAt(j), data*.getAt(i)) * 100 as int
+}
+
+def corrMatrix = Matrix.builder().data(X: 0..&lt;corr.size(), Heat: corr)
+    .types([Number] * 2)
+    .matrixName('Heatmap')
+    .build()
+
+def hc = HeatmapChart.create(corrMatrix)
+    .addSeries('Heat Series', features.reverse(), features,
+        corrMatrix.column('Heat').collate(size))
+hc.exportPng('matrixWhiskyCorrHeatmap.png' as File)
+new SwingWrapper(hc.exportSwing().chart).displayChart()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/matrixWhiskyCorrHeatmap.png" alt="heatmap" width="50%"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://grooviter.github.io/underdog/">Underdog</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/whisky-underdog">source code for Underdog examples</a></p>
+</li>
+<li>
+<p><a href="https://github.com/Alipsa/matrix/tree/main">Matrix</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/whisky-matrix">source code for Matrix examples</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have looked at how to use Underdog and Matrix.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>19/Apr/2025</strong>: Initial version<br></p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='http://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='../img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache&reg; and the Apache feather logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='http://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
