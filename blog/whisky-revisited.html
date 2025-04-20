@@ -57,7 +57,7 @@
 <div class="sectionbody">
 <table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
 <div class="paragraph">
-<p><span class="blue"><em>Let&#8217;s take a first look at Underdog and Matrix, two new Groovy powered dataframe libraries.
+<p><span class="blue"><em>Let&#8217;s take a first look at Underdog and Matrix, two new Groovy-powered dataframe libraries.
 We&#8217;ll explore Whisky flavor profiles!</em></span></p>
 </div>
 </td></tr></table>
@@ -77,35 +77,26 @@ We&#8217;ll explore Whisky flavor profiles!</em></span></p>
 <div class="paragraph">
 <p>The <a href="https://github.com/paulk-asert/groovy-data-science">groovy-data-science</a> repo also has examples of this case study using other technologies including:</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 80%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Data manipulation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tablesaw, Datumbox, Apache Commons CSV, Tribuo</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Clustering</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Smile, Apache Commons Math, Datumbox, Weka, Encog, Elki, Tribuo</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Visualization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">XChart, Tablesaw Plot.ly, Smile visualization, JFreeChart</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Scaling clustering</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Apache Ignite, Apache Spark, Apache Wayang, Apache Flink, Apache Beam</p></td>
-</tr>
-</tbody>
-</table>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Data manipulation</strong>: Tablesaw, Datumbox, Apache Commons CSV, Tribuo</p>
+</li>
+<li>
+<p><strong>Clustering</strong>: Smile, Apache Commons Math, Datumbox, Weka, Encog, Elki, Tribuo</p>
+</li>
+<li>
+<p><strong>Visualization</strong>: XChart, Tablesaw Plot.ly, Smile visualization, JFreeChart</p>
+</li>
+<li>
+<p><strong>Scaling clustering</strong>: Apache Ignite, Apache Spark, Apache Wayang, Apache Flink, Apache Beam</p>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>Let&#8217;s take a first look at two new Groovy powered dataframe libraries,
+<p>Let&#8217;s explore the same case study, but this time, taking a first look at two new Groovy-powered dataframe libraries:
 <a href="https://grooviter.github.io/underdog/">Underdog</a> and
-<a href="https://github.com/Alipsa/matrix">Matrix</a>,
-to explore the same case study.</p>
+<a href="https://github.com/Alipsa/matrix">Matrix</a>.</p>
 </div>
 </div>
 </div>
@@ -134,13 +125,16 @@ Let&#8217;s use it to explore Whisky profiles.
 It has many Groovy-powered features delivering a very expressive developer experience.</p>
 </div>
 <div class="paragraph">
+<p>Underdog has the following modules: underdog-dataframe, underdog-graphs, underdog-plots, underdog-ml, and underdog-ta. We&#8217;ll use all but the last of these.</p>
+</div>
+<div class="paragraph">
 <p>Underdog sits on top of some well-known data-science libraries in the JVM ecosystem
 like Smile, Tablesaw, and <a href="https://echarts.apache.org/">Apache ECharts</a>.
 If you have used any of those libraries, you&#8217;ll recognise parts of the functionality
 shining through.</p>
 </div>
 <div class="paragraph">
-<p>First, we&#8217;ll load our CSV file into an Underdog dataframe:</p>
+<p>First, we&#8217;ll load our CSV file into an Underdog dataframe (removing a column we don&#8217;t need):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -182,7 +176,14 @@ println df.schema()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s look at a correlation matrix plot of the data:</p>
+<p>When data has many dimensions, understanding the relationship between the columns can be hard.
+We can look at a correlation matrix to help us understand whether there is any redundant data,
+e.g. are <em>Sweetness</em> and <em>Honey</em>, or <em>Tobacco</em> and <em>Smoky</em>, two measure of the same thing
+or different things.</p>
+</div>
+<div class="paragraph">
+<p>Underdog has a built-in plot for this, so let&#8217;s
+gather the numeric features and plot the correlation matrix:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -196,6 +197,11 @@ plot.correlationMatrix(df[features]).show()</code></pre>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="img/underdogCorrelationPlot.png" alt="correlation plot" width="50%"></span></p>
+</div>
+<div class="paragraph">
+<p>We can see that the different flavor measures are quite distinct.
+The highest correlations are between <em>Smoky</em> and <em>Medicinal</em>, and <em>Smoky</em> and <em>Body</em>.
+Some, like <em>Floral</em> and <em>Medicinal</em>, are very unrelated.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s now explore searching for whiskies of a particular flavor,
@@ -300,6 +306,19 @@ df['Cluster'] = clusters.toList()</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>       Whisky Cluster Sizes
+ Cluster  |  Count [Distillery]  |
+----------------------------------
+       0  |                  25  |
+       2  |                  44  |
+       1  |                  17  |</pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Or, we can easily print out the distilleries in each cluster:</p>
 </div>
 <div class="listingblock">
@@ -380,10 +399,19 @@ in which case the cluster allocation counts will look like this:</p>
 <div class="paragraph">
 <p>The
 <a href="https://github.com/Alipsa/matrix/tree/main">Matrix</a>
-library makes it easy to work with a matrix of tabular data.</p>
+library makes it easy to work with a matrix of tabular data.
+The Matrix project consists of the following modules: matrix-core, matrix-stats, matrix-datasets, matrix-spreadsheet, matrix-csv, matrix-json, matrix-xcharts, matrix-sql, matrix-parquet, matrix-bigquery, matrix-charts, and matrix-tablesaw.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s read in our data and explore its size:</p>
+<p>While new, Matrix does build upon common JVM data science libraries, like Tablesaw and Apache Commons Math.
+For certain functionality, like clustering and dimension reduction, Matrix works well with libraries like Smile.</p>
+</div>
+<div class="paragraph">
+<p>For a first intro, we&#8217;ll look at the
+matrix-core, matrix-stats, matrix-csv, and matrix-xchart modules.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s read in our data, remove a column we don&#8217;t need, and explore its size:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -402,26 +430,24 @@ println m.dimensions()</code></pre>
 </div>
 <div class="paragraph">
 <p>Currently, the data is all strings. Matrix provides a <code>convert</code> option for getting data
-into the right type including handling missing values. It also has powerful normalization
-functionality. We&#8217;ll want to normalize our data because some of the algorithms and certainly
-the radar plot assume normalized data (values between 0 and 1).</p>
+into the right type. It also has various normalization
+methods. We want our data as numbers, and some of the functionality we&#8217;ll use, e.g.
+the radar plot, assumes our data is normalized (values between 0 and 1).</p>
 </div>
 <div class="paragraph">
-<p>But, here we&#8217;ll show off the <code>apply</code> functionality which will convert and normalize all-in-one
-by hand:</p>
+<p>Rather than using <code>convert</code> or the normalization methods, here we&#8217;ll show off the <code>apply</code>
+functionality which will achieve the same thing for our example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def features = m.columnNames() - 'Distillery'
 def size = features.size()
-features.each { feature -&gt;
-    m.apply(feature) { it.toDouble() / 4 }
-}</code></pre>
+features.each(feature -&gt; m.apply(feature) { it.toDouble() / 4 })</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now, like we did with Underdog, we want to perform a query to find the
-whiskies which are somewhat <em>fruity</em> and somewhat <em>sweet</em> in flavor:</p>
+<p>Now, like we did with Underdog, we want to perform a query to find and display
+the whiskies which are somewhat <em>fruity</em> and somewhat <em>sweet</em> in flavor:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -456,6 +482,20 @@ def rc = RadarChart.create(aberlour).addSeries('Distillery', transparency)
 new SwingWrapper(rc.exportSwing().chart).displayChart()</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+If <code>matrix-xchart</code> doesn&#8217;t have the functionality you are after, considering
+looking at the <code>matrix-chart</code> library. They offer many similar charts but there
+are some differences too.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>The output looks like this:</p>
 </div>
@@ -463,7 +503,7 @@ new SwingWrapper(rc.exportSwing().chart).displayChart()</code></pre>
 <p><span class="image"><img src="img/matrixAberlourRadar.png" alt="aberlour profile" width="50%"></span></p>
 </div>
 <div class="paragraph">
-<p>Or, for all selected whiskies:</p>
+<p>The same chart also works to display all selected whiskies:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -478,7 +518,9 @@ new SwingWrapper(rc.exportSwing().chart).displayChart()</code></pre>
 <p><span class="image"><img src="img/matrixWhiskySelectionsRadar.png" alt="selected whisky profiles" width="50%"></span></p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s now apply K-Means, placing the allocated clusters back into the matrix:</p>
+<p>Let&#8217;s now cluster our whiskies. We&#8217;ll use the K-Means functionality from
+<a href="https://haifengl.github.io/clustering.html">Smile</a>.
+Let&#8217;s apply K-Means, and place the allocated clusters back into the matrix:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -489,7 +531,67 @@ m['Cluster'] = model.group().toList()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can also project onto two dimensions using PCA:</p>
+<p>We can examine the cluster allocation using groovy-ginq functionality, which works well with Matrix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def result = GQ {
+    from w in m
+    groupby w.Cluster
+    orderby w.Cluster
+    select w.Cluster, count(w.Cluster) as Count
+}
+println result</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>+---------+-------+
+| Cluster | Count |
++---------+-------+
+| 0       | 51    |
+| 1       | 23    |
+| 2       | 12    |
++---------+-------+</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can convert the ginq result back into a matrix like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println Matrix.builder('Cluster allocation').ginqResult(result).build().content()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Cluster allocation: 3 obs * 2 variables
+Cluster	Count
+      0	   51
+      1	   23
+      2	   12</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the particular problem of checking cluster allocation, we can also
+use the normal Groovy extension methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert m.rows().countBy{ it.Cluster } == [0:51, 1:23, 2:12]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can also project onto two dimensions using Principal Component Analysis (PCA).
+We&#8217;ll again use the
+<a href="https://haifengl.github.io/feature.html#dimension-reduction">Smile</a> functionality for this.
+Let&#8217;s project onto 2 dimensions and place the projected coordinates back into the matrix:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -500,9 +602,9 @@ m['Y'] = projected*.getAt(1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We&#8217;ve placed the projected coordinates back into the matrix.
-Let&#8217;s now create a scatter plot with the distilleries for each cluster
-added in distinct series:</p>
+<p>Let&#8217;s now create a scatter plot showing the distilleries mapped according
+to the projected coordinates. The most compact form of the <code>ScatterPlot#create</code>
+method assumes one series, but it&#8217;s not hard to add each series ourselves:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -523,7 +625,7 @@ new SwingWrapper(sc.exportSwing().chart).displayChart()</code></pre>
 <p><span class="image"><img src="img/matrixWhiskyScatterPlot.png" alt="scatter plot" width="50%"></span></p>
 </div>
 <div class="paragraph">
-<p>Matrix doesn&#8217;t have a correlation heatmap out of the box, but it does have heatmap plots,
+<p>Matrix doesn&#8217;t have a correlation heatmap plot out of the box, but it does have heatmap plots,
 and it does have correlation functionality.
 It&#8217;s easy enough to roll our own:</p>
 </div>
@@ -540,9 +642,7 @@ def corrMatrix = Matrix.builder().data(X: 0..&lt;corr.size(), Heat: corr)
 
 def hc = HeatmapChart.create(corrMatrix)
     .addSeries('Heat Series', features.reverse(), features,
-        corrMatrix.column('Heat').collate(size))
-hc.exportPng('matrixWhiskyCorrHeatmap.png' as File)
-new SwingWrapper(hc.exportSwing().chart).displayChart()</code></pre>
+        corrMatrix.column('Heat').collate(size))</code></pre>
 </div>
 </div>
 <div class="paragraph">
