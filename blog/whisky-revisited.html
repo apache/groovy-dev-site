@@ -366,7 +366,7 @@ but currently, that information is behind Underdog&#8217;s simplified K-Means ab
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">(summary.columns - 'Cluster').each { c -&gt;
-    summary[c] = summary[c](Double, Double) {it.round(3) }
+    summary[c] = summary[c](Double, Double) { it.round(3) }
 }
 println summary</code></pre>
 </div>
@@ -385,7 +385,7 @@ println summary</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Looking at the centroids is one way to understand how the whiskies have been grouped.
+<p>Looking at the centroids is one way to try to understand how the whiskies have been grouped.
 But, it&#8217;s very hard to visualize 12 dimensional data, so instead,
 let&#8217;s project our data onto 2 dimensions using PCA and store those projections back into the dataframe:</p>
 </div>
@@ -701,7 +701,7 @@ It&#8217;s easy enough to roll our own:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def corr = [size&lt;..0, 0..&lt;size].combinations().collect { i, j -&gt;
-    Correlation.cor(data*.getAt(j), data*.getAt(i)) * 100 as int
+    Correlation.cor(data*.getAt(j), data*.getAt(i)).round(2)
 }
 
 def corrMatrix = Matrix.builder().data(X: 0..&lt;corr.size(), Heat: corr)
@@ -747,13 +747,13 @@ def hc = HeatmapChart.create(corrMatrix)
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We have looked at how to use Underdog and Matrix.</p>
+<p>We have looked at how to use Underdog and Matrix to classify whisky flavor profiles.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>19/Apr/2025</strong>: Initial version<br></p>
+<p><strong>02/May/2025</strong>: Initial version<br></p>
 </div>
 </div>
 </div>
