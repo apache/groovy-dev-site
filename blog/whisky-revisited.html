@@ -292,8 +292,8 @@ so it&#8217;s great that we can add such a feature on the fly!</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def ml = Underdog.ml()
-def d = df[features] as double[][]
-def clusters = ml.clustering.kMeans(d, nClusters: 3)
+def data = df[features] as double[][]
+def clusters = ml.clustering.kMeans(data, nClusters: 3)
 df['Cluster'] = clusters.toList()</code></pre>
 </div>
 </div>
@@ -391,8 +391,8 @@ let&#8217;s project our data onto 2 dimensions using PCA and store those project
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def pca = ml.features.pca(d, 2)
-def projected = pca.apply(d)
+<pre class="prettyprint highlight"><code data-lang="groovy">def pca = ml.features.pca(data, 2)
+def projected = pca.apply(data)
 df['X'] = projected*.getAt(0)
 df['Y'] = projected*.getAt(1)</code></pre>
 </div>
@@ -417,7 +417,7 @@ df['Y'] = projected*.getAt(1)</code></pre>
 <p><span class="image"><img src="img/underdogClusterKmeans.png" alt="scatter plot kmeans" width="50%"></span></p>
 </div>
 <div class="paragraph">
-<p>We can go and change our clustering algorithm, e.g. <code>ml.clustering.agglomerative(d, nClusters: 3)</code>,
+<p>We can go and change our clustering algorithm, e.g. <code>ml.clustering.agglomerative(data, nClusters: 3)</code>,
 in which case the cluster allocation counts will look like this:</p>
 </div>
 <div class="listingblock">
@@ -496,7 +496,7 @@ the whiskies which are somewhat <em>fruity</em> and somewhat <em>sweet</em> in f
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def selected= m.subset{ it.Fruity &gt; 0.5 &amp;&amp; it.Sweetness &gt; 0.5 }
+<pre class="prettyprint highlight"><code data-lang="groovy">def selected = m.subset { it.Fruity &gt; 0.5 &amp;&amp; it.Sweetness &gt; 0.5 }
 println selected.dimensions()
 println selected.head(10)</code></pre>
 </div>
@@ -571,7 +571,7 @@ Let&#8217;s apply K-Means, and place the allocated clusters back into the matrix
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def iterations = 20
 def data = m.selectColumns(*features) as double[][]
-def model = KMeans.fit(data,3, iterations)
+def model = KMeans.fit(data, 3, iterations)
 m['Cluster'] = model.group().toList()</code></pre>
 </div>
 </div>
