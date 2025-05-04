@@ -269,16 +269,23 @@ assert abc.stream()
 </div>
 </div>
 <div class="paragraph">
-<p>For collections, Groovy provides <code>combinations</code> or <code>eachCombination</code>, but for iterators you can do the following:</p>
+<p>For collections, Groovy provides <code>combinations</code> or <code>eachCombination</code>,
+but for iterators you can do the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert Iterators.combine(letter: abc.iterator(), number: nums.iterator())
-    .collectLazy(map -&gt; map.letter + map.number)
+    .collecting(map -&gt; map.letter + map.number)
     .toList() == ['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C1', 'C2', 'C3']
 <br/></div></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Groovy has the <code>collect</code> family of methods corresponding to Java&#8217;s <code>map</code> method in streams.
+Groovy followed Smalltalk&#8217;s naming conventions at the time when naming that method.
+Groovy offers both eager, <code>collect</code>, and lazy, <code>collecting</code>, variants, so we could have
+used <code>collect</code> here and not needed the <code>toList()</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -345,7 +352,7 @@ assert abc.iterator()
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mapindexed_collectlazywithindex_mapwithindex">mapIndexed, collectLazy+withIndex, mapWithIndex</h3>
+<h3 id="_mapindexed_collectwithindex_mapwithindex">mapIndexed, collect+withIndex, mapWithIndex</h3>
 <div class="paragraph">
 <p>The <em>map</em> (also called <em>transform</em> or <em>collect</em>) operation transforms elements in a stream into a stream of new values.</p>
 </div>
@@ -364,14 +371,26 @@ assert abc.stream()
 </div>
 </div>
 <div class="paragraph">
-<p>In Groovy, you&#8217;d typically use <code>withIndex</code> and <code>collectLazy</code> for this functionality:</p>
+<p>In Groovy, you&#8217;d typically use <code>withIndex</code> and <code>collect</code> for this functionality:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abc.iterator()
     .withIndex()
-    .collectLazy {  s, i -&gt; s + i }
+    .collect { s, i -&gt; s + i } == ['A0', 'B1', 'C2']
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or we could use the <code>collecting</code> variant as shown here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
+assert abc.iterator()
+    .withIndex()
+    .collecting { s, i -&gt; s + i }
     .toList() == ['A0', 'B1', 'C2']
 <br/></div></code></pre>
 </div>
@@ -756,9 +775,7 @@ assert abc.stream()
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
-assert abc.iterator().withIndex()
-    .collectLazy(tuple -&gt; "$tuple.v1$tuple.v2")
-    .toList() == ['A0', 'B1', 'C2']
+assert abc.iterator().withIndex().collect { s, i -&gt; s + i } == ['A0', 'B1', 'C2']
 <br/></div></code></pre>
 </div>
 </div>
@@ -786,8 +803,7 @@ assert abc.stream()
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abc.iterator()
     .zip(nums.iterator())
-    .collectLazy { s, n -&gt; s + n }
-    .toList() == ['A1', 'B2', 'C3']
+    .collect { s, n -&gt; s + n } == ['A1', 'B2', 'C3']
 <br/></div></code></pre>
 </div>
 </div>
@@ -861,13 +877,13 @@ but you either use <code>findAllLazy</code> with <code>withIndex</code>, or <cod
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 // drop every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAllLazy { next, i -&gt; i % 3 }
-    .toList()*.first == ['B', 'C', 'E', 'F']
+    .findAll { next, i -&gt; i % 3 }
+    *.first == ['B', 'C', 'E', 'F']
 
 // take every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAllLazy { next, i -&gt; i % 3 == 0 }
-    .toList()*.first == ['A', 'D', 'G']
+    .findAll { next, i -&gt; i % 3 == 0 }
+    *.first == ['A', 'D', 'G']
 
 // also take every 3rd
 var result = []
@@ -951,9 +967,9 @@ assert abcde.stream()
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abcde.iterator().withIndex()
-    .findAllLazy { s, n -&gt; n % 2 == 0 }*.first == ['A', 'C', 'E']
+    .findAll { s, n -&gt; n % 2 == 0 }*.first == ['A', 'C', 'E']
 assert abcde.iterator().withIndex()
-    .findAllLazy { s, n -&gt; n &lt; 2 || s == 'E' }*.first == ['A', 'B', 'E']
+    .findAll { s, n -&gt; n &lt; 2 || s == 'E' }*.first == ['A', 'B', 'E']
 <br/></div></code></pre>
 </div>
 </div>
