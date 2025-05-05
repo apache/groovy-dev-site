@@ -550,6 +550,8 @@ if (location.href.indexOf('is-external=true') == -1) {
  we were constructed with, the <CODE>classLoader</CODE> passed in and a <a href='../geb/BuildAdapter.html' title='build adapter'>build adapter</a>.</div></dd>
 <dt><span class="strong"><a href="geb/Configuration.html#createDefaultReporter()" title="Method in Configuration">createDefaultReporter()</a></span> - Method in <a href="geb/Configuration.html">Configuration</a>
 </dt><dd> <div class="block"></div></dd>
+<dt><span class="strong"><a href="geb/Browser.html#createDriver()" title="Method in Browser">createDriver()</a></span> - Method in <a href="geb/Browser.html">Browser</a>
+</dt><dd> <div class="block">Called to create the driver, the first time it is requested.</div></dd>
 <dt><span class="strong"><a href="geb/Configuration.html#createDriver()" title="Method in Configuration">createDriver()</a></span> - Method in <a href="geb/Configuration.html">Configuration</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="geb/navigator/factory/AbstractNavigatorFactory.html#createDynamic(Supplier<Iterable<WebElement>>)" title="Method in AbstractNavigatorFactory">createDynamic(Supplier&lt;Iterable&lt;WebElement&gt;&gt;)</a></span> - Method in <a href="geb/navigator/factory/AbstractNavigatorFactory.html">AbstractNavigatorFactory</a>
@@ -1085,7 +1087,8 @@ if (location.href.indexOf('is-external=true') == -1) {
 <dt><span class="strong"><a href="geb/driver/CallbackDriverFactory.html#getDriver()" title="Method in CallbackDriverFactory">getDriver()</a></span> - Method in <a href="geb/driver/CallbackDriverFactory.html">CallbackDriverFactory</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="geb/Configuration.html#getDriver()" title="Method in Configuration">getDriver()</a></span> - Method in <a href="geb/Configuration.html">Configuration</a>
-</dt><dd> <div class="block"></div></dd>
+</dt><dd> <div class="block"><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, replaced by <a href='#createDriver()'>createDriver()</a>, the configuration does
+             no longer carry a driver instance.</DD></DL> </div></dd>
 <dt><span class="strong"><a href="geb/driver/DriverFactory.html#getDriver()" title="Method in DriverFactory">getDriver()</a></span> - Method in <a href="geb/driver/DriverFactory.html">DriverFactory</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="geb/driver/NameBasedDriverFactory.html#getDriver()" title="Method in NameBasedDriverFactory">getDriver()</a></span> - Method in <a href="geb/driver/NameBasedDriverFactory.html">NameBasedDriverFactory</a>
@@ -2300,7 +2303,9 @@ if (location.href.indexOf('is-external=true') == -1) {
 <dt><span class="strong"><a href="geb/Browser.html#setDriver(org.openqa.selenium.WebDriver)" title="Method in Browser">setDriver(org.openqa.selenium.WebDriver)</a></span> - Method in <a href="geb/Browser.html">Browser</a>
 </dt><dd> <div class="block">Set (or change) the webdriver underneath this browser.</div></dd>
 <dt><span class="strong"><a href="geb/Configuration.html#setDriver(org.openqa.selenium.WebDriver)" title="Method in Configuration">setDriver(org.openqa.selenium.WebDriver)</a></span> - Method in <a href="geb/Configuration.html">Configuration</a>
-</dt><dd> <div class="block"></div></dd>
+</dt><dd> <div class="block"><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, the configuration does no longer carry a driver
+             instance, but only create new driver instances, the driver
+             instance used is stored in the browser instance.</DD></DL> </div></dd>
 <dt><span class="strong"><a href="geb/Configuration.html#setDriverConf(java.lang.Object)" title="Method in Configuration">setDriverConf(java.lang.Object)</a></span> - Method in <a href="geb/Configuration.html">Configuration</a>
 </dt><dd> <div class="block">Sets the driver configuration value.</div></dd>
 <dt><span class="strong"><a href="geb/navigator/DefaultNavigator.html#setEventListener(geb.navigator.event.NavigatorEventListener)" title="Method in DefaultNavigator">setEventListener(geb.navigator.event.NavigatorEventListener)</a></span> - Method in <a href="geb/navigator/DefaultNavigator.html">DefaultNavigator</a>

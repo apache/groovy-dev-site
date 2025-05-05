@@ -325,7 +325,7 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>protected&nbsp;<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a></code></td>
+                            <td class="colLast"><code><a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a></code></td>
                             <td class="colLast"><code><strong><a href="#createDriver()">createDriver</a></strong>()</code><br></td>
                         </tr>
                         
@@ -381,7 +381,8 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code><a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a></code></td>
-                            <td class="colLast"><code><strong><a href="#getDriver()">getDriver</a></strong>()</code><br></td>
+                            <td class="colLast"><code><strong><a href="#getDriver()">getDriver</a></strong>()</code><br><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, replaced by <a href='#createDriver()'>createDriver()</a>, the configuration does
+             no longer carry a driver instance.</DD></DL> </td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -623,7 +624,9 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>void</code></td>
-                            <td class="colLast"><code><strong><a href="#setDriver(org.openqa.selenium.WebDriver)">setDriver</a></strong>(<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> driver)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#setDriver(org.openqa.selenium.WebDriver)">setDriver</a></strong>(<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> ignored)</code><br><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, the configuration does no longer carry a driver
+             instance, but only create new driver instances, the driver
+             instance used is stored in the browser instance.</DD></DL> </td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -1087,7 +1090,7 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         <a name="createDriver()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> <strong>createDriver</strong>()</h4>
+                                <h4><a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> <strong>createDriver</strong>()</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -1169,8 +1172,9 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         <a name="getDriver()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4><a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> <strong>getDriver</strong>()</h4>
-                                <p></p>
+                                <h4>@<a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html' title='Deprecated'>Deprecated</a><br><a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> <strong>getDriver</strong>()</h4>
+                                <p><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, replaced by <a href='#createDriver()'>createDriver()</a>, the configuration does
+             no longer carry a driver instance.</DD></DL> </p>
                             </li>
                         </ul>
                     
@@ -1181,7 +1185,7 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                                 <p> Returns the configuration value for the driver.
  <p>
  This may be the class name of a driver implementation, a short name, or a closure
- that when invoked returns an actual driver. <DL><DT><B>See Also:</B></DT><DD><a href='#getDriver()'>getDriver()</a></DD></DL></p>
+ that when invoked returns an actual driver. <DL><DT><B>See Also:</B></DT><DD><a href='#createDriver()'>createDriver()</a></DD></DL></p>
                             </li>
                         </ul>
                     
@@ -1518,8 +1522,10 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                         <a name="setDriver(org.openqa.selenium.WebDriver)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>void <strong>setDriver</strong>(<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> driver)</h4>
-                                <p></p>
+                                <h4>@<a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Deprecated.html' title='Deprecated'>Deprecated</a><br>void <strong>setDriver</strong>(<a href='http://static.javadoc.io/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html' title='WebDriver'>WebDriver</a> ignored)</h4>
+                                <p><DL><DT><B>deprecated:</B></DT><DD>As of 8.0, the configuration does no longer carry a driver
+             instance, but only create new driver instances, the driver
+             instance used is stored in the browser instance.</DD></DL> </p>
                             </li>
                         </ul>
                     
@@ -1530,7 +1536,7 @@ extends <a href='http://docs.oracle.com/javase/8/docs/api/java/lang/Object.html'
                                 <p> Sets the driver configuration value.
  <p>
  This may be the class name of a driver implementation, a driver short name or a closure
- that when invoked with no arguments returns a driver implementation. <DL><DT><B>See Also:</B></DT><DD><a href='#getDriver()'>getDriver()</a></DD></DL></p>
+ that when invoked with no arguments returns a driver implementation. <DL><DT><B>See Also:</B></DT><DD><a href='#createDriver()'>createDriver()</a></DD></DL></p>
                             </li>
                         </ul>
                     
