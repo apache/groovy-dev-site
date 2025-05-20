@@ -924,7 +924,7 @@ A <code>Navigator</code> object is in someways analogous to the <code>jQuery</co
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">geb.Browser</span>
 
 Browser.drive {
-    go <span class="string"><span class="delimiter">&quot;</span><span class="content">http://gebish.org</span><span class="delimiter">&quot;</span></span>
+    go <span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>
 
     <span class="keyword">assert</span> title == <span class="string"><span class="delimiter">&quot;</span><span class="content">Geb - Very Groovy Browser Automation</span><span class="delimiter">&quot;</span></span> <i class="conum" data-value="1"></i><b>(1)</b>
 
@@ -986,7 +986,7 @@ Browser.drive {
 }
 
 <span class="type">class</span> <span class="class">GebHomePage</span> <span class="directive">extends</span> Page {
-    <span class="directive">static</span> url = <span class="string"><span class="delimiter">&quot;</span><span class="content">http://gebish.org</span><span class="delimiter">&quot;</span></span> <i class="conum" data-value="5"></i><b>(5)</b>
+    <span class="directive">static</span> url = <span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span> <i class="conum" data-value="5"></i><b>(5)</b>
 
     <span class="directive">static</span> at = { title == <span class="string"><span class="delimiter">&quot;</span><span class="content">Geb - Very Groovy Browser Automation</span><span class="delimiter">&quot;</span></span> } <i class="conum" data-value="6"></i><b>(6)</b>
 
@@ -1742,7 +1742,7 @@ windows.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.gebish.org</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">myWindow</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">myWindow</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1784,7 +1784,7 @@ The first closure passed should return true for the window, or windows, you want
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.gebish.org</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_blank</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_blank</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1860,7 +1860,7 @@ Given that this HTML is rendered for the <code>baseUrl</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.gebish.org</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_blank</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
+<pre class="CodeRay highlight"><code data-lang="html"><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">target</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">_blank</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb<span class="tag">&lt;/a&gt;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5180,9 +5180,9 @@ This can be set with the <code>static</code> <code>atCheckWaiting</code> propert
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
+<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
     to PageObjectsPage
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/pages</span><span class="delimiter">&quot;</span></span>
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/pages</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -5198,9 +5198,9 @@ This can be set with the <code>static</code> <code>atCheckWaiting</code> propert
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
-    to ManualsPage, <span class="string"><span class="delimiter">&quot;</span><span class="content">0.9.3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">index.html</span><span class="delimiter">&quot;</span></span>
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/manual/0.9.3/index.html</span><span class="delimiter">&quot;</span></span>
+<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
+    to ManualsPage, <span class="string"><span class="delimiter">&quot;</span><span class="content">7.0.0</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">index.html</span><span class="delimiter">&quot;</span></span>
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/manual/7.0.0/index.html</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -5240,11 +5240,11 @@ Consider the following…</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> someManualVersion = <span class="keyword">new</span> Manual(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">0.9.3</span><span class="delimiter">&quot;</span></span>)
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> someManualVersion = <span class="keyword">new</span> Manual(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">7.0.0</span><span class="delimiter">&quot;</span></span>)
 
-Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
+Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
     to ManualsPage, someManualVersion
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/manual/0.9.3/index.html</span><span class="delimiter">&quot;</span></span>
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/manual/7.0.0/index.html</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -5257,11 +5257,11 @@ Using the classes from the above example…</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> someManualVersion = <span class="keyword">new</span> Manual(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">0.9.3</span><span class="delimiter">&quot;</span></span>)
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> someManualVersion = <span class="keyword">new</span> Manual(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">7.0.0</span><span class="delimiter">&quot;</span></span>)
 
-Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
+Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
     to ManualsPage, someManualVersion, <span class="key">flag</span>: <span class="predefined-constant">true</span>
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/manual/0.9.3/index.html?flag=true</span><span class="delimiter">&quot;</span></span>
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/manual/7.0.0/index.html?flag=true</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -5277,9 +5277,9 @@ The <code>UrlFragment</code> class comes with two static factory methods: <a hre
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
-    to ManualsPage, UrlFragment.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">advanced-page-navigation</span><span class="delimiter">&quot;</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">0.9.3</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">index.html</span><span class="delimiter">&quot;</span></span>
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/manual/0.9.3/index.html#advanced-page-navigation</span><span class="delimiter">&quot;</span></span>
+<pre class="CodeRay highlight"><code data-lang="groovy">Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
+    to ManualsPage, UrlFragment.of(<span class="string"><span class="delimiter">&quot;</span><span class="content">advanced-page-navigation</span><span class="delimiter">&quot;</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">7.0.0</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">index.html</span><span class="delimiter">&quot;</span></span>
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/manual/7.0.0/index.html#advanced-page-navigation</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -5303,9 +5303,9 @@ The <code>UrlFragment</code> class comes with two static factory methods: <a hre
     }
 }
 
-Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/</span><span class="delimiter">&quot;</span></span>) {
-    to <span class="keyword">new</span> ParameterizedManualsPage(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">0.9.3</span><span class="delimiter">&quot;</span></span>, <span class="key">section</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">advanced-page-navigation</span><span class="delimiter">&quot;</span></span>)
-    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://gebish.org/manual/0.9.3/index.html#advanced-page-navigation</span><span class="delimiter">&quot;</span></span>
+Browser.drive(<span class="key">baseUrl</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>) {
+    to <span class="keyword">new</span> ParameterizedManualsPage(<span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">7.0.0</span><span class="delimiter">&quot;</span></span>, <span class="key">section</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">advanced-page-navigation</span><span class="delimiter">&quot;</span></span>)
+    <span class="keyword">assert</span> currentUrl == <span class="string"><span class="delimiter">&quot;</span><span class="content">https://groovy.apache.org/geb/manual/7.0.0/index.html#advanced-page-navigation</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
 </div>
@@ -6769,9 +6769,9 @@ input.number = <span class="float">3.5</span>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> input = <span class="error">$</span>(<span class="key">name</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">homepage</span><span class="delimiter">&quot;</span></span>).module(UrlInput)
-input.text = <span class="string"><span class="delimiter">&quot;</span><span class="content">http://gebish.org</span><span class="delimiter">&quot;</span></span>
+input.text = <span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>
 
-<span class="keyword">assert</span> input.text == <span class="string"><span class="delimiter">&quot;</span><span class="content">http://gebish.org</span><span class="delimiter">&quot;</span></span></code></pre>
+<span class="keyword">assert</span> input.text == <span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span></code></pre>
 </div>
 </div>
 </div>
@@ -8612,7 +8612,7 @@ The minimum supported version of jQuery is 1.4.</p>
     <span class="tag">&lt;/head&gt;</span>
     <span class="tag">&lt;body&gt;</span>
         <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">a</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;/div&gt;</span>
-        <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">style</span>=<span class="string"><span class="delimiter">&quot;</span><span class="key">display</span>:<span class="value">none</span>;<span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://www.gebish.org</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb!<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute-name">id</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">b</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">style</span>=<span class="string"><span class="delimiter">&quot;</span><span class="key">display</span>:<span class="value">none</span>;<span class="delimiter">&quot;</span></span><span class="tag">&gt;</span><span class="tag">&lt;a</span> <span class="attribute-name">href</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>Geb!<span class="tag">&lt;/a&gt;</span><span class="tag">&lt;/div&gt;</span>
     <span class="tag">&lt;/body&gt;</span>
 <span class="tag">&lt;/html&gt;</span></code></pre>
 </div>
@@ -9131,7 +9131,7 @@ It is also possible to change the <a href="api/geb/Browser.html#reportGroup(java
     report <span class="string"><span class="delimiter">&quot;</span><span class="content">home page</span><span class="delimiter">&quot;</span></span>
 
     reportGroup <span class="string"><span class="delimiter">&quot;</span><span class="content">geb</span><span class="delimiter">&quot;</span></span>
-    go <span class="string"><span class="delimiter">&quot;</span><span class="content">http://gebish.org</span><span class="delimiter">&quot;</span></span>
+    go <span class="string"><span class="delimiter">&quot;</span><span class="content">http://groovy.apache.org/geb/</span><span class="delimiter">&quot;</span></span>
     report <span class="string"><span class="delimiter">&quot;</span><span class="content">home page</span><span class="delimiter">&quot;</span></span>
 }</code></pre>
 </div>
@@ -10267,7 +10267,7 @@ test {
   <span class="tag">&lt;packaging&gt;</span>jar<span class="tag">&lt;/packaging&gt;</span>
   <span class="tag">&lt;version&gt;</span>1<span class="tag">&lt;/version&gt;</span>
   <span class="tag">&lt;name&gt;</span>Geb Maven Example<span class="tag">&lt;/name&gt;</span>
-  <span class="tag">&lt;url&gt;</span>http://www.gebish.org<span class="tag">&lt;/url&gt;</span>
+  <span class="tag">&lt;url&gt;</span>http://groovy.apache.org/geb/<span class="tag">&lt;/url&gt;</span>
   <span class="tag">&lt;dependencies&gt;</span>
     <span class="tag">&lt;dependency&gt;</span>
       <span class="tag">&lt;groupId&gt;</span>junit<span class="tag">&lt;/groupId&gt;</span>
@@ -10620,7 +10620,7 @@ homePage.loginPageLink.click()
 <h2 id="about-the-project"><a class="link" href="#about-the-project">About the project</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Geb home page can be found at <a href="http://www.gebish.org">http://www.gebish.org</a>.</p>
+<p>The Geb home page can be found at <a href="https://groovy.apache.org/geb/">https://groovy.apache.org/geb/</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="api-reference"><a class="link" href="#api-reference">API reference</a></h3>
@@ -12915,7 +12915,7 @@ new <a href="#form-element"><code>FormElement</code></a> module class.</p>
 <div id="footer">
 <div id="footer-text">
 Version 8.0-SNAPSHOT<br>
-Last updated 2025-05-20 14:50:31 UTC
+Last updated 2025-05-20 21:35:39 UTC
 </div>
 </div>
 </body>
