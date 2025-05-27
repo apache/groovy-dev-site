@@ -53,130 +53,43 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-8</a></li><li><a href='#_abstract_static_type_checking' class='anchor-link'>Abstract: Static Type Checking</a></li><li><a href='#_rationale_static_type_checking_vs_static_compilation' class='anchor-link'>Rationale: Static Type Checking vs Static compilation</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-8</h1><hr/><div id="preamble">
-<div class="sectionbody">
-<div class="sidebarblock">
-<div class="content">
-<div class="title">Metadata</div>
-<div class="hdlist">
-<table>
-<tr>
-<td class="hdlist1">
-<strong>Number</strong>
-</td>
-<td class="hdlist2">
-<p>GEP-8</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Title</strong>
-</td>
-<td class="hdlist2">
-<p>Static type checking</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Version</strong>
-</td>
-<td class="hdlist2">
-<p>9</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Type</strong>
-</td>
-<td class="hdlist2">
-<p>Feature</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Status</strong>
-</td>
-<td class="hdlist2">
-<p>Final</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Comment</strong>
-</td>
-<td class="hdlist2">
-<p>Delivered in Groovy 2.0 and enhanced in later versions</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Leader</strong>
-</td>
-<td class="hdlist2">
-<p>Cédric Champeau</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Created</strong>
-</td>
-<td class="hdlist2">
-<p>2011-10-08</p>
-</td>
-</tr>
-<tr>
-<td class="hdlist1">
-<strong>Last modification</strong>&#160;
-</td>
-<td class="hdlist2">
-<p>2018-10-12</p>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_abstract_static_type_checking">Abstract: Static Type Checking</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>This GEP introduces a new feature in the language known as static type checking.
+                        </div><asciidocText attributes='{DOCS_BASEURL=https://docs.groovy-lang.org/latest}'>= GEP-8: Static type checking
+
+:icons: font
+
+.Metadata
+****
+[horizontal,options="compact"]
+*Number*:: GEP-8
+*Title*:: Static type checking
+*Version*:: 9
+*Type*:: Feature
+*Status*:: Final
+*Comment*:: Delivered in Groovy 2.0 and enhanced in later versions
+*Leader*:: Cédric Champeau
+*Created*:: 2011-10-08
+*Last modification*&#160;:: 2018-10-12
+****
+
+== Abstract: Static Type Checking
+
+This GEP introduces a new feature in the language known as static type checking.
 It is often disturbing for developers coming from a statically typed language (say Java)
-to discover that the Groovy compiler will not complain at compile time:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>when assignments are made on different types</p>
-</li>
-<li>
-<p>when a method doesn&#8217;t exist</p>
-</li>
-<li>
-<p>when a property or variable doesn&#8217;t exist</p>
-</li>
-<li>
-<p>when returned object type doesn&#8217;t match the method signature</p>
-</li>
-<li>
-<p>&#8230;&#8203;</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>All those are silent because the dynamic nature of the Groovy language makes such code perfectly valid.
+to discover that the Groovy compiler will not complain at compile time:
+
+* when assignments are made on different types
+* when a method doesn't exist
+* when a property or variable doesn't exist
+* when returned object type doesn't match the method signature
+* ...
+
+All those are silent because the dynamic nature of the Groovy language makes such code perfectly valid.
 However, in some situations, a developer may want Groovy to behave like a statically typed language
-and have the compiler give hints about such "errors". To do this, Groovy must introduce static type checking.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_rationale_static_type_checking_vs_static_compilation">Rationale: Static Type Checking vs Static compilation</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>It is important to make the difference between static type checking and static compilation.
+and have the compiler give hints about such "errors". To do this, Groovy must introduce static type checking.
+
+== Rationale: Static Type Checking vs Static compilation
+
+It is important to make the difference between static type checking and static compilation.
 The goal of this GEP is to have an option to turn static type checking (STC) on.
 If STC is activated, the compiler will be more verbose (you will also see the term "grumpy"),
 but in the end, the generated bytecode and runtime behaviour will be exactly the same as if you
@@ -185,388 +98,232 @@ which will perform STC then produce a different bytecode and therefore produce d
 The scope of this GEP is only a static type checker, and therefore should only be considered as a
 feature which allows developers to write statically checked code, so is an elegant way for example
 to leverage the Groovy syntax to reduce verbosity of Java code while still getting strongly checked code.
-Eventually, IDE could support the STC mode and provide information to the developer.</p>
-</div>
-<div class="sect2">
-<h3 id="_implementation_details">Implementation details</h3>
-<div class="sect3">
-<h4 id="_development_branch">Development branch</h4>
-<div class="paragraph">
-<p>Since Groovy 2.0-beta-2, code has been merged into master branch. However, if heavy developments are
+Eventually, IDE could support the STC mode and provide information to the developer.
+
+=== Implementation details
+
+==== Development branch
+
+Since Groovy 2.0-beta-2, code has been merged into master branch. However, if heavy developments are
 done on the type checker, it is advisable to work on the grumpy branch. It adds an AST transformation
 named TypeChecked. If set, then the AST transformation will perform type inference and store type
 information in AST nodes metadata. Eventually, if errors are found, it will add errors to the compiler
 through a dedicated addStaticTypeError method which basically does the same as the traditional
 addError method but prefixes the messages with a "Static type checking" message.
 This is done to help the developer determine whether the error they are seeing is a "plain Groovy" error,
-or an error thrown by the STC mode.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_the_statictypecheckingtestcase_class">The StaticTypeCheckingTestCase class</h4>
-<div class="paragraph">
-<p>Static type checking behaviour must be tested. As there are tons of possible checks to be done,
+or an error thrown by the STC mode.
+
+==== The StaticTypeCheckingTestCase class
+
+Static type checking behaviour must be tested. As there are tons of possible checks to be done,
 a base test class provides a framework for testing this mode.
-Unit tests for static type checking should override this class.</p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_decisions_made">Decisions made</h3>
-<div class="sect3">
-<h4 id="_about_this_section">About this section</h4>
-<div class="paragraph">
-<p>The goal of this section is to provide code samples which demonstrates in what case the STC transformation
+Unit tests for static type checking should override this class.
+
+=== Decisions made
+
+==== About this section
+
+The goal of this section is to provide code samples which demonstrates in what case the STC transformation
 will actually complain and what is the expected error message, and serves as a basis to future STC documentation.
 This section may not be up-to-date, and one should always take a look at the STC unit tests found in the
-<code>src/test/groovy/transform/stc</code> directory.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-<col style="width: 25%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Feature</th>
-<th class="tableblock halign-left valign-top">Example</th>
-<th class="tableblock halign-left valign-top">Behavior</th>
-<th class="tableblock halign-left valign-top">Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method does not exist</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def method() {
+`src/test/groovy/transform/stc` directory.
+
+[options="header"]
+|===
+| Feature | Example | Behavior | Status
+| Method does not exist a|
+----
+def method() {
   ...
 }
-methode() // typo</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complains about undefined method</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Property does not exist</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>class A {
+methode() // typo
+----
+| Complains about undefined method | Implemented
+| Property does not exist a|
+----
+class A {
   int x
 }
 A obj = new A()
-a.y = 2</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complains about undefined property "y"</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Assignment type checking</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>int x = 2
-x = 'String'</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Assigning a String to an int is forbidden</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Incompatible binary expressions</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>1 + 'string'</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Checks that arguments of a binary expression are compatible (here, no 'plus' method is available</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Possible loss of precision (1/2)</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>long myLong = ...
-int myInt = myLong</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Complains about possible loss of precision</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Possible loss of precision (2/2)</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>int myInt = 2L</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Will not complain because '2' can be represented as an int</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Arrays components</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>String[] arr = { '1', '2', '3' }
-arr[2] = 200</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cannot assign an int value in an array of type String[]</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method return type check</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>String method() { 'Hello' }
-int x = method() // return types don't match</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures that assignments are compatible with method return type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit return type checking</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>int method() {
+a.y = 2
+----
+| Complains about undefined property "y" | Implemented
+| Assignment type checking a|
+----
+int x = 2
+x = 'String'
+----
+| Assigning a String to an int is forbidden | Implemented
+| Incompatible binary expressions a|
+----
+1 + 'string'
+----
+| Checks that arguments of a binary expression are compatible (here, no 'plus' method is available | Implemented
+| Possible loss of precision (1/2) a|
+----
+long myLong = ...
+int myInt = myLong
+----
+| Complains about possible loss of precision | Implemented
+| Possible loss of precision (2/2) a|
+----
+int myInt = 2L
+----
+| Will not complain because '2' can be represented as an int | Implemented
+| Arrays components a|
+----
+String[] arr = { '1', '2', '3' }
+arr[2] = 200
+----
+| Cannot assign an int value in an array of type String[] | Implemented
+| Method return type check a|
+----
+String method() { 'Hello' }
+int x = method() // return types don't match
+----
+| Ensures that assignments are compatible with method return type | Implemented
+| Explicit return type checking a|
+----
+int method() {
   return 'String' // return type is not compatible
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures that returned value is compatible with declared return type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit return type checking</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>int method() {
+}
+----
+| Ensures that returned value is compatible with declared return type | Implemented
+| Implicit return type checking a|
+----
+int method() {
   'String' // return type is not compatible
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ensures that returned value is compatible with declared return type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit toString()</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>String method(String name) {
+}
+----
+| Ensures that returned value is compatible with declared return type | Implemented
+| Implicit toString() a|
+----
+String method(String name) {
   StringBuilder sb = new StringBuilder()
-  sb 'Hi ' &lt;&lt; name &lt;&lt; '!'
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit call to toString()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Basic type inference</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def str = 'My string'
-str.toUpperCase() // type of 'str' is inferred</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method calls as well as property access are checked against inferred type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Basic flow analysis</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def o
+  sb 'Hi ' << name << '!'
+}
+----
+| Implicit call to toString() | Implemented
+| Basic type inference a|
+----
+def str = 'My string'
+str.toUpperCase() // type of 'str' is inferred
+----
+| Method calls as well as property access are checked against inferred type | Implemented
+| Basic flow analysis a|
+----
+def o
 ...
 if (o instanceof String) {
   o.toUpperCase() // no explicit cast required
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Casts should not be necessary when type can be inferred from a previous instanceof check</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DefaultGroovyMethods support</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>'123'.toInteger() // toInteger() is a Groovy extension method</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method calls can be resolved against Groovy extension methods</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">with</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>class A {
+}
+----
+| Casts should not be necessary when type can be inferred from a previous instanceof check | Implemented
+| DefaultGroovyMethods support a|
+----
+'123'.toInteger() // toInteger() is a Groovy extension method
+----
+| Method calls can be resolved against Groovy extension methods | Implemented
+| with a|
+----
+class A {
   int x
 }
 def a = new A()
 a.with {
   x = 1
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method calls can be resolved against Groovy extension methods</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Categories</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>use (MyStringCategory) {
+}
+----
+| Method calls can be resolved against Groovy extension methods | Implemented
+| Categories a|
+----
+use (MyStringCategory) {
    'string'.methodInStringCategory()
-}</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compiler should be aware that extension method is found in a category</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>N/A</strong> (support will be limited as category support is inherently dynamic)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy list constructor</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>Dimension d = [100, 200]</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type checks the arguments and the number of arguments</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy map constructor</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>Bean myBean = [x: 100, y: 200]</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type checks the properties and checks for incorrect property names</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure parameter types</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def closure = { int x, int y -&gt; x + y }
+}
+----
+| Compiler should be aware that extension method is found in a category | *N/A* (support will be limited as category support is inherently dynamic)
+| Groovy list constructor a|
+----
+Dimension d = [100, 200]
+----
+| Type checks the arguments and the number of arguments | Implemented
+| Groovy map constructor a|
+----
+Bean myBean = [x: 100, y: 200]
+----
+| Type checks the properties and checks for incorrect property names | Implemented
+| Closure parameter types a|
+----
+def closure = { int x, int y -> x + y }
 closure(1, 2)
-closure('1', '2') // complains</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type checking the arguments when calling a closure</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure return type inference</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def closure = { int x, int y -&gt; x + y }
-int sum = closure(1, 2)</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure return type can be inferred from block</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Method return type inference</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def method(int x, int y) { x + y }
-int sum = method(1, 2)</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Return type can be inferred from a method if the method is itself annotated with @TypeChecked (or class is annotated with @TypeChecked)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple assignments</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def (x, y) = [1, 2]</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">In case of inline declaration, type check arguments</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple assignments from a variable</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def (x, y) = list</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">In case of inline declaration, type check arguments</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Generics</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>List&lt;String&gt; list = []
-List&lt;String&gt; list = ['a', 'b', 'c']
-List&lt;String&gt; list = [1, 2, 3] // should throw error</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type checking of generic parameters</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Spread operator</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def list = ['a', 'b', 'c']
-list*.toUpperCase()</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type checking against component type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure shared variables</p></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
-<div class="content">
-<pre>def x = new Date()
+closure('1', '2') // complains
+----
+| Type checking the arguments when calling a closure | Implemented
+| Closure return type inference a|
+----
+def closure = { int x, int y -> x + y }
+int sum = closure(1, 2)
+----
+| Closure return type can be inferred from block | Implemented
+| Method return type inference a|
+----
+def method(int x, int y) { x + y }
+int sum = method(1, 2)
+----
+| Return type can be inferred from a method if the method is itself annotated with @TypeChecked (or class is annotated with @TypeChecked) | Implemented
+| Multiple assignments a|
+----
+def (x, y) = [1, 2]
+----
+| In case of inline declaration, type check arguments | Implemented
+| Multiple assignments from a variable a|
+----
+def (x, y) = list
+----
+| In case of inline declaration, type check arguments | Implemented
+| Generics a|
+----
+List<String> list = []
+List<String> list = ['a', 'b', 'c']
+List<String> list = [1, 2, 3] // should throw error
+----
+| Type checking of generic parameters | Implemented
+| Spread operator a|
+----
+def list = ['a', 'b', 'c']
+list*.toUpperCase()
+----
+| Type checking against component type | Implemented
+| Closure shared variables a|
+----
+def x = new Date()
 def cl = { x = 'hello' }
 cl()
-x.toUpperCase() // should throw an error because the toUpperCase() method doesn't belong to both Date and String classes</pre>
-</div>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type check assignments of closure shared variables. The type checker is required to perform a two-pass verification,
-in order to check that method calls on a closure shared variables belong to the lowest upper bound of all assignment types.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Implemented</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_open_discussions">Open discussions</h3>
-<div class="sect3">
-<h4 id="_closure_parameter_type_inference">Closure parameter type inference</h4>
-<div class="paragraph">
-<p>With the current version of the checker, idiomatic constructs like :</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>['a','b','c'].collect { it.toUpperCase() }</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Are not properly recognized. You have to explicitly set the type of the "it" parameter inside the closure.
+x.toUpperCase() // should throw an error because the toUpperCase() method doesn't belong to both Date and String classes
+----
+| Type check assignments of closure shared variables. The type checker is required to perform a two-pass verification,
+in order to check that method calls on a closure shared variables belong to the lowest upper bound of all assignment types. | Implemented
+|===
+
+=== Open discussions
+
+==== Closure parameter type inference
+
+With the current version of the checker, idiomatic constructs like :
+
+```
+['a','b','c'].collect { it.toUpperCase() }
+```
+
+Are not properly recognized. You have to explicitly set the type of the "it" parameter inside the closure.
 It is because the expected parameter types of closures are unknown at compile time.
 There is a discussion about how to add this type information to source code so that the inference
 engine can deal with them properly. The implementation of closure parameter type inference requires
-a change to the method signatures. It will probably not belong to the initial release of the type checker.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_unification_types">Unification Types</h4>
-<div class="paragraph">
-<p>In cases of for example <code>x instanceof A || x instanceof B</code> with A and B being unrelated we could
+a change to the method signatures. It will probably not belong to the initial release of the type checker.
+
+==== Unification Types
+
+In cases of for example `x instanceof A || x instanceof B` with A and B being unrelated we could
 still make an artificial union kind of type, that contains everything present in A and B,
 to allow those kinds of method calls. The alternative to this is to allow only methods from Object here,
 which is less interesting. This typing can also be used for multicatch, ensuring that a method call is
@@ -574,73 +331,29 @@ only valid if it exists on each of the exceptions for the multicatch.
 In the current implementation (2011-10-14) the multicatch is already expanded at the point @TypeChecked will check.
 Meaning effectively this already represents a kind of union type, as the same code is in each catch block
 and thus the method call would fail, if the method is not available on each type.
-The proposed behaviour is therefore to align the instanceof case with multicatch.</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_references_and_useful_links">References and useful links</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://web.archive.org/web/20150508041021/http://docs.codehaus.org/display/GroovyJSR/GEP+8+-+Static+type+checking">GEP-8: Static type checking</a> (web archive link with comments)</p>
-</li>
-<li>
-<p><a href="http://blackdragsview.blogspot.com/2011/10/flow-sensitive-typing.html">Flow Sensitive Typing?</a></p>
-</li>
-<li>
-<p><a href="https://web.archive.org/web/20150508040745/http://www.jroller.com/melix/entry/groovy_static_type_checker_status">Groovy static type checker: status update</a> (web archive)</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_mailing_list_discussions">Mailing-list discussions</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://marc.info/?l=groovy-user&amp;m=131805623302039&amp;w=2">groovy-user: [grumpy mode] What to do on assignment?</a> Discussion about the expected behaviour when STC detects a potential error on assignment (for example, possible loss of precision on implicit number casts)</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_jira_issues">JIRA issues</h3>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://issues.apache.org/jira/browse/GROOVY-5073">GROOVY-5073: GEP-8 - Static type checking</a></p>
-</li>
-<li>
-<p><a href="https://issues.apache.org/jira/browse/GROOVY-3014">GROOVY-3014: add an annotation that forces the compiler to check methods for their existence at compile time</a></p>
-</li>
-<li>
-<p><a href="https://issues.apache.org/jira/browse/GROOVY-5081">GROOVY-5081: Handle explicit and implicit returns</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_update_history">Update history</h2>
-<div class="sectionbody">
-<div class="dlist">
-<dl>
-<dt class="hdlist1">8 (2012-02-21)</dt>
-<dd>
-<p>Version as extracted from Codehaus wiki</p>
-</dd>
-<dt class="hdlist1">9 (2018-10-16)</dt>
-<dd>
-<p>Numerous minor tweaks</p>
-</dd>
-</dl>
-</div>
-</div>
-</div></div></div></div></div><footer id='footer'>
+The proposed behaviour is therefore to align the instanceof case with multicatch.
+
+== References and useful links
+
+* https://web.archive.org/web/20150508041021/http://docs.codehaus.org/display/GroovyJSR/GEP+8+-+Static+type+checking[GEP-8: Static type checking] (web archive link with comments)
+* http://blackdragsview.blogspot.com/2011/10/flow-sensitive-typing.html[Flow Sensitive Typing?]
+* https://web.archive.org/web/20150508040745/http://www.jroller.com/melix/entry/groovy_static_type_checker_status[Groovy static type checker: status update] (web archive)
+
+=== Mailing-list discussions
+
+* https://marc.info/?l=groovy-user&m=131805623302039&w=2[groovy-user: [grumpy mode\] What to do on assignment?] Discussion about the expected behaviour when STC detects a potential error on assignment (for example, possible loss of precision on implicit number casts)
+
+=== JIRA issues
+
+* https://issues.apache.org/jira/browse/GROOVY-5073[GROOVY-5073: GEP-8 - Static type checking]
+* https://issues.apache.org/jira/browse/GROOVY-3014[GROOVY-3014: add an annotation that forces the compiler to check methods for their existence at compile time]
+* https://issues.apache.org/jira/browse/GROOVY-5081[GROOVY-5081: Handle explicit and implicit returns]
+
+== Update history
+
+8 (2012-02-21):: Version as extracted from Codehaus wiki
+9 (2018-10-16):: Numerous minor tweaks
+</asciidocText><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-8</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-8</h1><hr/></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
                                     <div class='col-1'>
