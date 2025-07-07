@@ -8107,7 +8107,8 @@ All drivers however throw <em>some kind</em> of exception when this happens.</p>
 <h4 id="executing-arbitrary-code"><a class="link" href="#executing-arbitrary-code">9.1.3. Executing arbitrary code</a></h4>
 <div class="paragraph">
 <p>The <code>js</code> object also has an <code>exec()</code> method that can be used to run snippets of JavaScript.
-It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method, except that it expects the code as last argument&#8230;&#8203;</p>
+It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method, except that it expects the code as last argument,
+and accepts <code>Navigator</code> instances in addition to `WebElement`s&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8120,10 +8121,24 @@ It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">js</span><span class="o">.</span><span class="na">exec</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="s2">"""
-    someJsMethod(1, 2);
+    someJsMethod(arguments[0], arguments[1]);
     // lots of javascript
     return true;
 """</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can give a <code>Closure</code> as last argument that returns the script to enable the following syntax&#8230;&#8203;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">js</span><span class="o">.</span><span class="na">exec</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">)</span> <span class="o">{</span>
+    <span class="s2">"""
+        someJsMethod(arguments[0], arguments[1]);
+        // lots of javascript
+        return true;
+    """</span>
+<span class="o">}</span></code></pre>
 </div>
 </div>
 </div>
@@ -13277,7 +13292,7 @@ new <a href="#form-element"><code>FormElement</code></a> module class.</p>
 <div id="footer">
 <div id="footer-text">
 Version 8.0-SNAPSHOT<br>
-Last updated 2025-07-02 18:51:18 UTC
+Last updated 2025-07-07 14:21:14 UTC
 </div>
 </div>
 <script src="asciidoctor-tabs.js" data-sync-storage-key="tabs"></script>
