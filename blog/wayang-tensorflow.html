@@ -53,13 +53,15 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using TensorFlow from Apache Wayang</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./groovy-text-similarity'>Groovy&trade; Text Similarity</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy&trade;, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./groovy-oracle23ai'>Using the Oracle 23ai Vector data type with Groovy&trade; to classify Iris flowers</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using TensorFlow from Apache Wayang</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using TensorFlow from Apache Wayang</a></li><li><a href='#_more_information' class='anchor-link'>More Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./groovy-text-similarity'>Groovy&trade; Text Similarity</a></li><li><a href='./groovy-oracle23ai'>Using the Oracle 23ai Vector data type with Groovy&trade; to classify Iris flowers</a></li><li><a href='./natural-language-processing-with-groovy'>Natural Language Processing with Groovy&trade;, OpenNLP, CoreNLP, Nlp4j, Datumbox, Smile, Spark NLP, DJL and TensorFlow</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using TensorFlow from Apache Wayang</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-02-28 09:30AM</span></p><hr/><div class="paragraph">
+        </div><br/><span>Published: 2025-02-28 09:30AM (Last updated: 2025-08-28 02:22PM)</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
 <p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="180"></span>In previous blog posts, we have looked at:</p>
 </div>
 <div class="ulist">
@@ -190,6 +192,16 @@ one or more hidden layers, and outputs (in this case, labels).</p>
 <p><span class="image"><img src="img/deep_node.png" alt="Neural net node" width="600"></span></p>
 </div>
 <div class="paragraph">
+<p>Let&#8217;s first define our inputs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">int[] noShape = null
+var features = new Input(noShape, Input.Type.FEATURES)
+var labels = new Input(noShape, Input.Type.LABEL, Op.DType.INT32)</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>We&#8217;ll have 4 inputs going to 32 hidden nodes to 3 outputs
 with Sigmoid activation. These classes are all platform-agnostic.
 Nowhere here do we mention TensorFlow or use any TensorFlow
@@ -198,7 +210,7 @@ classes.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">Op l1 = new Linear(4, 32, true)
-Op s1 = new Sigmoid().with(l1.with(new Input(Input.Type.FEATURES)))
+Op s1 = new Sigmoid().with(l1.with(features))
 Op l2 = new Linear(32, 3, true).with(s1)
 DLModel model = new DLModel(l2)</code></pre>
 </div>
@@ -209,20 +221,15 @@ providing some needed options, that will do our training.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">Op criterion = new CrossEntropyLoss(3).with(
-    new Input(Input.Type.PREDICTED, Op.DType.FLOAT32),
-    new Input(Input.Type.LABEL, Op.DType.INT32)
-)
+<pre class="prettyprint highlight"><code data-lang="groovy">Op criterion = new CrossEntropyLoss(3).with(model.out, labels)
 Optimizer optimizer = new Adam(0.1f) // optimizer with learning rate
 int batchSize = 45
 int epoch = 10
 var option = new DLTrainingOperator.Option(criterion, optimizer, batchSize, epoch)
 option.setAccuracyCalculation(new Mean(0).with(
     new Cast(Op.DType.FLOAT32).with(
-        new Eq().with(new ArgMax(1).with(
-            new Input(Input.Type.PREDICTED, Op.DType.FLOAT32)),
-            new Input(Input.Type.LABEL, Op.DType.INT32)
-))))
+        new Eq().with(new ArgMax(1).with(model.out), labels)
+)))
 var trainingOp = new DLTrainingOperator&lt;&gt;(model, option, float[], Integer)</code></pre>
 </div>
 </div>
@@ -270,6 +277,7 @@ new WayangContext().with {
     execute(wayangPlan)
 }
 
+println "labels:       $LABEL_MAP"
 println "predicted:    $predicted"
 println "ground truth: $groundTruth"
 
@@ -315,6 +323,7 @@ println "test accuracy: ${correct / predicted.size()}"</code></pre>
 [epoch 10, batch 3] loss: 0.318649 accuracy: 0.911111
 Finish training.
 
+labels:       [Iris-setosa:0, Iris-versicolor:1, Iris-virginica:2]
 predicted:    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
 ground truth: [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2]
 test accuracy: 1</pre>
@@ -330,6 +339,30 @@ so you might get slightly different results for each run.</p>
 and
 <a href="https://wayang.apache.org/">Apache Wayang</a>!
 Why not get involved!</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More Information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Repo containing the source code:<br>
+<a href="https://github.com/paulk-asert/groovy-wayang-tensorflow" class="bare">https://github.com/paulk-asert/groovy-wayang-tensorflow</a></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>28/Feb/2025</strong>: Initial version.<br>
+<strong>28/Aug/2025</strong>: Updated for Apache Wayang 1.1.0 and Groovy 5.0.0.</p>
+</div>
+</div>
+</div>
+</div>
 </div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
