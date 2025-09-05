@@ -34,7 +34,7 @@
 <h1>The Book Of Geb</h1>
 <div class="details">
 <span id="author" class="author">Luke Daley, Marcin Erdmann, Erik Pragt</span><br>
-<span id="revnumber">version 8.0-SNAPSHOT</span>
+<span id="revnumber">version 8.0.0-SNAPSHOT</span>
 <br><span id="revremark">Very groovy browser automation... web testing, screen scraping and more</span>
 </div>
 <div id="toc" class="toc2">
@@ -492,7 +492,7 @@
 </li>
 <li><a href="#history">History</a>
 <ul class="sectlevel3">
-<li><a href="#8-0-snapshot">8.0-SNAPSHOT</a>
+<li><a href="#8-0-0-snapshot">8.0.0-SNAPSHOT</a>
 <ul class="sectlevel4">
 <li><a href="#breaking-changes">💥 Breaking changes</a></li>
 <li><a href="#️-dependencies">⚙️ Dependencies</a></li>
@@ -1105,7 +1105,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0-SNAPSHOT"</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.27.0"</span><span class="o">)</span>
 <span class="kn">import</span> <span class="nn">geb.Browser</span></code></pre>
 </div>
@@ -1118,7 +1118,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 <pre class="rouge highlight"><code data-lang="xml"><span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.apache.groovy.geb<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>geb-core<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;version&gt;</span>8.0.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 <span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.seleniumhq.selenium<span class="nt">&lt;/groupId&gt;</span>
@@ -1132,7 +1132,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0-SNAPSHOT"</span><span class="o">)</span>
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0.0-SNAPSHOT"</span><span class="o">)</span>
 <span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.27.0"</span><span class="o">)</span></code></pre>
 </div>
 </div>
@@ -9859,7 +9859,7 @@ Examples of typical usage are included below.</p>
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">geb.gradle.saucelabs.SauceAccount</span>
 
 <span class="nf">plugins</span> <span class="p">{</span>
-    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.saucelabs"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.saucelabs"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="p">}</span>
 
 <span class="nf">dependencies</span> <span class="p">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -9908,7 +9908,7 @@ Examples of typical usage are included below.</p>
 <pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">geb.gradle.saucelabs.SauceAccount</span>
 
 <span class="n">plugins</span> <span class="o">{</span>
-    <span class="n">id</span> <span class="s2">"org.gebish.saucelabs"</span> <span class="n">version</span> <span class="s2">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="n">id</span> <span class="s2">"org.gebish.saucelabs"</span> <span class="n">version</span> <span class="s2">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="o">}</span>
 
 <span class="n">dependencies</span> <span class="o">{</span> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -10052,7 +10052,7 @@ It can be done in the following way:</p>
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">geb.gradle.browserstack.BrowserStackAccount</span>
 
 <span class="nf">plugins</span> <span class="p">{</span>
-    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.browserstack"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.browserstack"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="p">}</span>
 
 <span class="nf">browserStack</span> <span class="p">{</span>
@@ -10097,7 +10097,7 @@ It can be done in the following way:</p>
 <pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">geb.gradle.browserstack.BrowserStackAccount</span>
 
 <span class="n">plugins</span> <span class="o">{</span>
-    <span class="n">id</span> <span class="s2">"org.gebish.browserstack"</span> <span class="n">version</span> <span class="s2">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="n">id</span> <span class="s2">"org.gebish.browserstack"</span> <span class="n">version</span> <span class="s2">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="o">}</span>
 
 <span class="n">browserStack</span> <span class="o">{</span>
@@ -10320,7 +10320,7 @@ It can be done in the following way:</p>
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="k">import</span> <span class="nn">geb.gradle.lambdatest.LambdaTestAccount</span>
 
 <span class="nf">plugins</span> <span class="p">{</span>
-    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.lambdatest"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="nf">id</span><span class="p">(</span><span class="s">"org.gebish.lambdatest"</span><span class="p">)</span> <span class="n">version</span> <span class="s">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="p">}</span>
 
 <span class="nf">lambdaTest</span> <span class="p">{</span>
@@ -10355,7 +10355,7 @@ It can be done in the following way:</p>
 <pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">geb.gradle.lambdatest.LambdaTestAccount</span>
 
 <span class="n">plugins</span> <span class="o">{</span>
-    <span class="n">id</span> <span class="s2">"org.gebish.lambdatest"</span> <span class="n">version</span> <span class="s2">"8.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
+    <span class="n">id</span> <span class="s2">"org.gebish.lambdatest"</span> <span class="n">version</span> <span class="s2">"8.0.0-SNAPSHOT"</span> <i class="conum" data-value="1"></i><b>(1)</b>
 <span class="o">}</span>
 
 <span class="n">lambdaTest</span> <span class="o">{</span>
@@ -10495,7 +10495,7 @@ It can be done in the following way:</p>
     <span class="nf">mavenCentral</span><span class="p">()</span>
 <span class="p">}</span>
 
-<span class="kd">val</span> <span class="py">gebVersion</span> <span class="p">=</span> <span class="s">"8.0-SNAPSHOT"</span>
+<span class="kd">val</span> <span class="py">gebVersion</span> <span class="p">=</span> <span class="s">"8.0.0-SNAPSHOT"</span>
 <span class="kd">val</span> <span class="py">seleniumVersion</span> <span class="p">=</span> <span class="s">"4.27.0"</span>
 
 <span class="nf">dependencies</span> <span class="p">{</span>
@@ -10529,7 +10529,7 @@ It can be done in the following way:</p>
     <span class="n">mavenCentral</span><span class="o">()</span>
 <span class="o">}</span>
 
-<span class="kt">def</span> <span class="n">gebVersion</span> <span class="o">=</span> <span class="s2">"8.0-SNAPSHOT"</span>
+<span class="kt">def</span> <span class="n">gebVersion</span> <span class="o">=</span> <span class="s2">"8.0.0-SNAPSHOT"</span>
 <span class="kt">def</span> <span class="n">seleniumVersion</span> <span class="o">=</span> <span class="s2">"4.27.0"</span>
 
 <span class="n">dependencies</span> <span class="o">{</span>
@@ -10597,7 +10597,7 @@ It can be done in the following way:</p>
         <span class="nt">&lt;dependency&gt;</span>
             <span class="nt">&lt;groupId&gt;</span>org.apache.groovy.geb<span class="nt">&lt;/groupId&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>geb-spock<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>8.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>8.0.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
         <span class="nt">&lt;/dependency&gt;</span>
         <span class="nt">&lt;dependency&gt;</span>
@@ -11261,7 +11261,7 @@ the <code>geb-dev@groovy.apache.org</code> mailing list:
 <p>This page lists the more important changes between versions of Geb.</p>
 </div>
 <div class="sect3">
-<h4 id="8-0-snapshot"><a class="link" href="#8-0-snapshot">8.0-SNAPSHOT</a></h4>
+<h4 id="8-0-0-snapshot"><a class="link" href="#8-0-0-snapshot">8.0.0-SNAPSHOT</a></h4>
 <div class="sect4">
 <h5 id="breaking-changes"><a class="link" href="#breaking-changes">💥 Breaking changes</a></h5>
 <div class="ulist">
@@ -13291,8 +13291,8 @@ new <a href="#form-element"><code>FormElement</code></a> module class.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 8.0-SNAPSHOT<br>
-Last updated 2025-09-04 09:59:52 UTC
+Version 8.0.0-SNAPSHOT<br>
+Last updated 2025-09-05 20:21:15 UTC
 </div>
 </div>
 <script src="asciidoctor-tabs.js" data-sync-storage-key="tabs"></script>
