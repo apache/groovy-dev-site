@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='data science, eclipse collections, groovy, kmeans, emoji, virtual threads, scala integration, clustering'/><meta name='description' content='This post looks at using KMeans to compare fruit nominated color with the colors used in its emoji.'/><title>The Apache Groovy programming language - Blogs - Fruity Eclipse Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/font-awesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='data science, eclipse collections, groovy, kmeans, emoji, virtual threads, scala integration, clustering'/><meta name='description' content='This post looks at using KMeans to compare fruit nominated color with the colors used in its emoji.'/><title>The Apache Groovy programming language - Blogs - Fruity Eclipse Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -13,19 +13,25 @@
         <nav class='st-menu st-effect-9' id='menu-12'>
             <h2 class='icon icon-lab'>Socialize</h2><ul>
                 <li>
-                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-envelope'></span> Discuss on the mailing-list</a>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing-list</a>
                 </li><li>
-                    <a href='https://twitter.com/ApacheGroovy' class='icon'><span class='fa fa-twitter'></span> Groovy on Twitter</a>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
                 </li><li>
-                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-calendar'></span> Events and conferences</a>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
                 </li><li>
-                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-github'></span> Source code on GitHub</a>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
                 </li><li>
-                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-bug'></span> Report issues in Jira</a>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
                 </li><li>
-                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-stack-overflow'></span> Stack Overflow questions</a>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
                 </li><li>
-                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-slack'></span> Slack Community</a>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
                 </li>
             </ul>
         </nav><div class='st-pusher'>
@@ -39,7 +45,7 @@
                                     <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
                                         <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
                                     </button><a class='navbar-brand' href='../index.html'>
-                                        <i class='fa fa-star'></i> Apache Groovy&trade;
+                                        <i class='fa-classic fa-regular fa-star'></i> Apache Groovy&trade;
                                     </a>
                                 </div><div class='navbar-collapse collapse'>
                                     <ul class='nav navbar-nav navbar-right'>
@@ -47,13 +53,13 @@
                                             <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
                                         </li><li class=''>
                                             <a href='../search.html'>
-                                                <i class='fa fa-search'></i>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Eclipse Collections</a></li><li><a href='#_eclipse_collections_fruit_salad' class='anchor-link'>Eclipse Collections Fruit Salad</a></li><li><a href='#_exploring_emoji_colors' class='anchor-link'>Exploring emoji colors</a></li><li><a href='#_putting_it_all_together' class='anchor-link'>Putting it all together</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./whisky-revisited'>Whisky flavor profiles revisited</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./groovy-null-processing'>Groovy&trade; Processing Nulls In Lists</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy&trade;</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy&trade;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Eclipse Collections</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-10-13 11:05AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Eclipse Collections</a></li><li><a href='#_eclipse_collections_fruit_salad' class='anchor-link'>Eclipse Collections Fruit Salad</a></li><li><a href='#_exploring_emoji_colors' class='anchor-link'>Exploring emoji colors</a></li><li><a href='#_putting_it_all_together' class='anchor-link'>Putting it all together</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./whisky-revisited'>Whisky flavor profiles revisited</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./groovy-null-processing'>Groovy&trade; Processing Nulls In Lists</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy&trade;</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy&trade;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Eclipse Collections</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-10-13 11:05AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This blog post continues on the theme of using fruit emoji from the
@@ -482,7 +488,7 @@ Results for other emojis may vary.</p>
                                         </ul>
                                     </div><div class='col-3'>
                                         <h1>Socialize</h1><ul>
-                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://twitter.com/ApacheGroovy'>Groovy on Twitter</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
                                         </ul>
                                     </div><div class='col-right'>
                                         <p>
