@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel'/><meta name='description' content='A tour of using Groovy with modern AI libraries including ollama4j, LangChain4j, Spring AI, and Embabel.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&amp;trade</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing-list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&amp;trade</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&amp;trade</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2025-10-14 07:27PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>ollama4j</code>, <code>langchain4j</code>, <code>Spring AI</code>, and <code>Embabel</code>.
+We&#8217;ll use a simple chat example, perhaps similar to what you might have done yourself when trying out your favourite LLM.
+We&#8217;ll ask for activities to do while on vacation.
+To make the examples as accessible as possible, we&#8217;ll use Ollama&#8217;s open-source models,
+which can be run locally. The libraries we use here can also connect to remote models and services.
+The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
+unchanged, but feel free to try other models and see what results you get.
+We also used Groovy 5 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_ollama4j">Using ollama4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/ollama/ollama4j"><em>Ollama4j</em></a> provides a client for interacting with local or remote <a href="https://ollama.com/">Ollama</a> models.</p>
+</div>
+<div class="paragraph">
+<p>We first create an instance of the <code>Ollama</code> class.
+We set a generous timeout to allow for longer-running models.
+While not strictly necessary, we can call the <code>ping</code> method to verify that the Ollama server is reachable.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var ollama = new Ollama(requestTimeoutSeconds: 300)
+println "Found ollama: ${ollama.ping()}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which gives this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Found ollama: true</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now we can send our prompt to the model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
+var builder = OllamaChatRequestBuilder.builder()
+    .withModel('mistral:7b')
+
+var request = builder
+    .withMessage(OllamaChatMessageRole.USER, prompt)
+    .build()
+
+var result = ollama.chat(request, null)
+println "Four things:\n$result.responseModel.message.response"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It will respond with something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Four things:
+ 1. Visit the beautiful beaches: Caloundra is famous for its stunning beaches, including Kings Beach, Moffat Beach, and Bulcock Beach. Spend your days soaking up the sun, swimming, or surfing.
+
+2. Explore the UnderWater World SeaLife Aquarium: This marine attraction offers a unique opportunity to interact with various sea creatures. You can even have a close encounter with sharks and turtles!
+
+3. Visit the Glastonbury Estate: For those who love history, this beautiful estate is worth a visit. It was built in the 1920s and features a variety of artifacts and memorabilia from World War I and II.
+
+4. Take a day trip to the Australia Zoo: Made famous by the Crocodile Hunter, Steve Irwin, the Australia Zoo is just a short drive from Caloundra. It's home to a wide variety of Australian wildlife, including kangaroos, koalas, and crocodiles. Don't miss the daily wildlife shows!</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can continue the conversation by including the previous chat history in the next request:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var prompt2 = 'If I had half a day and can only go to one, which would you recommend?'
+request = builder
+    .withMessages(result.chatHistory)
+    .withMessage(OllamaChatMessageRole.USER, prompt2)
+    .build()
+
+result = ollama.chat(request, null)
+println "Best thing:\n$result.responseModel.message.response"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Best thing:
+ If you only have half a day and can choose just one activity, I would recommend visiting the beautiful Kings Beach in Caloundra. It offers a lovely stretch of sandy beach, perfect for swimming, sunbathing, or simply taking a leisurely stroll along the shoreline. The beach also has various amenities like picnic areas, BBQ facilities, and a playground for children. Plus, it provides stunning views of the Pacific Ocean and the Glass House Mountains in the distance. It's the perfect place to relax and soak up the sun on your vacation!</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_langchain4j">Using LangChain4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/langchain4j/langchain4j"><em>LangChain4j</em></a> brings LangChain’s composable AI approach to the JVM.
+Here’s the same initial prompt using its <code>OllamaChatModel</code> interface:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var chatModel = OllamaChatModel.builder()
+    .baseUrl("http://localhost:11434")
+    .timeout(Duration.ofMinutes(5))
+    .modelName("mistral:7b")
+    .build()
+
+String prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
+println "Response: " + chatModel.chat(prompt)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Response:
+ 1. Visit the beautiful beaches: Caloundra is known for its stunning beaches, with Kings Beach and Moffat Beach being some of the most popular ones. You can spend your days sunbathing, swimming, or surfing.
+
+2. Explore the underwater world: Take a trip to the UnderWater World Sea Life Mooloolaba, an aquarium that houses a variety of marine life including sharks, turtles, and seahorses. It's a great way to learn about and appreciate the ocean's wonders.
+
+3. Visit the Glastonbury Estate: This historic homestead offers a glimpse into Australia's past. The estate features beautiful gardens, a tea room, and often hosts various events throughout the year.
+
+4. Take a day trip to the Glass House Mountains: Just a short drive from Caloundra, these iconic volcanic plugs offer breathtaking views and hiking trails for all levels of fitness. You can also visit the Kondalilla National Park for waterfalls and rainforest walks.</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_spring_ai">Using Spring AI</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://docs.spring.io/spring-ai/reference/"><em>Spring AI</em></a> provides first-class integration with the Spring ecosystem.
+In Groovy, this makes it simple to embed AI capabilities into a Spring Boot app.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SpringBootApplication
+void main() {
+    try(var context = SpringApplication.run(Holiday)) {
+        var chatClient = context.getBean(ChatClient.Builder).build()
+        var response = chatClient
+                .prompt("What are some interesting things to do while I am on vacation in Caloundra?")
+                .call()
+        println "Response:\n" + response.content()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Response:
+ Caloundra, located on the Sunshine Coast of Australia, offers a variety of activities that cater to different interests. Here are some suggestions for an enjoyable vacation:
+
+1. Beaches: Caloundry has several beautiful beaches, including Kings Beach, Moffat Beach, and Bulcock Beach. You can swim, sunbathe, surf, or just enjoy the stunning views.
+
+2. Visit the Underwater World SEA LIFE Mooloolaba: This aquarium is home to a diverse range of marine life, including sharks, turtles, and seahorses. It's a great place for both children and adults to learn about and interact with marine creatures.
+
+3. Explore the Glass House Mountains: These are a series of 12 granite peaks that offer stunning views of the surrounding area. You can hike, picnic, or simply enjoy the panoramic vistas.
+
+4. Visit the Eumundi Markets: Open on Saturdays and Wednesdays, these markets feature over 600 stalls selling art, crafts, produce, and food. It's a great place to pick up unique souvenirs and sample local delicacies.
+
+5. Go for a scenic flight: For a truly unforgettable experience, consider taking a scenic flight over the Sunshine Coast. You'll get breathtaking views of the coastline, hinterland, and the Glass House Mountains.
+
+6. Visit Australia Zoo: Made famous by the Crocodile Hunter, Steve Irwin, this zoo is home to a wide variety of Australian wildlife. It's a great place for families and animal lovers.
+
+7. Enjoy local cuisine: Caloundra has a vibrant food scene with numerous restaurants offering everything from fresh seafood to international cuisines. Be sure to try some local favorites like Barramundi, Moreton Bay bugs, and mangoes.
+
+8. Visit the Powerboat Park: If you're a fan of powerboats, this park is a must-visit. It features a museum dedicated to the history of powerboating in Australia.
+
+9. Relax at a day spa: After a day of exploring, treat yourself to a relaxing massage or beauty treatment at one of Caloundra's many day spas.
+
+10. Go fishing: Whether you prefer deep-sea fishing or casting a line from the shore, Caloundra offers numerous opportunities for anglers. You can even hire a charter boat if you don't have your own equipment.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Spring AI also supports structured outputs — where responses are deserialized into domain objects.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s create a small domain model for describing activities and lists of activities (itineraries).</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ToString(includePackage = false)
+record Activity(String activity, String location, String day, String time) {
+}
+
+record Itinerary(List&lt;Activity&gt; itinerary) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These simple records let the AI models return structured data that Groovy can manipulate easily.
+With our domain records defined, our earlier example can be tweaked as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SpringBootApplication
+void main() {
+    try(var context = SpringApplication.run(Holiday)) {
+        var chatClient = context.getBean(ChatClient.Builder).build()
+        var response = chatClient
+                .prompt("What are some interesting things to do while I am on vacation in Caloundra?")
+                .call()
+                .entity(Itinerary)
+        println "Response:\n" + response.itinerary.join('\n')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Response:
+Activity(Visit Kings Beach, Caloundra, Day 1, Morning)
+Activity(Explore Bulcock Beach, Caloundra, Day 1, Afternoon)
+Activity(Sunset at Moffat Headland, Caloundra, Day 1, Evening)
+Activity(Visit the Australian Zoo, Beerwah, Day 2, Whole Day)
+Activity(Relax at Shelly Beach, Caloundra, Day 3, Morning)
+Activity(Explore Pumicestone Passage by boat tour, Caloundra, Day 3, Afternoon)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_embabel">Using Embabel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/vaadin/embabel"><em>Embabel</em></a> is a newer JVM library that provides agent orchestration and LLM integration through a declarative approach.</p>
+</div>
+<div class="paragraph">
+<p>A simple text-generation example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SpringBootApplication
+@EnableAgents(loggingTheme = LoggingThemes.STAR_WARS)
+void main() {
+    try(var context = SpringApplication.run(Holiday)) {
+        println context.getBean(OperationContext)
+            .ai()
+            .withDefaultLlm()
+            .generateText('What are some interesting things to do while I am on vacation in Caloundra?')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Caloundra, located on the Sunshine Coast in Queensland, Australia, offers a variety of activities for tourists. Here are some suggestions for an enjoyable vacation:
+
+1. Visit the beautiful beaches: Caloundra has several beautiful beaches, such as Kings Beach, Shelly Beach, and Moffat Beach, where you can swim, sunbathe, or surf.
+
+2. Explore the Coastal Walk: Take a leisurely stroll along the Coastal Walk, which offers stunning views of the ocean, coastal cliffs, and nearby islands.
+
+3. Visit the Underwater World SEA LIFE Mooloolaba Aquarium: Discover an amazing underwater world filled with sea turtles, sharks, seahorses, and more.
+
+4. Spend a day at Australia Zoo: Home to over 1,200 animals and the late Steve Irwin's family, this iconic zoo offers up-close encounters with some of Australia's most famous wildlife.
+
+5. Visit the Glastonbury Estate Winery: Taste locally produced wines at this picturesque winery, which also features a restaurant and beautiful gardens.
+
+6. Explore the Bulcock Beach Esplanade: This vibrant area offers a variety of shops, cafes, and restaurants, as well as regular markets on weekends.
+
+7. Take a day trip to Fraser Island: Known for its stunning beaches, crystal-clear waters, and rainforests, Fraser Island is just a short boat ride away from Caloundra.
+
+8. Enjoy the Pumicestone Passage: Go boating, kayaking, or fishing in this beautiful waterway that separates Bribie Island from the mainland.
+
+9. Visit the Powerboat Park: Watch high-speed powerboats compete in various races at this popular watersports venue.
+
+10. Relax at a spa or wellness center: Pamper yourself with a massage, beauty treatment, or yoga class at one of Caloundra's many wellness centers.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Similarly to Spring AI, Embabel also supports structured data generation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SpringBootApplication
+@EnableAgents(loggingTheme = LoggingThemes.STAR_WARS)
+void main() {
+    try(var context = SpringApplication.run(Structured)) {
+        println context.getBean(OperationContext)
+            .ai()
+            .withDefaultLlm()
+            .createObject('What are some interesting things to do while I am on vacation in Caloundra?', Itinerary)
+            .itinerary
+            .join('\n')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Activity(Visit the Kings Beach, Kings Beach, Caloundra, Day 1, Morning)
+Activity(Explore Bulcock Beach, Bulcock Beach, Caloundra, Day 1, Afternoon)
+Activity(Dine at Mooloolaba Seafood Market, Mooloolaba Seafood Market, Mooloolaba, Day 1, Evening)
+Activity(Visit the Aussie World Theme Park, Aussie World, Palmview, Day 2, Whole day)
+Activity(Relax at Shelly Beach, Shelly Beach, Caloundra, Day 3, Morning)
+Activity(Try Surfing at Currimundi Beach, Currimundi Beach, Currimundi, Day 3, Afternoon)
+Activity(Explore the Eumundi Markets, Eumundi Markets, Eumundi, Day 4, Morning to Afternoon)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_autonomous_agents_with_embabel">Autonomous Agents with Embabel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a final example, let&#8217;s look at how Embabel can orchestrate multiple AI calls using its agent model.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s first extend our domain model to be able to have a bunch of alternative itineraries
+and allow them to be rated.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Alternatives(Set&lt;Itinerary&gt; content) {
+}
+
+record RatedAlternatives(List&lt;RatedItinerary&gt; content) {
+}
+
+record RatedItinerary(Itinerary itinerary, Rating rating) {
+}
+
+record Rating(double percentage) { }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our example uses an <code>@Agent</code> class to coordinate multiple AI actions — generating, rating, and selecting itineraries. The <code>@Action</code> methods that make up the agent&#8217;s capabilities are simple to write, with our domain records as inputs and outputs.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Agent(description = "Creates and ranks itineraries for a holiday at a given location")
+class ItineraryAgent {
+    @Action
+    Alternatives generateItineraries(UserInput userInput, OperationContext context) {
+        context.ai()
+            .withLlm('mistral:7b')
+            .createObject("Generate 5 sets of: An itinerary of things to do while on $userInput.content?", Alternatives)
+    }
+
+    @Action
+    RatedAlternatives rateItineraries(Alternatives alternatives, OperationContext context) {
+        new RatedAlternatives(alternatives.content.collect { itinerary -&gt;
+            var rating = context.ai()
+                .withLlm('qwen3:8b')
+                .createObject("Rate this itinerary on variety and number of activities: $itinerary?", Rating)
+            new RatedItinerary(itinerary, rating)
+        })
+    }
+
+    @Action
+    @AchievesGoal(description = 'Best itinerary')
+    RatedItinerary bestItinerary(RatedAlternatives ratedAlternatives) {
+        ratedAlternatives.content.max { it.rating.percentage }
+    }
+}
+
+@SpringBootApplication
+@EnableAgents(loggingTheme = LoggingThemes.STAR_WARS)
+void main() {
+    try(var context = SpringApplication.run(Rated)) {
+        println context.getBean(Autonomy)
+            .chooseAndRunAgent('A long-weekend holiday in Caloundra', ProcessOptions.DEFAULT).output
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look something like (slightly formatted here for readability):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>RatedItinerary[
+    itinerary=Itinerary[itinerary=[
+        Activity(Visit Kings Beach, Caloundra, Friday, All day),
+        Activity(Sunset at Mooloolaba Beach, Mooloolaba, Friday, Evening),
+        Activity(Explore Bulcock Beach Markets, Caloundra, Saturday, Morning to Early Afternoon),
+        Activity(Snorkeling at Dicky Beach, Dicky Beach, Saturday, Afternoon),
+        Activity(Relax at Shelly Beach, Caloundra, Sunday, All day)]],
+    rating=Rating[percentage=80.0]]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This demonstrates how Embabel’s agent model and Groovy’s expressive syntax can work together to orchestrate multiple AI calls with minimal boilerplate.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy’s interoperability, concise syntax, and powerful DSL capabilities make it an excellent language for prototyping and composing AI workflows on the JVM.
+Whether you’re chatting with Ollama, integrating via Spring, or orchestrating agents with Embabel, Groovy keeps your code clear and compact.</p>
+</div>
+<div class="paragraph">
+<p>You can find the full source for all these examples at:
+<a href="https://github.com/paulk-asert/groovy-ai" class="bare">https://github.com/paulk-asert/groovy-ai</a>
+Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing-list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
