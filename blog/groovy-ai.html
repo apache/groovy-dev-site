@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel'/><meta name='description' content='A tour of using Groovy with modern AI libraries including ollama4j, LangChain4j, Spring AI, and Embabel.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&amp;trade</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel'/><meta name='description' content='A tour of using Groovy with modern AI libraries including ollama4j, LangChain4j, Spring AI, and Embabel.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -59,19 +59,31 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&amp;trade</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&amp;trade</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-14 07:27PM</span></p><hr/><div id="preamble">
+        </div><br/><span>Published: 2025-10-14 07:27PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
 <div class="paragraph">
-<p>In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>ollama4j</code>, <code>langchain4j</code>, <code>Spring AI</code>, and <code>Embabel</code>.
-We&#8217;ll use a simple chat example, perhaps similar to what you might have done yourself when trying out your favourite LLM.
-We&#8217;ll ask for activities to do while on vacation.
-To make the examples as accessible as possible, we&#8217;ll use Ollama&#8217;s open-source models,
+<p><span class="blue">In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>ollama4j</code>, <code>langchain4j</code>, <code>Spring AI</code>, and <code>Embabel</code>.</span></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><span class="image right"><img src="img/bulcock_beach_sunset.jpg" alt="Bulcock Beach" width="350"></span></p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use a simple chat example, perhaps similar to what you might have done yourself when trying out your favourite LLM.
+We&#8217;ll ask for activities to do while on vacation.</p>
+</div>
+<div class="paragraph">
+<p>To make the examples as accessible as possible, we&#8217;ll use Ollama&#8217;s open-source models,
 which can be run locally. The libraries we use here can also connect to remote models and services.
 The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
 unchanged, but feel free to try other models and see what results you get.
@@ -303,7 +315,7 @@ Activity(Explore Pumicestone Passage by boat tour, Caloundra, Day 3, Afternoon)<
 <h2 id="_using_embabel">Using Embabel</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/vaadin/embabel"><em>Embabel</em></a> is a newer JVM library that provides agent orchestration and LLM integration through a declarative approach.</p>
+<p><a href="https://github.com/embabel"><em>Embabel</em></a> is a newer JVM library that provides agent orchestration and LLM integration through a declarative approach.</p>
 </div>
 <div class="paragraph">
 <p>A simple text-generation example:</p>
@@ -475,12 +487,14 @@ void main() {
 <div class="sectionbody">
 <div class="paragraph">
 <p>Groovy’s interoperability, concise syntax, and powerful DSL capabilities make it an excellent language for prototyping and composing AI workflows on the JVM.
-Whether you’re chatting with Ollama, integrating via Spring, or orchestrating agents with Embabel, Groovy keeps your code clear and compact.</p>
+Whether you’re chatting with Ollama, integrating via Spring, or orchestrating agents with Embabel, Groovy keeps your code clear and compact.
+Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
 </div>
 <div class="paragraph">
-<p>You can find the full source for all these examples at:
-<a href="https://github.com/paulk-asert/groovy-ai" class="bare">https://github.com/paulk-asert/groovy-ai</a>
-Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
+<p>You can find the full source for all these examples at:<br>
+<a href="https://github.com/paulk-asert/groovy-ai" class="bare">https://github.com/paulk-asert/groovy-ai</a><br>
+Other examples of using Groovy with Spring AI can be found at:<br>
+<a href="https://github.com/danvega/groovyai" class="bare">https://github.com/danvega/groovyai</a></p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
