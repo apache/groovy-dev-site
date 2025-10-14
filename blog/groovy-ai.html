@@ -65,7 +65,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-14 07:27PM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2025-10-15 07:06AM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="quoteblock">
@@ -76,7 +76,7 @@
 </blockquote>
 </div>
 <div class="paragraph">
-<p><span class="image right"><img src="img/bulcock_beach_sunset.jpg" alt="Bulcock Beach" width="350"></span></p>
+<p><span class="image right"><img src="img/bulcock_beach_sunset.jpg" alt="Bulcock Beach at Sunset looking towards Pumicestone Passage" width="320"></span></p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll use a simple chat example, perhaps similar to what you might have done yourself when trying out your favourite LLM.
@@ -84,8 +84,11 @@ We&#8217;ll ask for activities to do while on vacation.</p>
 </div>
 <div class="paragraph">
 <p>To make the examples as accessible as possible, we&#8217;ll use Ollama&#8217;s open-source models,
-which can be run locally. The libraries we use here can also connect to remote models and services.
-The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
+which can be run locally. So, no need to get keys, or use up your token limits.
+The libraries we use here can also connect to remote models and services.</p>
+</div>
+<div class="paragraph">
+<p>The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
 unchanged, but feel free to try other models and see what results you get.
 We also used Groovy 5 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
 </div>
@@ -95,11 +98,13 @@ We also used Groovy 5 and JDK 25, but the examples should work on other Groovy a
 <h2 id="_using_ollama4j">Using ollama4j</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/ollama/ollama4j"><em>Ollama4j</em></a> provides a client for interacting with local or remote <a href="https://ollama.com/">Ollama</a> models.</p>
+<p>Since we are using Ollama, we&#8217;ll start with a library aimed directly at that tool.
+<a href="https://github.com/ollama/ollama4j"><em>Ollama4j</em></a> provides a client for interacting with local or remote <a href="https://ollama.com/">Ollama</a> models.</p>
 </div>
 <div class="paragraph">
 <p>We first create an instance of the <code>Ollama</code> class.
-We set a generous timeout to allow for longer-running models.
+We set a generous timeout to allow for longer-running models
+but otherwise leave the defaults as is.
 While not strictly necessary, we can call the <code>ping</code> method to verify that the Ollama server is reachable.</p>
 </div>
 <div class="listingblock">
@@ -178,8 +183,10 @@ println "Best thing:\n$result.responseModel.message.response"</code></pre>
 <h2 id="_using_langchain4j">Using LangChain4j</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/langchain4j/langchain4j"><em>LangChain4j</em></a> brings LangChain’s composable AI approach to the JVM.
-Here’s the same initial prompt using its <code>OllamaChatModel</code> interface:</p>
+<p><a href="https://github.com/langchain4j/langchain4j"><em>LangChain4j</em></a> brings LangChain’s composable AI approach to the JVM. Its unified API might be a good option if you want to experiment with different models and providers later.</p>
+</div>
+<div class="paragraph">
+<p>Here’s the same initial prompt using its <code>OllamaChatModel</code> interface:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -214,8 +221,12 @@ println "Response: " + chatModel.chat(prompt)</code></pre>
 <h2 id="_using_spring_ai">Using Spring AI</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://docs.spring.io/spring-ai/reference/"><em>Spring AI</em></a> provides first-class integration with the Spring ecosystem.
-In Groovy, this makes it simple to embed AI capabilities into a Spring Boot app.</p>
+<p><a href="https://docs.spring.io/spring-ai/reference/"><em>Spring AI</em></a> provides first-class integration with the Spring ecosystem. This would be a good option if you are already using Spring Boot or need
+its integration and deployment capabilities.</p>
+</div>
+<div class="paragraph">
+<p>In Groovy, it&#8217;s simple to embed AI capabilities into a Spring Boot app.
+Our entire script is shown below:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -230,6 +241,10 @@ void main() {
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>We also need to set up a few properties, e.g. in <code>application.properties</code>,
+to tell Spring AI to use Ollama and our chosen model.</p>
 </div>
 <div class="paragraph">
 <p>The output might look something like:</p>
@@ -404,7 +419,7 @@ Activity(Explore the Eumundi Markets, Eumundi Markets, Eumundi, Day 4, Morning t
 <p>As a final example, let&#8217;s look at how Embabel can orchestrate multiple AI calls using its agent model.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s first extend our domain model to be able to have a bunch of alternative itineraries
+<p>Let&#8217;s first extend our domain model to be able to support a set of alternative itineraries
 and allow them to be rated.</p>
 </div>
 <div class="listingblock">
@@ -461,6 +476,10 @@ void main() {
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Here we are using two different models for different tasks — <code>mistral:7b</code> for generating itineraries and <code>qwen3:8b</code> for rating them. Embabel provides richer ways to control and configure the models, but this simple approach works well for our example.
+The <code>@AchievesGoal</code> annotation makes use of Embabel&#8217;s goal-oriented action planning (GOAP) capabilities.</p>
 </div>
 <div class="paragraph">
 <p>The output might look something like (slightly formatted here for readability):</p>
