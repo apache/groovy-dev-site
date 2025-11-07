@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, spring ai, embabel, agentic'/><meta name='description' content='This post highlights some agentic code patterns supported by Embabel.'/><title>The Apache Groovy programming language - Blogs - Groovy&trade;, Embabel, and Agentic Design Patterns</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li><li><a href='#_prompt_chaining' class='anchor-link'>Prompt Chaining</a></li><li><a href='#_reflection' class='anchor-link'>Reflection</a></li><li><a href='#_routing' class='anchor-link'>Routing</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-ai'>Exploring AI with Groovy&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy&trade;, Embabel, and Agentic Design Patterns</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-11-07 11:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A recent <a href="https://medium.com/@springrod/build-better-agents-in-java-vs-python-embabel-vs-langgraph-f7951a0d855c">blog post</a> by Rod Johnson, looked at using Embabel and Java to solve some common agentic design patterns.
+Rod&#8217;s post in turn reference&#8217;s
+another blog post by Hamza Boulahia using LangGraph with Python. Rod&#8217;s post makes some
+excellent arguments as to the benefits of a JVM solution over LangGraph and Python.
+We won&#8217;t repeat those arguments here, but we highly recommend that you read Rod&#8217;s article.</p>
+</div>
+<div class="paragraph">
+<p>This blog post looks at those same examples using Groovy. Groovy is sometimes referred to
+as the Python of the JVM world. It&#8217;s syntax mostly resembles Java but some of its features
+will be familiar to Python programmers. So, for Python folks who want to try out some JVM
+AI frameworks, Groovy might be a nice entry point.
+Also, for Groovy folks, we want to show them how easy it is to use powerful JVM frameworks like Embabel.
+As an added bonus, we&#8217;ll get to show off a few neat features of Groovy on the way.</p>
+</div>
+<div class="paragraph">
+<p>We used Java 25, Groovy 5.0.2, and Embabel 0.2.0-SNAPSHOT.
+Embabel itself is built on Spring boot. We used Spring boot 3.5.6.
+Embabel supports a range of LLMs. We used Mistral:7b with Ollama.</p>
+</div>
+<div class="paragraph">
+<p>Embabel can make use of Spring Shell functionality and our example is all set up to use that.
+First, you&#8217;ll need to have Ollama running locally, or set it up using docker as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+docker exec -it ollama ollama run mistral:7b</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can of course use other LLMs and other models.
+Follow the <a href="https://docs.embabel.com/embabel-agent/guide/0.1.3/">Embabel documentation</a>
+to configure such artifacts if needed.</p>
+</div>
+<div class="paragraph">
+<p>Assuming you have cloned the <a href="https://github.com/paulk-asert/langgraph-patterns-groovy">example repo</a>, you can then run the example using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">./gradlew run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This invokes our Embabel (Spring Boot) application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SpringBootApplication
+@EnableAgents(loggingTheme = LoggingThemes.COLOSSUS)
+void main() {
+    SpringApplication.run(PatternsApplication)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can then interact with the Embabel agents from the command line (or IDE run terminal window).</p>
+</div>
+<div class="paragraph">
+<p>Now, we&#8217;re ready to start exploring some of those design patterns.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prompt_chaining">Prompt Chaining</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Prompt chaining breaks tasks into manageable pieces.
+The blog title generator example picks topics from user input,
+and then generates several blog titles for each topic.
+The Groovy solution follows the Java solution very closely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Agent(description = 'Blog Titler Agent')
+class BlogTitler {
+
+    private final Actor&lt;?&gt; techWriter = new Actor&lt;&gt;('''
+        You are an expert technical writer. Always give clear,
+        concise, and straight-to-the-point answers.
+        ''', LlmOptions.withAutoLlm())
+
+    record Topics(List&lt;String&gt; topics) {
+    }
+
+    record TopicTitles(String topic, List&lt;String&gt; titles) {
+    }
+
+    record BlogTitles(List&lt;TopicTitles&gt; topicTitles) {
+    }
+
+    @Action
+    Topics extractTopics(UserInput userInput, Ai ai) {
+        techWriter.promptRunner(ai)
+            .creating(Topics)
+            .fromPrompt("""
+                Extract 1-3 key topics from the following text:
+                $userInput.content
+                """)
+    }
+
+    @Action
+    @AchievesGoal(description='Generate Titles for Topics')
+    BlogTitles generateBlogTitles(Topics topics, OperationContext context) {
+        var titles = context.parallelMap(
+            topics.topics(),
+            10,
+            topic -&gt; techWriter.promptRunner(context)
+            .creating(TopicTitles)
+            .fromPrompt("""
+                Generate two catchy blog titles for this topic:
+                $topic
+                """))
+        new BlogTitles(titles)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It has domain records like <code>Topics</code> and <code>BlogTitles</code> to provide a richer context for our prompts
+compared to simple strings. The Groovy version has some minor improvements compared to Java.
+The most important is possibly the interpolated string support, which is still coming for Java.</p>
+</div>
+<div class="paragraph">
+<p>At the shell prompt, you can enter a command like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Colossus&gt; blogs topics "Why Groovy is a great option for your AI applications especially when using Embabel"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the output might be something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>{
+  "topicTitles" : [ {
+    "topic" : "Groovy",
+    "titles" : [ "Unleashing Potential: Mastering Groovy for Modern Development", "Exploring the Future of Coding: Top Groovy Trends and Techniques in 2025" ]
+  }, {
+    "topic" : "AI Applications",
+    "titles" : [ "Unleashing Potential: Top AI Applications Shaping Our Future", "Revolutionizing Everyday Life: Exploring Cutting-Edge AI Applications" ]
+  }, {
+    "topic" : "Embabel",
+    "titles" : [ "Unveiling the Future: A Deep Dive into Embabel Technology", "Embabel Revolution: Transforming Tomorrow's Tech Landscape Today" ]
+  } ]
+}</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reflection">Reflection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Reflection, also know by other names such as the evaluator-optimizer pattern,
+is where agents critique and improve outputs.
+The draft and refine example explores drafting text in response to a user-specified task
+and critiquing it until it’s satisfactory.</p>
+</div>
+<div class="paragraph">
+<p>Here is the Groovy code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Configuration
+class DraftAndRefine {
+
+    record Draft(String content) {
+    }
+
+    @Bean
+    Agent draftAndRefineAgent() {
+        RepeatUntilAcceptableBuilder
+            .returning(Draft)
+            .consuming(UserInput)
+            .withMaxIterations(7)
+            .withScoreThreshold(.99)
+            .repeating(tac -&gt; {
+                tac.ai()
+                    .withAutoLlm()
+                    .withId('draft')
+                    .createObject("""
+                        You are an assistant helping to complete the following task:
+
+                        Task:
+                        $tac.input.content
+
+                        Current Draft:
+                        ${tac.lastAttemptOr("no draft yet")}
+
+                        Feedback:
+                        ${tac.lastFeedbackOr("no feedback yet")}
+
+                        Instructions:
+                        - If there is no draft and no feedback, generate a clear and complete response to the task.
+                        - If there is a draft but no feedback, improve the draft as needed for clarity and quality.
+                        - If there is both a draft and feedback, revise the draft by incorporating the feedback directly.
+                        - Always produce a single, improved draft as your output.
+                        """, Draft)
+            })
+            .withEvaluator(tac -&gt; {
+                tac.ai().withAutoLlm()
+                    .withId('evaluate_draft')
+                    .createObject("""
+                        Evaluating the following draft, based on the given task.
+                        Score it from 0.0 to 1.0 (best) and provide constructive feedback for improvement.
+
+                        Task:
+                        $tac.input.content
+
+                        Draft:
+                        $tac.resultToEvaluate
+                        """, TextFeedback)
+            })
+            .buildAgent('draft_and_refine_agent', 'An agent that drafts and refines content')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, it follows the Java code very closely with some minor improvements.</p>
+</div>
+<div class="paragraph">
+<p>You might invoke it with something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Colossus&gt; x "Draft and refine a paragraph about using Groovy and Embabel"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might be something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>You asked: UserInput(content=Draft and refine a paragraph about using Groovy and Embabel, timestamp=2025-11-07T10:37:55.707939Z)
+
+{
+  "content" : "Groovy, a dynamic language for the Java platform with an elegant syntax and seamless integration with Java, is particularly useful when combined with Embabel. In complex problem-solving scenarios such as test automation and scripting tasks, Groovy's concise and readable code enables developers to tackle these challenges effectively. Embabel simplifies the process by abstracting away low-level programming details, further improving performance and reducing development time significantly. However, it's essential to understand the nuances of each language, manage compatibility issues between them, and anticipate potential challenges or limitations while using these tools together."
+}
+
+LLMs used: [mistral:7b] across 15 calls
+Prompt tokens: 7,502,
+Completion tokens: 1,914</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_routing">Routing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Another fundamental pattern is routing within a workflow.
+The sentiment classification example first performs sentiment analysis,
+and then chooses between alternative options for generating a response.</p>
+</div>
+<div class="paragraph">
+<p>The Java Embabel solution itself incorporates a coding design pattern:
+Algebraic Data Types (ADTs). This pattern is worth exploring a bit more.
+ADTs have <em>product</em> types, like records,
+and <em>sum</em> types, like what you get with a sealed base class and some subtype variants.
+Other programming languages, like Haskell, represent sum types with different approaches.
+A common scenario is capturing state as types (positive/negative in our
+example but more elaborate state machines can be represented this way).
+It is also convenient being able to convert between the states and a data type
+like an enum. As an added bonus, serializability to JSON also helps in many scenarios
+including constructing AI payloads.</p>
+</div>
+<div class="paragraph">
+<p>The first half of the <code>ClassificationAgent</code> class
+has the relevant types for our ADT (copied from Rod&#8217;s example):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Agent(description = "Perform sentiment analysis")          // Java
+public class ClassificationAgent {
+
+    @JsonTypeInfo(
+            use = JsonTypeInfo.Id.SIMPLE_NAME,
+            include = JsonTypeInfo.As.PROPERTY,
+            property = "type"
+    )
+    public sealed interface Sentiment {
+    }
+
+    public static final class Positive implements Sentiment {
+    }
+
+    public static final class Negative implements Sentiment {
+    }
+
+    private enum SentimentType {
+        POSITIVE,
+        NEGATIVE;
+
+        public Sentiment toSentiment() {
+            return switch (this) {
+                case POSITIVE -&gt; new Positive();
+                case NEGATIVE -&gt; new Negative();
+            };
+        }
+    }
+
+    public record Response(String message) {
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You could imagine similar scenarios where we&#8217;d want to capture similar ADTs.
+Whenever we have common boilerplate code, Groovy AST transforms can be a useful tool.
+We&#8217;ll create a <code>@SumType</code> AST transform (details in the source code repo). Then our code becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Agent(description = 'Perform sentiment analysis')
+class ClassificationAgent {
+
+    @SumType(variantHelper = 'toSentiment')
+    interface Sentiment {
+        Positive()
+        Negative()
+    }
+
+    record Response(String message) {
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It generates the same types and methods in Rod&#8217;s example.</p>
+</div>
+<div class="paragraph">
+<p>The second half of the classification agent follows the Java version closely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">    @Action
+    Sentiment classify(UserInput userInput, Ai ai) {
+        ai.withAutoLlm()
+            .createObject("""
+                Determine if the sentiment of the following text is positive or negative.
+                Text: "$userInput.content"
+                """, SentimentType)
+            .toSentiment()
+    }
+
+    @Action
+    Response encourage(UserInput userInput, Positive sentiment, Ai ai) {
+        ai.withAutoLlm()
+            .createObject("""
+                Generate an encouraging response to the following positive text:
+                $userInput.content
+                """, Response)
+    }
+
+    @Action
+    Response help(UserInput userInput, Negative sentiment, Ai ai) {
+        ai.withAutoLlm()
+            .createObject("""
+                Generate a supportive response to the following negative text:
+                $userInput.content
+                """, Response)
+    }
+
+    @AchievesGoal(description = 'Generate a response based on discerning sentiment in user input')
+    @Action
+    Response done(Response response) {
+        response
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We can ask a query that will trigger these agents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>x "Analyze sentiment and respond to 'Groovy makes you more productive when writing your AI applications' "</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>You asked: UserInput(content=Analyze sentiment and respond to 'Groovy makes you more productive when writing your AI applications' , timestamp=2025-11-07T10:40:14.120002Z)
+
+{
+  "message" : "Continuing to utilize Groovy for your AI applications will undeniably foster increased productivity and efficiency in your development process. Keep up the great work!"
+}
+
+LLMs used: [mistral:7b] across 2 calls
+Prompt tokens: 425,
+Completion tokens: 47</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_discussion">Discussion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Hopefully you can see that writing Embabel applications is easy using Groovy.
+Python users might find the Groovy syntax a friendly starting point to try out JVM development.
+Certainly, Groovy has
+powerful DSL capabilities. We could provide an alternative DSL that offered
+an even more Python-like coding experience for the Embabel framework,
+but that&#8217;s a topic for a different blog post.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>07/Nov/2025</strong>: Initial version.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
