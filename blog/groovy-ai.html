@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel'/><meta name='description' content='A tour of using Groovy with modern AI libraries including ollama4j, LangChain4j, Spring AI, and Embabel.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel, micronaut-ai, quarkus-ai'/><meta name='description' content='A tour of using Groovy with modern AI libraries including Ollama4j, LangChain4j, Spring AI, Embabel, Micronaut, and Quarkus.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -59,19 +59,19 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_using_micronaut_langchain4j' class='anchor-link'>Using Micronaut LangChain4j</a></li><li><a href='#_using_quarkus_langchain4j' class='anchor-link'>Using Quarkus LangChain4j</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-15 07:06AM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2025-11-14 08:05PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p><span class="blue">In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>ollama4j</code>, <code>langchain4j</code>, <code>Spring AI</code>, and <code>Embabel</code>.</span></p>
+<p><span class="blue">In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>Ollama4j</code>, <code>LangChain4j</code>, <code>Spring AI</code>, <code>Embabel</code>, <code>Micronaut LangChain4j</code>, and <code>Quarkus LangChain4j</code>.</span></p>
 </div>
 </blockquote>
 </div>
@@ -90,6 +90,7 @@ The libraries we use here can also connect to remote models and services.</p>
 <div class="paragraph">
 <p>The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
 unchanged, but feel free to try other models and see what results you get.
+Some of the examples use the <code>qwen3:8b</code> model. It seems to give better results when using tools.
 We also used Groovy 5 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
 </div>
 </div>
@@ -154,7 +155,8 @@ println "Four things:\n$result.responseModel.message.response"</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can continue the conversation by including the previous chat history in the next request:</p>
+<p>AI chat calls are stateless, but we can simulate continuing the conversation by
+including the previous chat history as additional messages in a subsequent request:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -215,6 +217,275 @@ println "Response: " + chatModel.chat(prompt)</code></pre>
 4. Take a day trip to the Glass House Mountains: Just a short drive from Caloundra, these iconic volcanic plugs offer breathtaking views and hiking trails for all levels of fitness. You can also visit the Kondalilla National Park for waterfalls and rainforest walks.</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Similarly to Ollama4j, we can manually include previous response messages
+to have a conversation with memory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
+var response = model.chat(new UserMessage(prompt))
+
+var prompt2 = 'If I had half a day and can only go to one, which would you recommend?'
+var response2 = model.chat(response.aiMessage(), new UserMessage(prompt2))
+
+println """
+Four things:
+${response.aiMessage().text()}
+
+Best thing:
+${response2.aiMessage().text()}
+"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output might be something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Best thing:
+ If you only have half a day and can only choose one attraction, I would recommend visiting the UnderWater World SEA LIFE Mooloolaba. It's an excellent aquarium that offers a fascinating glimpse into the marine life of the region, and it's suitable for people of all ages.
+
+The UnderWater World is home to a variety of marine animals, including sharks, turtles, stingrays, seahorses, and many more. You can also participate in interactive experiences such as feeding the sharks or holding a starfish. The aquarium also offers educational programs and behind-the-scenes tours for those interested in learning more about marine conservation.
+
+While the Coastal Walk and Glass House Mountains are worth visiting if you have more time, they require more planning and travel time, so I would recommend UnderWater World SEA LIFE Mooloolaba as the best option for a half-day visit.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>LangChain4j however, also provides more friendly support to have a conversation with memory using its
+<code>AiServices</code> builder. We declare the interface of our chat assistant and provide some
+additional configuration information, and the builder will create our service for us:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">interface HolidayAssistant {
+    String chat(String message)
+}
+
+var model = OllamaChatModel.builder()
+    .baseUrl("http://localhost:11434")
+    .timeout(Duration.ofMinutes(5))
+    .modelName("mistral:7b")
+    .build()
+
+var chatMemory = MessageWindowChatMemory.withMaxMessages(10)
+
+var assistant = AiServices.builder(HolidayAssistant)
+    .chatModel(model)
+    .chatMemory(chatMemory)
+    .build()
+
+var prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
+var response = assistant.chat(prompt)
+
+var prompt2 = '''
+It might rain at some point on the weekend, so can you give me
+a very short description of a single backup alternative if it rains?
+Make it different to your previous suggestions since I am not
+sure which ones I will have already seen by the time it rains.
+'''
+var response2 = assistant.chat(prompt2)
+
+println """
+Four things:
+$response
+
+If it rains:
+$response2
+"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>MessageWindowChatMemory</code> is one of several supported memory implementations.
+This ones keeps a window of in-memory messages available. Once the <em>max</em> configured
+number of messages is reached, they fall out of the cache.</p>
+</div>
+<div class="paragraph">
+<p>The output might be something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Four things:
+ 1. Visit the beautiful beaches: Caloundra is known for its stunning beaches, with Mooloolaba Beach and Kings Beach being particularly popular. You can spend your days swimming, sunbathing, or even surfing.
+
+2. Explore the Underwater World SEA LIFE Sunshine Coast: This aquarium offers an amazing opportunity to get up close and personal with a variety of marine life, including sharks, stingrays, turtles, and seals.
+
+3. Visit the Bulcock Beach Esplanade: This is a great spot for shopping, dining, and people-watching. The esplanade offers a range of boutiques, cafes, and restaurants. Don't forget to check out the local markets that are held regularly.
+
+4. Take a day trip to Australia Zoo: Made famous by the Crocodile Hunter, Steve Irwin, this zoo is a must-visit for animal lovers. It's home to a wide variety of Australian wildlife and offers interactive experiences and shows throughout the day.
+
+If it rains:
+ If it rains, an indoor activity that you might enjoy is visiting the Queensland Air Museum in Caboolture, which is a short drive from Caloundra. The museum houses one of Australia's largest collections of aircraft and aviation artifacts, including military planes, helicopters, and memorabilia. It offers a fascinating look at the history of Australian aviation and is suitable for all ages.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>AiServices</code> also supports structured output if we declare that
+when defining our model, as this example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">interface HolidayBot {
+    List&lt;Activity&gt; extractActivitiesFrom(String text)
+}
+
+var model = OllamaChatModel.builder()
+    .baseUrl("http://localhost:11434")
+    .supportedCapabilities(RESPONSE_FORMAT_JSON_SCHEMA)
+    .timeout(Duration.ofMinutes(5))
+    .modelName("mistral:7b")
+    .build()
+
+var chatMemory = MessageWindowChatMemory.withMaxMessages(10)
+
+var bot = AiServices.builder(HolidayBot)
+    .chatModel(model)
+    .chatMemory(chatMemory)
+    .build()
+
+var prompt = '''
+What are 4 interesting things to do for a long weekend vacation in Caloundra?
+Provide location, and suggested non-overlapping day and time for each activity.
+'''
+var response = bot.extractActivitiesFrom(prompt)
+
+var prompt2 = '''
+If my only spare time is Sunday morning, and I can only go to one activity, which would you recommend?
+'''
+var response2 = bot.extractActivitiesFrom(prompt2)
+
+println """
+Four things:
+${response.join('\n')}
+
+Best thing:
+${response2.join('\n')}
+"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Instead of returning a <code>String</code>, our chat service is now returning a <code>List&lt;Activity&gt;</code> where <code>Activity</code>
+is a domain record defined as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ToString(includePackage = false)
+record Activity(String activity, String location, String day, String time) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>RESPONSE_FORMAT_JSON_SCHEMA</code> configuration will represent our domain record
+in JSON using its record component names and values.</p>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Four things:
+Activity(Visit Australia Zoo, Beerwah, Queensland (Approx. 30 minutes drive from Caloundra), Day 1 - Friday, 9:00 AM - 5:00 PM)
+Activity(Explore Kings Beach and the Coastal Walk, Caloundra, Queensland, Day 2 - Saturday, 8:00 AM - Afternoon)
+Activity(Relax at Bulcock Beach Market, Bulcock Street, Caloundra, Day 3 - Sunday, 6:00 AM - 1:00 PM)
+Activity(Explore the Glass House Mountains, Glass House Mountains, Queensland (Approx. 45 minutes drive from Caloundra), Day 4 - Monday, 9:00 AM - 3:00 PM)
+
+Best thing:
+Activity(Relax at Bulcock Beach Market, Bulcock Street, Caloundra, Sunday, 6:00 AM - 1:00 PM)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>AiServices</code> also supports tools. Tools allow the LLM to query for information
+different to what it was trained on when the model was built.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll tweak our example to have a tool for finding "<em>next weekend</em>"
+and a tool for finding the weather forecast given a location and date.
+We&#8217;ll just have fake weather forecasts but we could call a REST service
+that provided real-time forecasting information.</p>
+</div>
+<div class="paragraph">
+<p>Our script now includes two tool definitions and might look something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">interface HolidayAssistantTools {
+    String chat(String message)
+}
+
+@Tool("The LocalDate of the start of the coming weekend")
+LocalDate getWeekend() {
+    LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
+}
+
+@Field static Integer fakeDay = 0
+
+@Tool('The expected domain.Weather including weather forecast, min and max temperature in Celsius for a given location and LocalDate')
+Weather getWeather(String location, LocalDate date) {
+    var fakeWeather = [0: [Caloundra: new Weather('Sunny and Hot', 30, 37)],
+                       1: [Caloundra: new Weather('Raining', 5, 15)]]
+    fakeWeather[fakeDay++ % fakeWeather.size()][location]
+}
+
+var model = OllamaChatModel.builder()
+    .baseUrl("http://localhost:11434")
+    .timeout(Duration.ofMinutes(5))
+    .modelName("qwen3:8b")
+//    .logRequests(true)
+//    .logResponses(true)
+    .build()
+
+var chatMemory = MessageWindowChatMemory.withMaxMessages(10)
+
+var assistant = AiServices.builder(HolidayAssistantTools)
+    .chatModel(model)
+    .chatMemory(chatMemory)
+    .tools(this)
+    .build()
+
+var prompt = '''
+Recommend an interesting thing to see in Caloundra for each day of this coming weekend.
+Factor in expected weather when making recommendations. Do not hallucinate weather or dates.
+'''
+var response = assistant.chat(prompt)
+
+println """
+Preparing recommendations as at: ${LocalDate.now()}
+Interesting things:
+$response
+"""</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We switched to the <code>qwen3:8b</code> model. It is slightly larger to download but does
+a more reliable job calling tools correctly. The tools are annotation with <code>@Tools</code>
+and will be automatically found.</p>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Preparing recommendations as at: 2025-11-12
+Interesting things:
+Here’s a weather-aware recommendation for Caloundra this coming weekend (November 15–16, 2025):
+
+**Saturday, November 15 (Sunny &amp; Hot: 30°C–37°C)**
+☀️ **Beach Day at Caloundra Spit**
+- Explore the scenic Caloundra Spit, a 12km stretch of sand with wildlife, birdlife, and picnic spots.
+- Try snorkeling or swimming in the calm waters (avoid midday sun; visit early morning or late afternoon).
+- Tip: Stay hydrated, wear sunscreen, and bring a hat.
+
+**Sunday, November 16 (Raining &amp; Cool: 5°C–15°C)**
+🌧️ **Indoor Cultural Activities**
+- Visit the **Caloundra Art Gallery** or **Caloundra Library** for indoor browsing and local art exhibits.
+- Enjoy a cozy café visit (e.g., **The Coffee Bean &amp; Tea Leaf**) with a book or light meal.
+- Tip: Pack an umbrella, layer clothing, and prioritize dry footwear.
+
+Safe travels! 🌊📚</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that it gave accurate recommendations that include our two fake weather forecasts.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -234,10 +505,10 @@ Our entire script is shown below:</p>
 void main() {
     try(var context = SpringApplication.run(Holiday)) {
         var chatClient = context.getBean(ChatClient.Builder).build()
-        var response = chatClient
-                .prompt("What are some interesting things to do while I am on vacation in Caloundra?")
+        println chatClient
+                .prompt("What are four interesting things to do while I am on vacation in Caloundra?")
                 .call()
-        println "Response:\n" + response.content()
+                .content()
     }
 }</code></pre>
 </div>
@@ -251,8 +522,7 @@ to tell Spring AI to use Ollama and our chosen model.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>Response:
- Caloundra, located on the Sunshine Coast of Australia, offers a variety of activities that cater to different interests. Here are some suggestions for an enjoyable vacation:
+<pre> Caloundra, located on the Sunshine Coast of Australia, offers a variety of activities that cater to different interests. Here are some suggestions for an enjoyable vacation:
 
 1. Beaches: Caloundry has several beautiful beaches, including Kings Beach, Moffat Beach, and Bulcock Beach. You can swim, sunbathe, surf, or just enjoy the stunning views.
 
@@ -260,34 +530,22 @@ to tell Spring AI to use Ollama and our chosen model.</p>
 
 3. Explore the Glass House Mountains: These are a series of 12 granite peaks that offer stunning views of the surrounding area. You can hike, picnic, or simply enjoy the panoramic vistas.
 
-4. Visit the Eumundi Markets: Open on Saturdays and Wednesdays, these markets feature over 600 stalls selling art, crafts, produce, and food. It's a great place to pick up unique souvenirs and sample local delicacies.
-
-5. Go for a scenic flight: For a truly unforgettable experience, consider taking a scenic flight over the Sunshine Coast. You'll get breathtaking views of the coastline, hinterland, and the Glass House Mountains.
-
-6. Visit Australia Zoo: Made famous by the Crocodile Hunter, Steve Irwin, this zoo is home to a wide variety of Australian wildlife. It's a great place for families and animal lovers.
-
-7. Enjoy local cuisine: Caloundra has a vibrant food scene with numerous restaurants offering everything from fresh seafood to international cuisines. Be sure to try some local favorites like Barramundi, Moreton Bay bugs, and mangoes.
-
-8. Visit the Powerboat Park: If you're a fan of powerboats, this park is a must-visit. It features a museum dedicated to the history of powerboating in Australia.
-
-9. Relax at a day spa: After a day of exploring, treat yourself to a relaxing massage or beauty treatment at one of Caloundra's many day spas.
-
-10. Go fishing: Whether you prefer deep-sea fishing or casting a line from the shore, Caloundra offers numerous opportunities for anglers. You can even hire a charter boat if you don't have your own equipment.</pre>
+4. Visit the Eumundi Markets: Open on Saturdays and Wednesdays, these markets feature over 600 stalls selling art, crafts, produce, and food. It's a great place to pick up unique souvenirs and sample local delicacies.</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Spring AI also supports structured outputs — where responses are deserialized into domain objects.</p>
 </div>
 <div class="paragraph">
-<p>Let&#8217;s create a small domain model for describing activities and lists of activities (itineraries).</p>
+<p>We saw the <code>Activity</code> record previously. Rather than just having a list of <code>Activity</code>,
+let&#8217;s also define a record to capture itineraries of activities:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@ToString(includePackage = false)
-record Activity(String activity, String location, String day, String time) {
-}
-
-record Itinerary(List&lt;Activity&gt; itinerary) {
+<pre class="prettyprint highlight"><code data-lang="groovy">record Itinerary(List&lt;Activity&gt; itinerary) {
+    String display() {
+        itinerary.join('\n')
+    }
 }</code></pre>
 </div>
 </div>
@@ -305,7 +563,7 @@ void main() {
                 .prompt("What are some interesting things to do while I am on vacation in Caloundra?")
                 .call()
                 .entity(Itinerary)
-        println "Response:\n" + response.itinerary.join('\n')
+        println "Response:\n" + response.display()
     }
 }</code></pre>
 </div>
@@ -322,6 +580,72 @@ Activity(Sunset at Moffat Headland, Caloundra, Day 1, Evening)
 Activity(Visit the Australian Zoo, Beerwah, Day 2, Whole Day)
 Activity(Relax at Shelly Beach, Caloundra, Day 3, Morning)
 Activity(Explore Pumicestone Passage by boat tour, Caloundra, Day 3, Afternoon)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Spring AI also supports tools. Our script might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Component
+class WeekendTool {
+    @Tool(description = 'The LocalDate of the start of the coming weekend')
+    LocalDate getWeekend() {
+        LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
+    }
+}
+
+@Component
+class WeatherTool {
+    static Integer fakeDay = 0
+
+    @Tool(description = 'The expected weather including forecast, min and max temperature in Celsius for a given location and LocalDate')
+    Weather getWeather(String location, LocalDate date) {
+        var fakeWeather = [0: [Caloundra: new Weather('Sunny and Hot', 30, 37)],
+                           1: [Caloundra: new Weather('Raining', 5, 15)]]
+        fakeWeather[fakeDay++ % fakeWeather.size()][location]
+    }
+}
+
+@SpringBootApplication
+void main() {
+    var prompt = '''
+Recommend an interesting thing to see in Caloundra for each day of this coming weekend.
+Factor in expected weather when making recommendations. Do not hallucinate weather or dates.
+'''
+    try(var context = SpringApplication.run(Holiday)) {
+        var chatClient = context.getBean(ChatClient.Builder).build()
+        var weekend = context.getBean(WeekendTool)
+        var weather = context.getBean(WeatherTool)
+        var options = OllamaChatOptions.builder().model('qwen3:8b').build()
+        println chatClient
+                .prompt(prompt)
+                .options(options)
+                .tools(weekend, weather)
+                .call()
+                .content()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the output might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>**Saturday, November 15 (Sunny &amp; Hot: 30°C–37°C)**
+Perfect for outdoor adventures!
+- **Caloundra Spit** – Explore the scenic coastal walk with panoramic ocean views.
+- **Snorkeling at Mooloolaba Beach** – Clear waters and vibrant marine life.
+- **Glass House Mountains Day Trip** – A short drive offers dramatic landscapes and hiking.
+
+**Sunday, November 16 (Raining: 5°C–15°C)**
+Opt for indoor attractions or sheltered activities:
+- **Caloundra Cultural Centre** – Discover local art and history.
+- **Caloundra Regional Gallery** – Enjoy contemporary exhibitions.
+- **Indoor Water Playground** – A splash-filled escape from the rain.
+
+Always check for real-time weather updates closer to the date! 🌞🌧️</pre>
 </div>
 </div>
 </div>
@@ -344,7 +668,7 @@ void main() {
         println context.getBean(OperationContext)
             .ai()
             .withDefaultLlm()
-            .generateText('What are some interesting things to do while I am on vacation in Caloundra?')
+            .generateText('What are four interesting things to do while I am on vacation in Caloundra?')
     }
 }</code></pre>
 </div>
@@ -354,27 +678,13 @@ void main() {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>Caloundra, located on the Sunshine Coast in Queensland, Australia, offers a variety of activities for tourists. Here are some suggestions for an enjoyable vacation:
+<pre> 1. Visit the Bulcock Beach: This is a popular beach in Caloundra, perfect for swimming, sunbathing, and enjoying various water sports. There's also a picturesque esplanade with cafes, shops, and art galleries nearby.
 
-1. Visit the beautiful beaches: Caloundra has several beautiful beaches, such as Kings Beach, Shelly Beach, and Moffat Beach, where you can swim, sunbathe, or surf.
+2. Explore the Kings Beach Park: Located next to Kings Beach, this park offers a variety of facilities including picnic areas, BBQ facilities, playgrounds, and beautiful views of the ocean. It's a great spot for families with children.
 
-2. Explore the Coastal Walk: Take a leisurely stroll along the Coastal Walk, which offers stunning views of the ocean, coastal cliffs, and nearby islands.
+3. Visit the Australian Zoo: Made famous by Steve Irwin, the Australian Zoo is just a short drive from Caloundra. Here you can see a wide variety of Australian wildlife, including kangaroos, koalas, and crocodiles.
 
-3. Visit the Underwater World SEA LIFE Mooloolaba Aquarium: Discover an amazing underwater world filled with sea turtles, sharks, seahorses, and more.
-
-4. Spend a day at Australia Zoo: Home to over 1,200 animals and the late Steve Irwin's family, this iconic zoo offers up-close encounters with some of Australia's most famous wildlife.
-
-5. Visit the Glastonbury Estate Winery: Taste locally produced wines at this picturesque winery, which also features a restaurant and beautiful gardens.
-
-6. Explore the Bulcock Beach Esplanade: This vibrant area offers a variety of shops, cafes, and restaurants, as well as regular markets on weekends.
-
-7. Take a day trip to Fraser Island: Known for its stunning beaches, crystal-clear waters, and rainforests, Fraser Island is just a short boat ride away from Caloundra.
-
-8. Enjoy the Pumicestone Passage: Go boating, kayaking, or fishing in this beautiful waterway that separates Bribie Island from the mainland.
-
-9. Visit the Powerboat Park: Watch high-speed powerboats compete in various races at this popular watersports venue.
-
-10. Relax at a spa or wellness center: Pamper yourself with a massage, beauty treatment, or yoga class at one of Caloundra's many wellness centers.</pre>
+4. Take a day trip to the Glass House Mountains: These are a series of 13 steep sided, volcanic plugs that dominate the local landscape. You can hike some of the mountains, or simply enjoy their unique beauty from various lookout points. Some popular ones include Mount Ngungun and Mount Beerwah.</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -472,7 +782,7 @@ class ItineraryAgent {
 void main() {
     try(var context = SpringApplication.run(Rated)) {
         println context.getBean(Autonomy)
-            .chooseAndRunAgent('A long-weekend holiday in Caloundra', ProcessOptions.DEFAULT).output
+            .chooseAndRunAgent('Itinerary for a relaxing long-weekend holiday in Caloundra', ProcessOptions.DEFAULT).output
     }
 }</code></pre>
 </div>
@@ -502,11 +812,177 @@ The <code>@AchievesGoal</code> annotation makes use of Embabel&#8217;s goal-orie
 </div>
 </div>
 <div class="sect1">
+<h2 id="_using_micronaut_langchain4j">Using Micronaut LangChain4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://micronaut-projects.github.io/micronaut-langchain4j/latest/guide/"><em>Micronaut LangChain4j</em></a>
+provides integration between Micronaut and LangChain4j.
+This module is regarded as somewhat experimental and subject to change, but
+is already quite feature rich. We&#8217;ll just look at some basic capabilities.</p>
+</div>
+<div class="paragraph">
+<p>First, let&#8217;s do a basic chat example. This time asking for recommendations for Auckland.
+Our code might look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Singleton
+class AppRunner {
+    @Inject
+    HolidayAssistant assistant
+
+    void run() {
+        println assistant.activities('What are four good things to see while I am in Auckland?')
+    }
+}
+
+@AiService
+interface HolidayAssistant {
+    @SystemMessage('''
+    You are knowledgeable about places tourists might like to visit.
+    Answer using New Zealand slang but keep it family friendly.
+    ''')
+    String activities(String userMessage)
+}
+
+try(var context = ApplicationContext.run()) {
+    context.getBean(AppRunner).run()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Micronaut&#8217;s sweet spot is creating microservices.
+Here we are just creating a command-line application, so we aren&#8217;t use many Micronaut
+features, but we will use its dependency injection capabilities.
+While not strictly needed, a common convention is to have an <code>AppRunner</code> class with a <code>run</code> method
+to run our application.</p>
+</div>
+<div class="paragraph">
+<p>We saw previously that LangChain4j had an <code>AiServices</code> builder.
+Micronaut provides instead the more declarative approach of providing an <code>@AiServices</code>
+annotation. The code for our assistant will be generated at compile time.
+Note that we can provide a system message as part of that annotation.
+Watch out for the NZ slang in some of the responses!</p>
+</div>
+<div class="paragraph">
+<p>The output might look something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre> Blimey mate, while you're roaming around Auckland, here are four top-notch spots ya gotta check out:
+
+1. The Sky Tower - It's like the tallest bloke in town, with a view that'll make ya heart race.
+2. Waitomo Glowworm Caves - It's a magical spot where tiny luminescent critters put on a light show.
+3. Waiheke Island - A chilled-out paradise with beaches and vineyards, perfect for a day trip or longer stay.
+4. Auckland Zoo - Get up close and personal with some of New Zealand's native critters, as well as exotic animals from around the world. Kiwi, eh?</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Structured output is also supported.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AiService
+interface HolidayBot {
+    @SystemMessage('''
+    Return holiday activity suggestions as structured JSON matching Itinerary.
+    Timebox activities if needed to fit within the holiday length and not overlap other
+    activities while still giving enough time to see all major aspects of each attraction.
+    Exclude other information.
+    ''')
+    Itinerary itinerary(String userMessage)
+}
+
+try(var context = ApplicationContext.run()) {
+    println context.getBean(HolidayBot)
+        .itinerary('Four great things to see in Auckland over a weekend.')
+        .display()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we didn&#8217;t use the <code>AppRunner</code> convention.
+It&#8217;s just a single bean that we want to invoke after all.</p>
+</div>
+<div class="paragraph">
+<p>The output might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Activity(Visit Auckland War Memorial Museum, Auckland, Day 1, 9:00 AM - 5:00 PM)
+Activity(Explore Viaduct Harbour and Wynyard Quarter, Auckland, Day 1, 6:00 PM - 8:00 PM)
+Activity(Hike up Mount Eden, Auckland, Day 2, 9:00 AM - 12:00 PM)
+Activity(Visit Waiheke Island and its vineyards, Waiheke Island, Day 2, 1:00 PM - 6:00 PM)</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_quarkus_langchain4j">Using Quarkus LangChain4j</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The
+<a href="https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html">Quarkus LangChain4j</a>
+extension integrates Large Language Models (LLMs) into your Quarkus applications.
+Let&#8217;s just build a simple chat example. Quarkus also follows the now familiar
+declarative approach. We can define an AI service like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@RegisterAiService
+@ApplicationScoped
+interface HolidayAssistant {
+    @SystemMessage('You are knowledgeable about places tourists might like to visit.')
+    String ask(@UserMessage String question)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then our main script would be this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@QuarkusMain
+class Holiday implements QuarkusApplication {
+
+    @Inject
+    HolidayAssistant assistant
+
+    @Override
+    int run(String... args) {
+        def question = 'What are four things to do while visiting Minneapolis?'
+        println "Asking: $question"
+        def answer = assistant.ask(question)
+        println "Answer: $answer"
+        return 0
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running the example might give output like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Asking: What are four things to do while visiting Minneapolis?
+Answer:  1. Explore the Minneapolis Sculpture Garden: This 11-acre outdoor museum located in downtown Minneapolis is home to over 40 works of art, including the iconic "Spoonbridge and Cherry" sculpture. The garden also features walking trails, picnic areas, and a conservatory.
+
+2. Visit the Mill City Museum: Located in the former Washburn A Mill, this museum tells the story of Minneapolis' milling heritage. You can explore exhibits on the city's flour-milling past, take a tour of the restored flour mill elevators, and enjoy panoramic views of the Mississippi River from the rooftop observation deck.
+
+3. Stroll through the Minnehaha Park: This beautiful urban park features hiking trails, a waterfall, and breathtaking views of the Mississippi River. You can also visit Minnehaha Falls, a 53-foot waterfall that is one of the most popular attractions in Minneapolis.
+
+4. Attend a concert or sporting event: Minneapolis is home to several major sports teams, including the Minnesota Vikings (NFL), Minnesota Timberwolves (NBA), and Minnesota Twins (MLB). The city also has a thriving music scene, with venues like First Avenue and the Orpheum Theatre hosting concerts by popular artists. Additionally, the Walker Art Center offers free outdoor performances during the summer months at its Sculpture Garden.</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Groovy’s interoperability, concise syntax, and powerful DSL capabilities make it an excellent language for prototyping and composing AI workflows on the JVM.
-Whether you’re chatting with Ollama, integrating via Spring, or orchestrating agents with Embabel, Groovy keeps your code clear and compact.
+Whether you’re chatting with Ollama, integrating via Spring, Micronaut, or Quarkus,
+or orchestrating agents with Embabel, Groovy keeps your code clear and compact.
 Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
 </div>
 <div class="paragraph">
@@ -514,6 +990,15 @@ Feel free to experiment with different models and prompts to see what interestin
 <a href="https://github.com/paulk-asert/groovy-ai" class="bare">https://github.com/paulk-asert/groovy-ai</a><br>
 Other examples of using Groovy with Spring AI can be found at:<br>
 <a href="https://github.com/danvega/groovyai" class="bare">https://github.com/danvega/groovyai</a></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>15/Oct/2023</strong>: Initial version<br>
+<strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and tools examples.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
