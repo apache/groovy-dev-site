@@ -83,14 +83,19 @@
 We&#8217;ll ask for activities to do while on vacation.</p>
 </div>
 <div class="paragraph">
-<p>To make the examples as accessible as possible, we&#8217;ll use Ollama&#8217;s open-source models,
+<p>To make the examples as accessible as possible, we&#8217;ll use Ollama,
+and use some <em>not-too-large</em> open-source models,
 which can be run locally. So, no need to get keys, or use up your token limits.
-The libraries we use here can also connect to remote models and services.</p>
+But feel free to try out other models and services.
+Most of the libraries we use here can connect to remote models and services,
+sometimes just by changing a line or two of config in a properties file.</p>
 </div>
 <div class="paragraph">
 <p>The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
 unchanged, but feel free to try other models and see what results you get.
-Some of the examples use the <code>qwen3:8b</code> model. It seems to give better results when using tools.
+Some of the examples also use the <code>qwen3:8b</code> model. It seems to give better results when using tools.
+See the example repo for how to run the needed services using docker,
+or within GitHub actions if you don&#8217;t have Ollama already running locally.
 We also used Groovy 5 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
 </div>
 </div>
@@ -100,7 +105,8 @@ We also used Groovy 5 and JDK 25, but the examples should work on other Groovy a
 <div class="sectionbody">
 <div class="paragraph">
 <p>Since we are using Ollama, we&#8217;ll start with a library aimed directly at that tool.
-<a href="https://github.com/ollama/ollama4j"><em>Ollama4j</em></a> provides a client for interacting with local or remote <a href="https://ollama.com/">Ollama</a> models.</p>
+<a href="https://github.com/ollama/ollama4j"><em>Ollama4j</em></a> provides a client for interacting with local or remote <a href="https://ollama.com/">Ollama</a> models. The examples here are
+geared towards local models, but see the Ollama documentation if you want to use Ollama <em>cloud</em> models.</p>
 </div>
 <div class="paragraph">
 <p>We first create an instance of the <code>Ollama</code> class.
@@ -700,8 +706,7 @@ void main() {
             .ai()
             .withDefaultLlm()
             .createObject('What are some interesting things to do while I am on vacation in Caloundra?', Itinerary)
-            .itinerary
-            .join('\n')
+            .display()
     }
 }</code></pre>
 </div>
@@ -960,7 +965,8 @@ class Holiday implements QuarkusApplication {
 </div>
 </div>
 <div class="paragraph">
-<p>Running the example might give output like:</p>
+<p>Running the example, and note we are asking about Minneapolis this time,
+might give output like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -996,7 +1002,7 @@ Other examples of using Groovy with Spring AI can be found at:<br>
 <div class="title">Update history</div>
 <div class="paragraph">
 <p><strong>15/Oct/2023</strong>: Initial version<br>
-<strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and tools examples.</p>
+<strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and AI tools examples.</p>
 </div>
 </div>
 </div>
