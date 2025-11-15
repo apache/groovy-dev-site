@@ -466,6 +466,16 @@ a more reliable job calling tools correctly. The tools are annotation with <code
 and will be automatically found.</p>
 </div>
 <div class="paragraph">
+<p>The <code>getWeather</code> tool has return type <code>Weather</code> which is another domain object:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ToString(includePackage = false)
+record Weather(String forecast, int minTemp, int maxTemp) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>The output might look something like:</p>
 </div>
 <div class="listingblock">
