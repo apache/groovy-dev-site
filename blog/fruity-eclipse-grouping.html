@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='eclipse collections, groovy, emoji, many-to-many, grouping'/><meta name='description' content='This post looks at using grouping in the context of many-to-many relationships.'/><title>The Apache Groovy programming language - Blogs - Grouping Fruity Collections</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Grouping Fruity Collections</a></li><li><a href='#_grouping_eclipse_collections_fruit_salad' class='anchor-link'>Grouping Eclipse Collections Fruit Salad</a></li><li><a href='#_grouping_jdk_collections_fruit_salad' class='anchor-link'>Grouping JDK Collections Fruit Salad</a></li><li><a href='#_grouping_jdk_collections_fruit_salad_with_gquery' class='anchor-link'>Grouping JDK Collections Fruit Salad with GQuery</a></li><li><a href='#_grouping_jdk_collections_fruit_salad_in_groovy_6' class='anchor-link'>Grouping JDK Collections Fruit Salad in Groovy 6</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy&trade;</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy&trade;</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./groovy-null-processing'>Groovy&trade; Processing Nulls In Lists</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Grouping Fruity Collections</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-12-01 10:45AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two previous blog posts have been inspired by the use of emojis in combination
+with collections of fruit or pets as per a related <a href="https://github.com/eclipse/eclipse-collections-kata/tree/master/top-methods-kata-solutions">Eclipse Collections kata</a>.
+Those posts had a bit of fun
+<a href="https://groovy.apache.org/blog/deep-learning-and-eclipse-collections">using deep learning</a>,
+and <a href="https://groovy.apache.org/blog/fruity-eclipse-collections">clustering using k-means</a>
+to do image recognition and color guessing based on emojis.</p>
+</div>
+<div class="paragraph">
+<p>This post doesn&#8217;t look at machine learning topics, but instead looks at
+what might seem like a more mundane task, but one that is very common: grouping.
+Grouping occurs naturally in any datasets where relationships exist.</p>
+</div>
+<div class="paragraph">
+<p>The <code>groupBy</code> method does the job perfectly for one-to-many relationships.
+It appears as one of the "top 25" methods in the previously mentioned Eclipse Collections kata,
+and is one of the examples carried over into the aforementioned Groovy blog posts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Fruit.ALL.groupBy(Fruit::getColor) ==
+        Multimaps.mutable.list.empty()
+                .withKeyMultiValues(RED, Fruit.of('🍎'), Fruit.of('🍒'))
+                .withKeyMultiValues(ORANGE, Fruit.of('🍑'), Fruit.of('🍊'))
+                .withKeyMultiValues(YELLOW, Fruit.of('🍌'))
+                .withKeyMultiValues(MAGENTA, Fruit.of('🍇'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We have a collection of fruit and we have colors.
+The fruit is an enum. The colors are <code>java.awt.Color</code> values.
+We won&#8217;t show the details of those but see the previous blog posts or the
+associated GitHub repo if you want all the details.</p>
+</div>
+<div class="paragraph">
+<p>As originally presented,
+there is a one-to-many relationship between fruit and their color.
+A fruit has one color, but there can be many fruit of a particular color.
+That&#8217;s what <code>groupBy</code> allows us to explore.</p>
+</div>
+<div class="paragraph">
+<p>In this post, we want to explore grouping in the context of many-to-many relationships.</p>
+</div>
+<div class="paragraph">
+<p>As an example, suppose now that rather than just coming in one <em>typical</em> color,
+in our case the predominant color of the supplied emoji, that multiple colors might be possible for
+any given fruit: red and green apples, a green unripe banana, and so forth.
+So, let&#8217;s expand the previous example so that rather than calling <code>getColor</code> to find <em>the</em> color,
+we&#8217;ll call <code>getColors</code> to find a list of potential colors.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll do that first using Eclipse Collections and then look at various possibilities
+for JDK collections when using Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grouping_eclipse_collections_fruit_salad">Grouping Eclipse Collections Fruit Salad</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We saw earlier that we could do some grouping using the <code>groupBy</code> method offered
+by Eclipse collection classes implementing the <code>RichIterable</code> interface.
+In fact, if we combine <code>groupBy</code> with some other methods like <code>flatCollect</code> (<em>flatMap</em>) or the inject
+family of methods, we&#8217;d be able to represent the many fruit to many color relationship that we now
+want to explore. However, the <code>groupByEach</code> method combines several steps into just one
+and that&#8217;s what we&#8217;ll use here.</p>
+</div>
+<div class="paragraph">
+<p>The <code>groupByEach</code> method didn&#8217;t make the cut of being in the "top 25" methods in the Eclipse
+Collections kata but is exactly what we need for a many-to-many relationship
+(many fruit and many potential colors).</p>
+</div>
+<div class="paragraph">
+<p>For our example, we&#8217;ll add <code>GREEN</code> as a possible color for apples, bananas (unripe), and grapes.
+Here is how we can explore the relationship between fruit and colors with these additions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Fruit.ALL.groupByEach(Fruit::getColors) ==
+        Multimaps.mutable.list.empty()
+                .withKeyMultiValues(GREEN, Fruit.of('🍎'), Fruit.of('🍌'), Fruit.of('🍇'))
+                .withKeyMultiValues(RED, Fruit.of('🍎'), Fruit.of('🍒'))
+                .withKeyMultiValues(ORANGE, Fruit.of('🍑'), Fruit.of('🍊'))
+                .withKeyMultiValues(YELLOW, Fruit.of('🍌'))
+                .withKeyMultiValues(MAGENTA, Fruit.of('🍇'))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grape colors are sometimes known by the juice or wine they produce (red and white)
+and sometimes by their skin color, green and purple or magenta. We&#8217;ll stick with the
+latter for the purposes of this post.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grouping_jdk_collections_fruit_salad">Grouping JDK Collections Fruit Salad</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If we want to achieve the same thing for JDK collections, we have a few options.
+We could consider stream functionality but, like with Eclipse Collections, there
+are ways to achieve what we want building on the fairly widely known <code>groupBy</code>
+functionality offered by Groovy. We&#8217;ll explore that next, but first let&#8217;s
+look at our expected result. It will be similar to what we had for Eclipse
+Collections but just using normal JDK lists and maps:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var expected = [
+        (GREEN)   : [Fruit.of('🍎'), Fruit.of('🍌'), Fruit.of('🍇')],
+        (RED)     : [Fruit.of('🍎'), Fruit.of('🍒')],
+        (ORANGE)  : [Fruit.of('🍑'), Fruit.of('🍊')],
+        (YELLOW)  : [Fruit.of('🍌')],
+        (MAGENTA) : [Fruit.of('🍇')]
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Note that Groovy defaults to keys being String values in its literal map notation,
+so we use round brackets around key values so that Groovy will use keys with <code>java.awt.Color</code>
+values like we have been using in earlier examples.</p>
+</div>
+<div class="paragraph">
+<p>Now, we can find fruits by color <em>simply</em> by using <code>groupBy</code>
+in combination with <code>collectMany</code> (<em>flatMap</em>) and <code>collectEntries</code> (or we could use <code>inject</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert expected == Fruit.values()
+        .collectMany(f -&gt; f.colors.collect{ c -&gt; [c, f] })
+        .groupBy{ c, f -&gt; c }
+        .collectEntries{ k, v -&gt; [k, v*.get(1)] }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works well but isn&#8217;t necessarily obvious at first glance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grouping_jdk_collections_fruit_salad_with_gquery">Grouping JDK Collections Fruit Salad with GQuery</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dealing with many-to-many relationships is very common in database systems.
+Query languages like SQL have special support for querying such relationships.
+It should come as no surprise then, that Groovy&#8217;s integrated query technology,
+GQuery (groovy-ginq), would also support such relationships.</p>
+</div>
+<div class="paragraph">
+<p>Here is the same example again using GQuery:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert expected == GQL {
+    from f in Fruit.values()
+    crossjoin c in Fruit.values()*.colors.sum().toSet()
+    where c in f.colors
+    groupby c
+    select c, list(f)
+}.collectEntries()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>crossjoin</code> gives us the cross-product and the <code>where</code> and <code>groupby</code> clauses
+select the desired elements. The <code>collectEntries</code> at the end converts from GQuery&#8217;s
+tabular format to the map used for our expectation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grouping_jdk_collections_fruit_salad_in_groovy_6">Grouping JDK Collections Fruit Salad in Groovy 6</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Inspired by the <code>groupByEach</code> method from
+<a href="https://www.eclipse.org/collections/">Eclipse Collections</a> and the examples in the
+<a href="https://www.amazon.com/Eclipse-Collections-Categorically-Level-programming/dp/B0DZVK69D3">Eclipse Collections Categorically book</a>,
+the Groovy team has recently added a <code>groupByMany</code> method. This is in Groovy 6
+which is still in the alpha/snapshot stage of evolution, so is subject to change.</p>
+</div>
+<div class="paragraph">
+<p>Using <code>groupByMany</code> our example becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert expected == Fruit.values().groupByMany(Fruit::getColors)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That was easy! And that&#8217;s the appeal of adding this method to Groovy.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s look at some other variations. One variant takes a second closure which
+allows the value to be transformed (mapped). In our case, we&#8217;ll just get the emoji
+representation for our fruit rather than the enum used in previous examples:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert Fruit.values().groupByMany(Fruit::getEmoji, Fruit::getColors) == [
+        (GREEN)   : ['🍎', '🍌', '🍇'],
+        (RED)     : ['🍎', '🍒'],
+        (ORANGE)  : ['🍑', '🍊'],
+        (YELLOW)  : ['🍌'],
+        (MAGENTA) : ['🍇']
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In more typical cases, you might have domain classes and mapping from some
+domain, e.g. <code>Person</code> to some desired value, e.g. a String <code>name</code> for the person.</p>
+</div>
+<div class="paragraph">
+<p>As another example, let&#8217;s group the fruit by the vowels they contain:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var vowels = 'AEIOU'.toSet()
+var vowelsOf = { String word -&gt; word.toSet().intersect(vowels) }
+assert Fruit.values().groupByMany(Fruit::getEmoji, fruit -&gt; vowelsOf(fruit.name())) == [
+        A: ['🍎', '🍑', '🍌', '🍊', '🍇'],
+        E: ['🍎', '🍑', '🍒', '🍊', '🍇'],
+        O: ['🍊']
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Our <code>ORANGE</code> fruit makes all three lists. <code>BANANA</code> and <code>CHERRY</code> are just
+in one list. The other fruit all have both <code>A</code> and <code>E</code>.</p>
+</div>
+<div class="paragraph">
+<p>There is also a variant of <code>groupByMany</code> taking no parameters.
+It caters for Maps where the value is already a list of the appropriate keys.
+As an example, suppose we want to buy fruit locally.
+I&#8217;ll roughly base this on subtropical Brisbane, but you could modify as appropriate
+if you are interested.
+We might now be interested in knowing when seasonal fruit will be available:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var availability = [
+    '🍎': ['Spring'],
+    '🍌': ['Spring', 'Summer', 'Autumn', 'Winter'],
+    '🍇': ['Spring', 'Autumn'],
+    '🍒': ['Autumn'],
+    '🍑': ['Spring']
+]
+
+assert availability.groupByMany() == [
+    Winter: ['🍌'],
+    Autumn: ['🍌', '🍇', '🍒'],
+    Summer: ['🍌'],
+    Spring: ['🍎', '🍌', '🍇', '🍑']
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>[Sorry U.S. folks, <em>Autumn</em> has the same number of letters as the other season names
+and makes the last map look prettier - <em>Fall</em> just didn&#8217;t cut it this time!]</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Repo with example code: <a href="https://github.com/paulk-asert/fruity-eclipse-collections" class="bare">https://github.com/paulk-asert/fruity-eclipse-collections</a></p>
+</li>
+<li>
+<p>Eclipse collections homepage: <a href="https://www.eclipse.org/collections/" class="bare">https://www.eclipse.org/collections/</a></p>
+</li>
+<li>
+<p>Eclipse Collections Categorically: <a href="https://www.amazon.com/Eclipse-Collections-Categorically-Level-programming/dp/B0DZVK69D3" class="bare">https://www.amazon.com/Eclipse-Collections-Categorically-Level-programming/dp/B0DZVK69D3</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2025 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
