@@ -346,18 +346,15 @@ assert availability.groupByMany() == [
 and makes the last map look prettier - <em>Fall</em> just didn&#8217;t cut it this time!]</p>
 </div>
 <div class="paragraph">
-<p>This Map variant is the equivalent of Eclipse Collections <code>flip</code> method on multimaps
-as this example shows:</p>
+<p>This no-args Map variant is the equivalent of Eclipse Collections <code>flip</code> method
+on multimaps as this example shows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var fruitColors = Multimaps.mutable.set.empty()
-fruitColors.put('red', '🍒')
-fruitColors.put('red', '🍎')
-fruitColors.put('green', '🍎')
-fruitColors.put('yellow', '🍌')
+fruitColors.putAll('red', ['🍒', '🍎'])
+fruitColors.putAll('green', ['🍎', '🍌', '🥑'])
 fruitColors.put('green', '🍌')
-fruitColors.put('green', '🥑')
 println fruitColors
 println fruitColors.flip()</code></pre>
 </div>
