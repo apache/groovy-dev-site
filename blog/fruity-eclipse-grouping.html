@@ -97,15 +97,36 @@ and is one of the examples carried over into the aforementioned Groovy blog post
 </div>
 <div class="paragraph">
 <p>We have a collection of fruit and we have colors.
-The fruit is an enum. The colors are <code>java.awt.Color</code> values.
-We won&#8217;t show the details of those but see the previous blog posts or the
-associated GitHub repo if you want all the details.</p>
+See the previous blog posts or the
+associated GitHub repo if you want all the details,
+but here&#8217;s a brief summary of our domain:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>each fruit is an enum having a <code>getColor</code> method to return its color</p>
+</li>
+<li>
+<p>there is also an <code>of</code> factory method for creating a <code>Fruit</code>,
+e.g. <code>APPLE</code>, from its emoji, e.g. <code>'🍎'</code></p>
+</li>
+<li>
+<p>the colors are <code>java.awt.Color</code> values</p>
+</li>
+<li>
+<p>ALL returns the <code>values()</code> as an <code>ImmutableList</code></p>
+</li>
+<li>
+<p>Eclipse Collections multimaps are the result type of <code>groupBy</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>As originally presented,
 there is a one-to-many relationship between fruit and their color.
 A fruit has one color, but there can be many fruit of a particular color.
-That&#8217;s what <code>groupBy</code> allows us to explore.</p>
+That&#8217;s what <code>groupBy</code> allows us to explore. It captures the
+color relationship in the returned multimap.</p>
 </div>
 <div class="paragraph">
 <p>In this post, we want to explore grouping in the context of many-to-many relationships.</p>
@@ -115,7 +136,7 @@ That&#8217;s what <code>groupBy</code> allows us to explore.</p>
 in our case the predominant color of the supplied emoji, that multiple colors might be possible for
 any given fruit: red and green apples, a green unripe banana, and so forth.
 So, let&#8217;s expand the previous example so that rather than calling <code>getColor</code> to find <em>the</em> color,
-we&#8217;ll call <code>getColors</code> to find a list of potential colors.</p>
+we&#8217;ll call <code>getColors</code> to find the list of potential colors.</p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll do that first using Eclipse Collections and then look at various possibilities
@@ -321,8 +342,34 @@ assert availability.groupByMany() == [
 </div>
 </div>
 <div class="paragraph">
-<p>[Sorry U.S. folks, <em>Autumn</em> has the same number of letters as the other season names
+<p>[Sorry U.S. readers, <em>Autumn</em> has the same number of letters as the other season names
 and makes the last map look prettier - <em>Fall</em> just didn&#8217;t cut it this time!]</p>
+</div>
+<div class="paragraph">
+<p>This Map variant is the equivalent of Eclipse Collections <code>flip</code> method on multimaps
+as this example shows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var fruitColors = Multimaps.mutable.set.empty()
+fruitColors.put('red', '🍒')
+fruitColors.put('red', '🍎')
+fruitColors.put('green', '🍎')
+fruitColors.put('yellow', '🍌')
+fruitColors.put('green', '🍌')
+fruitColors.put('green', '🥑')
+println fruitColors
+println fruitColors.flip()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has this output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>{red=[🍒, 🍎], green=[🍌, 🥑, 🍎], yellow=[🍌]}
+{🍒=[red], 🍌=[green, yellow], 🥑=[green], 🍎=[red, green]}</pre>
+</div>
 </div>
 </div>
 </div>
