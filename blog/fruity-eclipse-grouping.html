@@ -224,6 +224,27 @@ in combination with <code>collectMany</code> (<em>flatMap</em>) and <code>collec
 <div class="paragraph">
 <p>This works well but isn&#8217;t necessarily obvious at first glance.</p>
 </div>
+<div class="paragraph">
+<p>We can also use streams. The JDK21 <code>mapMulti</code> stream method
+comes in handy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert expected == Fruit.values().stream()
+    .mapMulti((fruit, consumer) -&gt; {
+        for (Color color : fruit.colors) {
+            consumer.accept(Map.entry(color, fruit))
+        }
+    })
+    .collect(Collectors.groupingBy(
+            Map.Entry::getKey,
+            Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+    ))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This also works well, but again isn&#8217;t necessarily obvious at first glance.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -233,7 +254,7 @@ in combination with <code>collectMany</code> (<em>flatMap</em>) and <code>collec
 <p>Dealing with many-to-many relationships is very common in database systems.
 Query languages like SQL have special support for querying such relationships.
 It should come as no surprise then, that Groovy&#8217;s integrated query technology,
-GQuery (groovy-ginq), would also support such relationships.</p>
+GQuery (AKA groovy-ginq), would also support such relationships.</p>
 </div>
 <div class="paragraph">
 <p>Here is the same example again using GQuery:</p>
