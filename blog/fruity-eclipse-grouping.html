@@ -375,7 +375,7 @@ on multimaps as this example shows:</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">var fruitColors = Multimaps.mutable.set.empty()
 fruitColors.putAll('red', ['🍒', '🍎'])
 fruitColors.putAll('green', ['🍎', '🍌', '🥑'])
-fruitColors.put('green', '🍌')
+fruitColors.put('yellow', '🍌')
 println fruitColors
 println fruitColors.flip()</code></pre>
 </div>
@@ -387,6 +387,32 @@ println fruitColors.flip()</code></pre>
 <div class="content">
 <pre>{red=[🍒, 🍎], green=[🍌, 🥑, 🍎], yellow=[🍌]}
 {🍒=[red], 🍌=[green, yellow], 🥑=[green], 🍎=[red, green]}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Speaking of fruit, we should consider this last example
+also using Guava (Google&#8217;s collection library):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fruitColors = HashMultimap.create()
+fruitColors.putAll('red',    ['🍒', '🍎'])
+fruitColors.putAll('green',  ['🍎', '🍌', '🥑'])
+fruitColors.put('yellow', '🍌')
+println fruitColors
+
+def flipped = HashMultimap.create()
+Multimaps.invertFrom(fruitColors, flipped)
+println flipped</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which has almost identical output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>{red=[🍒, 🍎], green=[🥑, 🍎, 🍌], yellow=[🍌]}
+{🥑=[green], 🍎=[red, green], 🍌=[yellow, green], 🍒=[red]}</pre>
 </div>
 </div>
 </div>
