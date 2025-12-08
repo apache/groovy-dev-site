@@ -391,19 +391,19 @@ println fruitColors.flip()</code></pre>
 </div>
 <div class="paragraph">
 <p>Speaking of fruit, we should consider this last example
-also using Guava (Google&#8217;s collection library):</p>
+also using Guava (Google&#8217;s collection library). For
+Guava, the <code>ImmutableMultimap</code> class has an <code>inverse</code> method:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def fruitColors = HashMultimap.create()
-fruitColors.putAll('red',    ['🍒', '🍎'])
-fruitColors.putAll('green',  ['🍎', '🍌', '🥑'])
-fruitColors.put('yellow', '🍌')
-println fruitColors
+<pre class="prettyprint highlight"><code data-lang="groovy">def fruitColors = new ImmutableMultimap.Builder&lt;String, String&gt;()
+    .putAll("red", ["🍒", "🍎"])
+    .putAll("green", ["🍎", "🍌", "🥑"])
+    .put("yellow", "🍌")
+    .build()
 
-def flipped = HashMultimap.create()
-Multimaps.invertFrom(fruitColors, flipped)
-println flipped</code></pre>
+println fruitColors
+println fruitColors.inverse()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -414,6 +414,11 @@ println flipped</code></pre>
 <pre>{red=[🍒, 🍎], green=[🥑, 🍎, 🍌], yellow=[🍌]}
 {🥑=[green], 🍎=[red, green], 🍌=[yellow, green], 🍒=[red]}</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The <code>inverse</code> method is available on <code>ImmutableListMultimap</code> and <code>ImmutableSetMultimap</code> instances;
+for other cases, there is an <code>invertFrom</code> utility method
+in the <code>Multimaps</code> class.</p>
 </div>
 </div>
 </div>
