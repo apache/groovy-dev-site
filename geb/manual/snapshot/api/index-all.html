@@ -414,7 +414,9 @@ if (location.href.indexOf('is-external=true') == -1) {
 <dt><span class="strong"><a href="geb/driver/CachingDriverFactory.html#clearCache()" title="Method in CachingDriverFactory">clearCache()</a></span> - Method in <a href="geb/driver/CachingDriverFactory.html">CachingDriverFactory</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="geb/driver/CachingDriverFactory.html#clearCacheAndQuitDriver()" title="Method in CachingDriverFactory">clearCacheAndQuitDriver()</a></span> - Method in <a href="geb/driver/CachingDriverFactory.html">CachingDriverFactory</a>
-</dt><dd> <div class="block"></div></dd>
+</dt><dd> <div class="block">Note: When using a perThread cache and executing multiple tests in parallel, it is possible to inadvertently
+ quit a driver in one thread that is being used by another, depending on how your test runner handles parallel
+ execution. </div></dd>
 <dt><span class="strong"><a href="geb/driver/CachingDriverFactory.html#clearCacheCache()" title="Method in CachingDriverFactory">clearCacheCache()</a></span> - Method in <a href="geb/driver/CachingDriverFactory.html">CachingDriverFactory</a>
 </dt><dd> <div class="block"></div></dd>
 <dt><span class="strong"><a href="geb/Browser.html#clearCookies()" title="Method in Browser">clearCookies()</a></span> - Method in <a href="geb/Browser.html">Browser</a>

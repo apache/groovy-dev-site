@@ -2122,6 +2122,41 @@ After calling any of these methods, the next request for a default driver will r
 <div class="paragraph">
 <p>This caching behavior is <a href="#driver-caching-configuration">configurable</a>.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Clearing the webdriver cache in this way is generally safe, though there is a known gotcha for JUnit 5 tests running in parallel.
+If you have multiple test classes running in parallel and call <code><a href="api/geb/driver/CachingDriverFactory.html#clearCache()">CachingDriverFactory.clearCache()</a></code> or <code><a href="api/geb/driver/CachingDriverFactory.html#clearCacheAndQuitDriver()">CachingDriverFactory.clearCacheAndQuitDriver()</a></code> in methods annotated with <a href="https://docs.junit.org/5.0.1/api/org/junit/jupiter/api/BeforeAll.html">@BeforeAll</a> or <a href="https://docs.junit.org/5.0.1/api/org/junit/jupiter/api/AfterAll.html">@AfterAll</a> the tests may fail intermittently with errors such as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.openqa.selenium.NoSuchSessionException: Session is closed</code></p>
+</li>
+<li>
+<p><code>org.openqa.selenium.WebDriverException: org.openqa.selenium.NoSuchWindowException: Window is closed</code></p>
+</li>
+<li>
+<p><code>java.util.concurrent.RejectedExecutionException: Task org.openqa.selenium.htmlunit.HtmlUnitDriver$$Lambda$972/0x0000000100572c40@39b402c9 rejected from java.util.concurrent.ThreadPoolExecutor@4fd3fc52[Terminated, pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 4]</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is because the <code>cacheDriverPerThread</code> setting keeps the webdriver in a ThreadLocal. Since BeforeAll and AfterAll methods on different test classes annotated with <code>@Execution(CONCURRENT)</code> may execute on the same thread, it&#8217;s possible to inadvertently quit the driver being used by another test currently executing on the same thread, leading to errors like those above.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;re relying on the implicit driver management to clean up the driver objects for you, you should be fine.
+Likewise, clearing the driver cache in methods annotated with <a href="https://docs.junit.org/5.0.1/api/org/junit/jupiter/api/BeforeEach.html"><code>@BeforeEach</code></a> and <a href="https://docs.junit.org/5.0.1/api/org/junit/jupiter/api/AfterEach.html"><code>@AfterEach</code></a> should be fine, since parallel test methods (and test-specific lifecycle methods) should be executed in the same thread. It&#8217;s only in the <code>@BeforeAll</code>/<code>@AfterAll</code> case that you need to be careful.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="driver-quirks"><a class="link" href="#driver-quirks">3.3. Driver quirks</a></h3>
