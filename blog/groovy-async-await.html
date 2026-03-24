@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='async, await, concurrency, virtual-threads'/><meta name='description' content='This post looks at a proposed extension to Groovy which provides comprehensive async/await support.'/><title>The Apache Groovy programming language - Blogs - Async/await for Groovy</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_problem_callback_complexity' class='anchor-link'>The problem: callback complexity</a></li><li><a href='#_example_1_sequential_async_reads_like_synchronous_code' class='anchor-link'>Example 1: sequential async — reads like synchronous code</a></li><li><a href='#_example_2_parallel_tasks_fetch_once_await_together' class='anchor-link'>Example 2: parallel tasks — fetch once, await together</a></li><li><a href='#_example_3_async_streams_with_yield_return_and_for_await' class='anchor-link'>Example 3: async streams with <code>yield return</code> and <code>for await</code></a></li><li><a href='#_example_4_defer_go_style_cleanup' class='anchor-link'>Example 4: <code>defer</code> — Go-style cleanup</a></li><li><a href='#_example_5_go_style_channels' class='anchor-link'>Example 5: Go-style channels</a></li><li><a href='#_example_6_structured_concurrency_with_asyncscope' class='anchor-link'>Example 6: structured concurrency with <code>AsyncScope</code></a></li><li><a href='#_example_7_framework_integration' class='anchor-link'>Example 7: framework integration</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-03-24 04:30PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A proposed enhancement for Groovy adds native <code>async</code>/<code>await</code> as a
+language-level feature
+(<a href="https://issues.apache.org/jira/browse/GROOVY-9381">GROOVY-9381</a>,
+<a href="https://github.com/apache/groovy/pull/2387">PR <mark>2387</a>).
+Inspired by similar constructs in JavaScript, C</mark>, Kotlin, and Swift,
+the proposal lets you write asynchronous code in a sequential, readable
+style — with first-class support for async streams, deferred cleanup,
+structured concurrency, Go-style channels, and framework adapters
+for Reactor and RxJava.</p>
+</div>
+<div class="paragraph">
+<p>On JDK 21+, async methods automatically leverage
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html#ofVirtual()">virtual threads</a>
+for optimal scalability.</p>
+</div>
+<div class="paragraph">
+<p>This is a comprehensive feature. Rather than cover every detail,
+this post walks through a handful of bite-sized examples that show
+what the day-to-day experience would feel like — and how it compares
+to what you&#8217;d write in plain Java today.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_problem_callback_complexity">The problem: callback complexity</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Consider a three-step workflow — fetch a user ID, look up a name,
+load a profile. With <code>CompletableFuture</code> the logic gets buried
+under plumbing:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Java with CompletableFuture
+CompletableFuture&lt;String&gt; profile =
+    fetchUserId()
+        .thenCompose(id -&gt; lookupName(id))
+        .thenCompose(name -&gt; loadProfile(name))
+        .exceptionally(e -&gt; "fallback");</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each <code>.thenCompose()</code> adds a nesting level, exception recovery is
+separated from the code that causes the exception, and the control
+flow reads inside-out.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_1_sequential_async_reads_like_synchronous_code">Example 1: sequential async — reads like synchronous code</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With the proposed <code>async</code>/<code>await</code>, the same logic becomes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async String getProfile() {
+    var id      = await fetchUserId()
+    var name    = await lookupName(id)
+    var profile = await loadProfile(name)
+    return profile
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Variables are declared at the point of use. The return value is
+obvious. No callbacks, no lambdas, no chained combinators. Standard
+<code>try</code>/<code>catch</code> works — and <code>await</code> automatically unwraps
+<code>CompletionException</code>, so you catch the <em>original</em> exception type,
+not a wrapper.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_2_parallel_tasks_fetch_once_await_together">Example 2: parallel tasks — fetch once, await together</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Launching concurrent work and collecting the results is a common
+pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async def fetchDashboard() {
+    var user   = async { fetchUser() }
+    var orders = async { fetchOrders() }
+    var prefs  = async { fetchPrefs() }
+
+    var (u, o, p) = await Awaitable.all(user(), orders(), prefs())
+    return buildDashboard(u, o, p)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All three I/O calls run concurrently. The <code>all</code> combinator waits
+for every result, failing fast if any task throws.</p>
+</div>
+<div class="sect2">
+<h3 id="_how_this_compares_to_javas_structuredtaskscope">How this compares to Java&#8217;s <code>StructuredTaskScope</code></h3>
+<div class="paragraph">
+<p>Java&#8217;s structured concurrency preview
+(<a href="https://openjdk.org/jeps/525">JEP 525</a>, previewing since JDK 21)
+provides a similar capability through <code>StructuredTaskScope</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Java with StructuredTaskScope (JDK 25 preview API)
+try (var scope = StructuredTaskScope.open()) {
+    var userTask   = scope.fork(() -&gt; fetchUser());
+    var ordersTask = scope.fork(() -&gt; fetchOrders());
+    var prefsTask  = scope.fork(() -&gt; fetchPrefs());
+    scope.join();
+    return buildDashboard(
+        userTask.get(), ordersTask.get(), prefsTask.get());
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The goals are aligned — both approaches bind task lifetimes to a
+scope and cancel siblings on failure. The Groovy version adds
+syntactic sugar (<code>await</code>, <code>all</code>) and integrates with the same
+<code>async</code>/<code>await</code> model used everywhere else, whereas Java&#8217;s API
+is deliberately lower-level and imperative.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_3_async_streams_with_yield_return_and_for_await">Example 3: async streams with <code>yield return</code> and <code>for await</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many real-world scenarios involve <em>streams</em> of values that arrive
+over time — paginated API results, sensor readings, log events.
+The proposal introduces <code>yield return</code> (to produce values lazily)
+and <code>for await</code> (to consume them):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async fetchPages(String url) {
+    var next = url
+    while (next != null) {
+        var page = await httpGet(next)
+        yield return page.items
+        next = page.nextLink
+    }
+}
+
+async def processAll() {
+    for await (items in fetchPages('/api/data')) {
+        items.each { process(it) }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The producer yields values on demand. The consumer pulls them with
+<code>for await</code>. The runtime provides natural <strong>back-pressure</strong> — the
+producer blocks on each <code>yield return</code> until the consumer is ready,
+preventing unbounded memory growth. No explicit queues, signals, or
+synchronization required.</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s nothing comparable in plain Java today. You&#8217;d typically
+reach for Reactor&#8217;s <code>Flux</code> or RxJava&#8217;s <code>Flowable</code>, each of which
+brings its own operator vocabulary and mental model. With <code>for await</code>,
+async iteration feels as natural as a regular <code>for</code> loop.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_4_defer_go_style_cleanup">Example 4: <code>defer</code> — Go-style cleanup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>defer</code> keyword schedules cleanup to run when the enclosing
+async method completes, regardless of success or failure.
+Multiple deferred blocks execute in LIFO order — exactly like
+<a href="https://go.dev/blog/defer-panic-and-recover">Go&#8217;s <code>defer</code></a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async def withTempFile() {
+    var f = createTempFile()
+    defer { f.delete() }
+
+    var conn = openConnection()
+    defer { conn.close() }
+
+    await uploadTo(conn, f)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is cleaner than nested <code>try</code>/<code>finally</code> blocks, especially when
+multiple resources are acquired at different points in the method.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_5_go_style_channels">Example 5: Go-style channels</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For task-to-task coordination, the proposal includes CSP-style
+channels inspired by Go:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async def pipeline() {
+    var ch = Awaitable.channel(5)  // buffered channel, capacity 5
+
+    // Producer
+    Awaitable.go {
+        for (i in 1..10) {
+            await ch.send(i)
+        }
+        ch.close()
+    }
+
+    // Consumer
+    var sum = 0
+    for await (val in ch) {
+        sum += val
+    }
+    assert sum == 55
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Channels support both unbuffered (rendezvous) and buffered modes.
+<code>for await</code> iterates received values until the channel is closed —
+the Groovy equivalent of Go&#8217;s <code>for range ch</code>. You can also race
+channel operations with <code>Awaitable.any(&#8230;&#8203;)</code>, serving a similar
+role to Go&#8217;s <code>select</code> statement.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_6_structured_concurrency_with_asyncscope">Example 6: structured concurrency with <code>AsyncScope</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>AsyncScope</code> binds child task lifetimes to a scope — inspired by
+Kotlin&#8217;s <code>coroutineScope</code>, Swift&#8217;s <code>TaskGroup</code>, and Java&#8217;s
+<code>StructuredTaskScope</code>. When the scope exits, all child tasks have
+completed or been cancelled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async def fetchAll(List&lt;String&gt; urls) {
+    AsyncScope.withScope { scope -&gt;
+        var tasks = urls.collect { url -&gt;
+            scope.async { await httpGet(url) }
+        }
+        tasks.collect { await it }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>By default, <code>AsyncScope</code> uses fail-fast semantics: if any child
+task throws, siblings are cancelled immediately.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example_7_framework_integration">Example 7: framework integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>await</code> keyword natively understands <code>CompletableFuture</code>,
+<code>CompletionStage</code>, <code>Future</code>, and <code>Flow.Publisher</code>. For third-party
+frameworks, drop-in adapter modules are auto-discovered via
+<code>ServiceLoader</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// With groovy-reactor on the classpath:
+async def reactorExample() {
+    var value = await Mono.just("hello")
+    for await (item in Flux.range(1, 5)) {
+        println item
+    }
+}
+
+// With groovy-rxjava on the classpath:
+async def rxExample() {
+    var value = await Single.just("hello")
+    for await (item in Observable.range(1, 5)) {
+        println item
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No manual adapter registration is needed — add the dependency and
+<code>await</code> works transparently with Reactor and RxJava types.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_it_relates_to_gpars_and_virtual_threads">How it relates to GPars and virtual threads</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Readers of the
+<a href="https://groovy-lang.org/blog/gpars-meets-virtual-threads.html">GPars meets virtual threads</a>
+blog post will recall that GPars provides parallel collections,
+actors, agents, and dataflow concurrency — and that it works well
+with virtual threads via custom executor services.</p>
+</div>
+<div class="paragraph">
+<p>The async/await proposal complements GPars rather than replacing
+it. GPars excels at data-parallel operations (<code>collectParallel</code>,
+<code>findAllParallel</code>) and actor-based designs. Async/await targets a
+different sweet spot: sequential-looking code that is actually
+asynchronous, with language-level support for streams, cleanup,
+structured concurrency, and framework bridging. If you&#8217;re calling
+microservices, paginating through APIs, or coordinating I/O-bound
+tasks, async/await gives you a concise way to express that without
+dropping into callback chains.</p>
+</div>
+<div class="paragraph">
+<p>Both approaches benefit from virtual threads on JDK 21+, and
+both can coexist in the same codebase.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_full_picture">The full picture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The examples above are only a taste. The complete proposal also includes
+async closures and lambdas, the <code>@Async</code> annotation (for Java-style
+declarations), <code>Awaitable</code> combinators (<code>any</code>, <code>allSettled</code>, <code>delay</code>,
+<code>orTimeoutMillis</code>), <code>AsyncContext</code> for propagating trace and tenant
+metadata across thread hops, cancellation support, and a pluggable
+adapter registry for custom async types. The full spec is available in
+the
+<a href="https://github.com/apache/groovy/blob/GROOVY-9381_3/src/spec/doc/core-async-await.adoc">draft documentation</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wed_love_your_feedback">We&#8217;d love your feedback</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The async/await feature is currently a proposal in
+<a href="https://github.com/apache/groovy/pull/2387">PR #2387</a>
+(tracking issue
+<a href="https://issues.apache.org/jira/browse/GROOVY-9381">GROOVY-9381</a>).
+This is a substantial addition to the language and we want to get
+it right.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Comment</strong> on the <a href="https://github.com/apache/groovy/pull/2387">PR</a> or
+the <a href="https://issues.apache.org/jira/browse/GROOVY-9381">JIRA issue</a>
+with your thoughts, use cases, or design suggestions.</p>
+</li>
+<li>
+<p><strong>Vote</strong> on the JIRA issue if you&#8217;d like to see this feature land.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Your feedback helps us gauge interest and shape the final design.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ve seen how the proposed async/await feature lets you write
+async Groovy code that reads almost like synchronous code — from
+simple sequential awaits, to parallel fan-out, async streams,
+Go-style channels, structured concurrency, and framework
+integration. The syntax is concise, the mental model is
+straightforward, and virtual threads make it scale.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2387">PR #2387 — Async/await support</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-9381">GROOVY-9381 — Tracking issue</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/GROOVY-9381_3/src/spec/doc/core-async-await.adoc">Draft spec documentation</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/525">JEP 525 — Structured Concurrency (Sixth Preview)</a></p>
+</li>
+<li>
+<p><a href="https://groovy-lang.org/blog/gpars-meets-virtual-threads.html">GPars meets Virtual Threads</a></p>
+</li>
+<li>
+<p><a href="http://gpars.org/">GPars</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
