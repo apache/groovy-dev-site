@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='design -by-contract, groovy, dafny, loop invariants'/><meta name='description' content='This post looks at a proposed extension to Groovy&apos;s design-by-contract support in groovy-contracts to allow invariants on loops.'/><title>The Apache Groovy programming language - Blogs - Design by contract with Groovy&trade;: loop invariants</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Design by contract with Groovy&trade;: loop invariants</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_dafny_example_multiply_by_repeated_addition' class='anchor-link'>The Dafny example: multiply by repeated addition</a></li><li><a href='#_how_the_proof_works' class='anchor-link'>How the proof works</a></li><li><a href='#_the_proposed_groovy_translation' class='anchor-link'>The proposed Groovy translation</a></li><li><a href='#_dafny_vs_groovy_whats_the_same_whats_different' class='anchor-link'>Dafny vs Groovy: what&#8217;s the same, what&#8217;s different</a></li><li><a href='#_but_wait_theres_more' class='anchor-link'>But wait, there&#8217;s more</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Design by contract with Groovy&trade;: loop invariants</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2026-03-24 04:30PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Design_by_contract">Design by contract</a> (DbC)
+is a software correctness methodology where developers specify
+<em>preconditions</em>, <em>postconditions</em>, and <em>invariants</em> alongside their code.
+Languages like <a href="https://dafny.org/">Dafny</a> take this further — they
+<em>statically verify</em> that every contract is satisfied for all possible inputs,
+giving mathematical certainty that a program is correct.</p>
+</div>
+<div class="paragraph">
+<p>Groovy has long supported DbC through its
+<a href="https://groovy-lang.org/contracts.html">groovy-contracts</a> module,
+which provides <code>@Invariant</code>, <code>@Requires</code>, and <code>@Ensures</code> annotations.
+A proposed enhancement
+(<a href="https://issues.apache.org/jira/browse/GROOVY-11878">GROOVY-11878</a>)
+would let you annotate <em>loops</em> with <code>@Invariant</code> too — bringing Groovy&#8217;s
+contract syntax even closer to languages like Dafny.</p>
+</div>
+<div class="paragraph">
+<p>In this post we&#8217;ll take a small but complete Dafny example — multiplication
+via repeated addition — and show how the proposed feature would look
+in Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_dafny_example_multiply_by_repeated_addition">The Dafny example: multiply by repeated addition</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a textbook Dafny example.
+It computes <code>m × n</code> by adding <code>m</code> to a running total, <code>n</code> times:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="dafny">method Multiply(m: int, n: int) returns (res: int)
+  requires m &gt;= 0 &amp;&amp; n &gt;= 0
+  ensures res == m * n
+{
+  res := 0;
+  var i := 0;
+  while i &lt; n
+    invariant 0 &lt;= i &lt;= n
+    invariant res == i * m
+  {
+    res := res + m;
+    i := i + 1;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every annotation here is a <em>contract</em>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>requires</code> — a <strong>precondition</strong>: what must be true when the method is called.</p>
+</li>
+<li>
+<p><code>ensures</code> — a <strong>postcondition</strong>: what the method guarantees on return.</p>
+</li>
+<li>
+<p><code>invariant</code> — a <strong>loop invariant</strong>: a property that holds before and after
+every iteration of the loop.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When you run the Dafny verifier on this code, it checks <em>statically</em> — at
+compile time, without running the program — that the postcondition
+<code>res == m * n</code> follows logically from the preconditions and loop invariants.
+No test cases needed. No edge cases missed.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_the_proof_works">How the proof works</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The verification relies on three phases:</p>
+</div>
+<div class="paragraph">
+<p><strong>1. Establishing the invariant (entry).</strong> Before the loop starts, <code>res</code> is <code>0</code>
+and <code>i</code> is <code>0</code>. The invariant <code>res == i * m</code> becomes <code>0 == 0 * m</code>, which is
+trivially true. The bound <code>0 &lt;= i &lt;= n</code> is also satisfied since <code>n &gt;= 0</code> is
+given by the precondition.</p>
+</div>
+<div class="paragraph">
+<p><strong>2. Maintaining the invariant (step).</strong> Dafny <em>assumes</em> the invariant holds at
+the start of an iteration: <code>res == i * m</code>. Inside the loop body we execute
+<code>res := res + m</code> and <code>i := i + 1</code>. Substituting, the new values satisfy
+<code>res' == (i + 1) * m</code> because <code>res + m == i * m + m == (i + 1) * m</code> — this
+is just the distributive law. The bound invariant is maintained because the
+loop guard guarantees <code>i &lt; n</code>, so after incrementing <code>i</code> we still have <code>i &lt;= n</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>3. Conclusion (exit).</strong> When the loop terminates, the guard <code>i &lt; n</code> is false,
+so <code>i &gt;= n</code>. Combined with the invariant <code>i &lt;= n</code>, we get <code>i == n</code>.
+Substituting into the other invariant: <code>res == n * m</code>, which is exactly the
+postcondition.</p>
+</div>
+<div class="paragraph">
+<p>This is the essence of <em>Hoare logic</em> applied to a loop: establish, maintain,
+conclude.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_proposed_groovy_translation">The proposed Groovy translation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With the existing <code>groovy-contracts</code> annotations and the
+proposed loop invariant support from
+<a href="https://github.com/apache/groovy/pull/2400">PR #2400</a>,
+the Groovy translation is remarkably close to the Dafny original:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ m &gt;= 0 &amp;&amp; n &gt;= 0 })
+@Ensures({ result == m * n })
+static int multiply(int m, int n) {
+    int res = 0
+    int i = 0
+    @Invariant({ 0 &lt;= i &amp;&amp; i &lt;= n })
+    @Invariant({ res == i * m })
+    while (i &lt; n) {
+        res = res + m
+        i = i + 1
+    }
+    res
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The mapping from Dafny to Groovy is almost one-to-one:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Dafny</th>
+<th class="tableblock halign-left valign-top">Groovy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>requires m &gt;= 0 &amp;&amp; n &gt;= 0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Requires({ m &gt;= 0 &amp;&amp; n &gt;= 0 })</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ensures res == m * n</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Ensures({ result == m * n })</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invariant 0 &lt;= i &lt;= n</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Invariant({ 0 &lt;= i &amp;&amp; i &lt;= n })</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invariant res == i * m</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Invariant({ res == i * m })</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>@Ensures</code> uses the special variable <code>result</code> to refer to the
+method&#8217;s return value, whereas Dafny uses a named return variable (<code>res</code>).
+Dafny also allows chained comparisons like <code>0 &lt;= i &lt;= n</code>, which Groovy
+spells as <code>0 &lt;= i &amp;&amp; i &lt;= n</code>. Otherwise the structure is the same.</p>
+</div>
+<div class="paragraph">
+<p>Groovy is a very extensible language. It would be possible to enhance the
+groovy-contracts transforms to make similar calls to a static verifier
+like Dafny does, or make transforms act like a transpiler,
+making Groovy an alternative front-end syntax for Dafny.
+But that isn&#8217;t what Groovy is proposing to do right now,
+instead here we enhance the existing design-by-contract features
+and inject assertions within the body of the loop code.</p>
+</div>
+<div class="paragraph">
+<p>These assertions are checked at <em>runtime</em> rather than proved at compile time.
+They serve as executable documentation and a dynamic safety net. If a bug breaks a
+loop invariant, you find out immediately with a clear error message
+pointing at the violated contract — not via a mysterious wrong result
+three methods later. In production, you can disable contract checking for performance, or leave it on for critical code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dafny_vs_groovy_whats_the_same_whats_different">Dafny vs Groovy: what&#8217;s the same, what&#8217;s different</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both languages let you state <em>what</em> the code should do separately from
+<em>how</em> it does it. The contracts act as a formal specification that
+lives right next to the implementation.</p>
+</div>
+<div class="paragraph">
+<p>The key difference is <em>when</em> the checking happens. Dafny proves your
+contracts hold for all inputs at compile time. Groovy checks them for
+the inputs you actually exercise at runtime. Think of it as the
+difference between a mathematical proof and a thorough test suite —
+both increase confidence, through different means.</p>
+</div>
+<div class="paragraph">
+<p>For many applications, runtime contract checking is the right trade-off:
+you get the documentation and safety benefits without needing a
+verification-aware language. And if you&#8217;re already writing Groovy,
+the proposed <code>@Invariant</code> on loops means you can express these
+properties with almost no syntactic overhead compared to Dafny.</p>
+</div>
+<div class="paragraph">
+<p>But perhaps more importantly, in this age of AI-assisted programming, the contracts serve as a powerful tool for guiding code generation and verification. An AI model can read the contracts and understand the intended behavior of the code, which can help it generate correct code or identify potential issues. This is especially valuable for complex algorithms where the logic might not be immediately clear from the code alone.</p>
+</div>
+<div class="paragraph">
+<p>This aligns with a goal of <em>making Groovy better for humans and AI</em>.
+Design by contract hasn&#8217;t been widely adopted in mainstream development, but perhaps with better tooling and AI support, it could become a more common practice. The proposed loop invariant feature is a step in that direction.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_but_wait_theres_more">But wait, there&#8217;s more</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>@Invariant</code> on loops is just one example of what becomes possible
+once AST transforms can target loop statements. The underlying change
+in <a href="https://github.com/apache/groovy/pull/2400">PR #2400</a> is more
+general: it extends Groovy&#8217;s grammar and AST plumbing so that <em>any</em>
+annotation-driven AST transform can be applied to <code>for</code>, <code>while</code>, and
+<code>do-while</code> loops — not just <code>@Invariant</code>.</p>
+</div>
+<div class="paragraph">
+<p>To illustrate the point, the PR includes a second experimental transform:
+<code>@Parallel</code>. When placed on a <code>for</code> loop, it rewrites the loop so that
+each iteration runs on a separate thread:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Parallel
+for (item in ['a', 'b', 'c', 'd']) {
+    println "Processing $item on ${Thread.currentThread().name}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is <em>not</em> intended to be production-quality or included in the final
+merge — it&#8217;s a lightweight demo that deliberately favours simplicity over
+proper parallel orchestration. But it shows the kind of thing that
+framework authors could build once loop-level annotations are available.
+Imagine annotations for loop unrolling hints, tracing or profiling
+instrumentation, automatic retry logic, GPU offloading, or even
+domain-specific loop transformations in scientific computing —
+all expressible as a simple annotation in front of a loop.</p>
+</div>
+<div class="paragraph">
+<p>The key takeaway is that <code>@Invariant</code> on loops is the first consumer
+of a more general capability. The plumbing is there for the community
+to build on.</p>
+</div>
+<div class="paragraph">
+<p>The loop invariant feature is currently a proposal in
+<a href="https://github.com/apache/groovy/pull/2400">PR #2400</a>
+(tracking issue
+<a href="https://issues.apache.org/jira/browse/GROOVY-11878">GROOVY-11878</a>).
+If you find this kind of design-by-contract support useful — whether
+for teaching, for critical code, or simply for making your intent
+explicit — we&#8217;d love to hear from you.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Comment</strong> on the <a href="https://github.com/apache/groovy/pull/2400">PR</a> or
+the <a href="https://issues.apache.org/jira/browse/GROOVY-11878">JIRA issue</a>
+with your thoughts, use cases, or suggestions.</p>
+</li>
+<li>
+<p><strong>Vote</strong> on the JIRA issue if you&#8217;d like to see this feature land.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Your feedback helps us gauge interest and shape the final design.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We have seen how a small Dafny example translates almost directly into
+Groovy using <code>@Requires</code>, <code>@Ensures</code>, and the proposed <code>@Invariant</code> on
+loops. The three-phase reasoning — establish, maintain, conclude — is
+the same in both languages; only the enforcement mechanism differs.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy-lang.org/contracts.html">Groovy Contracts documentation</a></p>
+</li>
+<li>
+<p><a href="https://dafny.org/">Dafny language</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2400">PR #2400 — Loop invariant support</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11878">GROOVY-11878 — Tracking issue</a></p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Hoare_logic">Hoare logic</a> (Wikipedia)</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
