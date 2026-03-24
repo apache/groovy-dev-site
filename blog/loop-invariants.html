@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='design -by-contract, groovy, dafny, loop invariants'/><meta name='description' content='This post looks at a proposed extension to Groovy&apos;s design-by-contract support in groovy-contracts to allow invariants on loops.'/><title>The Apache Groovy programming language - Blogs - Design by contract with Groovy&trade;: loop invariants</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='design-by-contract, groovy, dafny, loop invariants'/><meta name='description' content='This post looks at a proposed extension to Groovy&apos;s design-by-contract support in groovy-contracts to allow invariants on loops.'/><title>The Apache Groovy programming language - Blogs - Design by contract with Groovy&trade;: loop invariants</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -229,17 +229,20 @@ static int multiply(int m, int n) {
 </table>
 <div class="paragraph">
 <p>Groovy&#8217;s <code>@Ensures</code> uses the special variable <code>result</code> to refer to the
-method&#8217;s return value, whereas Dafny uses a named return variable (<code>res</code>).
+method&#8217;s return value, and we define a local variable <code>res</code> to keep the
+tally so far during our looping.
+The Dafny example uses a named return variable (<code>res</code>) and mutates that variable
+during looping.
 Dafny also allows chained comparisons like <code>0 &lt;= i &lt;= n</code>, which Groovy
-spells as <code>0 &lt;= i &amp;&amp; i &lt;= n</code>. Otherwise the structure is the same.</p>
+splits into <code>0 &lt;= i &amp;&amp; i &lt;= n</code>. Otherwise, the structure is the same.</p>
 </div>
 <div class="paragraph">
 <p>Groovy is a very extensible language. It would be possible to enhance the
-groovy-contracts transforms to make similar calls to a static verifier
-like Dafny does, or make transforms act like a transpiler,
+<code>groovy-contracts</code> transforms to make similar calls to a static verifier
+like Dafny does, or make the transforms act like a transpiler,
 making Groovy an alternative front-end syntax for Dafny.
-But that isn&#8217;t what Groovy is proposing to do right now,
-instead here we enhance the existing design-by-contract features
+But that isn&#8217;t what Groovy is proposing to do right now;
+instead, here we enhance the existing design-by-contract features
 and inject assertions within the body of the loop code.</p>
 </div>
 <div class="paragraph">
