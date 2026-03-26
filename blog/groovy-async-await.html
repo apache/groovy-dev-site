@@ -72,8 +72,8 @@
 <p>A proposed enhancement for Groovy adds native <code>async</code>/<code>await</code> as a
 language-level feature
 (<a href="https://issues.apache.org/jira/browse/GROOVY-9381">GROOVY-9381</a>,
-<a href="https://github.com/apache/groovy/pull/2387">PR <mark>2387</a>).
-Inspired by similar constructs in JavaScript, C</mark>, Kotlin, and Swift,
+<a href="https://github.com/apache/groovy/pull/2387">PR #2387</a>).
+Inspired by similar constructs in JavaScript, C#, Kotlin, and Swift,
 the proposal lets you write asynchronous code in a sequential, readable
 style — with first-class support for async streams, deferred cleanup,
 structured concurrency, Go-style channels, and framework adapters
@@ -352,10 +352,10 @@ blocks execute in LIFO order, exactly like
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">async enterDungeon(hero, dungeonId) {
     var familiar = hero.summonFamiliar()
-    defer { familiar.dismiss() }
+    defer familiar.dismiss()
 
     var portal = openPortal(dungeonId)
-    defer { portal.close() }
+    defer portal.close()
 
     await hero.explore(portal, familiar)
 }</code></pre>
