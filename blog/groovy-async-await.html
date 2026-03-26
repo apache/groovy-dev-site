@@ -69,12 +69,12 @@
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A proposed enhancement for Groovy adds native <code>async</code>/<code>await</code> as a
-language-level feature
+<p>A proposed enhancement, targeted for Groovy 6,
+adds native <code>async</code>/<code>await</code> as a language-level feature
 (<a href="https://issues.apache.org/jira/browse/GROOVY-9381">GROOVY-9381</a>,
 <a href="https://github.com/apache/groovy/pull/2387">PR #2387</a>).
 Inspired by similar constructs in JavaScript, C#, Kotlin, and Swift,
-the proposal lets you write asynchronous code in a sequential, readable
+the proposal would let you write asynchronous code in a sequential, readable
 style — with first-class support for async streams, deferred cleanup,
 structured concurrency, Go-style channels, and framework adapters
 for Reactor and RxJava.</p>
@@ -144,6 +144,11 @@ Before diving in, here&#8217;s a quick guide to when you&#8217;d reach for each:
 <td class="tableblock halign-left valign-top"><p class="tableblock">Groovy&#8217;s take on the same goal as JDK <code>StructuredTaskScope</code>, with <code>async</code>/<code>await</code> integration.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsyncContext</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You need contextual data (e.g. player session, logging trace ID) to follow your async calls across thread hops.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Automatically propagated through <code>async</code>/<code>await</code>, <code>AsyncScope</code>, and <code>Awaitable.go</code>.</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Framework adapters</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">You&#8217;re already using Reactor or RxJava and want <code>await</code> to work transparently with their types.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Auto-discovered via <code>ServiceLoader</code> — just add the dependency.</p></td>
@@ -187,7 +192,9 @@ CompletableFuture&lt;Quest&gt; quest =
 <div class="paragraph">
 <p>Each <code>.thenCompose()</code> adds a nesting level, exception recovery is
 separated from the code that causes the exception, and the control
-flow reads inside-out.</p>
+flow reads inside-out. For this example, the simple chaining
+is manageable, but the complexity grows non-linearly with
+branching and error handling</p>
 </div>
 </div>
 </div>
@@ -330,8 +337,8 @@ for the next wave, preventing unbounded enemy spawning. No explicit
 queues, signals, or synchronization required.</p>
 </div>
 <div class="paragraph">
-<p>There&#8217;s nothing comparable in plain Java today. You&#8217;d typically
-reach for Reactor&#8217;s <code>Flux</code> or RxJava&#8217;s <code>Flowable</code>, each of which
+<p>There&#8217;s no language-level equivalent in plain Java today.
+You&#8217;d typically reach for Reactor&#8217;s <code>Flux</code> or RxJava&#8217;s <code>Flowable</code>, each of which
 brings its own operator vocabulary and mental model. With <code>for await</code>,
 async iteration feels as natural as a regular <code>for</code> loop.</p>
 </div>
@@ -455,6 +462,40 @@ scouting task throws (the hero falls), sibling tasks are cancelled
 immediately — the raid retreats.</p>
 </div>
 <div class="sect2">
+<h3 id="_cancellation_and_timeouts">Cancellation and timeouts</h3>
+<div class="paragraph">
+<p>Cancellation is one of the trickiest parts of async programming —
+and one of `CompletableFuture&#8217;s biggest pain points. The proposal
+makes it straightforward. For instance, a raid might have a time
+limit — if the party takes too long, all scouting missions are
+cancelled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async raidWithTimeLimit(List&lt;Hero&gt; party, List&lt;Room&gt; rooms) {
+    try {
+        await Awaitable.orTimeoutMillis(30_000) {
+            AsyncScope.withScope { scope -&gt;
+                var missions = unique(party, rooms).collect { hero, room -&gt;
+                    scope.async { await hero.scout(room) }
+                }
+                missions.collect { await it }
+            }
+        }
+    } catch (TimeoutException e) {
+        party.each { it.retreat() }
+        return []  // no loot this time
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the timeout fires, the scope&#8217;s child tasks are cancelled and
+a <code>TimeoutException</code> is thrown — which you handle with an ordinary
+<code>catch</code>, just like any other error.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_complementing_jdk_structured_concurrency">Complementing JDK structured concurrency</h3>
 <div class="paragraph">
 <p>Java&#8217;s <code>StructuredTaskScope</code>
@@ -542,7 +583,7 @@ async villainAlerts(dungeonId) {
 <div class="sectionbody">
 <div class="paragraph">
 <p>Readers of the
-<a href="https://groovy-lang.org/blog/gpars-meets-virtual-threads.html">GPars meets virtual threads</a>
+<a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">GPars meets virtual threads</a>
 blog post will recall that GPars provides parallel collections,
 actors, agents, and dataflow concurrency — and that it works well
 with virtual threads via custom executor services.</p>
