@@ -227,12 +227,13 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def prepareBattle(heroId, visibleVillainId) {
+<pre class="prettyprint highlight"><code data-lang="groovy">async prepareBattle(heroId, visibleVillainId) {
     var stats     = async { fetchHeroStats(heroId) }
     var inventory = async { fetchInventory(heroId) }
     var villain   = async { fetchVillain(visibleVillainId) }
 
-    var (s, inv, v) = await Awaitable.all(stats(), inventory(), villain())
+    var result = await Awaitable.all(stats(), inventory(), villain())
+    var (s, inv, v) = result*.get()
     return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
@@ -293,7 +294,7 @@ them as they arrive. This is a natural fit for <em>async streams</em>:
     }
 }
 
-async def runDungeon(hero, dungeonId) {
+async runDungeon(hero, dungeonId) {
     for await (wave in generateWaves(dungeonId)) {
         wave.each { villain -&gt; hero.fight(villain) }
     }
@@ -328,7 +329,7 @@ blocks execute in LIFO order, exactly like
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def enterDungeon(hero, dungeonId) {
+<pre class="prettyprint highlight"><code data-lang="groovy">async enterDungeon(hero, dungeonId) {
     var familiar = hero.summonFamiliar()
     defer { familiar.dismiss() }
 
@@ -375,7 +376,7 @@ channels inspired by Go:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def bossFight(hero, bossArena) {
+<pre class="prettyprint highlight"><code data-lang="groovy">async bossFight(hero, bossArena) {
     var enemies = AsyncChannel.create(3)  // buffered channel
 
     // Villain spawner — runs concurrently
@@ -417,7 +418,7 @@ completed or been cancelled:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def raidDungeon(List&lt;Hero&gt; party, List&lt;Room&gt; rooms) {
+<pre class="prettyprint highlight"><code data-lang="groovy">async raidDungeon(List&lt;Hero&gt; party, List&lt;Room&gt; rooms) {
     AsyncScope.withScope { scope -&gt;
         var missions = unique(party, rooms).collect { hero, room -&gt;
             scope.async { await hero.scout(room) }
@@ -485,20 +486,23 @@ principle: structured concurrency is the safety net, and
 keyword natively understands <code>CompletableFuture</code>,
 <code>CompletionStage</code>, <code>Future</code>, and <code>Flow.Publisher</code>. For third-party
 frameworks, drop-in adapter modules are auto-discovered via
-<code>ServiceLoader</code>:</p>
+<code>ServiceLoader</code>.</p>
+</div>
+<div class="paragraph">
+<p>Here, heroes might asynchronously gain boosts in power (<em>buff</em>), and we might be able to stream villain alerts from a dungeon&#8217;s alert feed. With the appropriate adapters on the classpath, we can <code>await</code> Reactor&#8217;s <code>Mono</code> and <code>Flux</code> or RxJava&#8217;s <code>Single</code> and <code>Observable</code> directly:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">// With groovy-reactor on the classpath:
-async def heroBuffs(heroId) {
+async heroBoosts(heroId) {
     var hero = await Mono.just(fetchHero(heroId))
-    for await (buff in Flux.from(hero.activeBuffStream())) {
-        hero.applyBuff(buff)
+    for await (boost in Flux.from(hero.activeBoostStream())) {
+        hero.applyBoost(boost)
     }
 }
 
 // With groovy-rxjava on the classpath:
-async def villainAlerts(dungeonId) {
+async villainAlerts(dungeonId) {
     var dungeon = await Single.just(loadDungeon(dungeonId))
     for await (alert in Observable.from(dungeon.alertFeed())) {
         broadcastToParty(alert)
