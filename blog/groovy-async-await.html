@@ -59,7 +59,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_problem_callback_complexity' class='anchor-link'>The problem: callback complexity</a></li><li><a href='#_example_1_sequential_async_reads_like_synchronous_code' class='anchor-link'>Example 1: sequential async — reads like synchronous code</a></li><li><a href='#_example_2_parallel_tasks_fetch_once_await_together' class='anchor-link'>Example 2: parallel tasks — fetch once, await together</a></li><li><a href='#_example_3_async_streams_with_yield_return_and_for_await' class='anchor-link'>Example 3: async streams with <code>yield return</code> and <code>for await</code></a></li><li><a href='#_example_4_defer_go_style_cleanup' class='anchor-link'>Example 4: <code>defer</code> — Go-style cleanup</a></li><li><a href='#_example_5_go_style_channels' class='anchor-link'>Example 5: Go-style channels</a></li><li><a href='#_example_6_structured_concurrency_with_asyncscope' class='anchor-link'>Example 6: structured concurrency with <code>AsyncScope</code></a></li><li><a href='#_example_7_framework_integration' class='anchor-link'>Example 7: framework integration</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_choosing_the_right_tool' class='anchor-link'>Choosing the right tool</a></li><li><a href='#_the_problem_callback_complexity' class='anchor-link'>The problem: callback complexity</a></li><li><a href='#_example_1_loading_a_hero_reads_like_synchronous_code' class='anchor-link'>Example 1: loading a hero — reads like synchronous code</a></li><li><a href='#_example_2_preparing_for_battle_fetch_once_await_together' class='anchor-link'>Example 2: preparing for battle — fetch once, await together</a></li><li><a href='#_example_3_dungeon_waves_async_streams_with_yield_return_and_for_await' class='anchor-link'>Example 3: dungeon waves — async streams with <code>yield return</code> and <code>for await</code></a></li><li><a href='#_example_4_entering_a_dungeon_defer_for_guaranteed_cleanup' class='anchor-link'>Example 4: entering a dungeon — <code>defer</code> for guaranteed cleanup</a></li><li><a href='#_example_5_the_villain_spawner_go_style_channels' class='anchor-link'>Example 5: the villain spawner — Go-style channels</a></li><li><a href='#_example_6_the_raid_party_structured_concurrency_with_asyncscope' class='anchor-link'>Example 6: the raid party — structured concurrency with <code>AsyncScope</code></a></li><li><a href='#_example_7_game_event_streams_framework_integration' class='anchor-link'>Example 7: game event streams — framework integration</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -93,21 +93,95 @@ to what you&#8217;d write in plain Java today.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_choosing_the_right_tool">Choosing the right tool</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The proposal provides several complementary features.
+Before diving in, here&#8217;s a quick guide to when you&#8217;d reach for each:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Use when…</th>
+<th class="tableblock halign-left valign-top">Complements</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>async</code>/<code>await</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You have sequential steps that involve I/O or other blocking work and want code that reads top-to-bottom.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Foundation for everything else — the other features build on top of async methods and closures.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Awaitable.all</code> / <code>any</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You need to launch several independent tasks and collect (all) or race (first) their results.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pairs with <code>async</code> closures to create the tasks that <code>all</code>/<code>any</code> coordinate.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>yield return</code> / <code>for await</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You&#8217;re producing or consuming a <em>stream</em> of values over time — paginated APIs, sensor data, log tailing.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Producer uses <code>async</code> + <code>yield return</code>; consumer uses <code>for await</code>. Back-pressure is automatic.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>defer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You acquire resources at different points and want guaranteed cleanup without nested <code>try</code>/<code>finally</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Works inside async methods <em>and</em> async closures. LIFO order mirrors Go&#8217;s <code>defer</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Channels (<code>AsyncChannel</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Two or more tasks need to communicate — producer/consumer, fan-out/fan-in, or rendezvous hand-off.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Created with <code>AsyncChannel.create()</code>; consumed with <code>for await</code>; launched with <code>Awaitable.go</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AsyncScope</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You want structured concurrency — child task lifetimes tied to a scope with automatic cancellation.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy&#8217;s take on the same goal as JDK <code>StructuredTaskScope</code>, with <code>async</code>/<code>await</code> integration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Framework adapters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">You&#8217;re already using Reactor or RxJava and want <code>await</code> to work transparently with their types.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-discovered via <code>ServiceLoader</code> — just add the dependency.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In practice, you&#8217;ll mix and match. A typical service handler might
+use <code>async</code>/<code>await</code> for its main flow, <code>Awaitable.all</code> to fan out
+parallel calls, <code>defer</code> for cleanup, and <code>AsyncScope</code> to ensure
+nothing leaks.</p>
+</div>
+<div class="paragraph">
+<p>To make the features concrete, the examples below follow a running
+theme: building the backend for <em>Groovy Quest</em>, a fictitious online game
+where heroes battle villains across dungeons. Each example tackles
+a different part of the game — loading heroes, spawning enemies,
+streaming dungeon waves, managing resources, and coordinating
+raid parties.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_the_problem_callback_complexity">The problem: callback complexity</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Consider a three-step workflow — fetch a user ID, look up a name,
-load a profile. With <code>CompletableFuture</code> the logic gets buried
-under plumbing:</p>
+<p>Imagine a player logs in and we need to load their quest: look up
+their hero ID, fetch the hero&#8217;s class, then load their active quest.
+With <code>CompletableFuture</code> the logic gets buried under plumbing:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">// Java with CompletableFuture
-CompletableFuture&lt;String&gt; profile =
-    fetchUserId()
-        .thenCompose(id -&gt; lookupName(id))
-        .thenCompose(name -&gt; loadProfile(name))
-        .exceptionally(e -&gt; "fallback");</code></pre>
+CompletableFuture&lt;Quest&gt; quest =
+    lookupHeroId(loginToken)
+        .thenCompose(id -&gt; fetchHeroClass(id))
+        .thenCompose(heroClass -&gt; loadActiveQuest(heroClass))
+        .exceptionally(e -&gt; Quest.DEFAULT);</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -118,18 +192,18 @@ flow reads inside-out.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_1_sequential_async_reads_like_synchronous_code">Example 1: sequential async — reads like synchronous code</h2>
+<h2 id="_example_1_loading_a_hero_reads_like_synchronous_code">Example 1: loading a hero — reads like synchronous code</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>With the proposed <code>async</code>/<code>await</code>, the same logic becomes:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async String getProfile() {
-    var id      = await fetchUserId()
-    var name    = await lookupName(id)
-    var profile = await loadProfile(name)
-    return profile
+<pre class="prettyprint highlight"><code data-lang="groovy">async Quest loadHeroQuest(String loginToken) {
+    var heroId    = await lookupHeroId(loginToken)
+    var heroClass = await fetchHeroClass(heroId)
+    var quest     = await loadActiveQuest(heroClass)
+    return quest
 }</code></pre>
 </div>
 </div>
@@ -143,21 +217,23 @@ not a wrapper.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_2_parallel_tasks_fetch_once_await_together">Example 2: parallel tasks — fetch once, await together</h2>
+<h2 id="_example_2_preparing_for_battle_fetch_once_await_together">Example 2: preparing for battle — fetch once, await together</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Launching concurrent work and collecting the results is a common
-pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
+<p>Before a battle, the game needs to load several things in parallel:
+the hero&#8217;s stats, their inventory, and the villain they&#8217;re about
+to face. Launching concurrent work and collecting the results is a
+common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def fetchDashboard() {
-    var user   = async { fetchUser() }
-    var orders = async { fetchOrders() }
-    var prefs  = async { fetchPrefs() }
+<pre class="prettyprint highlight"><code data-lang="groovy">async def prepareBattle(heroId, visibleVillainId) {
+    var stats     = async { fetchHeroStats(heroId) }
+    var inventory = async { fetchInventory(heroId) }
+    var villain   = async { fetchVillain(visibleVillainId) }
 
-    var (u, o, p) = await Awaitable.all(user(), orders(), prefs())
-    return buildDashboard(u, o, p)
+    var (s, inv, v) = await Awaitable.all(stats(), inventory(), villain())
+    return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
 </div>
@@ -176,12 +252,12 @@ provides a similar capability through <code>StructuredTaskScope</code>:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">// Java with StructuredTaskScope (JDK 25 preview API)
 try (var scope = StructuredTaskScope.open()) {
-    var userTask   = scope.fork(() -&gt; fetchUser());
-    var ordersTask = scope.fork(() -&gt; fetchOrders());
-    var prefsTask  = scope.fork(() -&gt; fetchPrefs());
+    var statsTask     = scope.fork(() -&gt; fetchHeroStats(heroId));
+    var inventoryTask = scope.fork(() -&gt; fetchInventory(heroId));
+    var villainTask   = scope.fork(() -&gt; fetchVillain(villainId));
     scope.join();
-    return buildDashboard(
-        userTask.get(), ordersTask.get(), prefsTask.get());
+    return new BattleScreen(
+        statsTask.get(), inventoryTask.get(), villainTask.get());
 }</code></pre>
 </div>
 </div>
@@ -190,44 +266,46 @@ try (var scope = StructuredTaskScope.open()) {
 scope and cancel siblings on failure. The Groovy version adds
 syntactic sugar (<code>await</code>, <code>all</code>) and integrates with the same
 <code>async</code>/<code>await</code> model used everywhere else, whereas Java&#8217;s API
-is deliberately lower-level and imperative.</p>
+is deliberately lower-level and imperative. We&#8217;ll see more on
+how Groovy&#8217;s <code>AsyncScope</code> complements JDK structured concurrency
+in <a href="#_example_6_the_raid_party_structured_concurrency_with_asyncscope">Example 6</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_3_async_streams_with_yield_return_and_for_await">Example 3: async streams with <code>yield return</code> and <code>for await</code></h2>
+<h2 id="_example_3_dungeon_waves_async_streams_with_yield_return_and_for_await">Example 3: dungeon waves — async streams with <code>yield return</code> and <code>for await</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Many real-world scenarios involve <em>streams</em> of values that arrive
-over time — paginated API results, sensor readings, log events.
-The proposal introduces <code>yield return</code> (to produce values lazily)
-and <code>for await</code> (to consume them):</p>
+<p>A dungeon sends waves of enemies at the hero. Each wave is fetched
+from the server (maybe procedurally generated), and the hero fights
+them as they arrive. This is a natural fit for <em>async streams</em>:
+<code>yield return</code> produces values lazily, and <code>for await</code> consumes them.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async fetchPages(String url) {
-    var next = url
-    while (next != null) {
-        var page = await httpGet(next)
-        yield return page.items
-        next = page.nextLink
+<pre class="prettyprint highlight"><code data-lang="groovy">async generateWaves(String dungeonId) {
+    var depth = 1
+    while (depth &lt;= await dungeonDepth(dungeonId)) {
+        var wave = await spawnEnemies(dungeonId, depth)
+        yield return wave
+        depth++
     }
 }
 
-async def processAll() {
-    for await (items in fetchPages('/api/data')) {
-        items.each { process(it) }
+async def runDungeon(hero, dungeonId) {
+    for await (wave in generateWaves(dungeonId)) {
+        wave.each { villain -&gt; hero.fight(villain) }
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The producer yields values on demand. The consumer pulls them with
-<code>for await</code>. The runtime provides natural <strong>back-pressure</strong> — the
-producer blocks on each <code>yield return</code> until the consumer is ready,
-preventing unbounded memory growth. No explicit queues, signals, or
-synchronization required.</p>
+<p>The producer yields each wave on demand. The consumer pulls them
+with <code>for await</code>. The runtime provides natural <strong>back-pressure</strong> —
+the producer blocks on each <code>yield return</code> until the hero is ready
+for the next wave, preventing unbounded enemy spawning. No explicit
+queues, signals, or synchronization required.</p>
 </div>
 <div class="paragraph">
 <p>There&#8217;s nothing comparable in plain Java today. You&#8217;d typically
@@ -238,59 +316,82 @@ async iteration feels as natural as a regular <code>for</code> loop.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_4_defer_go_style_cleanup">Example 4: <code>defer</code> — Go-style cleanup</h2>
+<h2 id="_example_4_entering_a_dungeon_defer_for_guaranteed_cleanup">Example 4: entering a dungeon — <code>defer</code> for guaranteed cleanup</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>defer</code> keyword schedules cleanup to run when the enclosing
-async method completes, regardless of success or failure.
-Multiple deferred blocks execute in LIFO order — exactly like
+<p>Before entering a dungeon, our hero summons a familiar (<em>spirit pet</em>) and opens a
+magic portal. Both must be cleaned up when the quest ends, whether
+the hero triumphs or falls. The <code>defer</code> keyword schedules cleanup
+to run when the enclosing async method completes — multiple deferred
+blocks execute in LIFO order, exactly like
 <a href="https://go.dev/blog/defer-panic-and-recover">Go&#8217;s <code>defer</code></a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def withTempFile() {
-    var f = createTempFile()
-    defer { f.delete() }
+<pre class="prettyprint highlight"><code data-lang="groovy">async def enterDungeon(hero, dungeonId) {
+    var familiar = hero.summonFamiliar()
+    defer { familiar.dismiss() }
 
-    var conn = openConnection()
-    defer { conn.close() }
+    var portal = openPortal(dungeonId)
+    defer { portal.close() }
 
-    await uploadTo(conn, f)
+    await hero.explore(portal, familiar)
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
+<p><code>defer</code> also works inside async closures — handy for one-off
+tasks like a hero briefly powering up. Notice how the deferred
+cleanup runs <em>after</em> the body completes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def log = []
+def powerUp = async {
+    defer { log &lt;&lt; 'shield down' }
+    log &lt;&lt; 'shield up'
+    'charged'
+}
+def result = await powerUp()
+assert result == 'charged'
+assert log == ['shield up', 'shield down']</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>This is cleaner than nested <code>try</code>/<code>finally</code> blocks, especially when
-multiple resources are acquired at different points in the method.</p>
+multiple resources are acquired at different points in the method
+or closure.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_5_go_style_channels">Example 5: Go-style channels</h2>
+<h2 id="_example_5_the_villain_spawner_go_style_channels">Example 5: the villain spawner — Go-style channels</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For task-to-task coordination, the proposal includes CSP-style
+<p>In a boss fight, a villain factory spawns enemies in the background
+while the hero fights them as they appear. The two sides need to
+communicate without tight coupling — a perfect fit for CSP-style
 channels inspired by Go:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def pipeline() {
-    var ch = Awaitable.channel(5)  // buffered channel, capacity 5
+<pre class="prettyprint highlight"><code data-lang="groovy">async def bossFight(hero, bossArena) {
+    var enemies = AsyncChannel.create(3)  // buffered channel
 
-    // Producer
+    // Villain spawner — runs concurrently
     Awaitable.go {
-        for (i in 1..10) {
-            await ch.send(i)
+        for (type in bossArena.spawnOrder) {
+            await enemies.send(new Villain(type))
         }
-        ch.close()
+        enemies.close()
     }
 
-    // Consumer
-    var sum = 0
-    for await (val in ch) {
-        sum += val
+    // Hero fights each enemy as it arrives
+    var xp = 0
+    for await (villain in enemies) {
+        xp += hero.fight(villain)
     }
-    assert sum == 55
+    return xp
 }</code></pre>
 </div>
 </div>
@@ -304,37 +405,84 @@ role to Go&#8217;s <code>select</code> statement.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_6_structured_concurrency_with_asyncscope">Example 6: structured concurrency with <code>AsyncScope</code></h2>
+<h2 id="_example_6_the_raid_party_structured_concurrency_with_asyncscope">Example 6: the raid party — structured concurrency with <code>AsyncScope</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>AsyncScope</code> binds child task lifetimes to a scope — inspired by
+<p>A raid sends multiple heroes to scout different dungeon rooms
+simultaneously. If any hero falls, the whole raid retreats.
+<code>AsyncScope</code> binds child task lifetimes to a scope — inspired by
 Kotlin&#8217;s <code>coroutineScope</code>, Swift&#8217;s <code>TaskGroup</code>, and Java&#8217;s
 <code>StructuredTaskScope</code>. When the scope exits, all child tasks have
 completed or been cancelled:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">async def fetchAll(List&lt;String&gt; urls) {
+<pre class="prettyprint highlight"><code data-lang="groovy">async def raidDungeon(List&lt;Hero&gt; party, List&lt;Room&gt; rooms) {
     AsyncScope.withScope { scope -&gt;
-        var tasks = urls.collect { url -&gt;
-            scope.async { await httpGet(url) }
+        var missions = unique(party, rooms).collect { hero, room -&gt;
+            scope.async { await hero.scout(room) }
         }
-        tasks.collect { await it }
+        missions.collect { await it }  // all loot gathered
     }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>By default, <code>AsyncScope</code> uses fail-fast semantics: if any child
-task throws, siblings are cancelled immediately.</p>
+<p>By default, <code>AsyncScope</code> uses fail-fast semantics: if any hero&#8217;s
+scouting task throws (the hero falls), sibling tasks are cancelled
+immediately — the raid retreats.</p>
+</div>
+<div class="sect2">
+<h3 id="_complementing_jdk_structured_concurrency">Complementing JDK structured concurrency</h3>
+<div class="paragraph">
+<p>Java&#8217;s <code>StructuredTaskScope</code>
+(<a href="https://openjdk.org/jeps/525">JEP 525</a>, previewing since JDK 21)
+brings structured concurrency to the platform. <code>AsyncScope</code> shares
+the same design goals — child lifetimes bounded by a parent scope,
+automatic cancellation on failure — but layers additional value
+on top:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>async</code>/<code>await</code> integration.</strong> JDK scopes use <code>fork()</code> and
+<code>join()</code> as separate steps; <code>AsyncScope</code> uses <code>scope.async { &#8230;&#8203; }</code>
+and <code>await</code>, keeping scoped work consistent with the rest of
+your async code.</p>
+</li>
+<li>
+<p><strong>Works on JDK 17+.</strong> <code>StructuredTaskScope</code> requires JDK 21+ and
+is still a preview API. <code>AsyncScope</code> runs on JDK 17+ (using
+<code>ThreadLocal</code> fallback) and uses <code>ScopedValue</code> when available on
+JDK 25+.</p>
+</li>
+<li>
+<p><strong>Composes with other async features.</strong> Inside a scope you can
+use <code>defer</code> for cleanup, <code>for await</code> to consume streams, channels
+for inter-task communication, and <code>Awaitable.all</code>/<code>any</code> for
+coordination — all within the same structured lifetime guarantee.</p>
+</li>
+<li>
+<p><strong>Groovy-idiomatic API.</strong> <code>AsyncScope.withScope { scope &#8594; … }</code> uses
+a closure, avoiding the <code>try</code>-with-resources boilerplate of Java&#8217;s
+<code>scope.open()</code> / <code>scope.close()</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Think of <code>AsyncScope</code> as Groovy&#8217;s opinionated take on the same
+principle: structured concurrency is the safety net, and
+<code>async</code>/<code>await</code> is the ergonomic surface you interact with daily.</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_7_framework_integration">Example 7: framework integration</h2>
+<h2 id="_example_7_game_event_streams_framework_integration">Example 7: game event streams — framework integration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>await</code> keyword natively understands <code>CompletableFuture</code>,
+<p>Many game backends already use reactive frameworks. The <code>await</code>
+keyword natively understands <code>CompletableFuture</code>,
 <code>CompletionStage</code>, <code>Future</code>, and <code>Flow.Publisher</code>. For third-party
 frameworks, drop-in adapter modules are auto-discovered via
 <code>ServiceLoader</code>:</p>
@@ -342,18 +490,18 @@ frameworks, drop-in adapter modules are auto-discovered via
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">// With groovy-reactor on the classpath:
-async def reactorExample() {
-    var value = await Mono.just("hello")
-    for await (item in Flux.range(1, 5)) {
-        println item
+async def heroBuffs(heroId) {
+    var hero = await Mono.just(fetchHero(heroId))
+    for await (buff in Flux.from(hero.activeBuffStream())) {
+        hero.applyBuff(buff)
     }
 }
 
 // With groovy-rxjava on the classpath:
-async def rxExample() {
-    var value = await Single.just("hello")
-    for await (item in Observable.range(1, 5)) {
-        println item
+async def villainAlerts(dungeonId) {
+    var dungeon = await Single.just(loadDungeon(dungeonId))
+    for await (alert in Observable.from(dungeon.alertFeed())) {
+        broadcastToParty(alert)
     }
 }</code></pre>
 </div>
@@ -438,12 +586,14 @@ with your thoughts, use cases, or design suggestions.</p>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>We&#8217;ve seen how the proposed async/await feature lets you write
-async Groovy code that reads almost like synchronous code — from
-simple sequential awaits, to parallel fan-out, async streams,
-Go-style channels, structured concurrency, and framework
-integration. The syntax is concise, the mental model is
-straightforward, and virtual threads make it scale.</p>
+<p>Through our <em>Groovy Quest</em> examples we&#8217;ve seen how the proposed
+async/await feature lets you write async Groovy code that reads
+almost like synchronous code — from loading a hero&#8217;s quest, to
+preparing a battle in parallel, streaming dungeon waves, cleaning
+up summoned familiars, coordinating a boss fight over channels,
+and rallying a raid party with structured concurrency. The syntax
+is concise, the mental model is straightforward, and virtual
+threads make it scale.</p>
 </div>
 </div>
 </div>
