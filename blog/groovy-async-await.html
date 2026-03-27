@@ -474,14 +474,7 @@ cancelled:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">async raidWithTimeLimit(List&lt;Hero&gt; party, List&lt;Room&gt; rooms) {
     try {
-        await Awaitable.orTimeoutMillis(30_000) {
-            AsyncScope.withScope { scope -&gt;
-                var missions = unique(party, rooms).collect { hero, room -&gt;
-                    scope.async { await hero.scout(room) }
-                }
-                missions.collect { await it }
-            }
-        }
+        await Awaitable.orTimeout(raidDungeon(party, rooms), 30, SECONDS)
     } catch (TimeoutException e) {
         party.each { it.retreat() }
         return []  // no loot this time
@@ -493,6 +486,14 @@ cancelled:</p>
 <p>When the timeout fires, the scope&#8217;s child tasks are cancelled and
 a <code>TimeoutException</code> is thrown — which you handle with an ordinary
 <code>catch</code>, just like any other error.</p>
+</div>
+<div class="paragraph">
+<p>In simple cases, you can also use <code>completeOnTimeout</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var loot = await Awaitable.completeOnTimeout(raidDungeon(heroes, rooms), [], 30, SECONDS)</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
