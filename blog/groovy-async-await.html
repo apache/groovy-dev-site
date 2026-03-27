@@ -194,7 +194,7 @@ CompletableFuture&lt;Quest&gt; quest =
 separated from the code that causes the exception, and the control
 flow reads inside-out. For this example, the simple chaining
 is manageable, but the complexity grows non-linearly with
-branching and error handling</p>
+branching and error handling.</p>
 </div>
 </div>
 </div>
@@ -261,16 +261,15 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
     var villain   = async { fetchVillain(visibleVillainId) }
 
     var result = await Awaitable.all(stats(), inventory(), villain())
-    var (s, inv, v) = result*.get()
+    var (s, inv, v) = result*.get()  // spread the results into variables
     return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>All three I/O calls run concurrently. The <code>all</code> combinator waits until
-all results are available. If one or more threads fail, all threads complete
-normally, and the first exception that occurred is thrown unwrapped.
-(See <code>AsyncScope</code> later in Example 6 if fail-fast semantics is appropriate.)</p>
+<p>Here, <code>async { … }</code> creates an async closure — a reusable
+block that doesn&#8217;t run until you call it.
+Invoking <code>stats()</code>, <code>inventory()</code>, and <code>villain()</code> each launches its respective block concurrently and returns an <code>Awaitable</code>. The <code>all</code> combinator produces another <code>Awaitable</code> that completes when every task has finished. If any task fails, the remaining tasks still run to completion, and the first exception is thrown unwrapped. (For fail-fast semantics — cancelling siblings as soon as one fails — see <code>AsyncScope</code> in Example 6.)</p>
 </div>
 <div class="sect2">
 <h3 id="_how_this_compares_to_javas_structuredtaskscope">How this compares to Java&#8217;s <code>StructuredTaskScope</code></h3>
@@ -494,7 +493,8 @@ a <code>TimeoutException</code> is thrown — which you handle with an ordinary
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var loot = await Awaitable.completeOnTimeout(raidDungeon(heroes, rooms), [], 30, SECONDS)</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">var boobyPrize = ['an old boot']
+var loot = await Awaitable.completeOnTimeout(raidDungeon(heroes, rooms), boobyPrize, 30, SECONDS)</code></pre>
 </div>
 </div>
 </div>
@@ -614,11 +614,10 @@ both can coexist in the same codebase.</p>
 <div class="paragraph">
 <p>The examples above are only a taste. The complete proposal also includes
 async closures and lambdas, the <code>@Async</code> annotation (for Java-style
-declarations), <code>Awaitable</code> combinators (<code>any</code>, <code>allSettled</code>, <code>delay</code>,
-<code>orTimeoutMillis</code>), <code>AsyncContext</code> for propagating trace and tenant
-metadata across thread hops, cancellation support, and a pluggable
-adapter registry for custom async types. The full spec is available in
-the
+declarations), other <code>Awaitable</code> combinators (<code>any</code>, <code>allSettled</code>, <code>delay</code>),
+more details about <code>AsyncContext</code> for propagating trace and tenant metadata across
+thread hops, cancellation support, and a pluggable adapter registry for
+custom async types. The full spec is available in the
 <a href="https://github.com/apache/groovy/blob/GROOVY-9381_3/src/spec/doc/core-async-await.adoc">draft documentation</a>.</p>
 </div>
 </div>
@@ -684,7 +683,7 @@ threads make it scale.</p>
 <p><a href="https://openjdk.org/jeps/525">JEP 525 — Structured Concurrency (Sixth Preview)</a></p>
 </li>
 <li>
-<p><a href="https://groovy-lang.org/blog/gpars-meets-virtual-threads.html">GPars meets Virtual Threads</a></p>
+<p><a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">GPars meets Virtual Threads</a></p>
 </li>
 <li>
 <p><a href="http://gpars.org/">GPars</a></p>
