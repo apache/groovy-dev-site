@@ -267,8 +267,10 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>All three I/O calls run concurrently. The <code>all</code> combinator waits
-for every result, failing fast if any task throws.</p>
+<p>All three I/O calls run concurrently. The <code>all</code> combinator waits until
+all results are available. If one or more threads fail, all threads complete
+normally, and the first exception that occurred is thrown unwrapped.
+(See <code>AsyncScope</code> later in Example 6 if fail-fast semantics is appropriate.)</p>
 </div>
 <div class="sect2">
 <h3 id="_how_this_compares_to_javas_structuredtaskscope">How this compares to Java&#8217;s <code>StructuredTaskScope</code></h3>
