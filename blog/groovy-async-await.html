@@ -59,7 +59,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_choosing_the_right_tool' class='anchor-link'>Choosing the right tool</a></li><li><a href='#_the_problem_callback_complexity' class='anchor-link'>The problem: callback complexity</a></li><li><a href='#_example_1_loading_a_hero_reads_like_synchronous_code' class='anchor-link'>Example 1: loading a hero — reads like synchronous code</a></li><li><a href='#_example_2_preparing_for_battle_fetch_once_await_together' class='anchor-link'>Example 2: preparing for battle — fetch once, await together</a></li><li><a href='#_example_3_dungeon_waves_async_streams_with_yield_return_and_for_await' class='anchor-link'>Example 3: dungeon waves — async streams with <code>yield return</code> and <code>for await</code></a></li><li><a href='#_example_4_entering_a_dungeon_defer_for_guaranteed_cleanup' class='anchor-link'>Example 4: entering a dungeon — <code>defer</code> for guaranteed cleanup</a></li><li><a href='#_example_5_the_villain_spawner_go_style_channels' class='anchor-link'>Example 5: the villain spawner — Go-style channels</a></li><li><a href='#_example_6_the_raid_party_structured_concurrency_with_asyncscope' class='anchor-link'>Example 6: the raid party — structured concurrency with <code>AsyncScope</code></a></li><li><a href='#_example_7_game_event_streams_framework_integration' class='anchor-link'>Example 7: game event streams — framework integration</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_choosing_the_right_tool' class='anchor-link'>Choosing the right tool</a></li><li><a href='#_the_problem_callback_complexity' class='anchor-link'>The problem: callback complexity</a></li><li><a href='#_example_1_loading_a_hero_reads_like_synchronous_code' class='anchor-link'>Example 1: loading a hero — reads like synchronous code</a></li><li><a href='#_example_2_preparing_for_battle_fetch_once_await_together' class='anchor-link'>Example 2: preparing for battle — fetch once, await together</a></li><li><a href='#_example_3_dungeon_waves_async_streams_with_yield_return_and_for_await' class='anchor-link'>Example 3: dungeon waves — async streams with <code>yield return</code> and <code>for await</code></a></li><li><a href='#_example_4_entering_a_dungeon_defer_for_guaranteed_cleanup' class='anchor-link'>Example 4: entering a dungeon — <code>defer</code> for guaranteed cleanup</a></li><li><a href='#_example_5_the_villain_spawner_go_style_channels' class='anchor-link'>Example 5: the villain spawner — Go-style channels</a></li><li><a href='#_example_6_the_raid_party' class='anchor-link'>Example 6: the raid party — structured concurrency with <code>AsyncScope</code></a></li><li><a href='#_example_7_game_event_streams_framework_integration' class='anchor-link'>Example 7: game event streams — framework integration</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -260,8 +260,7 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
     var inventory = async { fetchInventory(heroId) }
     var villain   = async { fetchVillain(visibleVillainId) }
 
-    var result = await Awaitable.all(stats(), inventory(), villain())
-    var (s, inv, v) = result*.get()  // spread the results into variables
+    var (s, inv, v) = await Awaitable.all(stats(), inventory(), villain())
     return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
@@ -298,7 +297,24 @@ syntactic sugar (<code>await</code>, <code>all</code>) and integrates with the s
 <code>async</code>/<code>await</code> model used everywhere else, whereas Java&#8217;s API
 is deliberately lower-level and imperative. We&#8217;ll see more on
 how Groovy&#8217;s <code>AsyncScope</code> complements JDK structured concurrency
-in <a href="#_example_6_the_raid_party_structured_concurrency_with_asyncscope">Example 6</a>.</p>
+in <a href="#_example_6_the_raid_party">Example 6</a>.</p>
+</div>
+<div class="paragraph">
+<p>Note that this isn&#8217;t an exact equivalent of our Groovy example.
+The async factory-like closures are reusable. To more closely mirror
+the Java version we could use <code>Awaitable.go</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async prepareBattle(heroId, visibleVillainId) {
+    var stats     = Awaitable.go { fetchHeroStats(heroId) }
+    var inventory = Awaitable.go { fetchInventory(heroId) }
+    var villain   = Awaitable.go { fetchVillain(visibleVillainId) }
+
+    await Awaitable.all(stats, inventory, villain)
+    return new BattleScreen(stats.get(), inventory.get(), villain.get())
+}</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -435,7 +451,7 @@ role to Go&#8217;s <code>select</code> statement.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_example_6_the_raid_party_structured_concurrency_with_asyncscope">Example 6: the raid party — structured concurrency with <code>AsyncScope</code></h2>
+<h2 id="_example_6_the_raid_party">Example 6: the raid party — structured concurrency with <code>AsyncScope</code></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A raid sends multiple heroes to scout different dungeon rooms
