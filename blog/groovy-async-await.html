@@ -260,7 +260,7 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
     var inventory = async { fetchInventory(heroId) }
     var villain   = async { fetchVillain(visibleVillainId) }
 
-    var (s, inv, v) = await Awaitable.all(stats(), inventory(), villain())
+    var (s, inv, v) = await stats(), inventory(), villain()
     return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
@@ -268,7 +268,12 @@ common pattern. Here&#8217;s how it looks with <code>Awaitable.all</code>:</p>
 <div class="paragraph">
 <p>Here, <code>async { … }</code> creates an async closure — a reusable
 block that doesn&#8217;t run until you call it.
-Invoking <code>stats()</code>, <code>inventory()</code>, and <code>villain()</code> each launches its respective block concurrently and returns an <code>Awaitable</code>. The <code>all</code> combinator produces another <code>Awaitable</code> that completes when every task has finished. If any task fails, the remaining tasks still run to completion, and the first exception is thrown unwrapped. (For fail-fast semantics — cancelling siblings as soon as one fails — see <code>AsyncScope</code> in Example 6.)</p>
+Invoking <code>stats()</code>, <code>inventory()</code>, and <code>villain()</code> each launches its respective block concurrently and returns an <code>Awaitable</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>await stats(), inventory(), villain()</code> statement is a shorthand for
+<code>await Awaitable.all(stats(), inventory(), villain())</code>.
+The <code>all</code> combinator produces another <code>Awaitable</code> that completes when every task has finished. If any task fails, the remaining tasks still run to completion, and the first exception is thrown unwrapped. (For fail-fast semantics — cancelling siblings as soon as one fails — see <code>AsyncScope</code> in Example 6.)</p>
 </div>
 <div class="sect2">
 <h3 id="_how_this_compares_to_javas_structuredtaskscope">How this compares to Java&#8217;s <code>StructuredTaskScope</code></h3>
@@ -301,8 +306,9 @@ in <a href="#_example_6_the_raid_party">Example 6</a>.</p>
 </div>
 <div class="paragraph">
 <p>Note that this isn&#8217;t an exact equivalent of our Groovy example.
-The async factory-like closures are reusable. To more closely mirror
-the Java version we could use <code>Awaitable.go</code>:</p>
+The async factory-like closures are reusable. If you don&#8217;t need that
+flexibility, you can also use <code>Awaitable.go</code> to launch a one-off task.
+This more closely mirrors the Java version:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -311,10 +317,35 @@ the Java version we could use <code>Awaitable.go</code>:</p>
     var inventory = Awaitable.go { fetchInventory(heroId) }
     var villain   = Awaitable.go { fetchVillain(visibleVillainId) }
 
-    await Awaitable.all(stats, inventory, villain)
+    await stats, inventory, villain
     return new BattleScreen(stats.get(), inventory.get(), villain.get())
 }</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_flip_side_awaitable_any_first_one_wins">The flip side: <code>Awaitable.any</code> — first one wins</h3>
+<div class="paragraph">
+<p>Where <code>all</code> waits for <em>every</em> task, <code>any</code> returns as soon as the
+<em>first</em> one completes — a race. Imagine a capture-the-flag battle
+where the hero and villain both dash for the flag:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">async captureTheFlag(hero, villain, flag) {
+    var heroGrab    = async { hero.grab(flag) }
+    var villainGrab = async { villain.grab(flag) }
+
+    var winner = await Awaitable.any(heroGrab(), villainGrab())
+    println "$winner.name captured the flag!"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The loser&#8217;s task still runs to completion in the background
+(use <code>AsyncScope</code> if you want the loser cancelled immediately).
+This is the same "race" pattern as JavaScript&#8217;s <code>Promise.race</code>
+or Go&#8217;s <code>select</code>.</p>
 </div>
 </div>
 </div>
