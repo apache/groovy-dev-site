@@ -235,8 +235,7 @@ concurrency model.</p>
 <div class="sect2">
 <h3 id="_capture_the_flag_awaitable_any">Capture the flag — <code>Awaitable.any</code></h3>
 <div class="paragraph">
-<p>Where <code>all</code> waits for <em>every</em> task, <code>any</code> returns the <em>first</em> to
-complete — a race:</p>
+<p>Where <code>all</code> waits for <em>every</em> task, <code>any</code> returns when <em>any</em> task completes — a race:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -250,8 +249,10 @@ complete — a race:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The loser&#8217;s task still runs to completion in the background
-(use <code>AsyncScope</code> for fail-fast cancellation).</p>
+<p>If the winner threw an exception, it propagates immediately.
+The loser&#8217;s task still runs to completion in the background
+(use <code>AsyncScope</code> for fail-fast cancellation).
+If you want to ignore failures and take the first success, use <code>Awaitable.first</code> instead.</p>
 </div>
 </div>
 <div class="sect2">
