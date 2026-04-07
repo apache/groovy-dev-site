@@ -131,15 +131,21 @@ inside-out.</p>
 <div class="paragraph">
 <p>Variables are declared at the point of use. The return value is obvious.
 No callbacks, no lambdas, no chained combinators. The method is a
-regular method — the caller decides whether to run it asynchronously:</p>
+regular method and called in the regular way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">// Run asynchronously:
-def quest = await async { loadHeroQuest(token) }
-
-// Or call directly (blocking — fine on virtual threads):
+<pre class="prettyprint highlight"><code data-lang="groovy">// Call directly (blocking — fine on virtual threads):
 def quest = loadHeroQuest(token)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The caller can choose to run it asynchronously if they want:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Or run asynchronously:
+def quest = await async { loadHeroQuest(token) }</code></pre>
 </div>
 </div>
 </div>
@@ -186,7 +192,7 @@ the villain — all in parallel:</p>
     var inventory = async { fetchInventory(heroId) }
     var villain   = async { fetchVillain(visibleVillainId) }
 
-    var (s, inv, v) = await Awaitable.all(stats, inventory, villain)
+    var (s, inv, v) = await stats, inventory, villain
     return new BattleScreen(s, inv, v)
 }</code></pre>
 </div>
@@ -265,6 +271,51 @@ with <code>success</code>, <code>value</code>, and <code>error</code> fields.</p
 </ul>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_combinator_summary">Combinator summary</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Combinator</th>
+<th class="tableblock halign-left valign-top">Completes when</th>
+<th class="tableblock halign-left valign-top">On failure</th>
+<th class="tableblock halign-left valign-top">Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Awaitable.all</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All succeed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fails immediately on first failure (fail-fast)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gather results from independent tasks</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Awaitable.allSettled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All complete (success or fail)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Never throws; failures captured in <code>AwaitResult</code> list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inspect every outcome, e.g. partial-success reporting</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Awaitable.any</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">First task completes (success or failure)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Propagates the first completion&#8217;s result or error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Latency-sensitive races, fastest-response wins</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Awaitable.first</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">First task succeeds, or all fail</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Throws only when every source fails (aggregate error)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hedged requests, graceful degradation with fallbacks</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -289,6 +340,30 @@ and the hero fights them as they arrive:</p>
 }
 
 def runDungeon(hero, dungeonId) {
+    for (wave in generateWaves(dungeonId)) {
+        wave.each { villain -&gt; hero.fight(villain) }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The producer yields each wave on demand. The consumer pulls with a normal for loop.
+Natural <strong>back-pressure</strong> — the producer blocks on each
+<code>yield return</code> until the consumer is ready. No queues, signals, or
+synchronization.</p>
+</div>
+<div class="paragraph">
+<p>Since generators return a standard <code>Iterable</code>, regular <code>for</code> loops as shown above
+and other Groovy collection methods (<code>collect</code>, <code>findAll</code>, <code>take</code>) also work.</p>
+</div>
+<div class="paragraph">
+<p>Other reactive libraries have different mechanisms for returning streaming results.
+You can always use their native methods but Groovy&#8217;s <code>for await</code> provides some
+syntactic sugar to make it more seamless:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def runDungeon(hero, dungeonId) {
     for await (wave in generateWaves(dungeonId)) {
         wave.each { villain -&gt; hero.fight(villain) }
     }
@@ -296,16 +371,9 @@ def runDungeon(hero, dungeonId) {
 </div>
 </div>
 <div class="paragraph">
-<p>The producer yields each wave on demand. The consumer pulls with
-<code>for await</code>. Natural <strong>back-pressure</strong> — the producer blocks on each
-<code>yield return</code> until the consumer is ready. No queues, signals, or
-synchronization.</p>
-</div>
-<div class="paragraph">
-<p>Since generators return a standard <code>Iterable</code>, regular <code>for</code> loops
-and Groovy collection methods (<code>collect</code>, <code>findAll</code>, <code>take</code>) also
-work — <code>for await</code> is optional for generators but required for
-reactive types (Flux, Observable).</p>
+<p>The consumer pulls with <code>for await</code> instead of <code>for</code> but no other changes are required.
+You can optionally use <code>for await</code> with the builtin generators, but it&#8217;s required for
+other reactive types (Flux, Observable) if you want the Groovy async friendly experience.</p>
 </div>
 </div>
 </div>
@@ -595,8 +663,12 @@ asynchronous, with language-level support for streams, cleanup,
 structured concurrency, and framework bridging.</p>
 </div>
 <div class="paragraph">
-<p>Both approaches benefit from virtual threads on JDK 21+, and
-both can coexist in the same codebase.</p>
+<p>GPars' <code>callAsync()</code> and <code>asyncFun()</code> return futures that work
+naturally with <code>await</code> and the <code>Awaitable</code> combinators, so you
+can mix and match both styles in the same codebase.</p>
+</div>
+<div class="paragraph">
+<p>Both approaches benefit from virtual threads on JDK 21+.</p>
 </div>
 </div>
 </div>
