@@ -576,11 +576,11 @@ is a race condition:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">// UNSAFE
-var count = 0
-def tasks = (1..100).collect { async { count++ } }
+<pre class="prettyprint highlight"><code data-lang="groovy">// UNSAFE — shared mutation is a race condition
+var total = 0
+def tasks = heroes.collect { h -&gt; async { total += fetchScore(h) } }
 tasks.each { await it }
-// count may not be 100!</code></pre>
+// total may be wrong!</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -588,10 +588,10 @@ tasks.each { await it }
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">// SAFE
-def tasks = (1..100).collect { n -&gt; async { n } }
+<pre class="prettyprint highlight"><code data-lang="groovy">// SAFE — each task returns its result
+def tasks = heroes.collect { h -&gt; async { fetchScore(h) } }
 def results = await Awaitable.all(*tasks)
-assert results.sum() == 5050</code></pre>
+def total = results.sum()</code></pre>
 </div>
 </div>
 <div class="paragraph">
