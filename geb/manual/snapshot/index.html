@@ -1112,7 +1112,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0.2-SNAPSHOT"</span><span class="o">)</span>
-<span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.27.0"</span><span class="o">)</span>
+<span class="nd">@Grab</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.34.0"</span><span class="o">)</span>
 <span class="kn">import</span> <span class="nn">geb.Browser</span></code></pre>
 </div>
 </div>
@@ -1129,7 +1129,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 <span class="nt">&lt;dependency&gt;</span>
   <span class="nt">&lt;groupId&gt;</span>org.seleniumhq.selenium<span class="nt">&lt;/groupId&gt;</span>
   <span class="nt">&lt;artifactId&gt;</span>selenium-firefox-driver<span class="nt">&lt;/artifactId&gt;</span>
-  <span class="nt">&lt;version&gt;</span>4.27.0<span class="nt">&lt;/version&gt;</span>
+  <span class="nt">&lt;version&gt;</span>4.34.0<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -1139,7 +1139,7 @@ Rather, it works with existing popular tools like <a href="https://spockframewor
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.apache.groovy.geb:geb-core:8.0.2-SNAPSHOT"</span><span class="o">)</span>
-<span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.27.0"</span><span class="o">)</span></code></pre>
+<span class="n">testImplementation</span><span class="o">(</span><span class="s2">"org.seleniumhq.selenium:selenium-firefox-driver:4.34.0"</span><span class="o">)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1186,7 +1186,7 @@ are intended for the developer community to test upcoming releases.
 <div class="sectionbody">
 <div class="paragraph">
 <p>The entry point to Geb is the <code><a href="api/geb/Browser.html">Browser</a></code> object.
-A browser object marries a <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> instance (which drives the actual web browser being automated) with the concept of a &#8220;current page&#8221;.</p>
+A browser object marries a <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> instance (which drives the actual web browser being automated) with the concept of a &#8220;current page&#8221;.</p>
 </div>
 <div class="paragraph">
 <p>Browser objects are created with a <code><a href="api/geb/Configuration.html">Configuration</a></code> that specifies which driver implementation to use, the base URL to resolve relative links against and other bits of config.
@@ -1769,7 +1769,7 @@ The first closure passed should return true for the window, or windows, you want
 <td class="content">
 <div class="paragraph">
 <p>If there is no window for which the window specification closure returns <code>true</code> then
-<a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/NoSuchWindowException.html"><code>NoSuchWindowException</code></a> is thrown.</p>
+<a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/NoSuchWindowException.html"><code>NoSuchWindowException</code></a> is thrown.</p>
 </div>
 </td>
 </tr>
@@ -2049,7 +2049,7 @@ See the section on <a href="#driver-management">driver management</a> for more i
 <h2 id="driver"><a class="link" href="#driver">3. The WebDriver implementation</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A <code><a href="api/geb/Browser.html">Browser</a></code> instance interacts with an actual browser via an instance of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code>.
+<p>A <code><a href="api/geb/Browser.html">Browser</a></code> instance interacts with an actual browser via an instance of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code>.
 The browser&#8217;s driver can always be retrieved via the <code><a href="api/geb/Browser.html#getDriver()">getDriver()</a></code> method.</p>
 </div>
 <div class="admonitionblock note">
@@ -2060,7 +2060,7 @@ The browser&#8217;s driver can always be retrieved via the <code><a href="api/ge
 </td>
 <td class="content">
 <div class="paragraph">
-<p>One of the key design principles that WebDriver embraces is that tests/scripts should be written to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> API making them agnostic to the actual browser being driven,
+<p>One of the key design principles that WebDriver embraces is that tests/scripts should be written to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> API making them agnostic to the actual browser being driven,
 and therefore portable.
 Geb always supports this goal.
 However, the reality is that there are still quirks and behavioural differences between driver implementations.
@@ -2274,7 +2274,7 @@ Operations on &#8220;empty&#8221; navigators return <code>null</code> or another
 <div class="sect3">
 <h4 id="using-webdrivers-by-class-selectors"><a class="link" href="#using-webdrivers-by-class-selectors">4.1.2. Using WebDriver&#8217;s <code>By</code> class selectors</a></h4>
 <div class="paragraph">
-<p>For all signatures of <code>$()</code> function that accept a css selector there is an equivalent signature where an instance of WebDriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/By.html">By</a></code> class can be used instead of a <code>String</code>.</p>
+<p>For all signatures of <code>$()</code> function that accept a css selector there is an equivalent signature where an instance of WebDriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/By.html">By</a></code> class can be used instead of a <code>String</code>.</p>
 </div>
 <div class="paragraph">
 <p>Using CSS selectors is the idiomatic way of using Geb and should be preferred to using <code>By</code> selectors.
@@ -2302,7 +2302,7 @@ This is especially the case when dealing with apps which completely rerender par
 <p>Quite often the fact that DOM elements backing a <code>Navigator</code> have been removed from the DOM and redrawn can be worked around by creating a new instance of that <code>Navigator</code> by obtaining it from its <a href="#content-dsl">content definition</a>.
 Unfortunately this workaround is not available when an action performed as part of a method defined in a <a href="#modules">Geb module class</a> causes the <a href="#base-and-context">module base element</a> to be re-rendered.
 This is because the reference to the base <code>Navigator</code> of a module is fixed at module creation time which in turn fixes the reference to the elements matching the selector used in the definition of that <code>Navigator</code>.
-When the part of the DOM which contains elements of that <code>Navigator</code> is recreated, these references become stale causing any methods called on them to throw <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/StaleElementReferenceException.html">StaleElementReferenceException</a></code> and their staleness cannot be rectified from within the code of the module method in question.
+When the part of the DOM which contains elements of that <code>Navigator</code> is recreated, these references become stale causing any methods called on them to throw <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/StaleElementReferenceException.html">StaleElementReferenceException</a></code> and their staleness cannot be rectified from within the code of the module method in question.
 The solution to this problem is to declare the base <code>Navigator</code> to be dynamic which means that the list of the DOM elements underpinning that <code>Navigator</code> will be refreshed every time a method accessing the elements is called on it.</p>
 </div>
 <div class="paragraph">
@@ -2443,7 +2443,7 @@ Therefore, you should only use dynamic navigators when dealing with content whic
 </td>
 <td class="content">
 <div class="paragraph">
-<p>While using dynamic navigators might seem like a way to completely avoid <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/StaleElementReferenceException.html">StaleElementReferenceException</a></code> it is unfortunately not the case.
+<p>While using dynamic navigators might seem like a way to completely avoid <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/StaleElementReferenceException.html">StaleElementReferenceException</a></code> it is unfortunately not the case.
 That&#8217;s because operations which access elements of a dynamic <code>Navigator</code> are not atomic.
 For example, when calling <code>click()</code> on a dynamic <code>Navigator</code>, first a WebDriver protocol command will be executed to refresh the web elements which underpin that instance and then another command will be executed to click on the element that was found - if between the two commands the element is removed from the DOM the exception will still occur.
 While dynamic navigators make <code>StaleElementReferenceException</code> less likely, it&#8217;s still far from impossible to get one when using them, especially in highly asynchronous applications with frequent DOM redraws.
@@ -2456,7 +2456,7 @@ It&#8217;s also worth noting that the risk of it occurring is exacerbated for na
 <div class="sect4">
 <h5 id="creating-directly-from-webelement-objects"><a class="link" href="#creating-directly-from-webelement-objects">Creating directly from <code>WebElement</code> objects</a></h5>
 <div class="paragraph">
-<p>Certain selection logic, for example selecting elements based on their size, cannot be expressed via Geb&#8217;s <code>$()</code> method but can be expressed by filtering Selenium&#8217;s <a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebElement.html">WebElement</a> instances.
+<p>Certain selection logic, for example selecting elements based on their size, cannot be expressed via Geb&#8217;s <code>$()</code> method but can be expressed by filtering Selenium&#8217;s <a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebElement.html">WebElement</a> instances.
 So, if you for example wanted to create a dynamic <code>Navigator</code> matching all divs in a page which are exactly 10 pixel high you could do so using <a href="api/geb/navigator/factory/NavigatorFactory.html#createDynamic(Supplier)">NavigatorFactory.createDynamic()</a>&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
@@ -3317,7 +3317,7 @@ in accordance with the DOM CSS2 specification - you should directly access the l
 </div>
 </div>
 <div class="paragraph">
-<p>You can send keystrokes to the input (and any other content) via the leftShift operator, which is a shortcut for the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebElement.html#sendKeys(java.lang.CharSequence&#8230;&#8203;)">sendKeys()</a></code> method of WebDriver.</p>
+<p>You can send keystrokes to the input (and any other content) via the leftShift operator, which is a shortcut for the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebElement.html#sendKeys(java.lang.CharSequence&#8230;&#8203;)">sendKeys()</a></code> method of WebDriver.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3331,7 +3331,7 @@ in accordance with the DOM CSS2 specification - you should directly access the l
 <div class="sect3">
 <h4 id="non-characters-e-g-delete-key-key-chords-etc"><a class="link" href="#non-characters-e-g-delete-key-key-chords-etc">Non characters (e.g. delete key, key chords, etc.)</a></h4>
 <div class="paragraph">
-<p>It is possible to send non-textual characters to content by using the WebDriver <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/Keys.html">Keys</a></code> enumeration&#8230;&#8203;</p>
+<p>It is possible to send non-textual characters to content by using the WebDriver <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/Keys.html">Keys</a></code> enumeration&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3344,7 +3344,7 @@ in accordance with the DOM CSS2 specification - you should directly access the l
 <p>Here we are sending a &#8220;control-c&#8221; to an input.</p>
 </div>
 <div class="paragraph">
-<p>See the documentation for <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/Keys.html">Keys</a></code> enumeration for more information on the possible keys.</p>
+<p>See the documentation for <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/Keys.html">Keys</a></code> enumeration for more information on the possible keys.</p>
 </div>
 </div>
 </div>
@@ -3857,7 +3857,7 @@ You can use this API directly when using Geb or use the more Geb friendly <a hre
 <div class="sect3">
 <h4 id="using-actions"><a class="link" href="#using-actions">4.15.1. Using the WebDriver <code>Actions</code> API directly</a></h4>
 <div class="paragraph">
-<p>A Geb navigator object is built on top of a collection of WebDriver <a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebElement.html">WebElement</a> objects.
+<p>A Geb navigator object is built on top of a collection of WebDriver <a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebElement.html">WebElement</a> objects.
 It is possible to access the contained <code>WebElement</code> instances via the following methods on navigator objects:</p>
 </div>
 <div class="listingblock">
@@ -3869,7 +3869,7 @@ It is possible to access the contained <code>WebElement</code> instances via the
 </div>
 </div>
 <div class="paragraph">
-<p>By using the methods of the WebDriver <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/interactions/Actions.html">Actions</a></code> class with <code>WebElement</code> instances, complex user gestures can be emulated.
+<p>By using the methods of the WebDriver <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/interactions/Actions.html">Actions</a></code> class with <code>WebElement</code> instances, complex user gestures can be emulated.
 First you will need to create an <code>Actions</code> instance after obtaining the WebDriver driver:</p>
 </div>
 <div class="listingblock">
@@ -5590,7 +5590,7 @@ at index <code>2</code></p>
 </div>
 </div>
 <div class="paragraph">
-<p>If a frame cannot be found for a given first argument of the <code>withFrame()</code> call, then <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/NoSuchFrameException.html">NoSuchFrameException</a></code> is thrown.</p>
+<p>If a frame cannot be found for a given first argument of the <code>withFrame()</code> call, then <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/NoSuchFrameException.html">NoSuchFrameException</a></code> is thrown.</p>
 </div>
 </div>
 <div class="sect3">
@@ -7115,7 +7115,7 @@ adapter which is not true for system properties.</p>
 <div class="sect4">
 <h5 id="driver-factory-closure"><a class="link" href="#driver-factory-closure">Factory closure</a></h5>
 <div class="paragraph">
-<p>In the config script it can be a closure that when invoked with no arguments returns an instance of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code>&#8230;&#8203;</p>
+<p>In the config script it can be a closure that when invoked with no arguments returns an instance of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code>&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7172,7 +7172,7 @@ For more information consult the WebDriver documentation on <code><a href="https
 <h5 id="driver-class-name"><a class="link" href="#driver-class-name">Driver class name</a></h5>
 <div class="paragraph">
 <p>The name of the driver class to use (it will be constructed with no arguments) can be specified as a string with the key <code>driver</code> in the config script or via the <code>geb.driver</code> system property
-(the class must implement the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> interface).</p>
+(the class must implement the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/WebDriver.html">WebDriver</a></code> interface).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -7208,19 +7208,19 @@ For more information consult the WebDriver documentation on <code><a href="https
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>firefox</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-firefox-driver/4.27.0/org/openqa/selenium/firefox/FirefoxDriver.html">org.openqa.selenium.firefox.FirefoxDriver</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-firefox-driver/4.34.0/org/openqa/selenium/firefox/FirefoxDriver.html">org.openqa.selenium.firefox.FirefoxDriver</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ie</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-ie-driver/4.27.0/org/openqa/selenium/ie/InternetExplorerDriver.html">org.openqa.selenium.ie.InternetExplorerDriver</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-ie-driver/4.34.0/org/openqa/selenium/ie/InternetExplorerDriver.html">org.openqa.selenium.ie.InternetExplorerDriver</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>chrome</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-chrome-driver/4.27.0/org/openqa/selenium/chrome/ChromeDriver.html">org.openqa.selenium.chrome.ChromeDriver</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-chrome-driver/4.34.0/org/openqa/selenium/chrome/ChromeDriver.html">org.openqa.selenium.chrome.ChromeDriver</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>edge</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-edge-driver/4.27.0/org/openqa/selenium/edge/EdgeDriver.html">org.openqa.selenium.edge.EdgeDriver</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-edge-driver/4.34.0/org/openqa/selenium/edge/EdgeDriver.html">org.openqa.selenium.edge.EdgeDriver</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -7966,7 +7966,7 @@ If your dependency management system does not do this, or if you are manually ma
 <div class="paragraph">
 <p>The browser instance exposes a <a href="api/geb/Browser.html#getJs()"><code>js</code></a> object that provides support for working with JavaScript over and above what WebDriver provides.
 It&#8217;s important to understand how WebDriver does handle JavaScript, which is through a driver&#8217;s implementation of
-<code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code>
+<code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code>
 method.</p>
 </div>
 <div class="admonitionblock important">
@@ -7977,7 +7977,7 @@ method.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Before reading further, it&#8217;s <strong>strongly</strong> recommended to read the description of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> in order to understand how type conversion works between the two worlds.</p>
+<p>Before reading further, it&#8217;s <strong>strongly</strong> recommended to read the description of <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> in order to understand how type conversion works between the two worlds.</p>
 </div>
 </td>
 </tr>
@@ -8002,7 +8002,7 @@ method.</p>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html">JavascriptExecutor</a></code> interface does not define any contract in regards to the driver&#8217;s responsibility when there is some issue executing JavaScript.
+<p>The <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html">JavascriptExecutor</a></code> interface does not define any contract in regards to the driver&#8217;s responsibility when there is some issue executing JavaScript.
 All drivers however throw <em>some kind</em> of exception when this happens.</p>
 </div>
 </td>
@@ -8134,7 +8134,7 @@ All drivers however throw <em>some kind</em> of exception when this happens.</p>
 <h4 id="executing-arbitrary-code"><a class="link" href="#executing-arbitrary-code">9.1.3. Executing arbitrary code</a></h4>
 <div class="paragraph">
 <p>The <code>js</code> object also has an <code>exec()</code> method that can be used to run snippets of JavaScript.
-It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method, except that it expects the code as last argument,
+It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method, except that it expects the code as last argument,
 and accepts <code>Navigator</code> instances in addition to `WebElement`s&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
@@ -8744,12 +8744,12 @@ Here is how we could call the <code>mouseover</code> jQuery function on an eleme
 </div>
 </div>
 <div class="paragraph">
-<p>The same set of restricted types as allowed by WebDriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method are permitted here.</p>
+<p>The same set of restricted types as allowed by WebDriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method are permitted here.</p>
 </div>
 <div class="paragraph">
 <p>The return value of methods called on the <code>jquery</code> property depends on what the corresponding jQuery method returns.
 A jQuery object will be converted to a Navigator representing the same set of elements, other values such as objects, strings and numbers are returned as per WebDriver&#8217;s
-<code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method.</p>
+<code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method.</p>
 </div>
 <div class="sect3">
 <h4 id="why"><a class="link" href="#why">Why?</a></h4>
@@ -10523,7 +10523,7 @@ It can be done in the following way:</p>
 <span class="p">}</span>
 
 <span class="kd">val</span> <span class="py">gebVersion</span> <span class="p">=</span> <span class="s">"8.0.2-SNAPSHOT"</span>
-<span class="kd">val</span> <span class="py">seleniumVersion</span> <span class="p">=</span> <span class="s">"4.27.0"</span>
+<span class="kd">val</span> <span class="py">seleniumVersion</span> <span class="p">=</span> <span class="s">"4.34.0"</span>
 
 <span class="nf">dependencies</span> <span class="p">{</span>
     <span class="nf">testImplementation</span><span class="p">(</span><span class="s">"org.spockframework:spock-core:2.3-groovy-4.0"</span><span class="p">)</span>
@@ -10557,7 +10557,7 @@ It can be done in the following way:</p>
 <span class="o">}</span>
 
 <span class="kt">def</span> <span class="n">gebVersion</span> <span class="o">=</span> <span class="s2">"8.0.2-SNAPSHOT"</span>
-<span class="kt">def</span> <span class="n">seleniumVersion</span> <span class="o">=</span> <span class="s2">"4.27.0"</span>
+<span class="kt">def</span> <span class="n">seleniumVersion</span> <span class="o">=</span> <span class="s2">"4.34.0"</span>
 
 <span class="n">dependencies</span> <span class="o">{</span>
     <span class="n">testImplementation</span> <span class="s2">"org.spockframework:spock-core:2.3-groovy-4.0"</span>
@@ -10630,7 +10630,7 @@ It can be done in the following way:</p>
         <span class="nt">&lt;dependency&gt;</span>
             <span class="nt">&lt;groupId&gt;</span>org.seleniumhq.selenium<span class="nt">&lt;/groupId&gt;</span>
             <span class="nt">&lt;artifactId&gt;</span>selenium-firefox-driver<span class="nt">&lt;/artifactId&gt;</span>
-            <span class="nt">&lt;version&gt;</span>4.27.0<span class="nt">&lt;/version&gt;</span>
+            <span class="nt">&lt;version&gt;</span>4.34.0<span class="nt">&lt;/version&gt;</span>
             <span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
         <span class="nt">&lt;/dependency&gt;</span>
     <span class="nt">&lt;/dependencies&gt;</span>
@@ -12404,7 +12404,7 @@ the <code>geb-dev@groovy.apache.org</code> mailing list:
 <div class="ulist">
 <ul>
 <li>
-<p>Support for finding elements using Webdriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.27.0/org/openqa/selenium/By.html">By</a></code> selectors. [<a href="https://github.com/geb/issues/issues/348">#348</a>]</p>
+<p>Support for finding elements using Webdriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.34.0/org/openqa/selenium/By.html">By</a></code> selectors. [<a href="https://github.com/geb/issues/issues/348">#348</a>]</p>
 </li>
 <li>
 <p>Support for navigating to page instances in addition to classes. [<a href="https://github.com/geb/issues/issues/310">#310</a>]</p>
