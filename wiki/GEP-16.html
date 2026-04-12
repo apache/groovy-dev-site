@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-16</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-16</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-16</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-16</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p><code>val</code> keyword for final declarations</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>2</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-12</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-12</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy already supports <code>var</code> as a declaration keyword (alias for <code>def</code>,
+introduced for Java 10 compatibility). This GEP proposes adding <code>val</code>
+as a declaration keyword that combines <code>final</code> with type inference&#8201;&#8212;&#8201;equivalent to <code>final def</code>, <code>final var</code>, or just <code>final</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="_motivation">Motivation</h3>
+<div class="paragraph">
+<p>Declaring immutable local variables in Groovy currently requires:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final name = 'Groovy'
+final def name = 'Groovy'
+final var name = 'Groovy'
+final String name = 'Groovy'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All of these work, but none are as concise or intention-revealing as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val name = 'Groovy'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>val</code> keyword is familiar from Kotlin and Scala, where it is the
+default and idiomatic way to declare immutable bindings. Adding <code>val</code>
+to Groovy provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A concise, readable way to declare final variables with inferred types</p>
+</li>
+<li>
+<p>Familiar syntax for developers coming from Kotlin or Scala</p>
+</li>
+<li>
+<p>A natural complement to the existing <code>var</code> keyword</p>
+</li>
+<li>
+<p>Encouragement of immutability as a default practice</p>
+</li>
+<li>
+<p>Improved parity for Gradle build script authors: Kotlin Gradle build scripts
+(<code>build.gradle.kts</code>) already use <code>val</code> for local variables. Supporting <code>val</code>
+in Groovy Gradle build scripts (<code>build.gradle</code>) makes it easier for teams
+that mix both languages, and reduces friction when translating between them.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements">Requirements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>val</code> declares a <code>final</code> variable with an inferred type (like <code>final def</code>)</p>
+</li>
+<li>
+<p><code>val</code> must still be usable as a variable name, method name, map key,
+and property name&#8201;&#8212;&#8201;mirroring <code>var</code> behavior</p>
+</li>
+<li>
+<p><code>val</code> must NOT be usable for method return types or type declarations&#8201;&#8212;&#8201;mirroring <code>var</code> restrictions</p>
+</li>
+<li>
+<p><code>final val</code> should be accepted (redundant but harmless)</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_non_goals">Non-goals</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Changing the behavior of <code>def</code> or <code>var</code></p>
+</li>
+<li>
+<p>Making <code>val</code> the default declaration style</p>
+</li>
+<li>
+<p>Adding immutability enforcement beyond the <code>final</code> modifier (deep immutability
+is the domain of <code>@Immutable</code> and related transforms)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_design">Design</h3>
+<div class="sect3">
+<h4 id="_keyword_classification">Keyword classification</h4>
+<div class="paragraph">
+<p><code>val</code> is a <em>contextual keyword</em> in the same category as <code>var</code>.
+It is a reserved token at the lexer level but is included in the
+parser&#8217;s <code>identifier</code> rule, allowing it to be used as a name in
+non-declaration contexts.</p>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s keywords fall into two categories with respect to identifier usage:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Examples</th>
+<th class="tableblock halign-left valign-top">In <code>identifier</code> rule?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declaration + method keywords</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No&#8201;&#8212;&#8201;<code>def</code> is used for method return types, so allowing it as an identifier
+  would create unresolvable ambiguity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Declaration-only keywords</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>var</code>, <code>val</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes&#8201;&#8212;&#8201;these are forbidden on method return types, so the contexts
+  don&#8217;t overlap and identifier use is unambiguous</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This is why <code>var var = 4</code> works but <code>def def = 2</code> does not.
+<code>val</code> follows the <code>var</code> pattern: <code>val val = 5</code> will work.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_semantics">Semantics</h4>
+<div class="paragraph">
+<p><code>val</code> is equivalent to <code>final def</code>, <code>final var</code>, or just <code>final</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val x = 42          // final, type inferred as int
+val s = 'hello'     // final, type inferred as String
+val list = [1,2,3]  // final, type inferred as ArrayList</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The variable cannot be reassigned:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val x = 1
+x = 2               // compile error: cannot assign to final variable</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>But the object itself can be mutated (shallow finality):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val list = [1, 2, 3]
+list &lt;&lt; 4            // OK: mutates the list, doesn't reassign</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_where_val_is_allowed">Where <code>val</code> is allowed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Local variable declarations: <code>val x = 1</code></p>
+</li>
+<li>
+<p>Field declarations: <code>class C { val x = 1 }</code></p>
+</li>
+<li>
+<p>For-loop index variables: <code>for (val i in 0..10) {}</code></p>
+</li>
+<li>
+<p>Closure/lambda parameters: <code>{ val x &#8594; x * 2 }</code></p>
+</li>
+<li>
+<p>Package names: <code>package foo.val.bar</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_where_val_is_not_allowed">Where <code>val</code> is NOT allowed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Method return types: <code>val someMethod() {}</code>&#8201;&#8212;&#8201;parse error</p>
+</li>
+<li>
+<p>Type declarations: <code>class val {}</code>, <code>interface val {}</code>, <code>@interface val {}</code>&#8201;&#8212;&#8201;parse error</p>
+</li>
+<li>
+<p>Compact constructor declarations (records)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These restrictions mirror <code>var</code> exactly. Note that <code>val</code> can still be used
+as a method <em>name</em> (<code>def val() {}</code>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_identifier_contexts_that_still_work">Identifier contexts that still work</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// As a variable name (just like var):
+val val = 5
+assert val == 5
+
+// As a map key:
+def m = [val: 42]
+
+// As a method name:
+def val() { 'hello' }
+
+// In GString interpolation:
+assert "$val" == '5'
+
+// Combined with other contextual keywords:
+var var = 4
+val val = 5
+assert "$var$val" == '45'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interaction_with_final">Interaction with <code>final</code></h4>
+<div class="paragraph">
+<p><code>final val</code> is redundant but accepted, just as <code>final def</code> and <code>final var</code> are:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final val x = 1     // OK, same as val x = 1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_interaction_with_java_classes_named_val">Interaction with Java classes named <code>val</code></h4>
+<div class="paragraph">
+<p>Unlike <code>var</code> (which Java prohibits as a class name since JDK 10), Java
+allows classes named <code>val</code>. This creates a potential conflict when such a
+class is used in Groovy code. The following table summarises the behavior:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Scenario</th>
+<th class="tableblock halign-left valign-top">Works?</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new val()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val</code> parsed as class name in <code>new</code> expression</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>import val as MyVal</code> then <code>MyVal x = new MyVal()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Import alias fully resolves the ambiguity</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val x = new val()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val</code> on LHS is the <em>keyword</em> (final + inferred type), not the class.
+  Type is inferred from RHS. Reassignment is forbidden.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val bar()</code> as method return type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keyword takes precedence&#8201;&#8212;&#8201;use FQN or import alias</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val x</code> as explicit type in declaration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keyword takes precedence&#8201;&#8212;&#8201;use FQN or import alias</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java-defined <code>@val</code> annotation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotations are resolved by class name, no conflict</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><strong>Workaround:</strong> If you need to use a Java class named <code>val</code> as an explicit
+type or method return type, use its fully-qualified name or an import alias:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import val as Val
+
+Val x = new Val()       // explicit type via alias
+
+class Foo {
+    Val bar() { new Val() }  // return type via alias
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementation">Implementation</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Early in parsing, <code>val</code> is simply converted to <code>final</code> with a dynamic
+type. From that point on, the compiler never sees <code>val</code> again&#8201;&#8212;&#8201;it follows
+the same code paths as any <code>final</code> declaration, including type inference
+in <code>@CompileStatic</code> mode.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_spike_implementation">Spike implementation</h4>
+<div class="paragraph">
+<p>A spike of the proposed functionality was implemented to validate the
+design and explore edge cases.</p>
+</div>
+<div class="paragraph">
+<p><strong>Production code</strong> (~15 lines across 5 files):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GroovyLexer.g4</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>VAL : 'val';</code> token (1 line)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GroovyParser.g4</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>VAL</code> to <code>modifier</code>, <code>variableModifier</code>, <code>indexVariable</code>,
+  <code>identifier</code>, and <code>keywords</code> rules&#8201;&#8212;&#8201;alongside <code>VAR</code> in each (5 lines)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ModifierNode.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>VAL</code> to <code>MODIFIER_OPCODE_MAP</code> mapping to <code>ACC_FINAL</code>,
+  add <code>isVal()</code> method, include <code>VAL</code> in <code>isDef()</code> (3 lines + import)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AstBuilder.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>VAL</code> to type name, method return type, and compact constructor
+  restrictions&#8201;&#8212;&#8201;alongside <code>VAR</code> in each (3 lines)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SmartDocumentFilter.java</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Add <code>VAL</code> to syntax highlighting keyword list (1 line + import)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>No changes were needed in <code>ModifierManager.java</code>&#8201;&#8212;&#8201;<code>val</code> is handled
+automatically via the opcode map (<code>ACC_FINAL</code>), and <code>isDef()</code> returning
+<code>true</code> ensures the dynamic type is applied.</p>
+</div>
+<div class="paragraph">
+<p><strong>Test code</strong> (4 new files + 2 existing test fixes):</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">File</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/test-resources/core/Val_01x.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valid usage: basic <code>val</code>, closure param, <code>val val</code>, map key,
+  type inference, shallow finality, <code>final val</code>, for loop, GString</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/test-resources/fail/Val_01x.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class val {}</code>&#8201;&#8212;&#8201;type declaration forbidden</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/test-resources/fail/Val_02x.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val someMethod() {}</code>&#8201;&#8212;&#8201;method return type forbidden</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>src/test-resources/fail/Val_03x.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val x = 1; x = 2</code>&#8201;&#8212;&#8201;reassignment forbidden</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GroovyParserTest.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wire up <code>Val_01x</code> core test</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SyntaxErrorTest.groovy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wire up <code>Val_01x</code>/<code>02x</code>/<code>03x</code> fail tests</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The spike confirmed that all edge cases (identifier usage, map keys,
+package names, Java class interop, import aliases, cast expressions)
+work correctly with no additional code beyond the changes listed above.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_breaking_behavior">Breaking behavior</h3>
+<div class="paragraph">
+<p>The main concern is existing code that uses <code>val</code> as a variable name.
+Since <code>val</code> will be in the <code>identifier</code> rule (like <code>var</code>), most usage
+continues to work:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>def val = 1</code>&#8201;&#8212;&#8201;still works (declaration with <code>def</code>, identifier <code>val</code>)</p>
+</li>
+<li>
+<p><code>val = something</code>&#8201;&#8212;&#8201;still works (assignment to variable named <code>val</code>)</p>
+</li>
+<li>
+<p><code>[val: 42]</code>&#8201;&#8212;&#8201;still works (map key)</p>
+</li>
+<li>
+<p><code>obj.val</code>&#8201;&#8212;&#8201;still works (property access)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The disambiguation works the same way as <code>var</code>: the parser uses
+<code>SemanticPredicates.isInvalidLocalVariableDeclaration()</code> to check
+what follows. <code>val = 42</code> is an assignment; <code>val x = 42</code> is a declaration.</p>
+</div>
+<div class="sect3">
+<h4 id="_field_named_val_or_var_before_a_method_declaration">Field named <code>val</code> (or <code>var</code>) before a method declaration</h4>
+<div class="paragraph">
+<p>A field declared as <code>def val</code> (or <code>def var</code>) immediately before a method
+declaration is misinterpreted by the parser as modifiers on the method.
+This is a pre-existing issue with <code>var</code> that equally applies to <code>val</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Foo {
+    def val            // intended as field, but parsed as
+    void doSomething() {} // modifiers for this method -&gt; error
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Workarounds:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Foo {
+    def val = null     // add initializer
+    def val;           // add semicolon
+    String val         // use explicit type instead of def
+    void doSomething() {}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_val_as_a_cast_expression"><code>val</code> as a cast expression</h4>
+<div class="paragraph">
+<p>A variable or field named <code>val</code> used with the <code>as</code> cast operator is
+misinterpreted. The parser sees <code>val</code> as the keyword followed by <code>as</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def val = 42
+val as String   // error: unable to resolve class as</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Workarounds:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">this.val as String   // qualify with this
+(val) as String      // parenthesise
+"$val" as String     // alternative approach</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This also applies to <code>var</code>. It is a pre-existing issue.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_java_class_named_val">Java class named <code>val</code></h4>
+<div class="paragraph">
+<p>A Java class named <code>val</code> cannot be used directly as a declared type or
+method return type in Groovy&#8201;&#8212;&#8201;the keyword takes precedence in those
+positions. The workaround is to use a fully-qualified name or import alias.
+This matches the behavior <code>var</code> would have if Java permitted <code>class var</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kotlinlang.org/docs/basic-syntax.html#variables">Kotlin val/var</a></p>
+</li>
+<li>
+<p><a href="https://docs.scala-lang.org/tour/basics.html">Scala val/var</a></p>
+</li>
+<li>
+<p>Groovy <code>var</code> implementation: commit <code>f4d96d8872</code> (2018)</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_reference_implementation">Reference implementation</h3>
+<div class="paragraph">
+<p><a href="https://github.com/apache/groovy/tree/valSpike" class="bare">https://github.com/apache/groovy/tree/valSpike</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jira_issues">JIRA issues</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-9308">GROOVY-9308: Support val for final declarations</a>&#8201;&#8212;&#8201;originally raised in 2019. At that time, the <code>val</code>/<code>var</code> distinction
+was less widely understood. Since then, Kotlin adoption has grown
+significantly and <code>val</code>/<code>var</code> semantics are now familiar to a broad
+audience, making the case for this feature stronger.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2026-04-12) Initial draft
+2 (2026-04-12) Added Java interop edge cases, spike implementation summary
+3 (2026-04-12) Added field naming edge case, Gradle motivation
+4 (2026-04-12) Added cast expression edge case, split code stats, linked spike branch and JIRA</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
