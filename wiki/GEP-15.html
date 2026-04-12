@@ -59,130 +59,310 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><asciidocText attributes='{DOCS_BASEURL=https://docs.groovy-lang.org/latest}'>= GEP-15: Compound assignment operator overloading
-
-:icons: font
-
-.Metadata
-****
-[horizontal,options="compact"]
-*Number*:: GEP-15
-*Title*:: Compound assignment operator overloading
-*Version*:: 1
-*Type*:: Feature
-*Status*:: Draft
-*Leader*:: Paul King
-*Created*:: 2026-04-12
-*Last modification*&#160;:: 2026-04-12
-****
-
-== Abstract
-
-Groovy supports operator overloading: `\+` maps to `plus()`, `-` maps to `minus()`,
-`<<` maps to `leftShift()`, and so on. However, compound assignment operators
-(`pass:[+=]`, `-=`, `pass:[<<=]`, etc.) are always desugared to `x = x.op(y)` -- there is
-no way to override `+=` independently of `pass:[+]`. This GEP proposes adding
-support for dedicated compound assignment methods such as `plusAssign`,
-`minusAssign`, `leftShiftAssign`, etc.
-
-=== Motivation
-
-The current desugaring of `x += y` to `x = x.plus(y)` creates a new object
-and reassigns the variable. This has several drawbacks:
-
-* **Mutable data structures** are forced into a create-and-reassign pattern
-  when in-place mutation is the intended semantics. For example, a mutable
-  list's `+=` creates a new list rather than appending in place.
-* **Final fields and variables** cannot use compound assignment at all,
-  even when the underlying object is mutable and supports in-place mutation.
-* **Intent** is unclear: the class author cannot distinguish between
-  `x + y` (produce a new value) and `x += y` (mutate in place).
-
-Languages like Kotlin and Scala already support this distinction.
-Kotlin maps `\+=` to `plusAssign()` when available, falling back to
-`plus()` with reassignment. Scala allows mutable collections to define
-`+=` directly.
-
-=== Requirements
-
-* Support dedicated compound assignment methods (`plusAssign`, `minusAssign`, etc.)
-  that are called in preference to the current `plus` + reassign pattern.
-* Maintain full backward compatibility: existing code that uses `+=` with
-  `plus()` must continue to work identically when no `plusAssign` method exists.
-* Support `+=` on `final` fields/variables when `plusAssign` is available.
-* Work correctly in both `@CompileStatic` and dynamic Groovy.
-
-==== Non-goals
-
-* Changing the behavior of `++` and `--` operators (these use `next()`/`previous()`
-  and are conceptually different).
-* Changing subscript compound assignment (`a[i] += b`), which uses the existing
-  `getAt`/`putAt` pattern. A future GEP might explore a two-argument
-  `plusAssign(key, value)` convention where `a[key] += b` maps to
-  `a.plusAssign(key, b)`, allowing containers to handle compound updates
-  atomically. Multi-dimensional cases like `a[i][j] += b` would resolve
-  naturally by peeling subscripts from the left: evaluate `a.getAt(i)` to
-  get the inner container, then apply the single-dimension rule to that result.
-
-=== Operator method name mapping
-
-[cols="1,2,2",options="header"]
-|===
-| Operator | Assign method | Fallback method
-
-| `+=` | `plusAssign` | `plus`
-| `-=` | `minusAssign` | `minus`
-| `*=` | `multiplyAssign` | `multiply`
-| `/=` | `divAssign` | `div`
-| `%=` | `remainderAssign` | `remainder`
-| `**=` | `powerAssign` | `power`
-| `<\<=` | `leftShiftAssign` | `leftShift`
-| `>>=` | `rightShiftAssign` | `rightShift`
-| `>>>=` | `rightShiftUnsignedAssign` | `rightShiftUnsigned`
-| `&=` | `andAssign` | `and`
-| `\|=` | `orAssign` | `or`
-| `^=` | `xorAssign` | `xor`
-|===
-
-=== Resolution algorithm
-
-When the compiler encounters `x += y`:
-
-1. Look for a method `plusAssign(y)` on the type of `x`.
-2. If found, call `x.plusAssign(y)` directly. No reassignment occurs.
-   This works even when `x` is `final`.
-3. If not found, fall back to the current behavior: `x = x.plus(y)`.
-   This requires `x` to be reassignable.
-4. If `x` is `final` and no `plusAssign` exists, report a compile error
-   (in `@CompileStatic` mode).
-
-When both `plusAssign` and `plus` exist on the same type, `plusAssign`
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-15</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-15</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-15</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Compound assignment operator overloading</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-12</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-12</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy supports operator overloading: <code>+</code> maps to <code>plus()</code>, <code>-</code> maps to <code>minus()</code>,
+<code>&lt;&lt;</code> maps to <code>leftShift()</code>, and so on. However, compound assignment operators
+(<code>+=</code>, <code>-=</code>, <code><<=</code>, etc.) are always desugared to <code>x = x.op(y)</code>&#8201;&#8212;&#8201;there is
+no way to override <code>+=</code> independently of <code>+</code>. This GEP proposes adding
+support for dedicated compound assignment methods such as <code>plusAssign</code>,
+<code>minusAssign</code>, <code>leftShiftAssign</code>, etc.</p>
+</div>
+<div class="sect2">
+<h3 id="_motivation">Motivation</h3>
+<div class="paragraph">
+<p>The current desugaring of <code>x += y</code> to <code>x = x.plus(y)</code> creates a new object
+and reassigns the variable. This has several drawbacks:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Mutable data structures</strong> are forced into a create-and-reassign pattern
+when in-place mutation is the intended semantics. For example, a mutable
+list&#8217;s <code>+=</code> creates a new list rather than appending in place.</p>
+</li>
+<li>
+<p><strong>Final fields and variables</strong> cannot use compound assignment at all,
+even when the underlying object is mutable and supports in-place mutation.</p>
+</li>
+<li>
+<p><strong>Intent</strong> is unclear: the class author cannot distinguish between
+<code>x + y</code> (produce a new value) and <code>x += y</code> (mutate in place).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Languages like Kotlin and Scala already support this distinction.
+Kotlin maps <code>+=</code> to <code>plusAssign()</code> when available, falling back to
+<code>plus()</code> with reassignment. Scala allows mutable collections to define
+<code>+=</code> directly.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_requirements">Requirements</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Support dedicated compound assignment methods (<code>plusAssign</code>, <code>minusAssign</code>, etc.)
+that are called in preference to the current <code>plus</code> + reassign pattern.</p>
+</li>
+<li>
+<p>Maintain full backward compatibility: existing code that uses <code>+=</code> with
+<code>plus()</code> must continue to work identically when no <code>plusAssign</code> method exists.</p>
+</li>
+<li>
+<p>Support <code>+=</code> on <code>final</code> fields/variables when <code>plusAssign</code> is available.</p>
+</li>
+<li>
+<p>Work correctly in both <code>@CompileStatic</code> and dynamic Groovy.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_non_goals">Non-goals</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Changing the behavior of <code>++</code> and <code>--</code> operators (these use <code>next()</code>/<code>previous()</code>
+and are conceptually different).</p>
+</li>
+<li>
+<p>Changing subscript compound assignment (<code>a[i] += b</code>), which uses the existing
+<code>getAt</code>/<code>putAt</code> pattern. A future GEP might explore a two-argument
+<code>plusAssign(key, value)</code> convention where <code>a[key] += b</code> maps to
+<code>a.plusAssign(key, b)</code>, allowing containers to handle compound updates
+atomically. Multi-dimensional cases like <code>a[i][j] += b</code> would resolve
+naturally by peeling subscripts from the left: evaluate <code>a.getAt(i)</code> to
+get the inner container, then apply the single-dimension rule to that result.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_operator_method_name_mapping">Operator method name mapping</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Operator</th>
+<th class="tableblock halign-left valign-top">Assign method</th>
+<th class="tableblock halign-left valign-top">Fallback method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>+=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>plusAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>plus</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>-=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minusAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minus</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multiplyAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>multiply</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>divAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>div</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>%=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>remainderAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>remainder</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>**=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>powerAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>power</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&lt;&lt;=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>leftShiftAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>leftShift</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;&gt;=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rightShiftAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rightShift</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&gt;&gt;&gt;=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rightShiftUnsignedAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>rightShiftUnsigned</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&amp;=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>andAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>and</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>|=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>or</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>^=</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xorAssign</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xor</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_resolution_algorithm">Resolution algorithm</h3>
+<div class="paragraph">
+<p>When the compiler encounters <code>x += y</code>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Look for a method <code>plusAssign(y)</code> on the type of <code>x</code>.</p>
+</li>
+<li>
+<p>If found, call <code>x.plusAssign(y)</code> directly. No reassignment occurs.
+This works even when <code>x</code> is <code>final</code>.</p>
+</li>
+<li>
+<p>If not found, fall back to the current behavior: <code>x = x.plus(y)</code>.
+This requires <code>x</code> to be reassignable.</p>
+</li>
+<li>
+<p>If <code>x</code> is <code>final</code> and no <code>plusAssign</code> exists, report a compile error
+(in <code>@CompileStatic</code> mode).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When both <code>plusAssign</code> and <code>plus</code> exist on the same type, <code>plusAssign</code>
 takes precedence. This is the pragmatic choice for Groovy since it lacks
-Kotlin's `val`/`var` distinction. If a class author defined `plusAssign`,
-they intended it to be used for `+=`.
-
-=== Design considerations
-
-* **Primitives are unaffected.** `int x = 0; x += 1` continues to use
-  the existing fast-path for primitive arithmetic. The `plusAssign` lookup
-  only applies when the base operator would resolve to a method call.
-* **Expression value.** When `plusAssign` is called, the expression value
-  of `x += y` is `x` (the mutated object), not the return value of
-  `plusAssign`. This differs from the current behavior where the expression
-  value is the result of `x.plus(y)`.
-* **Extension methods.** `plusAssign` is discoverable as an extension method
-  (DGM or category), not just as an instance method.
-* **`@OperatorRename` support.** The existing `@OperatorRename` annotation
-  will be extended to support renaming the assign variants, e.g.
-  `@OperatorRename(plusAssign="addInPlace")`.
-
-=== Examples
-
-A mutable accumulator:
-
-[source,groovy]
-----
-class Accumulator {
+Kotlin&#8217;s <code>val</code>/<code>var</code> distinction. If a class author defined <code>plusAssign</code>,
+they intended it to be used for <code>+=</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_design_considerations">Design considerations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Primitives are unaffected.</strong> <code>int x = 0; x += 1</code> continues to use
+the existing fast-path for primitive arithmetic. The <code>plusAssign</code> lookup
+only applies when the base operator would resolve to a method call.</p>
+</li>
+<li>
+<p><strong>Expression value.</strong> When <code>plusAssign</code> is called, the expression value
+of <code>x += y</code> is <code>x</code> (the mutated object), not the return value of
+<code>plusAssign</code>. This differs from the current behavior where the expression
+value is the result of <code>x.plus(y)</code>.</p>
+</li>
+<li>
+<p><strong>Extension methods.</strong> <code>plusAssign</code> is discoverable as an extension method
+(DGM or category), not just as an instance method.</p>
+</li>
+<li>
+<p><strong><code>@OperatorRename</code> support.</strong> The existing <code>@OperatorRename</code> annotation
+will be extended to support renaming the assign variants, e.g.
+<code>@OperatorRename(plusAssign="addInPlace")</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_examples">Examples</h3>
+<div class="paragraph">
+<p>A mutable accumulator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Accumulator {
     int total = 0
     void plusAssign(int n) { total += n }
     Accumulator plus(int n) { new Accumulator(total: total + n) }
@@ -194,70 +374,108 @@ assert acc.total == 5
 
 def acc2 = acc + 3 // calls acc.plus(3), returns new Accumulator
 assert acc2.total == 8
-assert acc.total == 5
-----
-
-A final field with in-place mutation:
-
-[source,groovy]
-----
-@CompileStatic
+assert acc.total == 5</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A final field with in-place mutation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
 class EventBus {
-    final List<String> listeners = []
+    final List&lt;String&gt; listeners = []
     // List has leftShiftAssign via extension method or subclass
 }
 
 def bus = new EventBus()
-bus.listeners <<= "listener1"  // calls listeners.leftShiftAssign("listener1")
-----
-
-=== Static compilation (`@CompileStatic`)
-
-In `@CompileStatic` mode, the type checker resolves `plusAssign` at
-compile time using `findMethod()`. If found, it records the target method
+bus.listeners &lt;&lt;= "listener1"  // calls listeners.leftShiftAssign("listener1")</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_static_compilation_compilestatic">Static compilation (<code>@CompileStatic</code>)</h3>
+<div class="paragraph">
+<p>In <code>@CompileStatic</code> mode, the type checker resolves <code>plusAssign</code> at
+compile time using <code>findMethod()</code>. If found, it records the target method
 on the expression via node metadata and the bytecode generator emits a
-direct method call -- no dup, no store-back.
-
-If not found, the existing desugaring to `x = x.plus(y)` applies.
-
-=== Dynamic Groovy
-
-In dynamic Groovy, the runtime checks for `plusAssign` via the Meta-Object
-Protocol (MOP). If `respondsTo(target, "plusAssign", arg)` succeeds, it is
-called. Otherwise, the fallback to `plus` + reassignment applies.
-
-This requires a new runtime helper method (e.g., in `ScriptBytecodeAdapter`)
-that encapsulates the try-assign-then-fallback logic.
-
-=== Breaking behavior
-
-1. **Existing `plusAssign` methods.** If a class already defines a method
-   literally named `plusAssign`, `+=` will now call it instead of desugaring
-   to `plus` + reassign. This is unlikely in practice but must be documented
-   in release notes.
-2. **Expression value change.** `val = (x += y)` -- with `plusAssign`, the
-   captured value is `x` (the mutated object), not the result of `plus`.
-   This only affects code that uses compound assignment as an expression.
-3. **Final fields.** In `@CompileStatic`, `final` fields with a type that
-   has `plusAssign` can now use `+=`. Previously this was always an error.
-
-== References and useful links
-
-* https://kotlinlang.org/docs/operator-overloading.html#augmented-assignments[Kotlin augmented assignments]
-* https://docs.scala-lang.org/overviews/collections-2.13/overview.html[Scala mutable collection operators]
-
-=== Reference implementation
-
-_TBD_
-
-=== JIRA issues
-
-_TBD_
-
-== Update history
-
-1 (2026-04-12) Initial draft
-</asciidocText><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-15</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-15</h1><hr/></div></div></div></div><footer id='footer'>
+direct method call&#8201;&#8212;&#8201;no dup, no store-back.</p>
+</div>
+<div class="paragraph">
+<p>If not found, the existing desugaring to <code>x = x.plus(y)</code> applies.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_groovy">Dynamic Groovy</h3>
+<div class="paragraph">
+<p>In dynamic Groovy, the runtime checks for <code>plusAssign</code> via the Meta-Object
+Protocol (MOP). If <code>respondsTo(target, "plusAssign", arg)</code> succeeds, it is
+called. Otherwise, the fallback to <code>plus</code> + reassignment applies.</p>
+</div>
+<div class="paragraph">
+<p>This requires a new runtime helper method (e.g., in <code>ScriptBytecodeAdapter</code>)
+that encapsulates the try-assign-then-fallback logic.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_breaking_behavior">Breaking behavior</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Existing <code>plusAssign</code> methods.</strong> If a class already defines a method
+literally named <code>plusAssign</code>, <code>+=</code> will now call it instead of desugaring
+to <code>plus</code> + reassign. This is unlikely in practice but must be documented
+in release notes.</p>
+</li>
+<li>
+<p><strong>Expression value change.</strong> <code>val = (x += y)</code>&#8201;&#8212;&#8201;with <code>plusAssign</code>, the
+captured value is <code>x</code> (the mutated object), not the result of <code>plus</code>.
+This only affects code that uses compound assignment as an expression.</p>
+</li>
+<li>
+<p><strong>Final fields.</strong> In <code>@CompileStatic</code>, <code>final</code> fields with a type that
+has <code>plusAssign</code> can now use <code>+=</code>. Previously this was always an error.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kotlinlang.org/docs/operator-overloading.html#augmented-assignments">Kotlin augmented assignments</a></p>
+</li>
+<li>
+<p><a href="https://docs.scala-lang.org/overviews/collections-2.13/overview.html">Scala mutable collection operators</a></p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_reference_implementation">Reference implementation</h3>
+<div class="paragraph">
+<p><em>TBD</em></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jira_issues">JIRA issues</h3>
+<div class="paragraph">
+<p><em>TBD</em></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2026-04-12) Initial draft</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
                                     <div class='col-1'>

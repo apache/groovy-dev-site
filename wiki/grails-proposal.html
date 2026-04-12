@@ -59,199 +59,471 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><asciidocText attributes='{DOCS_BASEURL=https://docs.groovy-lang.org/latest}'>= Grails Project Proposal
-
-== Abstract
-
-Grails is a powerful Groovy-based full-stack web application framework for the JVM built on top of Spring Boot.
-
-== Proposal
-
-Grails is a full-stack web application framework for the JVM. It is intended to be a high-productivity framework by following the "convention over configuration" paradigm, providing a stand-alone development environment and hiding much of the configuration detail from the developer. Grails has long been developed under an Apache License v2.0 under an open governance community management process.
-
-So far Grails has been a project mostly sponsored by a single company. It has become clear that the single vendor backed model previously used by Grails isn’t the best strategy to take it forward. We propose to bring the Grails community under the umbrella of the Apache Software Foundation with an initial goal that Grails core and its critical plugins are brought into the ASF (see more details in the “Initial Goals” section). We propose that the Groovy project act as the sponsoring organization during “incubation”. It will be responsible for mentoring community members and helping with releases until such time as Grails is ready to become a top-level project.
-
-== Background
-
-Grails is a mature open source project. Work began in July 2005, with the 0.1 release on March 29, 2006, and the 1.0 release announced on February 18, 2008. Recent releases include 6.2.3 (Jan 2025) and pre-release 7.0.0-M1 (Dec 2024) . After 19 years of development, Grails has grown into a powerful web application framework which leverages many of the latest technologies for building web applications on the JVM.
-
-Numerous vendors have consulting businesses based on building web applications using Grails. Other organizations use Grails for their internal web application development. While the Grails community is large, the project itself is also large. The existing model of expecting a single vendor to do the bulk of its maintenance is no longer viable. Moving to the ASF provides a vendor neutral home where all community members can feel safe contributing to Grails.
-
-== Rationale
-
-Many modern web frameworks in the Java space are more complicated than needed and don’t embrace the Don’t Repeat Yourself (DRY) principles.
-Dynamic frameworks like Rails and Django helped pave the way to a more modern way of thinking about web applications. Grails builds on these concepts and dramatically reduces the complexity of building web applications on the Java platform. What makes it different, however, is that it does so by building on already established Java technologies.
-
-== Initial Goals
-
-The initial goals of the Grails transition to the ASF are:
-
-* To establish a new home for an already fully functioning project in a setting which is welcoming for multiple vendors and individuals alike.
-* While many Grails contributors have a long-time open source history and experience, not all are familiar with ASF governance practices. So, another goal will be to mentor and educate those involved if/as needed.
-* As Grails has evolved, it has been split into small manageable pieces. This has made it easy to release parts individually but has made it harder to move the entire ecosystem across large changes (e.g. there have sometimes been circular dependencies). Also, because of Grails’ longevity, there is a rich ecosystem of plugins, but numerous plugins are out of date. So, a goal of this transition will be to bring across a fresh version of all of the critical Grails plugins. This has been dubbed a Minimum Viable Product (MVP) for the next version of Grails.
-* Since Spring Boot is now released every 6 months with only 12 months of OSS support per release, a Grails release will need to be released within 6 months of each Boot release to maintain Spring OSS support. Given the need for more frequent Grails releases due to Spring Boot, we will make an effort to reduce complexity and technical debt such that Grails releases take less effort with each release.
-
-== Current Status
-
-Currently, Grails provides a fully functional implementation licensed under ALv2. The project home is at https://grails.org/ and the majority of development is coordinated under various repos on GitHub at https://github.com/grails/. The project sports a very mature documentation and ecosystem of projects leveraging it.
-
-== Meritocracy
-
-Grails, up to now, has been run by a few core project members with a lot of contributions coming from a wide community of participants in the project.
-We want to expand our diverse developer and user community and run the Grails project in the Apache way clearly signaling not only the licensing, but also the governance choice.
-
-Users and new contributors will be treated with respect and welcomed; they will earn merit in the project by providing quality patches and support that move the project forward.
-Those with a proven support and quality patch track record will be encouraged to become committers.
-
-== Community
-
-There are just a few core team members with over a hundred contributors to the project. If Grails is accepted into the ASF, transitioning the community to embrace the Apache Way of governance would be a primary initial goal. We would solicit major existing contributors to become committers on the project from the get go.
-
-== Core Developers
-Core developers include folks who are extremely skilled in working in the openly governed communities on code bases licensed under the ALv2. The core developers are NOT currently affiliated with the ASF, although quite a few contributors are.
-
-== Alignment
-
-Grails is highly aligned with the Groovy project with many of the DSLs used within Grails being drivers for the requirements of DSL support within Groovy.
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Grails Project Proposal</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_background' class='anchor-link'>Background</a></li><li><a href='#_rationale' class='anchor-link'>Rationale</a></li><li><a href='#_initial_goals' class='anchor-link'>Initial Goals</a></li><li><a href='#_current_status' class='anchor-link'>Current Status</a></li><li><a href='#_meritocracy' class='anchor-link'>Meritocracy</a></li><li><a href='#_community' class='anchor-link'>Community</a></li><li><a href='#_core_developers' class='anchor-link'>Core Developers</a></li><li><a href='#_alignment' class='anchor-link'>Alignment</a></li><li><a href='#_known_risks' class='anchor-link'>Known Risks</a></li><li><a href='#_orphaned_products' class='anchor-link'>Orphaned products</a></li><li><a href='#_inexperience_with_open_source' class='anchor-link'>Inexperience with Open Source</a></li><li><a href='#_homogeneous_developers' class='anchor-link'>Homogeneous Developers</a></li><li><a href='#_reliance_on_salaried_developers' class='anchor-link'>Reliance on Salaried Developers</a></li><li><a href='#_relationships_with_other_apache_products' class='anchor-link'>Relationships with Other Apache Products</a></li><li><a href='#_an_excessive_fascination_with_the_apache_brand' class='anchor-link'>An Excessive Fascination with the Apache Brand</a></li><li><a href='#_documentation' class='anchor-link'>Documentation</a></li><li><a href='#_initial_source' class='anchor-link'>Initial Source</a></li><li><a href='#_required_resources' class='anchor-link'>Required Resources</a></li><li><a href='#_initial_committers' class='anchor-link'>Initial Committers</a></li><li><a href='#_champion' class='anchor-link'>Champion</a></li><li><a href='#_nominated_mentors' class='anchor-link'>Nominated Mentors</a></li><li><a href='#_sponsoring_entity' class='anchor-link'>Sponsoring Entity</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Grails Project Proposal</h1><hr/><div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails is a powerful Groovy-based full-stack web application framework for the JVM built on top of Spring Boot.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails is a full-stack web application framework for the JVM. It is intended to be a high-productivity framework by following the "convention over configuration" paradigm, providing a stand-alone development environment and hiding much of the configuration detail from the developer. Grails has long been developed under an Apache License v2.0 under an open governance community management process.</p>
+</div>
+<div class="paragraph">
+<p>So far Grails has been a project mostly sponsored by a single company. It has become clear that the single vendor backed model previously used by Grails isn’t the best strategy to take it forward. We propose to bring the Grails community under the umbrella of the Apache Software Foundation with an initial goal that Grails core and its critical plugins are brought into the ASF (see more details in the “Initial Goals” section). We propose that the Groovy project act as the sponsoring organization during “incubation”. It will be responsible for mentoring community members and helping with releases until such time as Grails is ready to become a top-level project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_background">Background</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails is a mature open source project. Work began in July 2005, with the 0.1 release on March 29, 2006, and the 1.0 release announced on February 18, 2008. Recent releases include 6.2.3 (Jan 2025) and pre-release 7.0.0-M1 (Dec 2024) . After 19 years of development, Grails has grown into a powerful web application framework which leverages many of the latest technologies for building web applications on the JVM.</p>
+</div>
+<div class="paragraph">
+<p>Numerous vendors have consulting businesses based on building web applications using Grails. Other organizations use Grails for their internal web application development. While the Grails community is large, the project itself is also large. The existing model of expecting a single vendor to do the bulk of its maintenance is no longer viable. Moving to the ASF provides a vendor neutral home where all community members can feel safe contributing to Grails.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rationale">Rationale</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Many modern web frameworks in the Java space are more complicated than needed and don’t embrace the Don’t Repeat Yourself (DRY) principles.
+Dynamic frameworks like Rails and Django helped pave the way to a more modern way of thinking about web applications. Grails builds on these concepts and dramatically reduces the complexity of building web applications on the Java platform. What makes it different, however, is that it does so by building on already established Java technologies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_initial_goals">Initial Goals</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The initial goals of the Grails transition to the ASF are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>To establish a new home for an already fully functioning project in a setting which is welcoming for multiple vendors and individuals alike.</p>
+</li>
+<li>
+<p>While many Grails contributors have a long-time open source history and experience, not all are familiar with ASF governance practices. So, another goal will be to mentor and educate those involved if/as needed.</p>
+</li>
+<li>
+<p>As Grails has evolved, it has been split into small manageable pieces. This has made it easy to release parts individually but has made it harder to move the entire ecosystem across large changes (e.g. there have sometimes been circular dependencies). Also, because of Grails’ longevity, there is a rich ecosystem of plugins, but numerous plugins are out of date. So, a goal of this transition will be to bring across a fresh version of all of the critical Grails plugins. This has been dubbed a Minimum Viable Product (MVP) for the next version of Grails.</p>
+</li>
+<li>
+<p>Since Spring Boot is now released every 6 months with only 12 months of OSS support per release, a Grails release will need to be released within 6 months of each Boot release to maintain Spring OSS support. Given the need for more frequent Grails releases due to Spring Boot, we will make an effort to reduce complexity and technical debt such that Grails releases take less effort with each release.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_current_status">Current Status</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Currently, Grails provides a fully functional implementation licensed under ALv2. The project home is at <a href="https://grails.org/" class="bare">https://grails.org/</a> and the majority of development is coordinated under various repos on GitHub at <a href="https://github.com/grails/" class="bare">https://github.com/grails/</a>. The project sports a very mature documentation and ecosystem of projects leveraging it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_meritocracy">Meritocracy</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails, up to now, has been run by a few core project members with a lot of contributions coming from a wide community of participants in the project.
+We want to expand our diverse developer and user community and run the Grails project in the Apache way clearly signaling not only the licensing, but also the governance choice.</p>
+</div>
+<div class="paragraph">
+<p>Users and new contributors will be treated with respect and welcomed; they will earn merit in the project by providing quality patches and support that move the project forward.
+Those with a proven support and quality patch track record will be encouraged to become committers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_community">Community</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are just a few core team members with over a hundred contributors to the project. If Grails is accepted into the ASF, transitioning the community to embrace the Apache Way of governance would be a primary initial goal. We would solicit major existing contributors to become committers on the project from the get go.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_core_developers">Core Developers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Core developers include folks who are extremely skilled in working in the openly governed communities on code bases licensed under the ALv2. The core developers are NOT currently affiliated with the ASF, although quite a few contributors are.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alignment">Alignment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails is highly aligned with the Groovy project with many of the DSLs used within Grails being drivers for the requirements of DSL support within Groovy.
 The Groovy subproject Geb is often used for testing with Grails and Grails provides
-special Geb support. Grails also makes use of about a dozen ASF artifacts from other ASF projects (commons, logging, etc.)
-
-== Known Risks
-
-As noted above, development has been sponsored mostly by a single company and coordinated mostly by the core team so far.
-For Grails to fully transition to an "Apache Way" governance model it needs to start embracing the meritocracy-centric way of growing the community of contributors while balancing it with the needs for extreme stability and coherency of the core implementation.
-
-== Orphaned products
-
-The community proposing Grails for incubation is an active open source community. The primary vendor until now has been Object Computing (and for about a year, a related spin-off Unity Foundation). Currently Object Computing has paused significant new investment in the Grails project, but the size and diversity of the community should guarantee against the project being orphaned.
-
-== Inexperience with Open Source
-
-The majority of the proposers have day jobs that have them working near full-time on open source projects. Grails to date has always been developed as an open source project.
-
-== Homogeneous Developers
-
-Now that Object Computing is pausing significant new investment, the initial group of committers is expected to be heterogeneous when it comes to corporate affiliations. The Grails community is also extremely diverse in terms of geography and backgrounds of developers.
-
-== Reliance on Salaried Developers
-
-Most of the contributors are paid to work in the Java ecosystem. While we might wander from our current employers, we probably won’t go far from the Java family tree.
-
-== Relationships with Other Apache Products
-
-Grails relies fundamentally on Apache Groovy. It also depends on a number of other ASF projects including commons, ant, tomcat, and maven. Various Grails plugins (many are optional) also have ASF projects as dependencies.
-
-== An Excessive Fascination with the Apache Brand
-
-While we think that the Apache ‘branding’ will add strength to our project’s desire for ‘neutrality’, we have no plans for making excessive use of the Apache brand.
-
-== Documentation
-
-See https://docs.grails.org/6.2.0/guide/single.html for the current state of the Grails documentation.
-A mature project website is also available at https://grails.org/.
-
-== Initial Source
-
-Initial source is available on GitHub under the ALv2
-
-[cols="5,5"]
-|===
-| https://github.com/grails/grails-core | The Grails Web Application Framework
-| https://github.com/grails/grails-gradle-plugin | Gradle build plugin used by many projects and end Grails applications
-| https://github.com/grails/grails-static-website | Static version of the grails.org website
-| https://github.com/grails/grails-doc | Documentation Project For The Grails Web Application Framework
-| https://github.com/grails/grails-forge | This is Grails project creator. Grails projects may be created using the browser interface, Command Line, or via CURL.
-| https://github.com/grails/grails-forge-ui | React.js app for start.grails.org
-| https://github.com/grails/scaffolding | Scaffolding plugin for Grails® framework
-| https://github.com/gpc/fields | the fields plugin used by scaffolding and also independently.  A core plugin for grails web projects
-| https://github.com/grails/grails-angularjs-scaffolding | A plugin for generating client side assets based on domain
-| https://github.com/grails/grails-gsp | GSP (Grails Server Pages) - A server-side view rendering technology based on Groovy
-| https://github.com/grails/grails-views | Additional View Technologies for Grails
-| https://github.com/grails/grails-boot | Grails integrations with Spring Boot
-| https://github.com/grails/grails-async | Repository for Grails async plugins
-| https://github.com/grails/grails-data-mapping | GORM - Groovy Object Mapping
-| https://github.com/grails/gorm-hibernate5 | GORM for Hibernate 5
-| https://github.com/grails/gorm-hibernate6 | GORM for Hibernate 6
-| https://github.com/grails/gorm-mongodb | GORM for MongoDB
-| https://github.com/grails/gorm-neo4j | GORM for Neo4j
-| https://github.com/grails/gorm-graphql | An automatic GraphQL schema generator for GORM
-| https://github.com/grails/grails-database-migration | Grails® framework Database Migration Plugin
-| https://github.com/grails/gorm-docs | Documentation for GORM
-| https://github.com/grails/grails-rxgorm-docs | Documentation for RxGORM https://gorm.grails.org/latest/rx/manual/index.html
-| https://github.com/grails/grails-spring-security-core | Grails Spring Security Core Plugin
-| https://github.com/grails/grails-spring-security-rest | Grails plugin to implement token-based, RESTful authentication using Spring Security
-| https://github.com/grails/grails-spring-security-ui | The Spring Security UI plugin provides CRUD screens and other user management workflows.
-| https://github.com/grails/grails-spring-security-oauth2 | Spring security Oauth Grails 3 plugin
-| https://github.com/grails/grails-spring-security-acl |
-| https://github.com/grails/grails-spring-security-cas |
-| https://github.com/grails-plugins/grails-spring-security-ldap |
-| https://github.com/grails/grails-testing-support | Trait-based testing library for Grails framework
-| https://github.com/grails/geb | Geb Functional Testing for Grails® framework
-| https://github.com/grails/grails-functional-tests | Functional Test Application for Grails 3
-| https://github.com/grails/grails-plugin-converters | Legacy converters plugin
-| https://github.com/grails/grails-plugins-metadata | grails-plugins.json used by https://grails.org/plugins.html
-| https://github.com/grails/grails-redis | Redis plugin for Grails
-| https://github.com/grails/grails-cache | Grails Cache Plugin
-| https://github.com/grails/elasticsearch-grails-plugin | The Elasticsearch Grails plugin
-| https://github.com/grails/grails-quartz | This project provides integration of the Quartz scheduling framework into the Grails Framework
-| https://github.com/grails/github-actions | custom github actions for workflows
-| https://github.com/grails/github-pages-deploy-action | GitHub action for building a project and deploying it to GitHub pages.
-| https://github.com/grails/grails-wrapper | Grails Wrapper
-| https://github.com/grails/grails-profiles | 10 active profiles with tests
-|===
-
-== Required Resources
-
-=== Mailing lists
-
-----
-users@grails.apache.org
+special Geb support. Grails also makes use of about a dozen ASF artifacts from other ASF projects (commons, logging, etc.)</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_known_risks">Known Risks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As noted above, development has been sponsored mostly by a single company and coordinated mostly by the core team so far.
+For Grails to fully transition to an "Apache Way" governance model it needs to start embracing the meritocracy-centric way of growing the community of contributors while balancing it with the needs for extreme stability and coherency of the core implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_orphaned_products">Orphaned products</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The community proposing Grails for incubation is an active open source community. The primary vendor until now has been Object Computing (and for about a year, a related spin-off Unity Foundation). Currently Object Computing has paused significant new investment in the Grails project, but the size and diversity of the community should guarantee against the project being orphaned.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_inexperience_with_open_source">Inexperience with Open Source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The majority of the proposers have day jobs that have them working near full-time on open source projects. Grails to date has always been developed as an open source project.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_homogeneous_developers">Homogeneous Developers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now that Object Computing is pausing significant new investment, the initial group of committers is expected to be heterogeneous when it comes to corporate affiliations. The Grails community is also extremely diverse in terms of geography and backgrounds of developers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reliance_on_salaried_developers">Reliance on Salaried Developers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most of the contributors are paid to work in the Java ecosystem. While we might wander from our current employers, we probably won’t go far from the Java family tree.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_relationships_with_other_apache_products">Relationships with Other Apache Products</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails relies fundamentally on Apache Groovy. It also depends on a number of other ASF projects including commons, ant, tomcat, and maven. Various Grails plugins (many are optional) also have ASF projects as dependencies.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_an_excessive_fascination_with_the_apache_brand">An Excessive Fascination with the Apache Brand</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>While we think that the Apache ‘branding’ will add strength to our project’s desire for ‘neutrality’, we have no plans for making excessive use of the Apache brand.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_documentation">Documentation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>See <a href="https://docs.grails.org/6.2.0/guide/single.html" class="bare">https://docs.grails.org/6.2.0/guide/single.html</a> for the current state of the Grails documentation.
+A mature project website is also available at <a href="https://grails.org/" class="bare">https://grails.org/</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_initial_source">Initial Source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Initial source is available on GitHub under the ALv2</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-core" class="bare">https://github.com/grails/grails-core</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Grails Web Application Framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-gradle-plugin" class="bare">https://github.com/grails/grails-gradle-plugin</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Gradle build plugin used by many projects and end Grails applications</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-static-website" class="bare">https://github.com/grails/grails-static-website</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static version of the grails.org website</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-doc" class="bare">https://github.com/grails/grails-doc</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation Project For The Grails Web Application Framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-forge" class="bare">https://github.com/grails/grails-forge</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is Grails project creator. Grails projects may be created using the browser interface, Command Line, or via CURL.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-forge-ui" class="bare">https://github.com/grails/grails-forge-ui</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">React.js app for start.grails.org</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/scaffolding" class="bare">https://github.com/grails/scaffolding</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scaffolding plugin for Grails® framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/gpc/fields" class="bare">https://github.com/gpc/fields</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the fields plugin used by scaffolding and also independently.  A core plugin for grails web projects</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-angularjs-scaffolding" class="bare">https://github.com/grails/grails-angularjs-scaffolding</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A plugin for generating client side assets based on domain</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-gsp" class="bare">https://github.com/grails/grails-gsp</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GSP (Grails Server Pages) - A server-side view rendering technology based on Groovy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-views" class="bare">https://github.com/grails/grails-views</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Additional View Technologies for Grails</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-boot" class="bare">https://github.com/grails/grails-boot</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails integrations with Spring Boot</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-async" class="bare">https://github.com/grails/grails-async</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository for Grails async plugins</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-data-mapping" class="bare">https://github.com/grails/grails-data-mapping</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM - Groovy Object Mapping</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-hibernate5" class="bare">https://github.com/grails/gorm-hibernate5</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM for Hibernate 5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-hibernate6" class="bare">https://github.com/grails/gorm-hibernate6</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM for Hibernate 6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-mongodb" class="bare">https://github.com/grails/gorm-mongodb</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM for MongoDB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-neo4j" class="bare">https://github.com/grails/gorm-neo4j</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM for Neo4j</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-graphql" class="bare">https://github.com/grails/gorm-graphql</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An automatic GraphQL schema generator for GORM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-database-migration" class="bare">https://github.com/grails/grails-database-migration</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails® framework Database Migration Plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/gorm-docs" class="bare">https://github.com/grails/gorm-docs</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation for GORM</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-rxgorm-docs" class="bare">https://github.com/grails/grails-rxgorm-docs</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Documentation for RxGORM <a href="https://gorm.grails.org/latest/rx/manual/index.html" class="bare">https://gorm.grails.org/latest/rx/manual/index.html</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-core" class="bare">https://github.com/grails/grails-spring-security-core</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails Spring Security Core Plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-rest" class="bare">https://github.com/grails/grails-spring-security-rest</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails plugin to implement token-based, RESTful authentication using Spring Security</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-ui" class="bare">https://github.com/grails/grails-spring-security-ui</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Spring Security UI plugin provides CRUD screens and other user management workflows.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-oauth2" class="bare">https://github.com/grails/grails-spring-security-oauth2</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spring security Oauth Grails 3 plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-acl" class="bare">https://github.com/grails/grails-spring-security-acl</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-spring-security-cas" class="bare">https://github.com/grails/grails-spring-security-cas</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails-plugins/grails-spring-security-ldap" class="bare">https://github.com/grails-plugins/grails-spring-security-ldap</a></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-testing-support" class="bare">https://github.com/grails/grails-testing-support</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trait-based testing library for Grails framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/geb" class="bare">https://github.com/grails/geb</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Geb Functional Testing for Grails® framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-functional-tests" class="bare">https://github.com/grails/grails-functional-tests</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Functional Test Application for Grails 3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-plugin-converters" class="bare">https://github.com/grails/grails-plugin-converters</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy converters plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-plugins-metadata" class="bare">https://github.com/grails/grails-plugins-metadata</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">grails-plugins.json used by <a href="https://grails.org/plugins.html" class="bare">https://grails.org/plugins.html</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-redis" class="bare">https://github.com/grails/grails-redis</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redis plugin for Grails</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-cache" class="bare">https://github.com/grails/grails-cache</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails Cache Plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/elasticsearch-grails-plugin" class="bare">https://github.com/grails/elasticsearch-grails-plugin</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Elasticsearch Grails plugin</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-quartz" class="bare">https://github.com/grails/grails-quartz</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This project provides integration of the Quartz scheduling framework into the Grails Framework</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/github-actions" class="bare">https://github.com/grails/github-actions</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">custom github actions for workflows</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/github-pages-deploy-action" class="bare">https://github.com/grails/github-pages-deploy-action</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GitHub action for building a project and deploying it to GitHub pages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-wrapper" class="bare">https://github.com/grails/grails-wrapper</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails Wrapper</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/grails/grails-profiles" class="bare">https://github.com/grails/grails-profiles</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10 active profiles with tests</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_required_resources">Required Resources</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_mailing_lists">Mailing lists</h3>
+<div class="listingblock">
+<div class="content">
+<pre>users@grails.apache.org
 dev@grails.apache.org
 private@grails.apache.org
 notifications@grails.apache.org
-commits@grails.apache.org
-----
-
-=== Git Repository
-
-See Initial Source Above
-
-=== Issue Tracking
-
-GitHub Issues
-
-=== Other Resources
-
-Means of setting up regular builds for Grails on builds.apache.org
-
-== Initial Committers
-
-* Søren Berg Glasius (ASF: sbglasius)
-* James Fredley (GitHub: jamesfredley)
-* James Daugherty (GitHub: jdaugherty)
-* Mattias Reichel (GitHub: matrei)
-* Sergio del Amo Caballero (ASF: sdelamo)
-* Scott Murphy (GitHub: codeconsole)
-* David Estes (GitHub: davydotcom)
-* Brian Koehmstedt (GitHub: bkoehm)
-* Graeme Rocher (ASF: grocher)
-* Puneet Behl (GitHub: puneetbehl)
-* Michael Yan (GitHub: rainboyan)
-* Paul King (ASF: paulk)
-
-== Champion
-
-Paul King
-
-== Nominated Mentors
-
-Paul King
-Søren Berg Glasius
-
-== Sponsoring Entity
-
-We would like to propose the Groovy project to sponsor the incubation of Grails.
-</asciidocText><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>Grails Project Proposal</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Grails Project Proposal</h1><hr/></div></div></div></div><footer id='footer'>
+commits@grails.apache.org</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git_repository">Git Repository</h3>
+<div class="paragraph">
+<p>See Initial Source Above</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_issue_tracking">Issue Tracking</h3>
+<div class="paragraph">
+<p>GitHub Issues</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_other_resources">Other Resources</h3>
+<div class="paragraph">
+<p>Means of setting up regular builds for Grails on builds.apache.org</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_initial_committers">Initial Committers</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Søren Berg Glasius (ASF: sbglasius)</p>
+</li>
+<li>
+<p>James Fredley (GitHub: jamesfredley)</p>
+</li>
+<li>
+<p>James Daugherty (GitHub: jdaugherty)</p>
+</li>
+<li>
+<p>Mattias Reichel (GitHub: matrei)</p>
+</li>
+<li>
+<p>Sergio del Amo Caballero (ASF: sdelamo)</p>
+</li>
+<li>
+<p>Scott Murphy (GitHub: codeconsole)</p>
+</li>
+<li>
+<p>David Estes (GitHub: davydotcom)</p>
+</li>
+<li>
+<p>Brian Koehmstedt (GitHub: bkoehm)</p>
+</li>
+<li>
+<p>Graeme Rocher (ASF: grocher)</p>
+</li>
+<li>
+<p>Puneet Behl (GitHub: puneetbehl)</p>
+</li>
+<li>
+<p>Michael Yan (GitHub: rainboyan)</p>
+</li>
+<li>
+<p>Paul King (ASF: paulk)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_champion">Champion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Paul King</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_nominated_mentors">Nominated Mentors</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Paul King
+Søren Berg Glasius</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sponsoring_entity">Sponsoring Entity</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We would like to propose the Groovy project to sponsor the incubation of Grails.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
                             <div class='row'>
                                 <div class='colset-3-footer'>
                                     <div class='col-1'>
