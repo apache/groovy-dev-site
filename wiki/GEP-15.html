@@ -117,7 +117,12 @@ Kotlin maps `\+=` to `plusAssign()` when available, falling back to
 * Changing the behavior of `++` and `--` operators (these use `next()`/`previous()`
   and are conceptually different).
 * Changing subscript compound assignment (`a[i] += b`), which uses the existing
-  `getAt`/`putAt` pattern.
+  `getAt`/`putAt` pattern. A future GEP might explore a two-argument
+  `plusAssign(key, value)` convention where `a[key] += b` maps to
+  `a.plusAssign(key, b)`, allowing containers to handle compound updates
+  atomically. Multi-dimensional cases like `a[i][j] += b` would resolve
+  naturally by peeling subscripts from the left: evaluate `a.getAt(i)` to
+  get the inner container, then apply the single-dimension rule to that result.
 
 === Operator method name mapping
 
@@ -129,8 +134,7 @@ Kotlin maps `\+=` to `plusAssign()` when available, falling back to
 | `-=` | `minusAssign` | `minus`
 | `*=` | `multiplyAssign` | `multiply`
 | `/=` | `divAssign` | `div`
-| `%=` | `modAssign` | `mod`
-| `%%=` | `remainderAssign` | `remainder`
+| `%=` | `remainderAssign` | `remainder`
 | `**=` | `powerAssign` | `power`
 | `<\<=` | `leftShiftAssign` | `leftShift`
 | `>>=` | `rightShiftAssign` | `rightShift`
@@ -138,7 +142,6 @@ Kotlin maps `\+=` to `plusAssign()` when available, falling back to
 | `&=` | `andAssign` | `and`
 | `\|=` | `orAssign` | `or`
 | `^=` | `xorAssign` | `xor`
-| `//=` | `intdivAssign` | `intdiv`
 |===
 
 === Resolution algorithm
