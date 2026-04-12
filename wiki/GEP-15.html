@@ -322,10 +322,14 @@ This requires <code>x</code> to be reassignable.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>When both <code>plusAssign</code> and <code>plus</code> exist on the same type, <code>plusAssign</code>
-takes precedence. This is the pragmatic choice for Groovy since it lacks
-Kotlin&#8217;s <code>val</code>/<code>var</code> distinction. If a class author defined <code>plusAssign</code>,
-they intended it to be used for <code>+=</code>.</p>
+<p>When both <code>plusAssign</code> and <code>plus</code> exist on the same
+type, <code>plusAssign</code> takes precedence.
+Languages like Kotlin apply an ambiguity resolution rule
+where the selection between <code>plusAssign</code> and <code>plus</code>
+depends on the mutability of the receiver (<code>val</code> vs <code>var</code>).
+This is not typical for Groovy method selection.
+If a class author defined <code>plusAssign</code>,
+they intend it to be used for <code>+=</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -399,7 +403,7 @@ bus.listeners &lt;&lt;= "listener1"  // calls listeners.leftShiftAssign("listene
 <p>In <code>@CompileStatic</code> mode, the type checker resolves <code>plusAssign</code> at
 compile time using <code>findMethod()</code>. If found, it records the target method
 on the expression via node metadata and the bytecode generator emits a
-direct method call&#8201;&#8212;&#8201;no dup, no store-back.</p>
+direct method call with no reassignment to the variable.</p>
 </div>
 <div class="paragraph">
 <p>If not found, the existing desugaring to <code>x = x.plus(y)</code> applies.</p>
@@ -410,7 +414,7 @@ direct method call&#8201;&#8212;&#8201;no dup, no store-back.</p>
 <div class="paragraph">
 <p>In dynamic Groovy, the runtime checks for <code>plusAssign</code> via the Meta-Object
 Protocol (MOP). If <code>respondsTo(target, "plusAssign", arg)</code> succeeds, it is
-called. Otherwise, the fallback to <code>plus</code> + reassignment applies.</p>
+called. Otherwise, the fallback to <code>plus</code> with reassignment applies.</p>
 </div>
 <div class="paragraph">
 <p>This requires a new runtime helper method (e.g., in <code>ScriptBytecodeAdapter</code>)
