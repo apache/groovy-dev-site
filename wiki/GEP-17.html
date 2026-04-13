@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-17</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-17</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_design' class='anchor-link'>Design</a></li><li><a href='#_current_status' class='anchor-link'>Current status</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-17</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-17</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Consistent handling of internal properties via <code>@Internal</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-13</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-13</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>JIRA</strong>
+</td>
+<td class="hdlist2">
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11928">GROOVY-11928</a></p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP defines a consistent mechanism for designating class
+members as <em>internal</em>&#8201;&#8212;&#8201;meaning they should be excluded from
+property introspection, serialization, and AST-transform-generated
+code such as <code>@ToString</code>, <code>@EqualsAndHashCode</code>, and <code>@TupleConstructor</code>.</p>
+</div>
+<div class="paragraph">
+<p>The mechanism uses the existing <code>@groovy.transform.Internal</code> annotation
+(introduced in Groovy 2.5.3) and extends its scope from a compile-time
+hint to a first-class runtime-honoured marker.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy AST transforms frequently generate fields with <code>$</code> in the name
+(e.g. <code>$hash$code</code> from <code>@EqualsAndHashCode</code>, <code>$fieldName</code> from <code>@Lazy</code>,
+<code>$reentrantlock</code> from <code>@ReadWriteLock</code>). These fields are implementation
+details that should not appear in <code>toString()</code> output, equality comparisons,
+JSON serialization, or property listings.</p>
+</div>
+<div class="paragraph">
+<p>Historically, filtering was done inconsistently:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>AST transforms</strong> used a name-based convention: <code>deemedInternalName(name)</code>
+checked <code>name.contains("$")</code>. Each consuming transform applied this
+check independently via <code>shouldSkip</code>/<code>shouldSkipUndefinedAware</code>.</p>
+</li>
+<li>
+<p><strong>Runtime</strong> (<code>MetaClassImpl.getProperties()</code>) had no filtering for
+internal properties at all. This meant <code>JsonOutput.toJson()</code> and
+<code>println</code> could expose <code>$</code>-containing fields.</p>
+</li>
+<li>
+<p><strong><code>BeanUtils.getAllProperties()</code></strong> (compile-time) checked <code>@Internal</code>
+on getter methods, but <code>MetaClassImpl</code> did not.</p>
+</li>
+<li>
+<p><strong>User-defined internal properties</strong> without <code>$</code> in the name had
+no way to opt in to the filtering.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This inconsistency led to bugs where internal fields leaked into
+serialized output, and AST transform authors had to independently
+remember to add <code>$</code> filtering.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design">Design</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_internal_annotation">The <code>@Internal</code> annotation</h3>
+<div class="paragraph">
+<p>The existing annotation serves as the single source of truth:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Internal { }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compile_time_ast_transforms">Compile-time: AST transforms</h3>
+<div class="sect3">
+<h4 id="_producerstransforms_that_generate_internal_fields">Producers&#8201;&#8212;&#8201;transforms that generate internal fields</h4>
+<div class="paragraph">
+<p>Transforms that create fields intended to be hidden from users
+should annotate them with <code>@Internal</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">FieldNode hashField = cNode.addField("$hash$code", ACC_PRIVATE | ACC_SYNTHETIC, ...);
+markAsInternal(hashField);  // from AnnotatedNodeUtils</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The utility methods are in <code>org.apache.groovy.ast.tools.AnnotatedNodeUtils</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>markAsInternal(T node)</code>&#8201;&#8212;&#8201;adds <code>@Internal</code> annotation (idempotent)</p>
+</li>
+<li>
+<p><code>isInternal(AnnotatedNode node)</code>&#8201;&#8212;&#8201;checks for <code>@Internal</code> annotation</p>
+</li>
+<li>
+<p><code>deemedInternal(AnnotatedNode node)</code>&#8201;&#8212;&#8201;checks both <code>@Internal</code>
+annotation and <code>$</code> name convention (backward compatible)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_consumerstransforms_that_iterate_properties">Consumers&#8201;&#8212;&#8201;transforms that iterate properties</h4>
+<div class="paragraph">
+<p>Transforms that iterate over properties or fields to generate code
+(e.g. <code>@ToString</code>, <code>@EqualsAndHashCode</code>) should use the node-aware
+skip methods from <code>AbstractASTTransformation</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Old way (name-based only):
+if (shouldSkipUndefinedAware(pNode.getName(), excludes, includes, allNames)) continue;
+
+// New way (checks @Internal annotation + $ convention):
+if (shouldSkipUndefinedAware(pNode, excludes, includes, allNames)) continue;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>allNames</code> parameter continues to mean "include internal properties",
+matching the behaviour of <code>@ToString(allNames=true)</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_runtime_metaclassimpl_getproperties">Runtime: <code>MetaClassImpl.getProperties()</code></h3>
+<div class="paragraph">
+<p><code>MetaClassImpl.getProperties()</code> now checks for <code>@Internal</code> on:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CachedField</code> entries: checks <code>field.isAnnotationPresent(Internal.class)</code></p>
+</li>
+<li>
+<p><code>MetaBeanProperty</code> entries: checks the backing field, getter, and
+setter for <code>@Internal</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This means <code>@Internal</code>-annotated properties are automatically excluded from:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>JsonOutput.toJson()</code></p>
+</li>
+<li>
+<p><code>FormatHelper.format()</code> (used by <code>println</code>, string interpolation)</p>
+</li>
+<li>
+<p><code>obj.properties</code> (the Groovy properties map)</p>
+</li>
+<li>
+<p>Any code that iterates <code>metaClass.properties</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Direct property access (<code>obj.secret = x</code>, <code>obj.secret</code>) still works.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_facing_usage">User-facing usage</h3>
+<div class="paragraph">
+<p>Users can annotate their own fields to exclude them from
+introspection and serialization:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.transform.Internal
+import groovy.transform.ToString
+
+@ToString
+class Account {
+    String name
+    @Internal String internalTag
+}
+
+def a = new Account(name: 'test', internalTag: 'x')
+assert a.toString() == 'Account(test)'           // internalTag excluded
+assert a.internalTag == 'x'                       // direct access still works</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_backward_compatibility">Backward compatibility</h3>
+<div class="paragraph">
+<p>The <code>$</code> name convention is preserved. <code>deemedInternal(node)</code> checks
+both <code>@Internal</code> and <code>name.contains("$")</code>, so existing code that
+relies on <code>$</code>-named fields being filtered continues to work.</p>
+</div>
+<div class="paragraph">
+<p>The <code>deemedInternalName(String)</code> method remains available for callers
+that only have a name string (e.g. <code>java.beans.PropertyDescriptor</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_current_status">Current status</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_proposed_pr2467_targeting_groovy_6_0">Proposed (PR#2467 targeting Groovy 6.0)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotatedNodeUtils.markAsInternal/isInternal/deemedInternal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AbstractASTTransformation.shouldSkip(node, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;node-aware overloads</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MetaClassImpl.getProperties()</code>&#8201;&#8212;&#8201;respects <code>@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code>&#8201;&#8212;&#8201;marks <code>$hash$code</code> as <code>@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code>&#8201;&#8212;&#8201;marks backing field as <code>@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ReadWriteLock</code>&#8201;&#8212;&#8201;marks lock fields as <code>@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@Builder</code>, <code>@Delegate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;use node-aware skip methods</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code>&#8201;&#8212;&#8201;uses <code>deemedInternal(fNode)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_future_work">Future work</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trait system (<code>TraitComposer</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trait-generated <code>$Trait$</code> fields should be marked <code>@Internal</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compiler internals (<code>Verifier</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Audit which compiler-generated <code>$</code> fields surface in <code>getProperties()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deemedInternalName</code> deprecation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Once all producers annotate with <code>@Internal</code>, the <code>$</code> name check
+  could be deprecated (not urgent&#8201;&#8212;&#8201;backward compat)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11928">GROOVY-11928</a>&#8201;&#8212;&#8201;MetaClassImpl.getProperties() should respect @Internal annotation</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11516">GROOVY-11516</a>&#8201;&#8212;&#8201;Improve consistency of treatment for internal properties (superseded)</p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2118">PR #2118</a>&#8201;&#8212;&#8201;Original
+draft PR (name-based <code>$</code> filtering, closed in favour of annotation approach)</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
