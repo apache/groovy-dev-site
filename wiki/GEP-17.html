@@ -79,7 +79,7 @@
 <strong>Title</strong>
 </td>
 <td class="hdlist2">
-<p>Consistent handling of internal properties via <code>@Internal</code></p>
+<p>Design Note: Consistent handling of internal properties via <code>@Internal</code></p>
 </td>
 </tr>
 <tr>
@@ -127,7 +127,7 @@
 <strong>Last modification</strong>&#160;
 </td>
 <td class="hdlist2">
-<p>2026-04-13</p>
+<p>2026-04-14</p>
 </td>
 </tr>
 <tr>
@@ -352,7 +352,7 @@ that only have a name string (e.g. <code>java.beans.PropertyDescriptor</code>).<
 <h2 id="_current_status">Current status</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_proposed_pr2467_targeting_groovy_6_0">Proposed (PR#2467 targeting Groovy 6.0)</h3>
+<h3 id="_infrastructure_donepr2467">Infrastructure (done&#8201;&#8212;&#8201;PR#2467)</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -370,42 +370,82 @@ that only have a name string (e.g. <code>java.beans.PropertyDescriptor</code>).<
 <td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AbstractASTTransformation.shouldSkip(node, &#8230;&#8203;)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;node-aware overloads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node-aware <code>shouldSkip</code>/<code>shouldSkipUndefinedAware</code> overloads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;in <code>AbstractASTTransformation</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MetaClassImpl.getProperties()</code>&#8201;&#8212;&#8201;respects <code>@Internal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code>&#8201;&#8212;&#8201;marks <code>$hash$code</code> as <code>@Internal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code>&#8201;&#8212;&#8201;marks backing field as <code>@Internal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ReadWriteLock</code>&#8201;&#8212;&#8201;marks lock fields as <code>@Internal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@Builder</code>, <code>@Delegate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;use node-aware skip methods</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code>&#8201;&#8212;&#8201;uses <code>deemedInternal(fNode)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_future_work">Future work</h3>
+<h3 id="_consumerstransforms_that_iterate_properties_donepr2467">Consumers&#8201;&#8212;&#8201;transforms that iterate properties (done&#8201;&#8212;&#8201;PR#2467)</h3>
+<div class="paragraph">
+<p>All use node-aware skip methods that check both <code>@Internal</code> and <code>$</code> convention:
+<code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@TupleConstructor</code>, <code>@MapConstructor</code>,
+<code>@Builder</code>, <code>@Delegate</code>, <code>@Immutable</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_producerstransforms_that_create_internal_fields">Producers&#8201;&#8212;&#8201;transforms that create internal fields</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
 <col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code>&#8201;&#8212;&#8201;marks <code>$hash$code</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done (PR#2467)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code>&#8201;&#8212;&#8201;marks backing field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done (PR#2467)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ReadWriteLock</code>&#8201;&#8212;&#8201;marks lock fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done (PR#2467)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code>&#8201;&#8212;&#8201;marks <code>$to$string</code> cache field</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Synchronized</code>&#8201;&#8212;&#8201;marks <code>$LOCK</code> and <code>$lock</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TraitComposer</code>&#8201;&#8212;&#8201;marks trait implementation fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done&#8201;&#8212;&#8201;these fields (e.g. <code>com_example_Named__name</code>) do not
+  contain <code>$</code>, so the name convention never caught them.
+  This was the only case where internal fields were leaking
+  into <code>metaClass.properties</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_cleanup">Cleanup</h3>
+<div class="paragraph">
+<p>Removed <code>markAsInternal</code> and <code>deemedInternal</code> wrapper methods from
+<code>AbstractASTTransformation</code>. Call sites now import directly from
+<code>AnnotatedNodeUtils</code>, avoiding method shadowing issues.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_deferredcompiler_internals">Deferred&#8201;&#8212;&#8201;compiler internals</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
 </colgroup>
 <thead>
 <tr>
@@ -415,20 +455,54 @@ that only have a name string (e.g. <code>java.beans.PropertyDescriptor</code>).<
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trait system (<code>TraitComposer</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Trait-generated <code>$Trait$</code> fields should be marked <code>@Internal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Verifier</code> (<code>__$stMC</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding <code>@Internal</code> causes NPE in <code>ExtendedVerifier.visitAnnotations</code>
+  during nested compilation contexts (triggered by <code>evaluateExpression</code>
+  in static type checking) where <code>this.source</code> is null.
+  Needs a null guard in <code>ExtendedVerifier</code> or an alternative mechanism.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Compiler internals (<code>Verifier</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Audit which compiler-generated <code>$</code> fields surface in <code>getProperties()</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>deemedInternalName</code> deprecation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Once all producers annotate with <code>@Internal</code>, the <code>$</code> name check
-  could be deprecated (not urgent&#8201;&#8212;&#8201;backward compat)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>InnerClassVisitor</code> (<code>this$0</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adding <code>@Internal</code> causes duplicate annotation errors in some
+  inner class scenarios. Needs investigation of the annotation
+  duplication path.</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>Both continue to rely on the <code>$</code> naming convention via
+<code>deemedInternal()</code> / <code>deemedInternalName()</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_path_to_deprecating_the_fallback">Path to deprecating the <code>$</code> fallback</h3>
+<div class="paragraph">
+<p>The <code>$</code> name convention (<code>deemedInternalName</code>) cannot be deprecated
+immediately, even once all Groovy&#8217;s own producers use <code>@Internal</code>.
+Third-party frameworks and AST transforms that generate <code>$</code>-named
+fields also rely on this convention. The deprecation path is:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Document</strong> the <code>@Internal</code> annotation as the recommended approach
+for framework authors (this GEP serves as that design note).</p>
+</li>
+<li>
+<p><strong>Allow time</strong> for framework authors to adopt <code>@Internal</code> in their
+own transforms and generated code.</p>
+</li>
+<li>
+<p><strong>Deprecate</strong> <code>deemedInternalName()</code> in a future version once
+adoption is sufficient.</p>
+</li>
+<li>
+<p><strong>Remove</strong> the <code>$</code> fallback eventually, potentially retaining a
+more surgical check for specific known compiler fields
+(e.g. <code>__$stMC</code>) if they cannot be annotated.</p>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>
