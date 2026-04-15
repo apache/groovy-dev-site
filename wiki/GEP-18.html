@@ -346,7 +346,7 @@ functions, inspired by GPars' <code>Agent</code> and Clojure agents:</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">def counter = Agent.create(0)
 counter.send { it + 1 }
 counter.send { it + 1 }
-assert await(counter.getAsync()) == 2</code></pre>
+assert 2 == await counter.getAsync()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -613,6 +613,16 @@ methods), and the <code>async</code>/<code>await</code>/<code>defer</code>/<code
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Promise</code> interface</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Superseded by <code>Awaitable</code> interface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STM (Software Transactional Memory)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPars' STM support depended on the Multiverse library which is no longer maintained; modern alternatives (agents, actors, virtual threads) provide better concurrency models</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JCSP (Communicating Sequential Processes)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPars' CSP support depended on the JCSP library; Groovy&#8217;s built-in <code>AsyncChannel</code> with composition provides equivalent channel-based communication</p></td>
 </tr>
 </tbody>
 </table>
