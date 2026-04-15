@@ -334,6 +334,19 @@ block, operations automatically use the bound pool:</p>
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>The <code>@Parallel</code> annotation provides a convenient shorthand for
+parallel <code>for</code> loops with structured completion:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Parallel
+for (item in bigList) {
+    process(item)
+}
+// All iterations complete before this line</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_agent">Agent</h3>
