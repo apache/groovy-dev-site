@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-18</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-18</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_java_only_module' class='anchor-link'>Java-only module</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-18</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-18</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Integrated Concurrency and Parallel Processing</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-15</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-15</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP describes the integration of concurrency, parallelism, dataflow,
+and actor-based programming into Groovy core, drawing from GPars' proven
+patterns and modernising them for virtual threads, structured concurrency,
+and the <code>async</code>/<code>await</code> language features introduced in Groovy 6.</p>
+</div>
+<div class="paragraph">
+<p>The work delivers a comprehensive concurrent programming toolkit directly
+in Groovy core, with a pure-Java subset published as a standalone module
+(<code>groovy-concurrent-java</code>) for use by Java, Kotlin, and other JVM language
+users without requiring the Groovy runtime.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GPars has served the Groovy community as the primary concurrency library
+for over a decade, providing parallel collections, dataflow variables,
+actors, agents, and more. However, GPars is a separate library with its
+own release cycle, and modern JDK developments (virtual threads, structured
+task scope, parallel streams) have shifted the concurrency landscape.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 introduced native <code>async</code>/<code>await</code> support (GEP-16), providing
+language-level concurrency primitives. This GEP extends that foundation
+with the higher-level patterns that GPars users rely on, integrated
+directly into Groovy core so they are available out of the box.</p>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Pure-Java API surface</strong> — all types in <code>groovy.concurrent</code> use
+<code>java.util.function</code> types (<code>Supplier</code>, <code>Function</code>, <code>Predicate</code>, etc.)
+rather than <code>groovy.lang.Closure</code>. Groovy closures work seamlessly
+via SAM coercion. This enables a Java-only extraction.</p>
+</li>
+<li>
+<p><strong>No extension classes needed</strong> — SAM coercion eliminates the need for
+Closure-bridging extension methods for the public API.</p>
+</li>
+<li>
+<p><strong>Virtual-thread-first</strong> — on JDK 21+, the default executor uses virtual
+threads. All abstractions (actors, agents, pools) scale to millions of
+concurrent entities without pool tuning.</p>
+</li>
+<li>
+<p><strong>Structured concurrency</strong> — scopes ensure child tasks complete before
+the scope exits. Nesting, cancellation propagation, and timeouts are
+built in.</p>
+</li>
+<li>
+<p><strong>GPars migration path</strong> — familiar patterns (<code>withPool</code>, <code>Agent</code>,
+<code>DataflowVariable</code>, <code>Dataflows</code>, <code>@ActiveObject</code>) are preserved with
+minimal API changes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_pool_and_parallelscope">Pool and ParallelScope</h3>
+<div class="paragraph">
+<p><code>Pool</code> is a managed thread pool extending <code>Executor</code> and <code>AutoCloseable</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def pool = Pool.cpu()       // ForkJoinPool sized to available processors
+def pool = Pool.fixed(8)    // Fixed-size ForkJoinPool
+def pool = Pool.io()        // Virtual threads on JDK 21+
+def pool = Pool.virtual()   // Virtual-thread-per-task</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Pool.cpu()</code> and <code>Pool.fixed()</code> create <code>ForkJoinPool</code>-backed pools,
+enabling parallel stream isolation for CPU-bound work.
+<code>Pool.io()</code> and <code>Pool.virtual()</code> use virtual threads for I/O-bound work.</p>
+</div>
+<div class="paragraph">
+<p><code>ParallelScope</code> binds a pool for scoped execution:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">ParallelScope.withPool(Pool.cpu()) { scope -&gt;
+    def a = scope.async { cpuWork1() }
+    def b = scope.async { cpuWork2() }
+    [await(a), await(b)]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Pool.current()</code> tracks the active pool via <code>ScopedValue</code> on JDK 25+
+(with <code>ThreadLocal</code> fallback), so parallel collection methods
+automatically use the correct pool.</p>
+</div>
+<div class="paragraph">
+<p><code>ConcurrentConfig</code> provides global defaults via system properties
+(<code>groovy.concurrent.poolsize</code>, <code>groovy.concurrent.virtual</code>) or
+programmatic override.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scope_nesting_and_timeout">Scope nesting and timeout</h3>
+<div class="paragraph">
+<p><code>AsyncScope</code> supports parent-child relationships. Cancelling a parent
+scope propagates to all child scopes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">AsyncScope.withScope { outer -&gt;
+    outer.async {
+        AsyncScope.withScope { inner -&gt;
+            assert inner.parent == outer
+            inner.async { work() }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Scopes support timeouts:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">AsyncScope.withScope(Duration.ofSeconds(5)) { scope -&gt;
+    scope.async { longRunningWork() }
+    // Cancelled automatically if not complete within 5 seconds
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_parallel_collections">Parallel collections</h3>
+<div class="paragraph">
+<p>Seventeen parallel methods are added to <code>Collection</code>, backed by Java
+parallel streams with pool isolation:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Methods</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transformation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>collectParallel</code>, <code>collectManyParallel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Filtering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>findAllParallel</code>, <code>findParallel</code>, <code>findAnyParallel</code>, <code>grepParallel</code>, <code>splitParallel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Iteration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eachParallel</code>, <code>eachWithIndexParallel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Predicates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>anyParallel</code>, <code>everyParallel</code>, <code>countParallel</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Aggregation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sumParallel</code>, <code>injectParallel</code>, <code>minParallel</code>, <code>maxParallel</code>, <code>groupByParallel</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>All methods use <code>java.util.function</code> types. Within a <code>ParallelScope.withPool</code>
+block, operations automatically use the bound pool:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">ParallelScope.withPool(Pool.cpu()) { scope -&gt;
+    def results = bigList.collectParallel { transform(it) }
+    def filtered = results.findAllParallel { it &gt; threshold }
+    filtered.groupByParallel { it.category }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_agent">Agent</h3>
+<div class="paragraph">
+<p><code>Agent</code> provides thread-safe mutable state through serialised update
+functions, inspired by GPars' <code>Agent</code> and Clojure agents:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def counter = Agent.create(0)
+counter.send { it + 1 }
+counter.send { it + 1 }
+assert await(counter.getAsync()) == 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Updates are queued and applied one at a time on a dedicated thread.
+<code>get()</code> returns a non-blocking snapshot; <code>getAsync()</code> returns an
+<code>Awaitable</code> that completes after pending updates.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_actor">Actor</h3>
+<div class="paragraph">
+<p><code>Actor</code> provides message-passing concurrency with two factory methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Reactor — stateless, each message produces a reply
+def doubler = Actor.reactor { it * 2 }
+assert await(doubler.sendAndGet(21)) == 42
+
+// Stateful — maintains state across messages
+def counter = Actor.stateful(0) { state, msg -&gt;
+    switch (msg) {
+        case 'increment': return state + 1
+        case 'decrement': return state - 1
+        default: return state
+    }
+}
+counter.send('increment')
+assert await(counter.sendAndGet('increment')) == 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each actor has a dedicated thread processing messages sequentially.
+On JDK 21+, actors use virtual threads — millions of actors are
+feasible without pool tuning.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_activeobject_activemethod">@ActiveObject / @ActiveMethod</h3>
+<div class="paragraph">
+<p>For annotation-driven thread safety, <code>@ActiveObject</code> routes annotated
+method calls through an internal actor:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ActiveObject
+class Account {
+    private double balance = 0
+
+    @ActiveMethod
+    void deposit(double amount) { balance += amount }
+
+    @ActiveMethod
+    void withdraw(double amount) { balance -= amount }
+
+    @ActiveMethod
+    double getBalance() { balance }
+}
+
+def account = new Account()
+account.deposit(100)
+account.withdraw(30)
+assert account.getBalance() == 70.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All <code>@ActiveMethod</code> calls are serialised — no locks needed. Methods
+without the annotation run on the caller&#8217;s thread as normal.
+<code>@ActiveMethod(blocking = false)</code> returns an <code>Awaitable</code> immediately.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dataflowvariable_and_dataflows">DataflowVariable and Dataflows</h3>
+<div class="paragraph">
+<p><code>DataflowVariable</code> is a single-assignment variable that blocks readers
+until a value is bound:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def x = new DataflowVariable()
+def y = new DataflowVariable()
+
+async { z &lt;&lt; await(x) + await(y) }
+async { x &lt;&lt; 10 }
+async { y &lt;&lt; 5 }
+
+assert await(z) == 15</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Dataflows</code> provides dynamic property-based access:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def df = new Dataflows()
+
+async { df.z = df.x + df.y }
+async { df.x = 10 }
+async { df.y = 5 }
+
+assert df.z == 15</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both integrate natively with <code>Awaitable</code> and the <code>async</code>/<code>await</code> keywords.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_channel_composition">Channel composition</h3>
+<div class="paragraph">
+<p><code>AsyncChannel</code> supports composable pipeline operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def pipeline = source
+    .filter { it &gt; 50 }
+    .map { it * 2 }
+
+for (val in pipeline) { process(val) }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Additional operations: <code>merge</code> (interleave two channels), <code>split</code>
+(partition by predicate), <code>tap</code> (fork a monitoring copy).</p>
+</div>
+<div class="paragraph">
+<p><code>ChannelSelect</code> waits for the first available value from multiple
+channels:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def sel = ChannelSelect.from(prices, alerts)
+def result = await sel.select()
+println "Channel ${result.index}: ${result.value}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>BroadcastChannel</code> delivers each value to all subscribers (one-to-many):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def broadcast = BroadcastChannel.create()
+def sub1 = broadcast.subscribe()
+def sub2 = broadcast.subscribe()
+
+async { broadcast.send('hello'); broadcast.close() }
+
+for (msg in sub1) { println "Sub1: $msg" }
+for (msg in sub2) { println "Sub2: $msg" }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_only_module">Java-only module</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>groovy-concurrent-java</code> module publishes the pure-Java subset of
+the concurrent API as a standalone dependency:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.apache.groovy&lt;/groupId&gt;
+    &lt;artifactId&gt;groovy-concurrent-java&lt;/artifactId&gt;
+    &lt;version&gt;6.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This module contains 27 classes with zero Groovy runtime dependency.
+Java users get access to <code>AsyncScope</code>, <code>Awaitable</code>, <code>Pool</code>,
+<code>ParallelScope</code>, <code>Actor</code>, <code>Agent</code>, <code>DataflowVariable</code>, <code>AsyncChannel</code>,
+<code>BroadcastChannel</code>, <code>ChannelSelect</code>, and <code>ConcurrentConfig</code>.</p>
+</div>
+<div class="paragraph">
+<p>Mutual exclusion with the full Groovy runtime is enforced via a shared
+Gradle capability (<code>org.apache.groovy:groovy-concurrent-api</code>). A runtime
+warning is logged if both jars are detected on the classpath (for Maven
+users who lack Gradle&#8217;s capability mechanism). JPMS split-package
+detection provides additional protection on the module path.</p>
+</div>
+<div class="paragraph">
+<p>Features not available in the Java module include <code>Dataflows</code> (requires
+Groovy&#8217;s <code>propertyMissing</code>), <code>@ActiveObject</code>/<code>@ActiveMethod</code> (Groovy AST
+transform), parallel collection methods (registered as Groovy extension
+methods), and the <code>async</code>/<code>await</code>/<code>defer</code>/<code>yield return</code> keywords
+(Groovy compiler syntax).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following GPars features are intentionally excluded or deferred:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>callAsync</code> / <code>asyncFun</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Superseded by <code>async</code>/<code>await</code> keywords</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getParallel</code> (PAWrapper)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy JSR-166 ParallelArray API; obsolete since Java 8 streams</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>makeConcurrent</code> / <code>makeSequential</code> / <code>asConcurrent</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only if sufficient subsequent user demand</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DataflowOperator</code> / <code>Pipeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit <code>async</code> + channel <code>receive</code> covers the multi-input join use case; add if demand warrants declarative operator graphs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KanbanFlow</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only if sufficient subsequent user demand</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SyncDataflowVariable</code> / <code>SyncDataflowQueue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rendezvous semantics primarily for testing; low demand expected</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remote actors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires networking dependencies (serialization, transport, discovery); belongs in a separate optional module</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BlockingActor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Legacy blocking pattern; virtual threads and <code>async</code>/<code>await</code> provide better alternatives</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GPars fork/join</code> (<code>AbstractForkJoinWorker</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK&#8217;s <code>ForkJoinPool</code> and <code>RecursiveTask</code>/<code>RecursiveAction</code> are the standard API</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Dataflow.task { }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Superseded by <code>async { }</code> keyword</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Promise</code> interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Superseded by <code>Awaitable</code> interface</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_gpars_migration">GPars migration</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">GPars</th>
+<th class="tableblock halign-left valign-top">Groovy 6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GParsPool.withPool(n) { }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ParallelScope.withPool(n) { }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>eachParallel</code>, <code>collectParallel</code>, etc.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same method names on <code>Collection</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new Agent(initialValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Agent.create(initialValue)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new DataflowVariable()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new DataflowVariable()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new Dataflows()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>new Dataflows()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Dataflow.task { }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>async { }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>reactor { }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Actor.reactor { }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ActiveObject</code> / <code>@ActiveMethod</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same annotations (in <code>groovy.transform</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>promise.get()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>await(awaitable)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>whenAllBound(a, b, c, handler)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>await(a, b, c)</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>GEP-16: Async/Await (Groovy 6)</p>
+</li>
+<li>
+<p><a href="https://github.com/GPars/GPars">GPars on GitHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
