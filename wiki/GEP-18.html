@@ -327,11 +327,11 @@ block, operations automatically use the bound pool:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">ParallelScope.withPool(Pool.cpu()) { scope -&gt;
-    def results = bigList.collectParallel { transform(it) }
-    def filtered = results.findAllParallel { it &gt; threshold }
-    filtered.groupByParallel { it.category }
-}</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ParallelScope.withPool(Pool.cpu()) { scope -&gt;
+    (1..15).collectParallel { it * 2 }          // [2, 4, 6, ..., 30]
+           .findAllParallel { it % 3 == 0 }     // [6, 12, 18, 24, 30]
+           .groupByParallel { it.toString().startsWith('1') }
+} == [(false):[6, 24, 30], (true):[12, 18]]</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -377,7 +377,7 @@ assert 2 == await counter.getAsync()</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">// Reactor — stateless, each message produces a reply
 def doubler = Actor.reactor { it * 2 }
-assert await(doubler.sendAndGet(21)) == 42
+assert 42 == await doubler.sendAndGet(21)
 
 // Stateful — maintains state across messages
 def counter = Actor.stateful(0) { state, msg -&gt;
@@ -388,7 +388,7 @@ def counter = Actor.stateful(0) { state, msg -&gt;
     }
 }
 counter.send('increment')
-assert await(counter.sendAndGet('increment')) == 2</code></pre>
+assert 2 == await counter.sendAndGet('increment')</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -422,7 +422,7 @@ class Account {
 def account = new Account()
 account.deposit(100)
 account.withdraw(30)
-assert account.getBalance() == 70.0</code></pre>
+assert account.balance == 70.0</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -441,6 +441,7 @@ until a value is bound:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def x = new DataflowVariable()
 def y = new DataflowVariable()
+def z = new DataflowVariable()
 
 async { z &lt;&lt; await(x) + await(y) }
 async { x &lt;&lt; 10 }
@@ -474,11 +475,19 @@ assert df.z == 15</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def pipeline = source
-    .filter { it &gt; 50 }
-    .map { it * 2 }
+<pre class="prettyprint highlight"><code data-lang="groovy">def source = AsyncChannel.create(10)
+def pipeline = source
+    .filter { it &gt; 3 }
+    .map { it * 10 }
 
-for (val in pipeline) { process(val) }</code></pre>
+async {
+    (1..5).each { source.send(it) }
+    source.close()
+}
+
+def results = []
+for (val in pipeline) { results &lt;&lt; val }
+assert results == [40, 50]</code></pre>
 </div>
 </div>
 <div class="paragraph">
