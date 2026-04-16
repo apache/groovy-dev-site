@@ -83,7 +83,7 @@
 <strong>Title</strong>
 </td>
 <td class="hdlist2">
-<p><code>val</code> keyword for final declarations</p>
+<p><code>val</code> type placeholder for final declarations</p>
 </td>
 </tr>
 <tr>
@@ -144,9 +144,12 @@
 <h2 id="_abstract">Abstract</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Groovy already supports <code>var</code> as a declaration keyword (alias for <code>def</code>,
+<p>Groovy already supports <code>var</code> as a type placeholder (alias for <code>def</code>,
 introduced for Java 10 compatibility). This GEP proposes adding <code>val</code>
-as a declaration keyword that combines <code>final</code> with type inference&#8201;&#8212;&#8201;equivalent to <code>final def</code>, <code>final var</code>, or just <code>final</code>.</p>
+as an additional type placeholder but also combining the <code>final</code> modifier;
+equivalent to <code>final def</code>, <code>final var</code>, <code>final Object</code>,
+or just <code>final</code> (Groovy already allows a visibility modifier
+to be a type placeholder).</p>
 </div>
 <div class="sect2">
 <h3 id="_motivation">Motivation</h3>
@@ -202,7 +205,7 @@ that mix both languages, and reduces friction when translating between them.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>val</code> declares a <code>final</code> variable with an inferred type (like <code>final def</code>)</p>
+<p><code>val</code> declares a <code>final</code> variable (like <code>final def</code>)</p>
 </li>
 <li>
 <p><code>val</code> must still be usable as a variable name, method name, map key,
@@ -213,6 +216,10 @@ and property name&#8201;&#8212;&#8201;mirroring <code>var</code> behavior</p>
 </li>
 <li>
 <p><code>final val</code> should be accepted (redundant but harmless)</p>
+</li>
+<li>
+<p>when statically type checking code with <code>val</code>, the same type
+inference occurs as occurs today for <code>final</code> or <code>final def</code></p>
 </li>
 </ul>
 </div>
@@ -237,9 +244,9 @@ is the domain of <code>@Immutable</code> and related transforms)</p>
 <div class="sect2">
 <h3 id="_design">Design</h3>
 <div class="sect3">
-<h4 id="_keyword_classification">Keyword classification</h4>
+<h4 id="_contextual_classification">Contextual classification</h4>
 <div class="paragraph">
-<p><code>val</code> is a <em>contextual keyword</em> in the same category as <code>var</code>.
+<p><code>val</code> interpretation is <em>contextual</em> in the same category as <code>var</code>.
 It is a reserved token at the lexer level but is included in the
 parser&#8217;s <code>identifier</code> rule, allowing it to be used as a name in
 non-declaration contexts.</p>
@@ -284,6 +291,9 @@ non-declaration contexts.</p>
 <h4 id="_semantics">Semantics</h4>
 <div class="paragraph">
 <p><code>val</code> is equivalent to <code>final def</code>, <code>final var</code>, or just <code>final</code>:</p>
+</div>
+<div class="paragraph">
+<p>With type-checking, normal inference applies:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -579,9 +589,9 @@ work correctly with no additional code beyond the changes listed above.</p>
 <div class="sect2">
 <h3 id="_breaking_behavior">Breaking behavior</h3>
 <div class="paragraph">
-<p>The main concern is existing code that uses <code>val</code> as a variable name.
-Since <code>val</code> will be in the <code>identifier</code> rule (like <code>var</code>), most usage
-continues to work:</p>
+<p>You might think the main concern is existing code that uses <code>val</code>
+as a variable name. But, since <code>val</code> will be in the <code>identifier</code> rule
+(like <code>var</code>), most usage continues to work:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -678,6 +688,48 @@ This matches the behavior <code>var</code> would have if Java permitted <code>cl
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_migration_flag_groovy_val_enabled">Migration flag: <code>groovy.val.enabled</code></h3>
+<div class="paragraph">
+<p>For codebases that use <code>val</code> as an identifier and cannot immediately
+migrate, a system property disables the <code>val</code> keyword entirely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">-Dgroovy.val.enabled=false</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When set to <code>false</code>, <code>val</code> is lexed as a plain identifier (not a keyword).
+All breaking changes listed above are resolved:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>def val</code> as a field name works (no modifier ambiguity)</p>
+</li>
+<li>
+<p><code>val as String</code> works (cast expression)</p>
+</li>
+<li>
+<p><code>class val {}</code> works (type declaration)</p>
+</li>
+<li>
+<p><code>val x</code> as explicit type works (if a class named <code>val</code> exists)</p>
+</li>
+<li>
+<p><code>val = something</code> and <code>def val = 1</code> work (assignment and declaration)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The flag is implemented as a lexer-level semantic predicate: when
+disabled, the lexer emits <code>IDENTIFIER</code> instead of <code>VAL</code>, so the parser
+never sees <code>val</code> as a keyword. We anticipate most users will use this
+as a short-lived porting aid&#8201;&#8212;&#8201;once code is migrated,
+remove the flag to benefit from <code>val</code>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -724,7 +776,8 @@ audience, making the case for this feature stronger.</p>
 <p>1 (2026-04-12) Initial draft<br>
 2 (2026-04-12) Added Java interop edge cases, spike implementation summary<br>
 3 (2026-04-12) Added field naming edge case, Gradle motivation<br>
-4 (2026-04-12) Added cast expression edge case, split code stats, linked spike branch and JIRA</p>
+4 (2026-04-12) Added cast expression edge case, split code stats, linked spike branch and JIRA<br>
+5 (2026-04-16) Added <code>groovy.val.enabled</code> migration flag</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
