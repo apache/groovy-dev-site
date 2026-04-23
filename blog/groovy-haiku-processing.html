@@ -75,7 +75,7 @@ with its multi-line strings, so we won&#8217;t elaborate further on that aspect.
 <p>Here is some of Donald&#8217;s creative writing:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*zcMH0Q37PFrGS4bC2EHqiw.png" alt="text of Donald Raab&#8217;s haikus"></span></p>
+<p><span class="image"><img src="img/DonaldRaabHaikus.png" alt="text of Donald Raab&#8217;s haikus"></span></p>
 </div>
 <div class="paragraph">
 <p>In his examples, he processes those examples in various ways. We&#8217;ll look at doing the same
@@ -164,7 +164,7 @@ and duplicate sets.</p>
     .findAll(Character::isAlphabetic)
     .collect(Character::toLowerCase)
     .collect(Character::toString)
-    .countBy{ it }
+    .countBy()
     .split(uniqueAndDuplicatePartitions)
     *.size() == [0, 22]</code></pre>
 </div>
@@ -201,7 +201,7 @@ that we will use for sorting (in reverse order):</p>
     .findAll(Character::isAlphabetic)
     .collect(Character::toLowerCase)
     .collect(Character::toString)
-    .countBy{ it }
+    .countBy()
     .sort(byCountDescending)
     .take(3) == [e:94, t:65, i:62]</code></pre>
 </div>
@@ -301,7 +301,7 @@ and it is a little easier to understand:</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">assert haiku.codePoints().toArray()
     .findAll(Character::isAlphabetic)
     .collect(Letter::new)
-    .countBy{ it }
+    .countBy()
     .collect(LetterByCount::new)
     .toSorted(LetterByCount.comparingByCount().reversed())
     .take(3)
@@ -325,7 +325,7 @@ assert haiku.codePoints().toArray()
     .findAll(Character::isAlphabetic)
     .collect(Character::toLowerCase)
     .collect(Character::toString)
-    .countBy{ it }
+    .countBy()
     .groupBy{ k, v -&gt; v }
     .sort(byCountReversed)
     .take(15)
