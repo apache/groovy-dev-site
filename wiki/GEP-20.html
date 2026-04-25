@@ -207,9 +207,11 @@ with identical semantics. New forms use grammar that fails to parse
 today.</p>
 </li>
 <li>
-<p><strong>No new keywords or markers</strong> — <code>def (&#8230;&#8203;)</code> already declares the
-names; <code>var</code> or other markers add ceremony without disambiguation in
-declarator position.</p>
+<p><strong>No new keywords</strong> — the new shapes use only existing tokens (<code>*</code>,
+<code>:</code>). <code>def</code> and <code>var</code> are also accepted before a binder for
+symmetry with switch case patterns and the bracket-form grammar in
+GEP-19, but neither is required: <code>def (a, b) = &#8230;&#8203;</code> works without
+any inner marker.</p>
 </li>
 <li>
 <p><strong><code><em></code> stays an identifier</strong> — existing idioms like
@@ -249,6 +251,29 @@ user-defined class providing the operator.</p>
 <div class="paragraph">
 <p>Type ascriptions on positional bindings (<code>def (int a, String b)</code>) are
 likewise unchanged.</p>
+</div>
+<div class="paragraph">
+<p><code>def</code> and <code>var</code> may also appear before any binder; both are
+equivalent to omitting a type. This is provided for symmetry with
+switch case patterns and the bracket-form declaration grammar in
+GEP-19, which use <code>var</code> as the canonical binding marker:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (var a, var b) = [1, 2]                  // same as: def (a, b) = [1, 2]
+def (def a, var b, int c) = [1, 2, 3]        // mix and match
+def (name: var n, age: var a) = person       // also in map-style</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Modifiers on the outer declaration propagate to every binder,
+including the new rest and map-style binders introduced below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final (a, *t) = list             // both `a` and `t` are final
+final (name: n, age: a) = person // both `n` and `a` are final</code></pre>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -813,12 +838,6 @@ GEP-19 pattern matching); others are not planned.</p>
  dedicated bracket-pattern proposal</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>var</code> markers in declarators</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (&#8230;&#8203;)</code> already declares the names; <code>var</code> adds ceremony without
- disambiguation in declarator position</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard <code>_</code> semantics</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned for parens form</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Existing identifier semantics preserved; any future wildcard form
@@ -835,9 +854,13 @@ GEP-19 pattern matching); others are not planned.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Inherently ambiguous; no language ships this</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nested patterns (e.g. <code>def (h, [a, b]) = &#8230;&#8203;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nested patterns (e.g. <code>def (h, [a, b]) = &#8230;&#8203;</code>,
+ <code>def (def (a, b), c) = &#8230;&#8203;</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Belongs with a bracket-form pattern grammar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Both bracket-form and recursive-parens shapes are currently
+ unparseable, so either remains claimable. Choice of syntax should
+ fall out of a dedicated pattern-grammar proposal (GEP-19)
+ rather than being settled here.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Head/middle rest against a non-indexable RHS</p></td>
@@ -857,6 +880,15 @@ GEP-19 pattern matching); others are not planned.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Useful for map-style destructuring on partial inputs; can be added
  later without grammar collision</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-binder modifiers (e.g. <code>def (final a, b) = …</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modifiers belong on the outer declaration: <code>final (a, b) = [1, 2]</code>
+ makes both binders final and propagates to rest and map-style
+ binders too. Per-binder modifiers would only enable mixed-modifier
+ shapes (one binder final, another mutable), adding grammar surface
+ for a rare use case.</p></td>
 </tr>
 </tbody>
 </table>
