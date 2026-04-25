@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-19</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-19</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_java_alignment' class='anchor-link'>Java alignment</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-19</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-19</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Structural Pattern Matching in switch</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-25</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-25</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+We are currently working Groovy 6.0 and this proposal targets Groovy 7.0.
+The final version of this proposal may differ significantly from the current draft,
+but having this draft available allows us to gather early feedback, future align design
+decisions in Groovy 6 as best we can, and iterate on the design.
+We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP extends Groovy&#8217;s <code>switch</code> expression with structural pattern
+matching for lists, maps, and types, building on the record patterns
+introduced in 5.0 and aligning with Java&#8217;s pattern-matching trajectory
+(JEPs 440, 441, 456, 507).</p>
+</div>
+<div class="paragraph">
+<p>The proposal adds list patterns (<code>[var h, var&#8230;&#8203; t]</code>), map patterns
+(<code>[name: var n, var&#8230;&#8203; rest]</code>), type patterns with binding (<code>String s</code>),
+guard clauses (<code>when</code>), and a unified wildcard form (<code>_</code> inside record
+patterns; <code>var _</code> elsewhere). The same pattern grammar is also accepted
+in <code>def [&#8230;&#8203;] = &#8230;&#8203;</code> bracket-form declarations, providing a consistent
+destructuring grammar between switch case labels and assignment for
+users who want it. The everyday parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) is
+covered separately by GEP-20 and ships in Groovy 6.x.</p>
+</div>
+<div class="paragraph">
+<p>All existing <code>switch</code> semantics are preserved: legacy <code>isCase</code> matching
+(constants, ranges, regex, classes, collections, maps, closures) compiles
+exactly as it does today. Pattern matching is opt-in via the binding
+markers that distinguish a structural pattern from a legacy case label.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s <code>switch</code> already exceeds Java&#8217;s classic switch through the
+<code>isCase</code> protocol — case labels can be classes, ranges, regex patterns,
+collections, and closures. Groovy 5.0 added record patterns aligned with
+Java 21&#8217;s JEP 440. What remains absent is structural decomposition of
+the most common data shapes: lists, maps, and arrays.</p>
+</div>
+<div class="paragraph">
+<p>Languages that have shipped this — Scala, Rust, Swift, Kotlin (limited),
+JavaScript (via destructuring), Python (via PEP 634), and Jactl — show
+that destructuring in switch / match is one of the most-used pattern
+matching idioms once available. Without it, the canonical functional
+expression of recursive list algorithms remains awkward in Groovy:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Without structural matching
+def qsort(list) {
+    if (list.size() &lt;= 1) return list
+    def h = list[0]
+    def t = list.drop(1)
+    qsort(t.findAll { it &lt; h }) + [h] + qsort(t.findAll { it &gt;= h })
+}
+
+// With structural matching (this proposal)
+def qsort(x) {
+    switch (x) {
+        case []                -&gt; []
+        case [var h, var... t] -&gt; qsort(t.findAll { it &lt; h }) + [h] + qsort(t.findAll { it &gt;= h })
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Java is moving in the same direction. Beyond what has shipped, JEP
+drafts cover deconstructor methods for arbitrary classes, primitive
+patterns in <code>switch</code> (JEP 507 preview), and array patterns under
+discussion. Aligning Groovy&#8217;s surface syntax with Java&#8217;s where they
+overlap — and lowering through a uniform internal representation —
+keeps Groovy forward-compatible without paying for it twice.</p>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>No legacy regression</strong> — every program valid under Groovy 6 compiles
+with identical semantics in 7. The disambiguation between legacy
+<code>isCase</code> and structural patterns is parser-decidable and based solely
+on the presence of binding markers.</p>
+</li>
+<li>
+<p><strong>Java alignment where syntax overlaps</strong> — <code>when</code> guards, type patterns,
+record patterns, and <code>_</code> unnamed pattern syntax match Java verbatim.
+Rest bindings reuse Groovy&#8217;s existing varargs syntax (<code>Type&#8230;&#8203; ident</code>),
+the form Java is most likely to adopt for variadic deconstructor
+components.</p>
+</li>
+<li>
+<p><strong>Groovy-native where Java has no analogue</strong> — list and map literal
+patterns (<code>[&#8230;&#8203;]</code>, <code>[k: v]</code>) have no Java counterpart because Java
+has no list or map literals. Groovy can lead here without future
+drift risk. In all binding positions, <code>var</code> and <code>def</code> are
+interchangeable (matching Groovy&#8217;s existing local-variable
+convention and GEP-20), and rest slots accept the shortcut <code>&#8230;&#8203;</code>
+(or <code>&#8230;&#8203; ident</code>) for <code>var&#8230;&#8203; _</code> (or <code>var&#8230;&#8203; ident</code>).</p>
+</li>
+<li>
+<p><strong>Shared bracket-form grammar with assignment</strong> — the pattern grammar
+is accepted by <code>def [&#8230;&#8203;] = expr</code> declarations as by
+<code>case [&#8230;&#8203;] &#8594;</code> labels. The parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) covered
+by GEP-20 remains the canonical surface for everyday destructuring;
+the bracket form is the opt-in bridge to switch pattern grammar.</p>
+</li>
+<li>
+<p><strong>Forward-compatible lowering</strong> — list and map patterns desugar through
+an internal <code>Deconstructable</code> strategy. When Java&#8217;s deconstructor JEP
+ships, surface forms like <code>case List.of(var h, var&#8230;&#8203; t) &#8594;</code> slot in
+as additional spellings of the same lowering — no architectural
+change needed.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_type_patterns_with_binding">Type patterns with binding</h3>
+<div class="paragraph">
+<p>A type pattern matches if the switch value is an instance of the named
+type, binding a new local variable in the case body:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (obj) {
+    case String s   -&gt; s.toUpperCase()
+    case Integer i  -&gt; i * 2
+    case Number n   -&gt; n.doubleValue()
+    default         -&gt; null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bound name is narrowed to the declared type within the case body
+and any <code>when</code> guard. <code>@CompileStatic</code> and <code>@TypeChecked</code> see the
+narrowed type via the same flow analysis already used for record
+patterns.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_record_patterns">Record patterns</h3>
+<div class="paragraph">
+<p>Record patterns (introduced in Groovy 5.0) deconstruct record-typed
+values positionally. Component positions accept nested patterns,
+including the unnamed pattern <code>_</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Point(int x, int y) {}
+record Line(Point start, Point end) {}
+
+switch (obj) {
+    case Point(int x, int y)         -&gt; "$x,$y"
+    case Point(int x, _)             -&gt; "x=$x"
+    case Line(Point(_, _), Point p2) -&gt; "ends at $p2"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Bare <code><em></code> is permitted inside <code>Type(&#8230;&#8203;)</code> because record-pattern
+component grammar is not expression grammar — there is no collision
+with <code></em></code> as an identifier in expression position.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_list_patterns">List patterns</h3>
+<div class="paragraph">
+<p>List patterns destructure <code>List</code>, array, and <code>Iterable</code> values
+structurally. Element positions accept literals, type patterns,
+<code>var</code>/<code>def</code> bindings, nested patterns, and a single rest binding:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (xs) {
+    case []                                     -&gt; "empty"
+    case [...]                                  -&gt; "non-empty list (any shape)"
+    case [var only]                             -&gt; "single: $only"
+    case [var h, var... t]                      -&gt; "h=$h, t=$t"
+    case [def h, ... t]                         -&gt; "h=$h, t=$t (using shortcuts)"
+    case [Integer h, var... t]                  -&gt; "int head $h"
+    case [var first, var... middle, var last]   -&gt; "$first..$last"
+    case [1, var x, ...]                        -&gt; "starts with 1, then $x"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>var</code> and <code>def</code> are interchangeable in any binding position. The
+shortcut <code>&#8230;&#8203;</code> is accepted for <code>var&#8230;&#8203; <em></code> (and <code>&#8230;&#8203; ident</code> for
+<code>var&#8230;&#8203; ident</code>); see _Rest bindings</em> below.</p>
+</div>
+<div class="paragraph">
+<p>Element count rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Without rest: a pattern of <code>n</code> elements matches values of exactly
+<code>n</code> elements.</p>
+</li>
+<li>
+<p>With one rest: a pattern of <code>n</code> fixed elements plus a rest binding
+matches values of at least <code>n</code> elements. Rest may appear in any
+single position. Multiple rest bindings at the same level are a
+compile error.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Type rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For <code>List&lt;T&gt;</code> input, untyped element bindings are inferred as <code>T</code>,
+the rest binding as <code>List&lt;T&gt;</code>.</p>
+</li>
+<li>
+<p>For <code>T[]</code> input, the rest binding is inferred as <code>T[]</code>.</p>
+</li>
+<li>
+<p>For other <code>Iterable&lt;T&gt;</code> input, the iterable is materialised as a list
+once for matching.</p>
+</li>
+<li>
+<p>For <code>Object</code> input, bindings fall back to <code>Object</code> and <code>List</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_map_patterns">Map patterns</h3>
+<div class="paragraph">
+<p>Map patterns destructure <code>Map</code> values by key. Keys are compile-time
+constant expressions; values are arbitrary patterns:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (m) {
+    case [name: var n, age: var a]       -&gt; "person $n, $a"
+    case [type: 'circle', radius: var r] -&gt; "circle r=$r"
+    case [name: String n, ... rest]      -&gt; "named $n; others=$rest"
+    case [name: def n, ...]              -&gt; "any named map (others discarded)"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Map pattern semantics are <strong>open</strong>: a pattern matches if all named keys
+are present and their value patterns match. Extra keys in the map are
+ignored unless captured by a rest binding. Closed semantics — "exactly
+these keys" — is expressed via a guard:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case [name: var n] when ((Map) m).size() == 1 -&gt; ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest binding <code>var&#8230;&#8203; rest</code> in a map pattern binds a <code>Map</code> of the
+entries not matched by named keys.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_empty_literals">Empty literals</h3>
+<div class="paragraph">
+<p>The empty list literal <code>[]</code> and empty map literal <code>[:]</code> in case-label
+position are always treated as patterns matching empty collections of
+the appropriate kind:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case []   -&gt; "empty list"
+case [:]  -&gt; "empty map"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The legacy <code>isCase</code> semantics for these — never matching anything,
+because <code>[].contains(x)</code> and <code>[:].get(x)</code> are always false / null —
+have no practical use, so claiming the pattern interpretation removes
+no functionality.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_wildcards">Wildcards</h3>
+<div class="paragraph">
+<p>The unnamed pattern matches any value without binding it. The form
+depends on context:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Position</th>
+<th class="tableblock halign-left valign-top">Form</th>
+<th class="tableblock halign-left valign-top">Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inside <code>Type(&#8230;&#8203;)</code> record patterns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>_</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No expression-grammar collision; matches Java 22 (JEP 456)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inside <code>[&#8230;&#8203;]</code> list and <code>[k: v]</code> map patterns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>var _</code> or <code>def _</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>_</code> is a legal identifier in expression grammar today; explicit
+ <code>var _</code> / <code>def _</code> avoids re-interpreting valid programs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rest discard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>&#8230;&#8203;</code> (shortcut) or <code>var&#8230;&#8203; _</code> / <code>def&#8230;&#8203; _</code> (canonical)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See <em>Rest bindings</em> below</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Top-level case label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default &#8594;</code> (preferred) or <code>case var _ &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>case _ &#8594;</code> retains its legacy meaning when <code>_</code> is in scope as
+ an identifier</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_rest_bindings">Rest bindings</h3>
+<div class="paragraph">
+<p>Rest bindings collect remaining elements into a single binding. The
+canonical form is <code>var&#8230;&#8203; ident</code> (or <code>def&#8230;&#8203; ident</code> / <code>Type&#8230;&#8203; ident</code>),
+reusing Groovy&#8217;s existing varargs token sequence — the same shape as
+<code>int&#8230;&#8203; args</code> in method parameter lists:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case [var h, var... t]      -&gt; ...   // canonical
+case [def h, def... t]      -&gt; ...   // equivalent (var/def interchangeable)
+case [var h, Integer... t]  -&gt; ...   // typed rest
+case [var h, var... _]      -&gt; ...   // discarded rest, canonical</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>var&#8230;&#8203; t</code> spelling reuses an existing Groovy token sequence
+(varargs in method declarations) and matches the shape Java is most
+likely to adopt for variadic deconstructor components — keeping the
+<code>case List.of(var h, var&#8230;&#8203; t)</code> surface form (when Java specifies
+it) consistent with the list-literal form.</p>
+</div>
+<div class="sect3">
+<h4 id="_shortcut"><code>&#8230;&#8203;</code> shortcut</h4>
+<div class="paragraph">
+<p>The triple-dot <code>&#8230;&#8203;</code> is accepted as a shortcut wherever <code>var&#8230;&#8203;</code> (or
+<code>def&#8230;&#8203;</code>) appears, reflecting that the leading <code>var</code> / <code>def</code> is
+ceremonial once <code>&#8230;&#8203;</code> has signalled the rest position:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case [var h, ... t]         -&gt; ...   // shortcut for `var... t`
+case [var h, ...]           -&gt; ...   // shortcut for `var... _`
+case [...]                  -&gt; ...   // matches any list</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both <code>&#8230;&#8203; ident</code> and bare <code>&#8230;&#8203;</code> flip a <code>[&#8230;&#8203;]</code> from legacy to pattern
+interpretation on their own. The <code>&#8230;&#8203;</code> token has no expression-position
+meaning today (it is reserved only for varargs in method declarations
+and enhanced-for index variables), so claiming it as pattern grammar
+reinterprets no existing program.</p>
+</div>
+<div class="paragraph">
+<p>Bare <code>&#8230;&#8203;</code> matches any list (including empty), since the rest can
+absorb zero elements. It pairs naturally with <code>case [] &#8594;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case []     -&gt; "empty"
+case [...]  -&gt; "non-empty (the empty case is matched above)"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The typed shortcut <code>Integer&#8230;&#8203; t</code> is <strong>not</strong> further shortened to
+<code>&#8230;&#8203; t</code>, because the type ascription carries semantic content (a
+runtime element-type check) that bare <code>&#8230;&#8203;</code> would discard.</p>
+</div>
+<div class="paragraph">
+<p>For reference, GEP-20&#8217;s parens-form <code>def (&#8230;&#8203;) = &#8230;&#8203;</code> uses <code>*ident</code>
+and <code>*<em></code> for the same role — the parens-form analogue of
+<code>var&#8230;&#8203; ident</code> and <code>var&#8230;&#8203; _</code> (or the <code>&#8230;&#8203;</code> shortcut). The <code>*</code>
+spelling is not adopted inside <code>[&#8230;&#8203;]</code> patterns here because <code>*</code>
+collides with list-literal spread in expression position; see
+_Excluded and deferred features</em> for the relationship between the
+two and the conditions under which the parser could in principle
+accept the <code>*</code> spelling inside an already-disambiguated pattern.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_guards">Guards</h3>
+<div class="paragraph">
+<p><code>when</code> guards apply to patterns:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">case Integer i when i &gt; 0                     -&gt; "positive"
+case [var h, var... t] when t.size() &gt; 5      -&gt; "long list head=$h"
+case Point(int x, int y) when x == y          -&gt; "diagonal point"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Guards may reference any binding from the same pattern. Guards are
+evaluated once after pattern matching succeeds; arms with failing
+guards fall through to the next arm.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_patterns_in_instanceof">Patterns in <code>instanceof</code></h3>
+<div class="paragraph">
+<p>Type patterns and record patterns extend to <code>instanceof</code>, mirroring
+Java:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">if (obj instanceof String s) {
+    println s.length()
+}
+if (point instanceof Point(int x, int y)) {
+    println "$x, $y"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>List and map patterns are not valid in <code>instanceof</code> because they have
+no type at the head. To test "is this value shaped like &#8230;&#8203;", use a
+single-arm <code>switch</code> expression returning a boolean.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_disambiguation_rule">Disambiguation rule</h3>
+<div class="paragraph">
+<p>A <code>[&#8230;&#8203;]</code> or <code>[k: v, &#8230;&#8203;]</code> case label is parsed as a <strong>structural
+pattern</strong> if and only if at least one of the following holds:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The literal is empty (<code>[]</code> or <code>[:]</code>).</p>
+</li>
+<li>
+<p>Some element (or value, in maps) is a <strong>binding form</strong>:</p>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<code>var &lt;ident&gt;</code> / <code>def &lt;ident&gt;</code>
+</td>
+<td class="hdlist2">
+<p>e.g. <code>var h</code> or <code>def h</code> (interchangeable)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>var _</code> / <code>def _</code>
+</td>
+<td class="hdlist2">
+<p>unnamed binding</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&lt;Type&gt; &lt;ident&gt;</code>
+</td>
+<td class="hdlist2">
+<p>e.g. <code>Integer h</code></p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&lt;Type&gt; _</code>
+</td>
+<td class="hdlist2">
+<p>type-checked unnamed binding</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>var&#8230;&#8203; &lt;ident&gt;</code> / <code>def&#8230;&#8203; &lt;ident&gt;</code>
+</td>
+<td class="hdlist2">
+<p>rest binding</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&#8230;&#8203; &lt;ident&gt;</code>
+</td>
+<td class="hdlist2">
+<p>rest binding (shortcut for <code>var&#8230;&#8203; &lt;ident&gt;</code>)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&lt;Type&gt;&#8230;&#8203; &lt;ident&gt;</code>
+</td>
+<td class="hdlist2">
+<p>typed rest binding</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>var&#8230;&#8203; _</code> / <code>def&#8230;&#8203; _</code>
+</td>
+<td class="hdlist2">
+<p>rest discard</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<code>&#8230;&#8203;</code>
+</td>
+<td class="hdlist2">
+<p>rest discard (shortcut for <code>var&#8230;&#8203; _</code>)</p>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Some element is a nested pattern (record pattern with at least one
+unambiguous binding form among its components, nested list pattern,
+nested map pattern).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Otherwise, the label retains its legacy <code>isCase</code> semantics — exactly
+today&#8217;s behaviour.</p>
+</div>
+<div class="paragraph">
+<p>The rule is parser-local and does not depend on surrounding scope.
+Every binding form listed above currently fails to parse as a Groovy
+expression in list-literal or map-literal value position, so claiming
+them as pattern grammar does not change the meaning of any program
+valid in Groovy 6.</p>
+</div>
+<div class="paragraph">
+<p>The bare identifier <code><em></code> continues to parse as an identifier in
+expression position — <code>case [</em>] &#8594;</code> therefore retains its legacy
+meaning. Users wanting a single-element wildcard pattern write
+<code>case [var _] &#8594;</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bracket_form_assignment">Bracket-form assignment</h3>
+<div class="paragraph">
+<p>In Groovy 7.0, <code>def [&#8230;&#8203;] = expr</code> accepts the same pattern grammar as
+switch case labels. This is the bridge between switch and assignment
+destructuring:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def [var h, var... t]                    = list      // canonical
+def [def h, ... t]                       = list      // equivalent (shortcuts)
+def [Integer h, var... t]                = list      // typed head
+def [var first, var... middle, var last] = list      // rest in middle
+def [name: var n, age: var a]            = person    // map destructuring
+def [Point(int x, int y), ... rest]      = list      // nested record pattern</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bracket form supports the full switch pattern grammar — nested
+patterns, type bindings with narrowing, wildcard <code>_</code> (via <code>var _</code>
+or <code>def _</code>), typed rest, and record patterns. A binding marker
+(<code>var</code>, <code>def</code>, a type, or <code>&#8230;&#8203;</code> for rest) is required inside <code>[&#8230;&#8203;]</code>
+for the same disambiguation reason it is in case labels: without
+one, the literal would parse as today&#8217;s legacy list literal.</p>
+</div>
+<div class="paragraph">
+<p>The parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) is a separate, simpler grammar
+covered by GEP-20 and shipped in Groovy 6.x. It remains canonical for
+everyday destructuring (positional bindings, simple rest, map-style
+keys) and does not require <code>var</code> markers because the surrounding <code>def</code>
+already declares the names. The two forms coexist:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Form</th>
+<th class="tableblock halign-left valign-top">Capabilities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parens (<code>def (&#8230;&#8203;)</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Positional, rest with <code>*</code>, map-style with <code>key:</code>. GEP-20, Groovy 6.x.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bracket (<code>def [&#8230;&#8203;]</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full pattern grammar — nested patterns, wildcard <code>_</code>, type narrowing,
+ record patterns. This proposal, Groovy 7.0.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_lowering_for_bracket_form_assignment">Lowering for bracket-form assignment</h4>
+<div class="paragraph">
+<p>The bracket form lowers via the same <code>Deconstructable</code> strategy as
+switch case labels, with one accommodation: tail-rest forms accept
+the same RHS contract as GEP-20&#8217;s parens form (<code>getAt(IntRange)</code> or
+<code>iterator()</code> fallback), so iterators and unbounded sources work in
+assignment context. List patterns in switch case labels do <strong>not</strong>
+accept iterators — pattern matching against an iterator would
+destructively consume it, which is surprising for a match operation.</p>
+</div>
+<div class="paragraph">
+<p>The divergence between contexts is therefore:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>def [var h, var&#8230;&#8203; t] = iter</code> — accepted, uses <code>iterator()</code>
+fallback, <code>t</code> is the iterator (matching GEP-20&#8217;s parens form).</p>
+</li>
+<li>
+<p><code>case [var h, var&#8230;&#8203; t] &#8594; &#8230;&#8203;</code> against an iterator — does not
+match; list patterns require <code>List</code>, array, or an <code>Iterable</code> that
+can be materialised non-destructively.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A failed match in a bracket-form declaration throws
+<code>IllegalArgumentException</code>. Partial matching is via <code>switch</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compilation">Compilation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>List and map patterns lower through an internal <code>Deconstructable</code>
+strategy that performs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a type check (<code>instanceof List</code>, <code>instanceof Map</code>, <code>instanceof T[]</code>,
+etc.),</p>
+</li>
+<li>
+<p>size or key checks for the named elements,</p>
+</li>
+<li>
+<p>component extraction (<code>get(int)</code>, <code>subList</code>, <code>containsKey</code>/<code>get</code>,
+key-set difference for rest),</p>
+</li>
+<li>
+<p>binding assignment.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Record patterns reuse the lowering already present in 5.0. When Java&#8217;s
+deconstructor JEP ships, surface forms like
+<code>case List.of(var h, var&#8230;&#8203; t) &#8594;</code> and
+<code>case Map.of("name", var n) &#8594;</code> are accepted as additional spellings
+that lower to the same <code>Deconstructable</code> calls — no re-architecture.</p>
+</div>
+<div class="paragraph">
+<p>Implementation considerations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Switch dispatch on JDK 21+ should evaluate
+<code>java.lang.runtime.SwitchBootstraps.typeSwitch</code> as the dispatch path
+for arms whose patterns admit it, on parity with how Java compiles
+pattern switch.</p>
+</li>
+<li>
+<p>Bindings live in synthetic locals; the static type checker propagates
+narrowed types into them.</p>
+</li>
+<li>
+<p>For dynamic Groovy, bindings are typed <code>Object</code> and runtime checks
+dominate; for <code>@CompileStatic</code>, narrowed types let the JIT see
+through.</p>
+</li>
+<li>
+<p>Iterable inputs that are not <code>List</code> or array are materialised as a
+list once per match attempt; this is observable for iterators with
+side effects.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_java_alignment">Java alignment</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Java feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Groovy alignment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching for <code>instanceof</code> (JEP 394, 16)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type and record patterns valid in <code>instanceof</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Record patterns (JEP 440, 21)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Already in Groovy 5.0; extended in this proposal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching for <code>switch</code> (JEP 441, 21)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arrow-form <code>switch</code>, this proposal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>when</code> guards (Java 21)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adopted verbatim</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unnamed patterns <code>_</code> (JEP 456, 22)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adopted in <code>Type(&#8230;&#8203;)</code>; <code>var _</code> / <code>def _</code> elsewhere (avoids
+ identifier collision); <code>&#8230;&#8203;</code> for rest discard (Groovy-native)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Primitive patterns (JEP 507)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preview</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy already coerces; revisit when finalised</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deconstructors for arbitrary classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Draft</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Deconstructable</code> lowering accommodates this when surface syntax is
+ specified</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Array patterns</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Discussed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If Java picks <code>T[] {&#8230;&#8203;}</code> syntax, Groovy will accept it as an
+ alternative surface for <code>case [&#8230;&#8203;]</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*name</code> / <code>*_</code> rest sugar (in bracket-form patterns / switch)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The triple-dot shortcut (<code>&#8230;&#8203;</code>, <code>&#8230;&#8203; ident</code>) supersedes both. <code><strong></code> is
+GEP-20&#8217;s canonical rest spelling in <code>def (&#8230;&#8203;) = &#8230;&#8203;</code> (no expression
+collision there) but inside <code>[&#8230;&#8203;]</code> patterns <code></strong></code> collides with
+list-literal spread, so this proposal uses <code>&#8230;&#8203;</code> instead. The GEP-20
+spellings (<code>*ident</code>, bare <code>key: ident</code>) could be accepted inside a
+<code>[&#8230;&#8203;]</code> pattern once another binding form elsewhere in the literal
+has triggered pattern mode — they are deferred rather than blocked,
+to keep binding markers locally explicit for readers and to leave
+the design space open for a future relaxation if usage warrants it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Or-patterns (<code>p1 | p2</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing comma-separated case labels (<code>case 1, 2, 3 &#8594;</code>) cover the
+ constant case; pattern alternation is rarely needed and ambiguous with
+ list-element commas</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type-prefixed list patterns (e.g. <code>case List&lt;Integer&gt;[var h, var&#8230;&#8203; t]</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Awaits clarity from Java&#8217;s array pattern direction; for now, type
+ information flows from the switch input</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Patterns in <code>for</code> loops</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>for (Map.Entry e in map.entrySet())</code> is already idiomatic; structural
+ unrolling is a future consideration</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Patterns in <code>catch</code> clauses</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-catch already covers type unions; structural matching of
+ exception state is rare</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closed map patterns ("exactly these keys")</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expressible via guard; dedicated syntax not warranted</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>case _ &#8594;</code> at top level</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conflicts with legacy <code>_</code>-as-identifier semantics; users write
+ <code>default &#8594;</code> or <code>case var _ &#8594;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustiveness enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Warn-only initially</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java errors for sealed-type expression switches; Groovy emits a
+ warning in 7.0 and may escalate via opt-in flag in 7.x</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>Every program valid in Groovy 6 compiles with identical semantics in
+Groovy 7. The disambiguation rule is purely parser-local and is
+triggered only by syntactic forms that currently fail to parse:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 75%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Form</th>
+<th class="tableblock halign-left valign-top">Parses today (Groovy 6 with GEP-20)?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [1, 2, 3] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy <code>isCase</code>, unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [name: 'x'] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy <code>Map.isCase</code>, unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [_] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy (list containing <code>_</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [var h, var&#8230;&#8203; t] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new, claims unused grammar</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [def h, def&#8230;&#8203; t] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (Groovy-native equivalent)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [&#8230;&#8203; t] &#8594;</code> / <code>case [&#8230;&#8203;] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (<code>&#8230;&#8203;</code> shortcut / flipper)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [Integer h, var&#8230;&#8203; t] &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case String s &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (5.0 supported only <code>Type(&#8230;&#8203;)</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [var h, var&#8230;&#8203; t] = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (bracket form)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [name: var n, age: var a] = person</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (bracket form)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (h, *t) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — covered by GEP-20 in Groovy 6.x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (name: n, age: a) = person</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — covered by GEP-20 in Groovy 6.x</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Two <code>[&#8230;&#8203;]</code> forms have legacy semantics that never usefully match —
+<code>case [] &#8594;</code> and <code>case [:] &#8594;</code> — and are reinterpreted as empty-list
+and empty-map patterns respectively. No existing program depends on
+these never-matching legacy forms.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics_across_forms"><code>_</code> semantics across forms</h3>
+<div class="paragraph">
+<p>Wildcard <code><em></code> semantics introduced in this proposal apply inside
+<code>[&#8230;&#8203;]</code> list and map patterns, and inside <code>Type(&#8230;&#8203;)</code> record
+patterns. The parens-form assignment <code>def (&#8230;&#8203;) = expr</code> (covered by
+GEP-20) continues to treat <code></em></code> as a regular identifier indefinitely,
+matching GEP-20&#8217;s explicit non-deprecation. Existing idioms such as
+<code>def (_, y, m) = Calendar.instance</code> keep compiling unchanged with no
+warning in Groovy 7.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Context</th>
+<th class="tableblock halign-left valign-top"><code>_</code> meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (&#8230;&#8203;, _, &#8230;&#8203;) = expr</code> (parens form, GEP-20)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Identifier — unchanged from today</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [var _, &#8230;&#8203;] = expr</code> (bracket form)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard — bind-and-discard</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [var _, &#8230;&#8203;] &#8594;</code> (list pattern in switch)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard — bind-and-discard</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case Type(_, _) &#8594;</code> (record pattern)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard — bind-and-discard (Java-aligned)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This scoping means GEP-19 introduces no behavioural break for any
+existing program: the wildcard semantics live in grammar (<code>[&#8230;&#8203;]</code>
+patterns, <code>Type(&#8230;&#8203;)</code> patterns) that does not parse today.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjdk.org/jeps/394">JEP 394: Pattern Matching for instanceof</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/440">JEP 440: Record Patterns</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/441">JEP 441: Pattern Matching for switch</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/456">JEP 456: Unnamed Variables &amp; Patterns</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/507">JEP 507: Primitive Types in Patterns</a></p>
+</li>
+<li>
+<p><a href="https://docs.python.org/3/whatsnew/3.10.html#pep-634-structural-pattern-matching">PEP 634: Structural Pattern Matching (Python)</a></p>
+</li>
+<li>
+<p><a href="GEP-18.html">GEP-18: Integrated Concurrency and Parallel Processing</a></p>
+</li>
+<li>
+<p><a href="GEP-20.html">GEP-20: Multi-assignment Destructuring</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
