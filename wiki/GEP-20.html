@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-20</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-20</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-20</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-20</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Multi-assignment Destructuring</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-25</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-25</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP extends Groovy&#8217;s parens-form multi-assignment with rest
+bindings (<code>*t</code>) at the tail, head, or middle of the declarator list,
+and map-style key destructuring (<code>name: n</code>). The extensions are
+strictly additive — every program valid in Groovy 4 / 5 today
+compiles with identical semantics — and each new shape uses an
+unparseable token sequence in the existing grammar, so the proposal
+claims previously-unused syntax rather than reinterpreting any
+existing form.</p>
+</div>
+<div class="paragraph">
+<p>The proposal targets Groovy 6.x.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s multi-assignment in <code>def (&#8230;&#8203;)</code> has been stable since Groovy
+1.6. Today&#8217;s grammar supports only positional binding:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (a, b, c) = list
+def (int x, String y) = pair</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three idioms are common in modern languages but unavailable in Groovy:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Tail rest binding</strong>: <code>def (h, *t) = list</code> — separate the head from
+the remainder. Common in functional code (recursive list traversal,
+pipeline-style processing of streams and iterators).</p>
+</li>
+<li>
+<p><strong>Map-style destructuring</strong>: <code>def (name: n, age: a) = person</code> — extract
+named properties or map keys directly, without intermediate
+variables.</p>
+</li>
+<li>
+<p><strong>Rest in non-tail positions</strong>: <code>def (*f, last) = list</code>,
+<code>def (l, *m, r) = list</code> — useful when the boundaries are at the ends
+rather than the middle.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Adding these to the parens form keeps the grammar familiar (no new
+bracket form, no marker words) while filling the gaps.</p>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Strictly additive</strong> — every program valid in Groovy 5 / 6 compiles
+with identical semantics. New forms use grammar that fails to parse
+today.</p>
+</li>
+<li>
+<p><strong>No new keywords or markers</strong> — <code>def (&#8230;&#8203;)</code> already declares the
+names; <code>var</code> or other markers add ceremony without disambiguation in
+declarator position.</p>
+</li>
+<li>
+<p><strong><code><em></code> stays an identifier</strong> — existing idioms like
+<code>def (</em>, y, m) = Calendar.instance</code> keep working without warning.
+This proposal introduces no wildcard semantics for <code>_</code>.</p>
+</li>
+<li>
+<p><strong>Reuse Groovy&#8217;s existing tokens</strong> — the rest marker is <code>*</code>, matching
+Groovy&#8217;s spread operator. The map form uses <code>key: value</code> syntax
+matching Groovy map literals.</p>
+</li>
+<li>
+<p><strong>Sized contracts only when needed</strong> — forms that can be lowered
+streaming-style (tail rest) accept iterators and unbounded sources
+via an <code>iterator()</code> fallback. Forms that genuinely need to know the
+RHS size (head rest, middle rest) document the sized-RHS contract
+and fail fast against non-conforming input.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_existing_positional_form_recap">Existing positional form (recap)</h3>
+<div class="paragraph">
+<p>For reference, <code>def (a, b, c) = rhs</code> evaluates <code>rhs</code> once into a
+synthetic local then assigns each declared variable from
+<code>rhs.getAt(0)</code>, <code>rhs.getAt(1)</code>, <code>rhs.getAt(2)</code>. This is unchanged. Any
+RHS supporting <code>getAt(int)</code> continues to work — <code>List</code>, <code>String</code>,
+arrays, ranges, iterators (via DGM&#8217;s <code>getAt(Iterator, int)</code>), and any
+user-defined class providing the operator.</p>
+</div>
+<div class="paragraph">
+<p>Type ascriptions on positional bindings (<code>def (int a, String b)</code>) are
+likewise unchanged.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tail_rest_binding">Tail rest binding</h3>
+<div class="paragraph">
+<p>A single <code>*ident</code> at the end of the declarator list captures the
+remaining elements:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (h, *t) = list
+def (a, b, c, *rest) = list</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The rest binding is well-defined for any RHS that supports <strong>either</strong>
+<code>getAt(IntRange)</code> <strong>or</strong> <code>iterator()</code>. The compiler picks one of two
+lowerings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Path A — RHS supports getAt(IntRange):
+def __rhs = rhs
+def h = __rhs.getAt(0)
+def t = __rhs.getAt(1..-1)
+
+// Path B — RHS iterable but not range-indexable:
+def __it = rhs.iterator()
+def h = __it.hasNext() ? __it.next() : null
+def t = __it</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>t</code> therefore has the natural type of the RHS:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3335%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">RHS type</th>
+<th class="tableblock halign-left valign-top"><code>getAt(IntRange)</code></th>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type of <code>t</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>T[]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Range</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;Integer&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterable&lt;T&gt;</code> (custom)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code> — same instance, advanced</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Path B is the key enabler for unbounded sources. Given an infinite or
+lazy iterator, <code>def (h, *t) = source</code> returns the head and an iterator
+the caller can keep pulling from — there is no materialisation.</p>
+</div>
+<div class="sect3">
+<h4 id="_type_ascriptions_on_the_rest_binder">Type ascriptions on the rest binder</h4>
+<div class="paragraph">
+<p>The rest binder may carry a type ascription, mirroring the existing
+positional form:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (h, List&lt;Integer&gt; *t) = [1, 2, 3, 4]    // Path A — t : List&lt;Integer&gt;
+def (h, Iterator&lt;Integer&gt; *t) = someSet     // Path B — t : Iterator&lt;Integer&gt;
+def (l, List&lt;Integer&gt; *m, r) = list         // typed middle rest</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The declared type must be compatible with the path the RHS selects:
+<code>List&lt;T&gt;</code> (or a supertype) for Path A, <code>Iterator&lt;T&gt;</code> (or a supertype)
+for Path B. Under <code>@CompileStatic</code> a mismatch is reported at compile
+time; in dynamic mode it surfaces as a <code>GroovyCastException</code> when the
+slice or iterator is coerced. Untyped rest is the recommended
+default; ascribe a type when you want a tighter element type or to
+fail fast if the RHS shape changes.</p>
+</div>
+<div class="paragraph">
+<p>Edge cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Empty RHS: <code>def (h, *t) = []</code> — <code>h = null</code>, <code>t = []</code> (Path A) or <code>t</code>
+is an exhausted iterator (Path B).</p>
+</li>
+<li>
+<p>Exhausted iterator: <code>def (h, *t) = exhaustedIter</code> — <code>h = null</code>,
+<code>t = exhaustedIter</code>.</p>
+</li>
+<li>
+<p>RHS that supports neither protocol: compile error under
+<code>@CompileStatic</code>; <code>MissingMethodException</code> at runtime in dynamic
+mode.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rest_binding_in_head_and_middle_positions">Rest binding in head and middle positions</h3>
+<div class="paragraph">
+<p>A <code>*ident</code> in non-tail position requires a sized, indexable RHS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (*front, last) = list
+def (l, *middle, r) = list
+def (a, b, *m, y, z) = list</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These forms lower via indexed access. Positional slots use <code>getAt(int)</code>
+(with negative indices for tail-side fixed slots); the rest slot uses
+<code>getAt(IntRange)</code>. The RHS contract is <code>getAt(int)</code> plus
+<code>getAt(IntRange)</code> — equivalent to "list-like".</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// def (l, *m, r) = rhs
+def __rhs = rhs
+def m = __rhs.getAt(1..-2)    // emitted before any negative-index call
+def l = __rhs.getAt(0)
+def r = __rhs.getAt(-1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>getAt(IntRange)</code> call is <strong>emitted before</strong> any negative-index
+<code>getAt(int)</code> call. This is load-bearing for safety: DGM&#8217;s
+<code>getAt(Iterator, int)</code> materialises the iterator on negative indices
+(<code>toList(self)</code> then index from the end), which would silently hang on
+an infinite source. By emitting the IntRange call first, iterators
+fail fast with <code>MissingMethodException</code> (no <code>getAt(Iterator, IntRange)</code>
+overload exists in DGM) before any materialisation can happen — the
+same clean failure mode <code>def (a, b) = 42</code> already produces today
+against a non-indexable RHS.</p>
+</div>
+<div class="paragraph">
+<p>Constraints:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>At most one rest binding per parens form. Multiple rest bindings
+(<code>def (a, *b, *c, d)</code>) is a compile error.</p>
+</li>
+<li>
+<p>RHS sizes smaller than the total number of fixed slots are
+tolerated: <code>getAt(int)</code> returns <code>null</code> for out-of-bounds positions
+and the rest slot becomes an empty collection.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_map_style_destructuring">Map-style destructuring</h3>
+<div class="paragraph">
+<p><code>key: ident</code> pairs in the declarator list bind via property access:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (name: n, age: a) = person
+def (host: h, port: p) = config</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lowering:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def __rhs = person
+def n = __rhs.name
+def a = __rhs.age</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The protocol is Groovy&#8217;s normal property access (<code>obj.name</code>), so the
+form works on any RHS responding to the named property via the MOP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Map</code> values — Groovy&#8217;s MapMOP makes <code>m.name</code> equivalent to
+<code>m['name']</code>.</p>
+</li>
+<li>
+<p>Java beans — calls the getter, e.g. <code>getName()</code>.</p>
+</li>
+<li>
+<p><code>GroovyObject</code> — dispatches via <code>getProperty('name')</code>.</p>
+</li>
+<li>
+<p>Any user-defined class providing the property by any of the above
+routes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Type ascriptions pin or coerce binding types:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (name: String n, age: int a) = person</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Failure modes match expression-position property access:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">RHS shape</th>
+<th class="tableblock halign-left valign-top">Property absent</th>
+<th class="tableblock halign-left valign-top">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Map</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key not in map</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Binding receives <code>null</code> (Groovy <code>Map</code> returns null for missing keys)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bean / <code>GroovyObject</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No matching property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MissingPropertyException</code> at runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static type lacks the property</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile error under <code>@CompileStatic</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_map_key_restrictions">Map-key restrictions</h4>
+<div class="paragraph">
+<p><code>class</code> is a reserved keyword and so cannot appear as a destructuring
+key — <code>def (class: c) = m</code> is a syntax error. Identifiers like
+<code>metaClass</code> parse, but <code>m.metaClass</code> resolves to the map&#8217;s MetaClass
+via Groovy&#8217;s standard MOP, not to a key named <code>metaClass</code>. Users
+needing either key fall back to subscript: <code>def c = m['class']</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_mixing_positional_and_map">Mixing positional and map</h4>
+<div class="paragraph">
+<p>Mixing positional and map-style declarators within a single <code>def (&#8230;&#8203;)</code>
+is a compile error in 6.x:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (h, name: n, *t) = obj    // error in 6.x</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Disallowing this leaves the option open for a future spec; permitting
+it now would lock in semantics before use cases emerge.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_and_other_identifiers"><code>_</code> and other identifiers</h3>
+<div class="paragraph">
+<p><code>_</code> is a regular identifier in all forms, exactly as today:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def (_, y, m) = Calendar.instance      // unchanged
+def (_, *t)   = list                   // _ binds to head
+def (h, *_)   = list                   // _ binds to rest
+def (*_, last) = list                  // _ binds to front
+def (name: _, age: a) = person         // _ binds to person.name</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No deprecation warning, no wildcard semantics, no behavioural change.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compilation">Compilation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_grammar_additions">Grammar additions</h3>
+<div class="paragraph">
+<p>Two local additions to the multi-assignment production:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>In the declarator list, allow an optional leading <code>*</code> on at most one
+identifier (with optional type ascription).</p>
+</li>
+<li>
+<p>Add a <code>key: ident</code> (or <code>key: Type ident</code>) alternative to the
+declarator list, exclusive of positional declarators within a single
+<code>def (&#8230;&#8203;)</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Empty declarator lists (<code>def () = expr</code>) remain a syntax error, as
+today. No changes outside the multi-assignment production. No new
+keywords. No reserved identifiers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_lowering_summary">Lowering summary</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Shape</th>
+<th class="tableblock halign-left valign-top">Lowering</th>
+<th class="tableblock halign-left valign-top">RHS contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (a, b, c) = rhs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Today&#8217;s lowering, unchanged</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getAt(int)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (h, *t) = rhs</code> (and <code>def (a, b, *t) = rhs</code>, etc.)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path A (<code>getAt(IntRange)</code>) or Path B (<code>iterator()</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getAt(IntRange)</code> <strong>or</strong> <code>iterator()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (*f, last) = rhs</code> / <code>def (l, *m, r) = rhs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getAt(IntRange)</code> first, then <code>getAt(int)</code> (positive then negative)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>getAt(int)</code> + <code>getAt(IntRange)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (k1: v1, k2: v2) = rhs</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Property access</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Property dispatch via MOP</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_static_type_checking">Static type checking</h3>
+<div class="paragraph">
+<p>Under <code>@CompileStatic</code> and <code>@TypeChecked</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Path A vs Path B for tail rest is decided at compile time from the
+RHS&#8217;s declared type.</p>
+</li>
+<li>
+<p>Bindings receive their natural narrowed type. For <code>List&lt;T&gt;</code>, the
+tail rest is <code>List&lt;T&gt;</code>; for <code>Iterator&lt;T&gt;</code>, the tail rest is
+<code>Iterator&lt;T&gt;</code>; for <code>Map&lt;String, V&gt;</code>, map-style bindings are <code>V</code>; for
+beans, bindings are the property&#8217;s declared type.</p>
+</li>
+<li>
+<p>If neither protocol is available on the RHS&#8217;s static type, the
+compiler reports an error.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_implicit_type_of_the_rest_binding">Implicit type of the rest binding</h4>
+<div class="paragraph">
+<p>An untyped rest binding (<code>*t</code>, <code>*f</code>, <code>*m</code>) takes the inferred type
+shown in the <em>Tail rest binding</em> table. Head and middle rest are
+restricted to Path A — a non-indexable RHS (Set, Iterator, Stream)
+in those positions is a static type error.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dynamic_dispatch">Dynamic dispatch</h3>
+<div class="paragraph">
+<p>In dynamic mode, Path A vs Path B for tail rest is selected at runtime
+via Groovy&#8217;s normal method-resolution. Failure modes are runtime
+exceptions (<code>MissingMethodException</code>, <code>MissingPropertyException</code>)
+consistent with expression-position dispatch — no new failure types
+introduced.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rhs_evaluation">RHS evaluation</h3>
+<div class="paragraph">
+<p>The RHS expression is evaluated <strong>exactly once</strong> into a synthetic local.
+All bindings derive from that single evaluation. Order of binding
+assignment is left-to-right of declared positions, except that in
+non-tail-rest forms the IntRange call is emitted before any
+negative-index call (see <em>Rest binding in head and middle positions</em>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>Every program valid in Groovy 4 / 5 compiles with identical semantics.
+The new shapes use grammar that does not parse today:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 75%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Form</th>
+<th class="tableblock halign-left valign-top">Parses today?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (a, b, c) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (int a, String b) = pair</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (_, y, m) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — <code>_</code> is an identifier, unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (h, *t) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — claimed by this proposal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (*f, last) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — claimed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (l, *m, r) = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — claimed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (name: n, age: a) = person</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — claimed</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>No syntactic ambiguity is introduced: <code>*ident</code> and <code>key: ident</code> in
+declarator position both fail to parse today, so claiming them as new
+grammar does not change the meaning of any existing program.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_is_not_deprecated"><code>_</code> is not deprecated</h3>
+<div class="paragraph">
+<p>This proposal explicitly does <strong>not</strong> deprecate <code><em></code> as an identifier in
+any context. Existing idioms (<code>def (</em>, y, m) = Calendar.instance</code>,
+<code>(0..n).each { _ &#8594; &#8230;&#8203; }</code>, etc.) continue to compile with no warning.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_forward_compatibility">Forward compatibility</h3>
+<div class="paragraph">
+<p>The parens form claims grammar that is unparseable today and uses
+tokens (<code>*</code>, <code>key:</code>) that have no other meaning in declarator position.
+This leaves the unrelated <code>def [&#8230;&#8203;]</code> bracket-literal grammar entirely
+free for any future pattern-matching or destructuring proposal that
+wants to use it, with no risk of conflicting reinterpretation.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following forms were considered and intentionally left out of this
+proposal. Some are deferred to a future spec (typically alongside
+GEP-19 pattern matching); others are not planned.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bracket form <code>def [h, *t] = list</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Out of scope for the parens-form additions; would belong with a
+ dedicated bracket-pattern proposal</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>var</code> markers in declarators</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (&#8230;&#8203;)</code> already declares the names; <code>var</code> adds ceremony without
+ disambiguation in declarator position</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard <code>_</code> semantics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned for parens form</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Existing identifier semantics preserved; any future wildcard form
+ belongs in a separate grammar (e.g. bracket-form patterns)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mixing positional and map-style in one <code>def (&#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned for 6.x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Semantics not obvious; defer pending concrete use cases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multiple rest bindings (<code>def (a, *b, *c, d)</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inherently ambiguous; no language ships this</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nested patterns (e.g. <code>def (h, [a, b]) = &#8230;&#8203;</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Belongs with a bracket-form pattern grammar</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Head/middle rest against a non-indexable RHS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No clean semantics; iterators / streams fail with
+ <code>MissingMethodException</code> for <code>getAt(IntRange)</code>, by design</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map destructuring with renaming via the <code>as</code> operator (e.g.
+ <code>def (name as fullName: n) = person</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>key: ident</code> already provides the renaming (<code>def (name: fullName) =
+ person</code>); a separate <code>as</code> form is unnecessary</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default values (e.g. <code>def (name: n = 'anon', age: a = 0) = person</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Useful for map-style destructuring on partial inputs; can be added
+ later without grammar collision</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy-lang.org/semantics.html#_multiple_assignment">Groovy multiple assignment (existing semantics)</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/master/src/main/java/org/codehaus/groovy/runtime/DefaultGroovyMethods.java"><code>DefaultGroovyMethods</code> — DGM extension methods on <code>Iterator</code>, <code>Iterable</code>, <code>List</code>, etc.</a></p>
+</li>
+<li>
+<p><a href="https://docs.python.org/3/reference/simple_stmts.html#assignment-statements">Python: starred targets in assignment</a></p>
+</li>
+<li>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">JavaScript: destructuring assignment</a></p>
+</li>
+<li>
+<p><a href="GEP-19.html">GEP-19: Structural Pattern Matching in switch</a> — related future work on pattern matching</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
