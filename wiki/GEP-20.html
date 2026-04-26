@@ -393,16 +393,16 @@ def t     = StreamSupport.stream(
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Range</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Range&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;Integer&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code> (e.g. <code>IntRange</code> → <code>List&lt;Integer&gt;</code>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">B'</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code> — fresh stream, lazy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code> — fresh stream wrapping the advanced iterator, lazy (see <a href="#degenerate-rest">[degenerate-rest]</a>)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set&lt;T&gt;</code></p></td>
@@ -478,6 +478,14 @@ Path B and the rest is an <code>Iterator&lt;Integer&gt;</code> / <code>Iterator&
 becomes the canonical owner of the source&#8217;s resources. Avoid
 closing both the original and the rest, or holding the original
 alongside the rest, to prevent double-close in user code.</p>
+</li>
+<li>
+<p><a id="degenerate-rest"></a><strong>Single-rest degenerate case</strong>: <code>def (<strong>s) = stream</code>
+has no head slots to extract, so it short-circuits to a plain
+assignment (<code>s = stream</code>). <code>s</code> is the *original</strong> Stream — same
+identity, characteristics, parallelism, and <code>onClose</code> handler
+intact. The "fresh stream wrapping the advanced iterator" wording
+in the table only applies when at least one head slot is bound.</p>
 </li>
 </ul>
 </div>
@@ -1011,6 +1019,19 @@ GEP-19 pattern matching); others are not planned.</p>
  binders too. Per-binder modifiers would only enable mixed-modifier
  shapes (one binder final, another mutable), adding grammar surface
  for a rare use case.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preserving Stream characteristics / parallelism through Path B'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Path B' tail wrap (<code>StreamSupport.stream(spliteratorUnknownSize(it, 0), false)</code>)
+ always produces a sequential stream with no spliterator characteristics
+ (<code>SIZED</code>, <code>ORDERED</code>, <code>IMMUTABLE</code>, etc.). Capturing the original characteristics
+ requires reading <code>rhs.spliterator()</code> and pulling head elements via
+ <code>Spliterator.tryAdvance</code> — mutually exclusive with the <code>iterator()</code> path the
+ head currently uses. A future revision could switch the lowering to spliterator-based
+ head extraction and propagate characteristics + <code>isParallel()</code> into the wrapped tail;
+ deferred until a concrete use case (parallel pipelines after destructuring,
+ SIZED-aware downstream collectors) emerges.</p></td>
 </tr>
 </tbody>
 </table>
