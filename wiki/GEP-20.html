@@ -331,32 +331,51 @@ def (a, b, c, *rest) = list</code></pre>
 <div class="paragraph">
 <p>The rest binding is well-defined for any RHS that supports <strong>either</strong>
 <code>getAt(IntRange)</code> <strong>or</strong> <code>iterator()</code>. The compiler picks one of three
-lowerings:</p>
+lowerings, in dispatch-precedence order:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">// Path A — RHS supports getAt(IntRange):
-def __rhs = rhs
-def h = __rhs.getAt(0)
-def t = __rhs.getAt(1..-1)
-
-// Path B — RHS iterable but not range-indexable, and not a Stream:
-def __it = rhs.iterator()
-def h = __it.hasNext() ? __it.next() : null
-def t = __it
-
-// Path B' — RHS is a java.util.stream.Stream:
+<pre class="prettyprint highlight"><code data-lang="groovy">// Path A — RHS is a java.util.stream.Stream:
 def __rhs = rhs
 def __it  = __rhs.iterator()
 def h     = __it.hasNext() ? __it.next() : null
 def t     = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(__it, 0),
                 false
-            ).onClose { __rhs.close() }</code></pre>
+            ).onClose { __rhs.close() }
+
+// Path B — RHS supports getAt(IntRange):
+def __rhs = rhs
+def h = __rhs.getAt(0)
+def t = __rhs.getAt(1..-1)
+
+// Path C — RHS iterable, neither Stream nor range-indexable:
+def __it = rhs.iterator()
+def h = __it.hasNext() ? __it.next() : null
+def t = __it</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>t</code> therefore has the natural type of the RHS:</p>
+<p>Path A is the dedicated branch for <code>Stream&lt;T&gt;</code>. Although Stream has a
+<code>getAt(Stream, IntRange)</code> extension, that overload materialises
+eagerly into a <code>List&lt;T&gt;</code> — defeating the GEP-20 guarantee that
+unbounded sources never silently materialise. Stream therefore
+bypasses Path B and gets its own lazy iterator-wrap path.</p>
+</div>
+<div class="paragraph">
+<p>Path B is defined by <strong>capability</strong>: any non-Stream RHS with a
+resolvable <code>getAt(IntRange)</code> participates, regardless of class. The
+rest binder&#8217;s type tracks the actual return type of that overload —
+it is <strong>not</strong> hard-coded to <code>List&lt;T&gt;</code>. So the rest of a String slice is
+a String; the rest of a <code>BitSet</code> slice is a <code>BitSet</code>; the rest of a
+user class whose <code>getAt(IntRange)</code> returns the same class is that
+same class.</p>
+</div>
+<div class="paragraph">
+<p>Path C is the fallback for anything else iterable. It&#8217;s the key
+enabler for unbounded sources: given an infinite or lazy iterator,
+<code>def (h, *t) = source</code> returns the head and an iterator the caller
+can keep pulling from — there is no materialisation.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -375,68 +394,91 @@ def t     = StreamSupport.stream(
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✗*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code> — fresh stream wrapping the advanced iterator, lazy (see <a href="#degenerate-rest">[degenerate-rest]</a>)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>T[]</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GString</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CharSequence</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CharSequence</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Range&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;T&gt;</code> (e.g. <code>IntRange</code> → <code>List&lt;Integer&gt;</code>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">B'</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream&lt;T&gt;</code> — fresh stream wrapping the advanced iterator, lazy (see <a href="#degenerate-rest">[degenerate-rest]</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BitSet</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>BitSet</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user class with <code>R getAt(IntRange)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✓</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>R</code> (whatever the user declared)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterable&lt;T&gt;</code> (custom)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code> — same instance, advanced</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IntStream</code> / <code>LongStream</code> / <code>DoubleStream</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✗</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">B</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Iterator&lt;T&gt;</code> (boxed) — see notes</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Path B is the key enabler for unbounded sources. Given an infinite or
-lazy iterator, <code>def (h, *t) = source</code> returns the head and an iterator
-the caller can keep pulling from — there is no materialisation.</p>
+<p>(<strong>) Stream&#8217;s <code>✗</strong></code> reflects "has <code>getAt(IntRange)</code> but is steered away
+from Path B by design". See the prose above.</p>
 </div>
 <div class="paragraph">
-<p>Path B' preserves the Stream pipeline: <code>t.filter { … }.map { … }
+<p>Path A preserves the Stream pipeline: <code>t.filter { … }.map { … }
 .collect(toList())</code> continues to work after the head is bound. The
 returned Stream is sequential and reports no spliterator
 characteristics (capturing characteristics from the original requires
@@ -469,8 +511,8 @@ the tail (<code>t.parallel()</code>) is a one-call opt-in.</p>
 <li>
 <p><strong>Primitive streams</strong> (<code>IntStream</code>, <code>LongStream</code>, <code>DoubleStream</code>):
 these are not subtypes of <code>Stream&lt;T&gt;</code>, so they fall through to
-Path B and the rest is an <code>Iterator&lt;Integer&gt;</code> / <code>Iterator&lt;Long&gt;</code> /
-<code>Iterator&lt;Double&gt;</code>. To get Path B' semantics, call <code>.boxed()</code> first:
+Path C and the rest is an <code>Iterator&lt;Integer&gt;</code> / <code>Iterator&lt;Long&gt;</code> /
+<code>Iterator&lt;Double&gt;</code>. To get Path A semantics, call <code>.boxed()</code> first:
 <code>def (h, *t) = intStream.boxed()</code> gives <code>t : Stream&lt;Integer&gt;</code>.</p>
 </li>
 <li>
@@ -498,21 +540,26 @@ positional form:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def (h, List&lt;Integer&gt; *t) = [1, 2, 3, 4]    // Path A  — t : List&lt;Integer&gt;
-def (h, Iterator&lt;Integer&gt; *t) = someSet     // Path B  — t : Iterator&lt;Integer&gt;
-def (h, Stream&lt;Integer&gt; *t) = someStream    // Path B' — t : Stream&lt;Integer&gt;
+<pre class="prettyprint highlight"><code data-lang="groovy">def (h, List&lt;Integer&gt; *t) = [1, 2, 3, 4]    // Path B  — t : List&lt;Integer&gt;
+def (c, String *cs)       = "hello"         // Path B  — t : String
+def (h, BitSet *t)        = someBitSet      // Path B  — t : BitSet
+def (h, Iterator&lt;Integer&gt; *t) = someSet     // Path C  — t : Iterator&lt;Integer&gt;
+def (h, Stream&lt;Integer&gt; *t) = someStream    // Path A — t : Stream&lt;Integer&gt;
 def (l, List&lt;Integer&gt; *m, r) = list         // typed middle rest</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The declared type must be compatible with the path the RHS selects:
-<code>List&lt;T&gt;</code> (or a supertype) for Path A, <code>Stream&lt;T&gt;</code> (or a supertype)
-for Path B', <code>Iterator&lt;T&gt;</code> (or a supertype) for Path B. Under
-<code>@CompileStatic</code> a mismatch is reported at compile time; in dynamic
-mode it surfaces as a <code>GroovyCastException</code> when the slice / stream /
-iterator is coerced. Untyped rest is the recommended default; ascribe
-a type when you want a tighter element type or to fail fast if the
-RHS shape changes.</p>
+<p>The declared type must be compatible with the path the RHS selects.
+For Path B the rest type is whatever the RHS&#8217;s <code>getAt(IntRange)</code>
+returns (a supertype is also accepted) — <code>List&lt;T&gt;</code> for lists / arrays /
+ranges, <code>String</code> for <code>String</code> / <code>GString</code>, <code>BitSet</code> for <code>BitSet</code>,
+the user-declared return type for custom classes. For Path A it is
+<code>Stream&lt;T&gt;</code> (or a supertype). For Path C it is <code>Iterator&lt;T&gt;</code> (or a
+supertype). Under <code>@CompileStatic</code> a mismatch is reported at compile
+time; in dynamic mode it surfaces as a <code>GroovyCastException</code> when the
+value is coerced. Untyped rest is the recommended default; ascribe a
+type when you want a tighter element type or to fail fast if the RHS
+shape changes.</p>
 </div>
 <div class="paragraph">
 <p>Edge cases:</p>
@@ -520,8 +567,8 @@ RHS shape changes.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Empty RHS: <code>def (h, *t) = []</code> — <code>h = null</code>, <code>t = []</code> (Path A) or <code>t</code>
-is an exhausted iterator (Path B).</p>
+<p>Empty RHS: <code>def (h, *t) = []</code> — <code>h = null</code>, <code>t = []</code> (Path B) or <code>t</code>
+is an exhausted iterator (Path C).</p>
 </li>
 <li>
 <p>Exhausted iterator: <code>def (h, *t) = exhaustedIter</code> — <code>h = null</code>,
@@ -552,7 +599,11 @@ def (a, b, *m, y, z) = list</code></pre>
 <p>These forms lower via indexed access. Positional slots use <code>getAt(int)</code>
 (with negative indices for tail-side fixed slots); the rest slot uses
 <code>getAt(IntRange)</code>. The RHS contract is <code>getAt(int)</code> plus
-<code>getAt(IntRange)</code> — equivalent to "list-like".</p>
+<code>getAt(IntRange)</code> — capability-based, not class-based. List, array,
+<code>String</code>, <code>GString</code>, <code>Range</code>, <code>BitSet</code>, and any user class declaring
+both methods are eligible. Stream is not (its <code>getAt(IntRange)</code>
+materialises eagerly, conflicting with the GEP&#8217;s no-silent-
+materialisation rule).</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -785,7 +836,7 @@ keywords. No reserved identifiers.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>def (h, *t) = rhs</code> (and <code>def (a, b, *t) = rhs</code>, etc.)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Path A (<code>getAt(IntRange)</code>), Path B' (<code>Stream</code> rewrap) or Path B (<code>iterator()</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path A (<code>Stream</code> rewrap), Path B (<code>getAt(IntRange)</code>) or Path C (<code>iterator()</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>getAt(IntRange)</code> <strong>or</strong> <code>iterator()</code></p></td>
 </tr>
 <tr>
@@ -809,15 +860,21 @@ keywords. No reserved identifiers.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Path A vs Path B' vs Path B for tail rest is decided at compile time
-from the RHS&#8217;s declared type.</p>
+<p>Path A vs Path B vs Path C for tail rest is decided at compile time
+from the RHS&#8217;s declared type. Path B is determined by <strong>capability</strong>:
+STC probes <code>rhs.getAt(IntRange)</code> and accepts the receiver as Path B
+if the call resolves. Stream is the one deliberate exception (its
+<code>getAt(Stream, IntRange)</code> materialises eagerly, so it routes to
+Path A instead).</p>
 </li>
 <li>
-<p>Bindings receive their natural narrowed type. For <code>List&lt;T&gt;</code>, the
-tail rest is <code>List&lt;T&gt;</code>; for <code>Stream&lt;T&gt;</code>, the tail rest is
-<code>Stream&lt;T&gt;</code>; for <code>Iterator&lt;T&gt;</code> (and other Path B receivers), the
-tail rest is <code>Iterator&lt;T&gt;</code>; for <code>Map&lt;String, V&gt;</code>, map-style bindings
-are <code>V</code>; for beans, bindings are the property&#8217;s declared type.</p>
+<p>Bindings receive their natural narrowed type. The tail rest&#8217;s type
+is whatever <code>getAt(IntRange)</code> actually returns: <code>List&lt;T&gt;</code> for
+lists / arrays / ranges; <code>String</code> for <code>String</code>/<code>GString</code>; <code>BitSet</code>
+for <code>BitSet</code>; the user-declared return type for custom classes.
+For Path A it is <code>Stream&lt;T&gt;</code>; for Path C (anything else iterable)
+it is <code>Iterator&lt;T&gt;</code>. For <code>Map&lt;String, V&gt;</code>, map-style bindings are
+<code>V</code>; for beans, bindings are the property&#8217;s declared type.</p>
 </li>
 <li>
 <p>If neither protocol is available on the RHS&#8217;s static type, the
@@ -830,7 +887,7 @@ compiler reports an error.</p>
 <div class="paragraph">
 <p>An untyped rest binding (<code>*t</code>, <code>*f</code>, <code>*m</code>) takes the inferred type
 shown in the <em>Tail rest binding</em> table. Head and middle rest are
-restricted to Path A — a non-indexable RHS (Set, Iterator, Stream)
+restricted to Path B — a non-indexable RHS (Set, Iterator, Stream)
 in those positions is a static type error.</p>
 </div>
 </div>
@@ -838,16 +895,46 @@ in those positions is a static type error.</p>
 <div class="sect2">
 <h3 id="_dynamic_dispatch">Dynamic dispatch</h3>
 <div class="paragraph">
-<p>In dynamic mode, Path A vs Path B' vs Path B for tail rest is selected
-at runtime: a runtime helper (<code>MultipleAssignmentSupport.tailRest</code>)
-inspects the RHS — <code>List</code> / <code>CharSequence</code> / array dispatch to Path A
-via <code>getAt(IntRange)</code>; <code>Stream</code> dispatches to Path B' (a fresh
-<code>StreamSupport.stream(&#8230;&#8203;)</code> wrap of the already-advanced iterator,
-with <code>onClose</code> chained to the original); anything else returns the
-already-advanced iterator (Path B). Failure modes are runtime
-exceptions (<code>MissingMethodException</code>, <code>MissingPropertyException</code>)
-consistent with expression-position dispatch — no new failure types
-introduced.</p>
+<p>In dynamic mode, Path A vs Path B vs Path C for tail rest is selected
+at runtime by <code>MultipleAssignmentSupport.tailRest</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>List</code> / <code>CharSequence</code> / array — fast-path dispatch via
+<code>getAt(IntRange)</code> with size-aware empty-slice handling.</p>
+</li>
+<li>
+<p><code>Stream</code> — Path A (lazy iterator wrap, <code>onClose</code> chained).</p>
+</li>
+<li>
+<p>Any other receiver with a resolvable <code>getAt(IntRange)</code> (e.g.
+<code>BitSet</code>, user custom classes) — MOP dispatch via <code>getAt(IntRange)</code>.</p>
+</li>
+<li>
+<p>Otherwise — Path C (return the already-advanced iterator).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Head and middle rest go through <code>nonTailRestSlice</code>, which always
+dispatches via the MOP. Failure modes are runtime exceptions
+consistent with expression-position dispatch:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Non-indexable sources without a <code>getAt(IntRange)</code> extension
+(iterators, sets, custom Iterables) fail fast with
+<code>MissingMethodException</code>.</p>
+</li>
+<li>
+<p><code>Stream</code> head/middle rest in dynamic mode fails fast with
+<code>IllegalArgumentException("reverse range")</code> from
+<code>StreamGroovyMethods.getAt(Stream, IntRange)</code> — head/middle rest
+from <code>Stream</code> is rejected at compile time under <code>@CompileStatic</code>.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -1021,9 +1108,9 @@ GEP-19 pattern matching); others are not planned.</p>
  for a rare use case.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Preserving Stream characteristics / parallelism through Path B'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Preserving Stream characteristics / parallelism through Path A</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Path B' tail wrap (<code>StreamSupport.stream(spliteratorUnknownSize(it, 0), false)</code>)
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Path A tail wrap (<code>StreamSupport.stream(spliteratorUnknownSize(it, 0), false)</code>)
  always produces a sequential stream with no spliterator characteristics
  (<code>SIZED</code>, <code>ORDERED</code>, <code>IMMUTABLE</code>, etc.). Capturing the original characteristics
  requires reading <code>rhs.spliterator()</code> and pulling head elements via
