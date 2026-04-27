@@ -329,9 +329,9 @@ switch (obj) {
 </div>
 </div>
 <div class="paragraph">
-<p>Bare <code><em></code> is permitted inside <code>Type(&#8230;&#8203;)</code> because record-pattern
+<p>Bare <code>_</code> is permitted inside <code>Type(&#8230;&#8203;)</code> because record-pattern
 component grammar is not expression grammar — there is no collision
-with <code></em></code> as an identifier in expression position.</p>
+with <code>_</code> as an identifier in expression position.</p>
 </div>
 </div>
 <div class="sect2">
@@ -489,8 +489,8 @@ depends on context:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Top-level case label</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default &#8594;</code> (preferred) or <code>case var _ &#8594;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>case _ &#8594;</code> retains its legacy meaning when <code>_</code> is in scope as
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default &#8594;</code> (preferred) or <code>case var _ -&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>case _ -&gt;</code> retains its legacy meaning when <code>_</code> is in scope as
  an identifier</p></td>
 </tr>
 </tbody>
@@ -542,7 +542,7 @@ reinterprets no existing program.</p>
 </div>
 <div class="paragraph">
 <p>Bare <code>&#8230;&#8203;</code> matches any list (including empty), since the rest can
-absorb zero elements. It pairs naturally with <code>case [] &#8594;</code>:</p>
+absorb zero elements. It pairs naturally with <code>case [] -&gt;</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -716,10 +716,10 @@ them as pattern grammar does not change the meaning of any program
 valid in Groovy 6.</p>
 </div>
 <div class="paragraph">
-<p>The bare identifier <code><em></code> continues to parse as an identifier in
-expression position — <code>case [</em>] &#8594;</code> therefore retains its legacy
+<p>The bare identifier <code>_</code> continues to parse as an identifier in
+expression position — <code>case [_] -&gt;</code> therefore retains its legacy
 meaning. Users wanting a single-element wildcard pattern write
-<code>case [var _] &#8594;</code>.</p>
+<code>case [var _] -&gt;</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -840,8 +840,8 @@ key-set difference for rest),</p>
 <div class="paragraph">
 <p>Record patterns reuse the lowering already present in 5.0. When Java&#8217;s
 deconstructor JEP ships, surface forms like
-<code>case List.of(var h, var&#8230;&#8203; t) &#8594;</code> and
-<code>case Map.of("name", var n) &#8594;</code> are accepted as additional spellings
+<code>case List.of(var h, var&#8230;&#8203; t) -&gt;</code> and
+<code>case Map.of("name", var n) -&gt;</code> are accepted as additional spellings
 that lower to the same <code>Deconstructable</code> calls — no re-architecture.</p>
 </div>
 <div class="paragraph">
@@ -1001,7 +1001,7 @@ the design space open for a future relaxation if usage warrants it.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Bare <code>case _ &#8594;</code> at top level</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Conflicts with legacy <code>_</code>-as-identifier semantics; users write
- <code>default &#8594;</code> or <code>case var _ &#8594;</code></p></td>
+ <code>default -&gt;</code> or <code>case var _ -&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustiveness enforcement</p></td>
@@ -1095,10 +1095,10 @@ these never-matching legacy forms.</p>
 <div class="sect2">
 <h3 id="_semantics_across_forms"><code>_</code> semantics across forms</h3>
 <div class="paragraph">
-<p>Wildcard <code><em></code> semantics introduced in this proposal apply inside
+<p>Wildcard <code>_</code> semantics introduced in this proposal apply inside
 <code>[&#8230;&#8203;]</code> list and map patterns, and inside <code>Type(&#8230;&#8203;)</code> record
 patterns. The parens-form assignment <code>def (&#8230;&#8203;) = expr</code> (covered by
-GEP-20) continues to treat <code></em></code> as a regular identifier indefinitely,
+GEP-20) continues to treat <code>_</code> as a regular identifier indefinitely,
 matching GEP-20&#8217;s explicit non-deprecation. Existing idioms such as
 <code>def (_, y, m) = Calendar.instance</code> keep compiling unchanged with no
 warning in Groovy 7.</p>
