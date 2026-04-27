@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-21</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-21</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_migration' class='anchor-link'>Migration</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-21</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-21</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Broadening AST transform awareness under joint compilation</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-04-28</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>&#160;
+</td>
+<td class="hdlist2">
+<p>2026-04-28</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP extends Groovy&#8217;s AST transform framework so that opt-in
+transforms can contribute Java-visible members to a class
+sufficiently early that they appear in the Java stubs used by joint
+compilation. The injected output of an opt-in transform — new
+constructors, methods, fields, declared interfaces, modifier
+adjustments — is visible to <code>javac</code> at compile time and to any
+downstream Java tooling that consumes the stubs.</p>
+</div>
+<div class="paragraph">
+<p>The proposal is strictly additive. Transforms that do not opt in
+behave exactly as today. Programs that compile under Groovy 5
+continue to compile under this proposal with identical bytecode and
+identical stubs. The change makes a class of programs that fail
+joint compilation today succeed.</p>
+</div>
+<div class="paragraph">
+<p>The proposal targets Groovy 7.x.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Joint compilation lets a project mix <code>.groovy</code> and <code>.java</code> sources in
+one compilation unit. The pipeline is:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Groovy parses and converts every source.</p>
+</li>
+<li>
+<p>At <code>Phases.CONVERSION</code>, Groovy emits Java <strong>stubs</strong> — empty-bodied Java
+files containing the public API surface of each Groovy class.</p>
+</li>
+<li>
+<p><code>javac</code> compiles the Java sources together with the stubs.</p>
+</li>
+<li>
+<p>Groovy resumes, re-resolves names against the now-compiled Java
+classes, and continues through later phases until bytecode is
+written.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The stubs are the only contract <code>javac</code> ever sees for the Groovy
+classes. Whatever isn&#8217;t in the stub doesn&#8217;t exist as far as the Java
+sources are concerned.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_current_gap">The current gap</h3>
+<div class="paragraph">
+<p>Local AST transforms run no earlier than <code>Phases.SEMANTIC_ANALYSIS</code>.
+Stubs are emitted earlier, at <code>Phases.CONVERSION</code>. The output of any
+local transform that injects members — <code>@TupleConstructor</code>,
+<code>@MapConstructor</code>, <code>@Singleton</code>, <code>@Bindable</code>, <code>@Vetoable</code>,
+<code>@ListenerList</code>, <code>@Builder</code>, <code>@Delegate</code>, <code>@InheritConstructors</code>,
+<code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>, <code>@Sortable</code>,
+<code>@NamedVariant</code>, <code>@Immutable</code>, records — is therefore <strong>not</strong> in the
+stub. The injected members appear in the runtime <code>.class</code> file but
+not in the API contract that <code>javac</code> reads.</p>
+</div>
+<div class="paragraph">
+<p>The user-visible symptom is a Java source that fails to compile
+against a Groovy class whose runtime form would satisfy the call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// UserAccount.groovy
+@groovy.transform.Immutable
+class UserAccount {
+    String name
+    int age
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Caller.java
+public class Caller {
+    public UserAccount build() {
+        return new UserAccount("alice", 30);    // compile error: no such constructor
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The runtime class has the constructor; the stub does not; <code>javac</code>
+sees only the stub.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_existing_relief">Existing relief</h3>
+<div class="paragraph">
+<p>Three mechanisms already paper over the gap for narrow cases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The stub generator runs a stripped-down <code>Verifier</code> sub-pass that
+synthesises property accessors and the <code>groovy.lang.GroovyObject</code>
+glue from <code>PropertyNode</code> entries declared in source. Plain
+<code>String name</code> becomes <code>getName()</code> / <code>setName(String)</code> in the stub.</p>
+</li>
+<li>
+<p><code>JavaStubGenerator</code> reads the <code>@PackageScope</code> annotation directly
+to adjust class / field / constructor / method modifiers in the
+stub even though <code>PackageScopeASTTransformation</code> itself runs at
+<code>SEMANTIC_ANALYSIS</code>.</p>
+</li>
+<li>
+<p><code>JavaStubGenerator</code> recognises traits via <code>Traits.isTrait(&#8230;&#8203;)</code> and
+renders a <code>@Trait</code>-annotated class as an interface plus the
+appropriate trait-method shape.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>These are stub-side back-channels: targeted code in
+<code>JavaStubGenerator</code> that knows about a specific annotation or
+classifier. They work, but each one is a per-transform concession
+rather than a general mechanism. Adding <code>@TupleConstructor</code> to
+<code>JavaStubGenerator</code> the same way would mean re-implementing the
+constructor-generation logic in two places, with the same drift risk
+as any duplicated specification.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_opportunity">The opportunity</h3>
+<div class="paragraph">
+<p>Most transforms in the affected list have signatures that are fully
+determined by information available at <code>Phases.CONVERSION</code>: declared
+fields and their types, declared class generics, declared
+annotations, classpath supertypes. The bodies — which are typically
+the only part requiring later phases — are irrelevant in stubs,
+because stub bodies always have placeholder content (<code>return null;</code>,
+<code>throw &#8230;&#8203;</code>) regardless of the runtime body.</p>
+</div>
+<div class="paragraph">
+<p>A general way for a transform to declare <strong>"my member signatures are
+knowable at CONVERSION; please render them into the stub even though
+my body work runs later"</strong> would close the gap once for all such
+transforms, removes the pressure to keep adding stub-side back-
+channels, and lets joint-compilation projects use the standard
+library&#8217;s transforms without working around the joint-compile
+contract.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles">Design principles</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Strictly additive.</strong> Transforms that don&#8217;t opt in behave exactly as
+today. No existing program changes meaning.</p>
+</li>
+<li>
+<p><strong>Opt-in.</strong> The transform author decides whether their transform is
+joint-compile-aware. The framework imposes no obligation.</p>
+</li>
+<li>
+<p><strong>Stub fidelity.</strong> When a transform opts in, the API surface in the
+stub matches the API surface of the runtime class. The bodies do
+not — bodies are always placeholders in stubs, by design.</p>
+</li>
+<li>
+<p><strong>No new phases.</strong> The mechanism slots into the existing
+<code>Phases.CONVERSION</code> op chain alongside the resolver and the
+transform-collector visitor. Transform dispatch for declared
+phases (<code>SEMANTIC_ANALYSIS</code>, <code>CANONICALIZATION</code>, …) is unchanged.</p>
+</li>
+<li>
+<p><strong>Reuse existing machinery.</strong> <code>@AnnotationCollector</code> aliases are
+already expanded in place at <code>CONVERSION</code> by the transform-
+collector visitor; the new mechanism inherits that for free.
+Priority ordering between transforms (<code>TransformWithPriority</code>) is
+reused for ordering of stub contributions.</p>
+</li>
+<li>
+<p><strong>No global re-architecture.</strong> Cross-class same-unit dependencies and
+late-phase type inference remain out of reach for stub
+contributions, by design (see <em>Excluded and deferred features</em>).
+Solving those would require a fixed-point scheduling model that is
+much larger in scope than this proposal.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="timeline">Stub generation timeline (recap)</h3>
+<div class="paragraph">
+<p>The order of operations at <code>Phases.CONVERSION</code> for joint compilation
+is, per source unit:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Resolution</strong> — <code>JavaAwareResolveVisitor</code> resolves type names in
+class headers, super, interfaces, field types, parameter / return
+types, and annotation types. Method bodies are deliberately <strong>not</strong>
+walked at this point.</p>
+</li>
+<li>
+<p><strong>Annotation collection and alias expansion</strong> —
+<code>ASTTransformationCollectorCodeVisitor</code> finds every
+transform-bearing annotation on the AST, expands
+<code>@AnnotationCollector</code> aliases in place, and records which
+transforms apply at which phases.</p>
+</li>
+<li>
+<p><strong>Stub generation</strong> — <code>JavaStubGenerator</code> walks each non-private
+top-level class node and writes a <code>.java</code> stub, running an
+embedded <code>Verifier</code> sub-pass to synthesise property accessors and
+the <code>GroovyObject</code> glue.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Local AST transforms then dispatch at their declared phase, starting
+no earlier than <code>SEMANTIC_ANALYSIS</code>.</p>
+</div>
+<div class="paragraph">
+<p>This proposal inserts a <strong>fourth</strong> step at <code>CONVERSION</code>, after
+annotation collection / alias expansion and before stub generation:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic" start="4">
+<li>
+<p><strong>Stub contribution</strong> — for each class node, every annotation whose
+transform has opted in to joint-compile awareness gets a chance to
+add Java-visible member signatures to the class node. The added
+members carry placeholder bodies and are tagged so the later body
+pass can recognise and complete them.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>When stub generation runs (step 3 in the original chain, now step 5),
+it sees the contributed members along with everything else and
+includes them in the rendered stub.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_joint_compile_aware_transforms">Joint-compile-aware transforms</h3>
+<div class="paragraph">
+<p>A transform opts into the new behaviour by declaring itself joint-
+compile-aware. Two equivalent shapes are available, chosen by the
+transform author:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Shape A — annotation attribute (re-entrant single-transform model)
+@GroovyASTTransformation(
+    phase = CompilePhase.CANONICALIZATION,
+    jointCompileAware = true
+)
+public class TupleConstructorASTTransformation
+        extends AbstractASTTransformation { ... }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Shape B — separate interface (split-method model)
+@GroovyASTTransformation(phase = CompilePhase.CANONICALIZATION)
+public class TupleConstructorASTTransformation
+        extends AbstractASTTransformation
+        implements StubContributor { ... }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In Shape A, the transform&#8217;s own <code>visit</code> method is invoked twice per
+target: once at <code>CONVERSION</code> with a context flag (or thread-local
+mode) indicating <strong>stub contribution</strong>, and again at the declared
+phase with the flag indicating <strong>body completion</strong>. The transform
+inspects the flag and self-selects what work to do. State carried
+between calls lives on the AST nodes (e.g. via <code>putNodeMetaData</code>).</p>
+</div>
+<div class="paragraph">
+<p>In Shape B, the framework invokes <code>contributeStubs(&#8230;&#8203;)</code> at
+<code>CONVERSION</code> and the existing <code>visit(&#8230;&#8203;)</code> at the declared phase as
+today. The two methods are independent code paths in the same
+class.</p>
+</div>
+<div class="paragraph">
+<p>Shape A is mechanically simpler: no new public interface, no
+additional method on existing transforms, less duplication when the
+same logic produces both signatures and bodies. Shape B is cleaner
+when the two passes are substantially different and the author
+prefers two short methods over one branching method. The proposal
+permits both; the choice is a transform-author decision and bears no
+on-the-wire compatibility consequence.</p>
+</div>
+<div class="paragraph">
+<p>The proposal will fix one of the two shapes as the canonical form
+during implementation. Either way, the contract observed by the rest
+of the compiler — what runs when, on which target, with which
+information available — is identical.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_a_stub_contribution_may_emit">What a stub contribution may emit</h3>
+<div class="paragraph">
+<p>A stub-contribution call may add to the target class node:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>New constructors, with parameters, exceptions, generics, and
+parameter annotations populated. The body is a placeholder
+(<code>super(&#8230;&#8203;)</code> if a super constructor must be invoked, otherwise an
+empty block).</p>
+</li>
+<li>
+<p>New methods, with the same signature fidelity as constructors. The
+body is a placeholder consistent with the declared return type
+(<code>return null;</code>, <code>return 0;</code>, <code>return false;</code>, or empty for
+<code>void</code>). The stub printer already understands such placeholders.</p>
+</li>
+<li>
+<p>New fields, with declared type, modifiers, and any constant
+initializer that is a literal expression. Non-literal initializers
+are deferred to the body pass and rendered as default values in
+the stub.</p>
+</li>
+<li>
+<p>New declared interfaces (<code>addInterface(&#8230;&#8203;)</code>).</p>
+</li>
+<li>
+<p>A new declared super class (<code>setSuperClass(&#8230;&#8203;)</code>), with the usual
+caveat that changing the super class is a global decision and may
+conflict with other transforms.</p>
+</li>
+<li>
+<p>Annotations on any of the above, including the contributing
+transform&#8217;s own marker annotations.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A stub contribution may <strong>not</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Modify existing user-declared members. Bodies of user-written
+methods, the type of declared fields, and existing constructors
+are owned by the source author and the body pass; the stub pass is
+read-only for those.</p>
+</li>
+<li>
+<p>Add behaviour that depends on inferred types from later phases
+(e.g. types derived by <code>StaticTypeCheckingVisitor</code>). The transform
+must declare types from information available at <code>CONVERSION</code>.</p>
+</li>
+<li>
+<p>Inspect transform-added members on <strong>other</strong> classes in the same
+compilation unit. Same-unit Groovy sources have only their source-
+declared members visible at <code>CONVERSION</code>; their own transforms
+haven&#8217;t run yet. (See <em>Excluded and deferred features</em>.)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_skeleton_bodies_and_the_body_pass">Skeleton bodies and the body pass</h3>
+<div class="paragraph">
+<p>Every member added by a stub contribution is tagged with a metadata
+flag identifying it as a skeleton awaiting body completion. The
+body pass — the same transform running at its declared phase — uses
+the flag to decide between two paths per member:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>If a matching skeleton already exists on the class node, the body
+pass <strong>fills in the body</strong> of that node (and any further annotations
+or modifiers it intends to add) rather than creating a new node.
+The skeleton flag is cleared.</p>
+</li>
+<li>
+<p>If no matching skeleton exists, the body pass creates the member
+as it does today.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This contract makes the body pass robust against the stub pass
+having been run, having been partially run, or not having been run
+at all (e.g. for a non-joint-compilation build that goes straight
+through <code>CONVERSION</code> without touching the stub op chain). A
+transform written for the joint-compile-aware contract continues to
+work in all build modes.</p>
+</div>
+<div class="paragraph">
+<p>The matching predicate is "same kind, same name, structurally equal
+parameter list, same declaring class". Generic substitution is
+applied before comparison so that a skeleton declared with type
+variables and a body-pass member declared with the same variables
+match.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ordering_of_contributions">Ordering of contributions</h3>
+<div class="paragraph">
+<p>When multiple joint-compile-aware transforms apply to the same
+target, contributions run in priority order using the existing
+<code>TransformWithPriority</code> mechanism. Contributions are deterministic
+and idempotent: rerunning them on a class node already containing
+their previous output is a no-op (matching the body-pass tolerance
+above).</p>
+</div>
+<div class="paragraph">
+<p>A contribution may rely on output of an earlier contribution within
+the same class. For example, <code>@EqualsAndHashCode</code> may rely on
+<code>@TupleConstructor</code> having already added a constructor whose
+parameter list it does not need to introspect (it works from
+fields), so order rarely matters; but where it does, priority is the
+mechanism.</p>
+</div>
+<div class="paragraph">
+<p>A contribution may <strong>not</strong> rely on output of contributions on a
+different class in the same unit. That ordering is undefined within
+a single <code>CONVERSION</code> pass.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_with_annotationcollector">Interaction with <code>@AnnotationCollector</code></h3>
+<div class="paragraph">
+<p><code>@AnnotationCollector</code> aliases are expanded <strong>in place</strong> on the AST by
+the transform-collector visitor at <code>CONVERSION</code>, before stub
+contribution runs. A class declared <code>@MyAlias class C { &#8230;&#8203; }</code> whose
+alias expands to <code>@TupleConstructor + @ToString</code> reaches the stub-
+contribution step with the constituent annotations on the class
+node, and each constituent transform&#8217;s stub contribution fires
+normally.</p>
+</div>
+<div class="paragraph">
+<p>No additional plumbing is required for aliases. This includes
+custom <code>@AnnotationCollector</code> processors: they remain in charge of
+which annotations are produced, and the produced annotations
+participate in stub contribution like any other.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_with_the_verifier_sub_pass">Interaction with the <code>Verifier</code> sub-pass</h3>
+<div class="paragraph">
+<p>The stub generator&#8217;s embedded <code>Verifier</code> sub-pass continues to run
+during stub printing. It synthesises:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Property accessors for declared `PropertyNode`s.</p>
+</li>
+<li>
+<p><code>getMetaClass()</code> / <code>setMetaClass(MetaClass)</code> for the implicit
+<code>GroovyObject</code> interface.</p>
+</li>
+<li>
+<p>Default constructors where required by the verifier.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>Verifier</code> sub-pass operates on whatever class node state exists
+at the moment it runs, which now includes any stub contributions.
+A property added by a stub contribution gets its accessors
+synthesised by <code>Verifier</code> automatically; a constructor added by a
+contribution is rendered as-is by the stub printer.</p>
+</div>
+<div class="paragraph">
+<p>The interaction is additive: contributions never disable
+<code>Verifier</code>, and <code>Verifier</code> does not inspect the skeleton metadata.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_existing_back_channels">Existing back-channels</h3>
+<div class="paragraph">
+<p>The stub-side back-channels for <code>@PackageScope</code> and traits remain in
+place. They predate this proposal and target output that is not a
+new member but a <strong>modification</strong> to how an existing class node is
+rendered (modifier flags, class-vs-interface emission). Those are
+well-suited to stub-side handling and there is no benefit to
+migrating them.</p>
+</div>
+<div class="paragraph">
+<p>Future modifier-only or rendering-only transforms should follow the
+same pattern: a small stub-side hook in <code>JavaStubGenerator</code> reading
+the annotation directly. Member-injection transforms — the cases
+this proposal targets — should use the joint-compile-aware
+mechanism instead.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compilation">Compilation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_phase_op_wiring">Phase op wiring</h3>
+<div class="paragraph">
+<p><code>JavaAwareCompilationUnit</code> and <code>JavaStubCompilationUnit</code> register a
+new phase operation at <code>Phases.CONVERSION</code>, ordered between the
+existing transform-collector op and the existing stub-generation op.
+The new op walks each top-level class node in the source unit,
+finds every annotation whose registered transform is joint-
+compile-aware, and dispatches the stub-contribution call for each.</p>
+</div>
+<div class="paragraph">
+<p>The ordering rule is, per source unit, per class:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>JavaAwareResolveVisitor</code></p>
+</li>
+<li>
+<p><code>ASTTransformationCollectorCodeVisitor</code> (collects + expands aliases)</p>
+</li>
+<li>
+<p><strong>new:</strong> <code>StubContributionVisitor</code> (calls contributions, in priority order)</p>
+</li>
+<li>
+<p><code>JavaStubGenerator.generateClass(&#8230;&#8203;)</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For non-joint-compilation builds (<code>CompilationUnit</code> rather than
+<code>JavaAwareCompilationUnit</code>), step 4 is absent. Step 3 is therefore
+either harmless (skeletons get filled in later by the body pass and
+the result is bit-for-bit identical to the no-skeleton path) or, as
+a perf optimisation, also skipped — the body pass handles
+everything as it does today.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_resolver_state_at_conversion">Resolver state at CONVERSION</h3>
+<div class="paragraph">
+<p>The resolver at <code>CONVERSION</code> resolves signature-level information:
+class headers, super, interfaces, field types, parameter / return
+types, annotation types and their constant values. It deliberately
+skips method-body containers. A stub contribution may rely on
+signature-level resolution but must not require body-level
+resolution.</p>
+</div>
+<div class="paragraph">
+<p>For same-unit Groovy classes referenced from the contributing
+class, this means:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Their type names resolve.</p>
+</li>
+<li>
+<p>Their declared fields, properties, source-written methods, and
+constructors are visible.</p>
+</li>
+<li>
+<p>Members added by their <strong>own</strong> transforms are not yet visible —
+those transforms haven&#8217;t run.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A contribution that needs to enumerate members of another same-unit
+Groovy class is therefore limited to source-declared members. For
+classpath types (already-compiled Java classes, JDK types,
+dependencies), the full class is available via
+<code>DecompiledClassNode</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_generic_substitution">Generic substitution</h3>
+<div class="paragraph">
+<p>Generics are populated on class nodes at parse / convert time:
+declared type variables, bounds, and parameterizations of declared
+field / parameter / return types are all in the AST when stub
+contribution runs. A contribution emitting a parameterized
+signature uses the same generic-utilities helpers
+(<code>GenericsUtils.correctToGenericsSpec</code>, etc.) that the stub
+generator uses for its own rendering; cross-substitution between a
+class&#8217;s type variables and an inherited supertype&#8217;s type variables
+is supported.</p>
+</div>
+<div class="paragraph">
+<p>For a contribution that emits members whose signatures depend on a
+classpath supertype (e.g. an <code>@AutoImplement</code>-style filling of
+abstract methods), the supertype&#8217;s resolved members and their
+generic specialisations are available. For a same-unit Groovy
+supertype, only source-declared members are available; transform-
+added abstract methods on the supertype are not yet seen.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_body_pass_replacement_contract">Body-pass replacement contract</h3>
+<div class="paragraph">
+<p>The body pass — the existing transform <code>visit</code> running at the
+declared phase — is updated for each joint-compile-aware transform
+to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Locate any skeleton members on the class node (via the metadata
+flag) that match what the transform would have added.</p>
+</li>
+<li>
+<p>For each match, replace the placeholder body and clear the flag.</p>
+</li>
+<li>
+<p>For non-matches (skeleton pass not run, or new members the
+contribution did not anticipate), behave as today.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This update is local to each transform. The body pass remains the
+canonical specification of what the transform produces; the stub
+contribution is constrained to be a subset (signature-only,
+annotations) of the body pass.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_migration">Migration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Existing transforms migrate to joint-compile-aware in three tiers,
+ordered by how much information their stub contribution needs.</p>
+</div>
+<div class="sect2">
+<h3 id="_tier_1_signatures_derivable_from_class_generics_declared_fields">Tier 1 — signatures derivable from class generics + declared fields</h3>
+<div class="paragraph">
+<p>These transforms emit member signatures that depend only on the
+declared class generics and the declared field types. All required
+information is unconditionally available at <code>CONVERSION</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Stub contribution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TupleConstructor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constructor signatures, including the cascade produced by the
+ <code>defaults = true</code> shape. Parameters use field types with class
+ generics applied. <code>pre</code> / <code>post</code> closures are body-only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@MapConstructor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MyClass(Map)</code> constructor signature.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Singleton</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public static <code>INSTANCE</code> field of the enclosing type, public static
+ <code>getInstance()</code> returning the enclosing type. Both with the
+ enclosing class&#8217;s generics applied.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Bindable</code> (class-level)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>addPropertyChangeListener(PropertyChangeListener)</code>,
+ <code>addPropertyChangeListener(String, PropertyChangeListener)</code>,
+ the matching removers, <code>firePropertyChange(String, Object, Object)</code>,
+ <code>getPropertyChangeListeners()</code>,
+ <code>getPropertyChangeListeners(String)</code>. Plus the
+ <code>propertyChangeSupport</code> field if non-private propagation is
+ desired.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Vetoable</code> (class-level)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code> with <code>VetoableChangeListener</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ListenerList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>addXxxListener</code>, <code>removeXxxListener</code>, <code>getXxxListeners</code>, and a
+ <code>fireXxx(&#8230;&#8203;)</code> per listener-interface method. Listener interface
+ method enumeration uses the field type&#8217;s resolved methods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExternalizeMethods</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>writeExternal(ObjectOutput)</code>, <code>readExternal(ObjectInput)</code>, plus
+ <code>Externalizable</code> on the implements clause.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@IndexedProperty</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per indexed field: <code>getXxx(int)</code>, <code>setXxx(int, T)</code>, with <code>T</code> from
+ the field&#8217;s element type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sortable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compareTo(T)</code> and <code>Comparable&lt;T&gt;</code> on the implements clause.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>These transforms are the proposal&#8217;s primary beneficiaries. A Java
+caller using <code>new MyTuple(a, b)</code>, <code>MySingleton.getInstance()</code>,
+<code>bindable.addPropertyChangeListener(&#8230;&#8203;)</code>, and so on, compiles
+cleanly under joint compilation once the corresponding transform
+opts in.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tier_2_signatures_from_supertypes_or_composition">Tier 2 — signatures from supertypes or composition</h3>
+<div class="paragraph">
+<p>These transforms either depend on supertype information, compose
+with Tier 1 transforms, or emit members whose Java visibility is
+already adequately covered by inheritance. They migrate after Tier
+1 with modest additional plumbing.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emits <code>toString()</code>. Java callers reach it via <code>Object</code>-inherited
+ dispatch even without a stub contribution, but the contribution
+ makes the stub faithful (and unblocks <code>MethodHandles.lookup</code> /
+ reflection-style code that introspects the stub).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same shape as <code>@ToString</code> — already callable via <code>Object</code> but a
+ contribution improves stub fidelity.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verifier already synthesises an accessor for the property; the
+ contribution refines the field shape.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code> (<code>SimpleStrategy</code>, <code>DefaultStrategy</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inner <code>Builder</code> class with fluent setters and a <code>build()</code> method.
+ Configuration is in the <code>@Builder</code> annotation values
+ (<code>builderClassName</code>, <code>builderMethodName</code>, <code>prefix</code>, etc.) and is
+ fully readable at <code>CONVERSION</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoClone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emits <code>clone()</code> and adds <code>Cloneable</code> to the implements clause. The
+ interface addition needs the contribution; <code>clone()</code> itself is
+ already on <code>Object</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mirrors super-class constructors. Works for classpath super
+ classes; for same-unit Groovy super classes that themselves use
+ <code>@TupleConstructor</code>-family transforms, the super&#8217;s transform-added
+ constructors are not yet visible at <code>CONVERSION</code> (deferred — see
+ below).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RecordType</code> / record-style classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Component accessors and the canonical constructor are derivable
+ from declared components. Some record-specific finalisation runs
+ later and is left to the body pass.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_tier_3_deferred">Tier 3 — deferred</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Reason for deferral</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code> of a same-unit Groovy delegate type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At <code>CONVERSION</code> the delegate type&#8217;s source-declared methods are
+ visible, but its transform-added methods (e.g. when the delegate
+ itself uses <code>@Delegate</code> recursively) are not. The contribution
+ would emit a strictly smaller method set than the runtime class.
+ Workable for classpath delegate types; deferred for same-unit
+ Groovy delegates pending a fixed-point scheduling model.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generates an overload of an existing method. If the existing method
+ was itself added by another transform, that method is not visible
+ to the contribution at <code>CONVERSION</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code> as a meta-transform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code> composes <code>@TupleConstructor</code>, <code>@MapConstructor</code>,
+ <code>@ToString</code>, <code>@EqualsAndHashCode</code>, plus immutability-specific
+ logic. Each constituent migrates independently as part of Tier 1 /
+ Tier 2; <code>@Immutable</code> itself becomes joint-compile-aware once its
+ constituents are.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code> of generic same-unit Groovy supertypes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires generic substitution against a same-unit type whose
+ declared abstract methods may be transform-added. Workable for
+ classpath supertypes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Transforms that don&#8217;t opt in are unchanged.</strong> Their dispatch
+phase, ordering, AST visit signature, and bytecode output are
+identical to today. No transform is required to opt in.</p>
+</li>
+<li>
+<p><strong>Stubs for classes whose annotations all come from non-opt-in
+transforms are unchanged.</strong> Byte-for-byte equivalence is preserved
+for the existing standard library transforms until they migrate.</p>
+</li>
+<li>
+<p><strong>Stubs for classes whose annotations include opt-in transforms
+gain members.</strong> The added members reflect the transform&#8217;s runtime
+output. This is the load-bearing change of the proposal.</p>
+</li>
+<li>
+<p><strong>Programs that compiled under joint compilation today continue to
+compile and produce identical bytecode.</strong> The new members are
+additive; nothing is renamed, retyped, or removed.</p>
+</li>
+<li>
+<p><strong>Programs that previously failed to compile under joint
+compilation due to missing stub members now compile.</strong> This is the
+intended observable effect.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_forward_compatibility">Forward compatibility</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>The mechanism is opt-in per transform. Future standard-library
+transforms can be joint-compile-aware from inception. Third-party
+transforms can opt in independently of any Groovy release that
+ships standard-library migrations.</p>
+</li>
+<li>
+<p>The choice between Shape A (annotation attribute) and Shape B
+(interface) is fixed at implementation time and is a property of
+the framework, not of any transform&#8217;s public contract.</p>
+</li>
+<li>
+<p>The skeleton-metadata key used for body-pass replacement is an
+internal contract between the framework and individual transforms.
+Third-party transforms using the framework&#8217;s helpers do not see it.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tooling_implications">Tooling implications</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>IDEs that consume Groovy stubs (IntelliJ, Eclipse) gain visibility
+into the migrated transforms' output without per-transform IDE
+support code.</p>
+</li>
+<li>
+<p>Build tools that cache stubs (Gradle&#8217;s <code>compileGroovy</code> /
+<code>compileJava</code> task graph) need to invalidate the cached stubs
+after any change that affects an opt-in contribution. The existing
+invalidation already handles annotation-value changes; the
+proposal does not add new triggers.</p>
+</li>
+<li>
+<p>Documentation tools (<code>groovydoc</code>, generated Javadoc against the
+stubs) reflect the stub contents. Migrated transforms' members
+appear in generated documentation.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same-unit cross-class transitive transform output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If class A&#8217;s contribution depends on members that another same-unit
+ Groovy class B&#8217;s transforms will add, A&#8217;s contribution sees only
+ B&#8217;s source-declared members. Solving this requires a fixed-point
+ scheduling model where contributions run, the AST is re-examined,
+ and the cycle repeats until stable. That is a substantial
+ architectural change beyond the scope of this proposal.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type inference results from later phases</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StaticTypeCheckingVisitor</code> runs at <code>INSTRUCTION_SELECTION</code>, far
+ after <code>CONVERSION</code>. Stub contributions cannot use inferred types.
+ In practice this is not a barrier: declared types from class
+ generics, fields, and supertypes are sufficient for the migration
+ list above.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cross-transform annotation propagation in stubs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If transform A&#8217;s contribution adds method <code>m</code>, and transform B
+ (running later, at <code>SEMANTIC_ANALYSIS</code>+) adds an annotation to <code>m</code>,
+ the runtime class carries the annotation but the stub does not.
+ Annotations contributed during the stub pass <strong>are</strong> in the stub.
+ Pulling cross-transform annotations into the stub would require
+ either re-emitting stubs after each later phase (expensive) or
+ promoting cross-transform interactions into the stub pass
+ (loses the separation that makes the proposal feasible).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Body fidelity in stubs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stub bodies are placeholders by design. Joint compilation never
+ needs body content for <code>javac</code>; only signatures matter.
+ Contributing transforms produce placeholder bodies in the same
+ style.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code> of same-unit Groovy delegate types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">See Tier 3. A skeleton emitting only source-declared methods of the
+ delegate is feasible but partial; full coverage needs the
+ fixed-point model.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code> over transform-added methods</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same root cause as <code>@Delegate</code> Tier 3.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Re-running the entire transform pipeline at <code>CONVERSION</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Some transforms have legitimate dependencies on later-phase
+ information (type inference, full body resolution); running the
+ whole pipeline twice would force every transform to be re-entrant
+ and would not improve stub fidelity beyond what targeted opt-in
+ contributions already achieve.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Migrating the <code>@PackageScope</code> and trait stub-side back-channels to
+ the new mechanism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The existing back-channels target rendering decisions (modifier
+ flags, class-vs-interface emission) rather than member injection.
+ Stub-side handling is a better fit for those cases. The new
+ mechanism is for member injection only.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy-lang.org/metaprogramming.html#_compilation_phases_guide">Groovy compilation phases guide</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/master/src/main/java/org/codehaus/groovy/tools/javac/JavaStubGenerator.java"><code>JavaStubGenerator</code> — current stub generator, including the <code>Verifier</code> sub-pass and the <code>@PackageScope</code> / trait back-channels</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/master/src/main/java/org/codehaus/groovy/tools/javac/JavaAwareCompilationUnit.java"><code>JavaAwareCompilationUnit</code> — joint-compilation phase op chain</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/master/src/main/java/org/codehaus/groovy/transform/ASTTransformationCollectorCodeVisitor.java"><code>ASTTransformationCollectorCodeVisitor</code> — <code>@AnnotationCollector</code> alias expansion at CONVERSION</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/blob/master/src/main/java/org/codehaus/groovy/transform/ASTTransformationVisitor.java"><code>ASTTransformationVisitor</code> — phase-dispatch wiring for local transforms</a></p>
+</li>
+<li>
+<p><a href="https://groovy-lang.org/objectorientation.html#_traits">Traits — example of an existing stub-side back-channel for non-injection rendering decisions</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
