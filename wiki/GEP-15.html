@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>&#160;
 </td>
 <td class="hdlist2">
-<p>2026-04-12</p>
+<p>2026-04-28</p>
 </td>
 </tr>
 </table>
@@ -194,7 +194,9 @@ that are called in preference to the current <code>plus</code> + reassign patter
 <code>plus()</code> must continue to work identically when no <code>plusAssign</code> method exists.</p>
 </li>
 <li>
-<p>Support <code>+=</code> on <code>final</code> fields/variables when <code>plusAssign</code> is available.</p>
+<p>Support <code>+=</code> on <code>final</code> fields/variables when <code>plusAssign</code> is available
+and the compiler can resolve it at compile time
+(i.e. under <code>@CompileStatic</code> or <code>@TypeChecked</code>&#8201;&#8212;&#8201;see <a href="#_resolution_algorithm">Resolution algorithm</a>).</p>
 </li>
 <li>
 <p>Work correctly in both <code>@CompileStatic</code> and dynamic Groovy.</p>
@@ -326,6 +328,19 @@ This requires <code>x</code> to be reassignable.</p>
 </ol>
 </div>
 <div class="paragraph">
+<p>The <code>final</code> relaxation in step 2 requires the compiler to resolve the
+<code><strong>Assign</code> method *at compile time</strong>. Under <code>@CompileStatic</code> and
+<code>@TypeChecked</code> the resolution happens during type-checking and the
+relaxation applies. In purely dynamic compilation the dispatch is
+deferred to runtime, so the JVM-level final-reassignment check cannot
+be safely lifted; <code>final + compound-assign</code> continues to be a
+compile-time error in that case even when a <code>plusAssign</code> method would
+have responded at runtime. This is an asymmetry between the two modes
+and is intentional: the alternative would require the compiler to
+emit conditional bytecode that, in the runtime-dispatched fallback
+branch, would violate JVM rules for <code>final</code> fields.</p>
+</div>
+<div class="paragraph">
 <p>When both <code>plusAssign</code> and <code>plus</code> exist on the same
 type, <code>plusAssign</code> takes precedence.
 Languages like Kotlin apply an ambiguity resolution rule
@@ -349,7 +364,19 @@ only applies when the base operator would resolve to a method call.</p>
 <p><strong>Expression value.</strong> When <code>plusAssign</code> is called, the expression value
 of <code>x += y</code> is <code>x</code> (the mutated object), not the return value of
 <code>plusAssign</code>. This differs from the current behavior where the expression
-value is the result of <code>x.plus(y)</code>.</p>
+value is the result of <code>x.plus(y)</code>. The contract holds regardless of
+how the <code>*Assign</code> method is reached&#8201;&#8212;&#8201;instance method, extension method,
+category method, or <code>@OperatorRename(plusAssign=…)</code> redirection&#8201;&#8212;&#8201;so a
+user-renamed <code>addInPlace</code> method that returns <code>void</code> still leaves <code>x</code>
+visible as the value of the surrounding expression.</p>
+</li>
+<li>
+<p><strong>Property setter is not invoked.</strong> When <code>obj.prop += y</code> resolves to a
+<code><strong>Assign</code> on <code>prop&#8217;s type, the getter runs once and the setter is
+*skipped</strong>; the receiver&#8217;s mutation is observed via `prop&#8217;s state, not via
+setter dispatch. Frameworks that wrap setters for change-tracking (e.g.
+observable beans, dirty-checking ORMs) need to hook the `*Assign</code>
+method instead.</p>
 </li>
 <li>
 <p><strong>Extension methods.</strong> <code>plusAssign</code> is discoverable as an extension method
@@ -358,7 +385,9 @@ value is the result of <code>x.plus(y)</code>.</p>
 <li>
 <p><strong><code>@OperatorRename</code> support.</strong> The existing <code>@OperatorRename</code> annotation
 will be extended to support renaming the assign variants, e.g.
-<code>@OperatorRename(plusAssign="addInPlace")</code>.</p>
+<code>@OperatorRename(plusAssign="addInPlace")</code>. The renamed method is
+authoritative for compound assignment (no fallback to the base operator
+rename), and the expression-value contract above continues to apply.</p>
 </li>
 </ul>
 </div>
@@ -441,8 +470,19 @@ captured value is <code>x</code> (the mutated object), not the result of <code>p
 This only affects code that uses compound assignment as an expression.</p>
 </li>
 <li>
-<p><strong>Final fields.</strong> In <code>@CompileStatic</code>, <code>final</code> fields with a type that
-has <code>plusAssign</code> can now use <code>+=</code>. Previously this was always an error.</p>
+<p><strong>Final fields.</strong> In <code>@CompileStatic</code> and <code>@TypeChecked</code>, <code>final</code>
+fields with a type that has <code>plusAssign</code> can now use <code>+=</code>. Previously
+this was always an error. (Pure dynamic mode is unchanged&#8201;&#8212;&#8201;still an
+error&#8201;&#8212;&#8201;per the carve-out in <a href="#_resolution_algorithm">Resolution algorithm</a>.)</p>
+</li>
+<li>
+<p><strong>Property setter not invoked.</strong> For <code>obj.prop op= y</code> where the
+property type has a <code>*Assign</code> method, the setter is no longer called
+(only the getter runs, then <code>*Assign</code> mutates the result). Frameworks
+that observe writes via setter interception (observable beans,
+GORM-style dirty tracking, JavaFX property bindings) must move the
+observation point to the <code>*Assign</code> method or define <code>*Assign</code> on the
+container type rather than the property&#8217;s type.</p>
 </li>
 </ol>
 </div>
@@ -481,6 +521,13 @@ has <code>plusAssign</code> can now use <code>+=</code>. Previously this was alw
 <div class="sectionbody">
 <div class="paragraph">
 <p>1 (2026-04-12) Initial draft</p>
+</div>
+<div class="paragraph">
+<p>2 (2026-04-28) Clarifications surfaced during reference implementation:
+final-relaxation is <code>@CompileStatic</code>/<code>@TypeChecked</code>-only;
+expression-value contract applies to <code>@OperatorRename(*Assign=…)</code> paths;
+property-setter suppression added to design considerations and breaking
+behaviour.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
