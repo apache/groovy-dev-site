@@ -1397,14 +1397,6 @@ already adequately covered by inheritance. They migrate after Tier
  to the contribution at <code>CONVERSION</code>.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code> as a meta-transform</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Immutable</code> composes <code>@TupleConstructor</code>, <code>@MapConstructor</code>,
- <code>@ToString</code>, <code>@EqualsAndHashCode</code>, plus immutability-specific
- logic. Each constituent migrates independently as part of Tier 1 /
- Tier 2; <code>@Immutable</code> itself becomes joint-compile-aware once its
- constituents are.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code> of generic same-unit Groovy supertypes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Requires generic substitution against a same-unit type whose
  declared abstract methods may be transform-added. Workable for
@@ -1412,6 +1404,77 @@ already adequately covered by inheritance. They migrate after Tier
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>@Immutable</code> was originally listed here as a deferred meta-transform
+pending its constituents. With Tier 1 / Tier 2 migrations and the
+addition of a <code>@Final</code> stubber, all of <code>@Immutable&#8217;s composing
+transforms (</code>@TupleConstructor(defaults=false)<code>, `@MapConstructor</code>,
+<code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Final</code>) are now joint-compile-aware
+in the spike, so <code>@Immutable</code> itself is transitively covered through
+<code>@AnnotationCollector</code> expansion. See
+<code>ImmutableJointCompilationStubTest</code> for end-to-end validation.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_transforms_that_need_no_stubber">Transforms that need no stubber</h3>
+<div class="paragraph">
+<p>Some transforms are intentionally absent from the migration tiers
+above because they produce no stub-visible output. The work they do
+is real, but it sits below the line of what <code>JavaStubGenerator</code>
+renders. Adding a Shape C stubber for them would be dead code today.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Why no stubber is needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoFinal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets {<code>Modifier.FINAL</code>} on each method / constructor / closure
+ <strong>parameter</strong>. The stub generator does not emit parameter modifiers
+ (<code>JavaStubGenerator.printParams</code> writes only annotations, type, and
+ name), so the change is invisible to Java consumers regardless of
+ when it runs. Pure internal-discipline annotation; if the stub
+ generator is ever enhanced to emit parameter modifiers, a stubber
+ mirroring the full transform&#8217;s parameter-walk would be the minimal
+ fix.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ImmutableBase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets fields to <code>private final</code>, adds <code>serialVersionUID</code>, marks
+ fields with the per-field <code>IMMUTABLE_BREADCRUMB</code> metadata key, and
+ wires the {<code>ImmutablePropertyHandler</code>}. All of these are runtime
+ semantics: defensive copies inside generated constructor bodies,
+ immutable-property handler integration, breadcrumbs that other
+ transforms (e.g. <code>@IndexedProperty</code>) consult later. The
+ <strong>Java-visible API</strong> — constructors, getters, no setters,
+ equals/hashCode/toString — is fully covered by the constituent
+ transforms (<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@ToString</code>,
+ <code>@EqualsAndHashCode</code>, <code>@Final</code>). Once those are migrated,
+ <code>@ImmutableBase&#8217;s contribution is invisible to `javac</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This category exists to make the GEP&#8217;s coverage decisions explicit:
+"considered, no work needed" rather than silently absent.</p>
+</div>
 </div>
 </div>
 </div>
