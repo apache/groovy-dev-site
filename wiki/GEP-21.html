@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>4</p>
+<p>5</p>
 </td>
 </tr>
 <tr>
@@ -147,12 +147,13 @@
 <td class="content">
 A working spike for <strong>Shape C</strong> (the split-transform model described
 below) is available at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>. It
-covers all of Tier 1 plus several Tier 2 entries — <code>@Sortable</code>,
-<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@Singleton</code>, <code>@Bindable</code>,
-<code>@Vetoable</code>, <code>@ListenerList</code>, <code>@ExternalizeMethods</code>, <code>@IndexedProperty</code>,
-<code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code> — end-to-end through
-joint compilation, plus compositional tests for <code>@Canonical</code> and
-<code>@Immutable</code>. Findings from that spike are folded into this revision.
+covers all of Tier 1 plus most of Tier 2 — <code>@Sortable</code>,
+<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@NamedVariant</code>, <code>@Singleton</code>,
+<code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>, <code>@ExternalizeMethods</code>,
+<code>@IndexedProperty</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code>,
+<code>@AutoClone</code>, <code>@Builder</code> — end-to-end through joint compilation, plus
+compositional tests for <code>@Canonical</code> and <code>@Immutable</code>. Findings from that
+spike are folded into this revision.
 </td>
 </tr>
 </table>
@@ -746,10 +747,51 @@ Tier 3 cross-class limit; classpath listeners (e.g.
 <code>java.beans.PropertyChangeListener</code>,
 <code>java.awt.event.ActionListener</code>) work fully.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoClone</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object.clone()</code> is <code>protected</code>, so Java code calling
+<code>foo.clone()</code> against the stub fails to compile even though the
+runtime exposes a public covariant override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Cloneable</code> on the implements clause; public covariant
+<code>Foo clone() throws CloneNotSupportedException</code>. Behaviour is
+identical for all four styles (CLONE / COPY_CONSTRUCTOR /
+SERIALIZATION / SIMPLE) — they differ only in body, which is
+irrelevant for stubs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Map-arg variant of an annotated method or constructor is not
+visible. Java callers wanting the named-arg form (e.g.
+<code>Calc.makeSense(args)</code> where <code>args</code> is a <code>Map</code>) fail to compile
+even though the runtime exposes the variant. Also covers
+<code>@TupleConstructor(namedVariant = true)</code>, which uses the same
+<code>createMapVariant</code> helper.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map-arg variant declared alongside the user-written original for
+both methods and constructors. Mixed
+<code>@NamedParam</code>/<code>@NamedDelegate</code> configurations produce a richer
+runtime signature that the stubber emits as a strict subset
+(single Map-arg form); the original was previously listed in
+Tier 3 and is now promoted to Tier 1 since the typical direct-use
+case has its target visible at CONVERSION.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Foo.builder()</code>, the inner builder class with its fluent setters,
+and the <code>build()</code> method are not visible. Java callers wanting
+<code>Foo.builder().name("a").age(7).build()</code> fail to compile.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For <code>DefaultStrategy</code> (the default): inner builder class declared
+inline in the stub with placeholder fluent setters and <code>build()</code>,
+plus a static <code>Foo.builder()</code> factory on the buildee. For
+<code>SimpleStrategy</code> with a non-default <code>prefix</code> (e.g.,
+<code>prefix = "with"</code>): chained <code>Foo prefixName(T)</code> setters on the
+buildee. Default-prefix <code>SimpleStrategy</code>, <code>InitializerStrategy</code>,
+<code>ExternalStrategy</code>, method/constructor targets, and <code>forClass</code> are
+documented limitations rather than deferrals.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In all thirteen cases the runtime output is unchanged — these are
+<p>In all sixteen cases the runtime output is unchanged — these are
 stub-fidelity fixes, not behavioural changes.</p>
 </div>
 <div class="paragraph">
@@ -846,6 +888,20 @@ placeholders. Otherwise whichever stubber fires second silently
 no-ops. Single-transform tests don&#8217;t catch this — only
 compositional cases do; the spike&#8217;s <code>@Canonical</code> and <code>@Immutable</code>
 tests are the smallest reliable triggers.</p>
+</li>
+<li>
+<p><strong>Inner-class stubbing needs manual module wiring.</strong> The natural API
+(<code>module.addClass(innerClass)</code>) registers the class globally in
+the <code>CompileUnit&#8217;s by-name map. The full transform&#8217;s
+`addGeneratedInnerClass</code> then trips a "duplicate class definition"
+error when it tries to register its own (untagged) replacement.
+The workaround is to add to <code>module.getClasses()</code> and call
+<code>setModule</code> manually, but skip the <code>CompileUnit</code> registration —
+the stub generator finds the inner class via the outer&#8217;s
+<code>innerClasses</code> list and renders it inline. The full transform&#8217;s
+cleanup then removes the stubber-tagged entry from the module
+before <code>addGeneratedInnerClass</code> runs. The spike&#8217;s <code>@Builder</code> with
+<code>DefaultStrategy</code> is the case that surfaces this.</p>
 </li>
 </ul>
 </div>
@@ -1348,6 +1404,18 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
  metadata-key handoff at <code>CANONICALIZATION</code>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Map-arg variant alongside the user-written method or constructor
+ (typical direct-use case). Mixed
+ <code>@NamedParam</code>/<code>@NamedDelegate</code> configurations produce a richer
+ runtime signature; the stubber&#8217;s single Map-arg form is a strict
+ subset. Promoted from Tier 3 — the original deferral assumed the
+ target method might be transform-added, but in practice
+ <code>@NamedVariant</code> sits on hand-written members, with the target
+ visible at CONVERSION.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -1425,19 +1493,26 @@ already adequately covered by inheritance. They migrate after Tier
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code> (<code>SimpleStrategy</code>, <code>DefaultStrategy</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Inner <code>Builder</code> class with fluent setters and a <code>build()</code> method.
- Configuration is in the <code>@Builder</code> annotation values
- (<code>builderClassName</code>, <code>builderMethodName</code>, <code>prefix</code>, etc.) and is
- fully readable at <code>CONVERSION</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For <code>DefaultStrategy</code> (the default): inner builder class with
+ fluent setters plus a <code>build()</code> method, accessed via a static
+ <code>Foo.builder()</code> factory. For <code>SimpleStrategy</code> with a non-default
+ <code>prefix</code>: chained setters on the buildee. Default-prefix
+ <code>SimpleStrategy</code> (return-type collision with auto-generated void
+ setters), <code>InitializerStrategy</code>, <code>ExternalStrategy</code>,
+ method/constructor targets, and <code>forClass</code> are documented
+ limitations rather than deferrals.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoClone</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emits <code>clone()</code> and adds <code>Cloneable</code> to the implements clause. The
- interface addition needs the contribution; <code>clone()</code> itself is
- already on <code>Object</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Cloneable</code> on the implements clause and a public covariant
+ <code>Foo clone() throws CloneNotSupportedException</code>. Body is a
+ placeholder; the four styles (CLONE / COPY_CONSTRUCTOR /
+ SERIALIZATION / SIMPLE) differ only in body content. Without the
+ stubber, <code>Object.clone()&#8217;s `protected</code> visibility means Java
+ callers cannot invoke <code>foo.clone()</code> against the stub.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
@@ -1482,12 +1557,6 @@ already adequately covered by inheritance. They migrate after Tier
  Groovy delegates pending a fixed-point scheduling model.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Generates an overload of an existing method. If the existing method
- was itself added by another transform, that method is not visible
- to the contribution at <code>CONVERSION</code>.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code> of generic same-unit Groovy supertypes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Requires generic substitution against a same-unit type whose
  declared abstract methods may be transform-added. Workable for
@@ -1495,6 +1564,25 @@ already adequately covered by inheritance. They migrate after Tier
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>@NamedVariant</code> was originally listed here as deferred because a
+target method "added by another transform" wouldn&#8217;t be visible at
+CONVERSION. In practice, transforms compose this kind of variant via
+<code>@NamedParam</code> annotations on parameters of an existing method, not by
+adding a <code>@NamedVariant</code>-annotated method; direct user-written
+<code>@NamedVariant</code> sits on hand-written members whose target is fully visible
+at CONVERSION. The original deferral was overly cautious; <code>@NamedVariant</code>
+is now in Tier 1.
+</td>
+</tr>
+</table>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1783,7 +1871,8 @@ appear in generated documentation.</p>
 <p>1 (2026-04-28) Initial proposal: motivation, design principles, Shapes A and B, migration tiers<br>
 2 (2026-04-29) Added Shape C (split-transform model) and the working spike (<a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>) covering <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@Lazy</code>, <code>@ToString</code>; before/after spike-results table; framework-adjustments subsection (rail relaxation + customizer filter)<br>
 3 (2026-04-29) Spike extended to nine transforms with <code>@MapConstructor</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>; added "Recurring patterns and implementation gotchas" subsection; updated migration tiers to reflect the broader spike validation<br>
-4 (2026-04-29) Tier 1 complete: spike adds <code>@Final</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>; compositional <code>@Canonical</code> and <code>@Immutable</code> tests; "Transforms that need no stubber" subsection; two new gotchas (parallel-map method removal, compositional ordering guards)</p>
+4 (2026-04-29) Tier 1 complete: spike adds <code>@Final</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>; compositional <code>@Canonical</code> and <code>@Immutable</code> tests; "Transforms that need no stubber" subsection; two new gotchas (parallel-map method removal, compositional ordering guards)<br>
+5 (2026-04-29) Tier 2 covered: spike adds <code>@AutoClone</code> and <code>@Builder</code> (DefaultStrategy + non-default-prefix SimpleStrategy); <code>@NamedVariant</code> promoted from Tier 3 to Tier 1; new gotcha (inner-class stubbing needs manual module wiring)</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
