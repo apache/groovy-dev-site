@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -128,15 +128,31 @@
 </tr>
 <tr>
 <td class="hdlist1">
-<strong>Last modification</strong>&#160;
+<strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-04-28</p>
+<p>2026-04-29</p>
 </td>
 </tr>
 </table>
 </div>
 </div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+A working spike for <strong>Shape C</strong> (the split-transform model described
+below) is available at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>. It
+covers <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@Lazy</code>, and <code>@ToString</code> end-to-end
+through joint compilation, including before/after stub diffs. Findings
+from that spike are folded into this revision.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -381,26 +397,38 @@ annotation collection / alias expansion and before stub generation:</p>
 <div class="olist arabic">
 <ol class="arabic" start="4">
 <li>
-<p><strong>Stub contribution</strong> — for each class node, every annotation whose
-transform has opted in to joint-compile awareness gets a chance to
-add Java-visible member signatures to the class node. The added
-members carry placeholder bodies and are tagged so the later body
-pass can recognise and complete them.</p>
+<p><strong>Stub contribution</strong> — for each class node, the framework gives
+every joint-compile-aware annotation an early invocation. The
+invocation may mutate the AST in any way that influences what
+<code>JavaStubGenerator</code> will subsequently render: adding members
+(interfaces, methods, constructors, fields) with placeholder
+bodies, flipping modifiers on existing members so the embedded
+<code>Verifier</code> sub-pass produces a different accessor shape,
+augmenting or trimming property nodes, and so on. Mutations are
+typically tagged with a metadata key so the authoritative later
+invocation — the same transform&#8217;s normal-phase call in Shapes A
+and B, or the sibling transform&#8217;s call in Shape C — can recognise
+the early contribution and complete it (replacing a placeholder
+body, discarding a stub-only artifact, etc.).</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
 <p>When stub generation runs (step 3 in the original chain, now step 5),
-it sees the contributed members along with everything else and
-includes them in the rendered stub.</p>
+it sees the post-contribution AST and renders the stub from that.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_joint_compile_aware_transforms">Joint-compile-aware transforms</h3>
 <div class="paragraph">
 <p>A transform opts into the new behaviour by declaring itself joint-
-compile-aware. Two equivalent shapes are available, chosen by the
-transform author:</p>
+compile-aware. Three alternative shapes have been identified for
+how a transform expresses this opt-in. They are not mutually
+exclusive — the framework could support any one of them, or any
+combination — and the choice between them is a design question this
+GEP leaves open for discussion (see <em>Open question: which shapes to
+ship?</em> below). The shapes are presented here so the discussion has
+concrete options to weigh.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -422,13 +450,25 @@ public class TupleConstructorASTTransformation
         implements StubContributor { ... }</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// Shape C — split-transform model (existing Groovy idiom, validated by spike)
+@GroovyASTTransformationClass({
+    "org.codehaus.groovy.transform.TupleConstructorASTStubber",       // phase = CONVERSION
+    "org.codehaus.groovy.transform.TupleConstructorASTTransformation" // phase = CANONICALIZATION
+})
+public @interface TupleConstructor { ... }</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>In Shape A, the transform&#8217;s own <code>visit</code> method is invoked twice per
-target: once at <code>CONVERSION</code> with a context flag (or thread-local
-mode) indicating <strong>stub contribution</strong>, and again at the declared
-phase with the flag indicating <strong>body completion</strong>. The transform
-inspects the flag and self-selects what work to do. State carried
-between calls lives on the AST nodes (e.g. via <code>putNodeMetaData</code>).</p>
+<p>In Shape A, the framework looks for the joint-compile-aware flag
+twice — once at <code>CONVERSION</code> during joint processing and once at
+the transform&#8217;s declared phase. The transform&#8217;s <code>visit</code> is invoked
+in both passes. The transform must be idempotent: state carried
+between calls lives on the AST nodes (e.g. via <code>putNodeMetaData</code>).
+A transform may distinguish the two passes via a context flag if
+the work is genuinely different, but this is not required by the
+framework.</p>
 </div>
 <div class="paragraph">
 <p>In Shape B, the framework invokes <code>contributeStubs(&#8230;&#8203;)</code> at
@@ -437,57 +477,227 @@ today. The two methods are independent code paths in the same
 class.</p>
 </div>
 <div class="paragraph">
-<p>Shape A is mechanically simpler: no new public interface, no
-additional method on existing transforms, less duplication when the
-same logic produces both signatures and bodies. Shape B is cleaner
-when the two passes are substantially different and the author
-prefers two short methods over one branching method. The proposal
-permits both; the choice is a transform-author decision and bears no
-on-the-wire compatibility consequence.</p>
+<p>In Shape C, the author writes two transform classes and lists both
+in <code>@GroovyASTTransformationClass</code>. The first class declares
+<code>phase = CompilePhase.CONVERSION</code> and runs only during joint
+compilation; the second class declares its normal phase
+(<code>CANONICALIZATION</code>, <code>SEMANTIC_ANALYSIS</code>, etc.) and is the
+authoritative pass for runtime output. Existing split-transform
+pairs in the codebase (<code>SealedASTTransformation</code> /
+<code>SealedCompletionASTTransformation</code>,
+<code>ExternalizeMethodsASTTransformation</code> /
+<code>ExternalizeVerifierASTTransformation</code>) follow the same idiom but
+both at non-CONVERSION phases; Shape C extends that pattern by
+allowing the first piece at <code>CONVERSION</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="_equivalence_and_trade_offs">Equivalence and trade-offs</h4>
+<div class="paragraph">
+<p>All three shapes face the <strong>same</strong> scoping decision at <code>CONVERSION</code>
+(thin AST, no transform-cascade output, no static-type-checker
+results), the <strong>same</strong> subset-of-runtime invariant for stub fidelity,
+and the <strong>same</strong> idempotency requirement. They differ only in:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Visible API surface.</strong> Shapes A and B add it (a new annotation
+attribute, a new interface). Shape C adds none — it composes
+existing public mechanisms.</p>
+</li>
+<li>
+<p><strong>Boundary visibility.</strong> Shape C makes the early/late split
+externally obvious because each phase is its own class. Shapes A
+and B keep the split internal to a single transform class —
+equally valid, just less immediately legible to a reader.</p>
+</li>
+<li>
+<p><strong>Code reuse for shared logic.</strong> In all three shapes, when the early
+pass and the authoritative pass do overlapping work, a static
+helper called from both pieces handles the duplication cleanly
+(the spike demonstrates this with <code>addComparableSurface</code> shared
+between <code>SortableASTStubber</code> and <code>SortableASTTransformation</code>).
+This is ordinary refactoring, not a shape-specific tax.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>The proposal will fix one of the two shapes as the canonical form
-during implementation. Either way, the contract observed by the rest
-of the compiler — what runs when, on which target, with which
-information available — is identical.</p>
+<p>Whichever shapes are ultimately supported, the contract observed by
+the rest of the compiler — what runs when, on which target, with
+which information available — is identical, and a transform&#8217;s
+choice of shape carries no on-the-wire compatibility consequence
+for users of that transform.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+The "Stubber" naming convention used in the spike is just a
+naming convention. Where the early piece does substantial AST
+surgery (e.g. <code>LazyASTStubber</code> flipping a property modifier to
+suppress setter emission), a more neutral name such as
+<code>*ASTConversionPart</code> or <code>*ASTPreStub</code> may better reflect scope.
+The framework imposes no naming requirement.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_open_question_which_shapes_to_ship">Open question: which shapes to ship?</h4>
+<div class="paragraph">
+<p>The three shapes can co-exist in the framework — adding any one
+does not preclude later adding the others — but committing to all
+three from day one is a larger surface area than may be warranted.
+Two reasonable positions for the GEP discussion:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Ship Shape C only</strong> (the spike&#8217;s choice). It requires no new
+public API — only the small framework adjustments documented
+under <em>Compilation</em> — and it composes existing mechanisms
+(<code>@GroovyASTTransformationClass</code> lists, the standard transform-
+collector and dispatcher). Shapes A and B can be added later if
+concrete demand emerges or if some transform&#8217;s needs aren&#8217;t
+comfortably expressible as a split.</p>
+</li>
+<li>
+<p><strong>Ship Shape A or B in addition</strong> if the in-class re-entrant model
+is judged worth the visible API cost (a new annotation attribute
+or a new interface), for example because authors of complex
+transforms find the single-class model significantly easier to
+reason about.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This GEP does not pre-decide. Reviewers are invited to weigh in on
+which shapes to commit to in the first implementation.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="spike-results">Spike results: before / after stub views</h3>
+<div class="paragraph">
+<p>The spike at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a> implements
+Shape C for four transforms. The table summarises what a Java source
+in the same joint-compilation unit sees via the generated stub
+before and after the transform opts in.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Before (no stubber piece)</th>
+<th class="tableblock halign-left valign-top">After (Shape C stubber)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sortable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class does not declare <code>Comparable</code>; no <code>compareTo</code> method is
+visible. Java code calling <code>task.compareTo(other)</code> fails to compile
+even though the runtime supports it.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>implements java.lang.Comparable&lt;Self&gt;</code> is on the class header;
+<code>int compareTo(Self other) { return 0; }</code> is declared. Java code
+compiles and at runtime hits the real comparison body
+(metadata-key handoff at <code>CANONICALIZATION</code>).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TupleConstructor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No tuple constructor visible — only the implicit no-arg. Java code
+writing <code>new Foo("bar")</code> fails to compile even though
+<code>defaults = true</code> would generate the overload at runtime.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For <code>defaults = true</code>/<code>defaultsMode = ON</code>: the full prefix-overload
+chain (<code>Foo()</code>, <code>Foo(p1)</code>, &#8230;&#8203;, <code>Foo(p1..pN)</code>) is in the stub,
+mirroring what <code>Verifier</code> will produce at runtime. For
+<code>defaults = false</code>/<code>defaultsMode = OFF</code>/<code>AUTO</code>: only the maximal
+form, matching the runtime exactly. (Trait-injected and super
+properties remain invisible — see <em>Tier 3</em>.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stub has both <code>getX()</code> and <code>setX(&#8230;&#8203;)</code> (auto-property accessors).
+Runtime has only <code>getX()</code>. Java code calling <code>holder.setX(v)</code>
+compiles against the stub but fails at runtime with
+<code>NoSuchMethodError</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stub has only <code>getX()</code> — the stubber marks the property final at
+<code>CONVERSION</code>, which causes <code>Verifier</code> to skip setter generation.
+The full transform later replaces the property entirely, so the
+final marker has no effect on runtime.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toString()</code> is inherited from <code>Object</code> only — the class does not
+<strong>declare</strong> it. Java code chaining <code>super.toString()</code> resolves to
+<code>Object.toString()</code> at the source level, even though the runtime
+class has its own override. Tooling that distinguishes declared
+from inherited methods sees no override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>toString()</code> is declared on the class with a placeholder body in
+the stub. Java&#8217;s <code>super.toString()</code> chains correctly through
+<code>Object</code>-virtual dispatch to the runtime body, and tooling that
+introspects declared methods sees the override.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In all four cases the runtime output is unchanged — these are stub-
+fidelity fixes, not behavioural changes.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_what_a_stub_contribution_may_emit">What a stub contribution may emit</h3>
 <div class="paragraph">
-<p>A stub-contribution call may add to the target class node:</p>
+<p>A stub-contribution call may mutate the target class node in any
+of these ways:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>New constructors, with parameters, exceptions, generics, and
+<p>Add new constructors, with parameters, exceptions, generics, and
 parameter annotations populated. The body is a placeholder
 (<code>super(&#8230;&#8203;)</code> if a super constructor must be invoked, otherwise an
 empty block).</p>
 </li>
 <li>
-<p>New methods, with the same signature fidelity as constructors. The
-body is a placeholder consistent with the declared return type
+<p>Add new methods, with the same signature fidelity as constructors.
+The body is a placeholder consistent with the declared return type
 (<code>return null;</code>, <code>return 0;</code>, <code>return false;</code>, or empty for
 <code>void</code>). The stub printer already understands such placeholders.</p>
 </li>
 <li>
-<p>New fields, with declared type, modifiers, and any constant
+<p>Add new fields, with declared type, modifiers, and any constant
 initializer that is a literal expression. Non-literal initializers
-are deferred to the body pass and rendered as default values in
-the stub.</p>
+are deferred to the authoritative pass and rendered as default
+values in the stub.</p>
 </li>
 <li>
-<p>New declared interfaces (<code>addInterface(&#8230;&#8203;)</code>).</p>
+<p>Add new declared interfaces (<code>addInterface(&#8230;&#8203;)</code>).</p>
 </li>
 <li>
-<p>A new declared super class (<code>setSuperClass(&#8230;&#8203;)</code>), with the usual
-caveat that changing the super class is a global decision and may
-conflict with other transforms.</p>
+<p>Add a new declared super class (<code>setSuperClass(&#8230;&#8203;)</code>), with the
+usual caveat that changing the super class is a global decision
+and may conflict with other transforms.</p>
 </li>
 <li>
-<p>Annotations on any of the above, including the contributing
+<p>Add annotations on any of the above, including the contributing
 transform&#8217;s own marker annotations.</p>
+</li>
+<li>
+<p>Flip modifiers on existing user-declared members where the change
+has no runtime effect — for example marking a <code>PropertyNode</code> final
+to suppress the <code>Verifier</code> sub-pass&#8217;s setter generation when the
+authoritative pass will replace the property entirely (the
+spike&#8217;s <code>@Lazy</code> case).</p>
 </li>
 </ul>
 </div>
@@ -497,10 +707,12 @@ transform&#8217;s own marker annotations.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Modify existing user-declared members. Bodies of user-written
-methods, the type of declared fields, and existing constructors
-are owned by the source author and the body pass; the stub pass is
-read-only for those.</p>
+<p>Change runtime semantics of user-declared members — bodies of
+user-written methods, types of declared fields, parameter lists of
+user-written constructors, and similar. These are owned by the
+source author and the authoritative pass; the stub pass must
+produce a class node whose runtime is unchanged compared to a
+pure-Groovy compilation of the same source.</p>
 </li>
 <li>
 <p>Add behaviour that depends on inferred types from later phases
@@ -517,41 +729,49 @@ haven&#8217;t run yet. (See <em>Excluded and deferred features</em>.)</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_skeleton_bodies_and_the_body_pass">Skeleton bodies and the body pass</h3>
+<h3 id="_skeleton_members_and_the_authoritative_pass">Skeleton members and the authoritative pass</h3>
 <div class="paragraph">
 <p>Every member added by a stub contribution is tagged with a metadata
-flag identifying it as a skeleton awaiting body completion. The
-body pass — the same transform running at its declared phase — uses
-the flag to decide between two paths per member:</p>
+flag identifying it as a skeleton awaiting completion. The
+authoritative pass — whether that&#8217;s the same transform running at
+its declared phase (Shapes A and B), or the sibling transform at
+its declared phase (Shape C) — uses the flag to decide between
+paths per member:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If a matching skeleton already exists on the class node, the body
-pass <strong>fills in the body</strong> of that node (and any further annotations
-or modifiers it intends to add) rather than creating a new node.
-The skeleton flag is cleared.</p>
+<p>If a matching skeleton already exists on the class node, the
+authoritative pass <strong>fills in the body</strong> of that node (and any
+further annotations or modifiers it intends to add) rather than
+creating a new node. The skeleton flag is cleared.</p>
 </li>
 <li>
-<p>If no matching skeleton exists, the body pass creates the member
-as it does today.</p>
+<p>If no matching skeleton exists, the authoritative pass creates
+the member as it does today.</p>
+</li>
+<li>
+<p>If the authoritative pass supersedes the skeleton entirely (as in
+the spike&#8217;s <code>@TupleConstructor</code>, where the full transform discards
+any stubber-tagged constructors before generating its own), the
+pass removes the skeletons before its main work.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>This contract makes the body pass robust against the stub pass
-having been run, having been partially run, or not having been run
-at all (e.g. for a non-joint-compilation build that goes straight
-through <code>CONVERSION</code> without touching the stub op chain). A
-transform written for the joint-compile-aware contract continues to
-work in all build modes.</p>
+<p>This contract makes the authoritative pass robust against the stub
+pass having been run, having been partially run, or not having been
+run at all (e.g. for a non-joint-compilation build that goes
+straight through <code>CONVERSION</code> without touching the stub op chain).
+A transform written for the joint-compile-aware contract continues
+to work in all build modes.</p>
 </div>
 <div class="paragraph">
 <p>The matching predicate is "same kind, same name, structurally equal
 parameter list, same declaring class". Generic substitution is
 applied before comparison so that a skeleton declared with type
-variables and a body-pass member declared with the same variables
-match.</p>
+variables and a member emitted by the authoritative pass with the
+same variables match.</p>
 </div>
 </div>
 <div class="sect2">
@@ -657,12 +877,11 @@ mechanism instead.</p>
 <p><code>JavaAwareCompilationUnit</code> and <code>JavaStubCompilationUnit</code> register a
 new phase operation at <code>Phases.CONVERSION</code>, ordered between the
 existing transform-collector op and the existing stub-generation op.
-The new op walks each top-level class node in the source unit,
-finds every annotation whose registered transform is joint-
-compile-aware, and dispatches the stub-contribution call for each.</p>
+The new op invokes any AST transformations registered for the
+<code>CONVERSION</code> phase on each class node.</p>
 </div>
 <div class="paragraph">
-<p>The ordering rule is, per source unit, per class:</p>
+<p>The ordering rule for joint compilation is, per source unit, per class:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -673,7 +892,7 @@ compile-aware, and dispatches the stub-contribution call for each.</p>
 <p><code>ASTTransformationCollectorCodeVisitor</code> (collects + expands aliases)</p>
 </li>
 <li>
-<p><strong>new:</strong> <code>StubContributionVisitor</code> (calls contributions, in priority order)</p>
+<p><strong>new:</strong> <code>CONVERSION</code>-phase transform invocation</p>
 </li>
 <li>
 <p><code>JavaStubGenerator.generateClass(&#8230;&#8203;)</code></p>
@@ -681,12 +900,58 @@ compile-aware, and dispatches the stub-contribution call for each.</p>
 </ol>
 </div>
 <div class="paragraph">
+<p>The spike implements step 3 by reusing the existing
+<code>ASTTransformationVisitor</code> machinery — a public factory
+<code>ASTTransformationVisitor.invocationOperation(phase, context)</code>
+returns an <code>IPrimaryClassNodeOperation</code> that walks the class with
+the same dispatch logic as the SEMANTIC_ANALYSIS+ phases. No new
+visitor class is required.</p>
+</div>
+<div class="paragraph">
 <p>For non-joint-compilation builds (<code>CompilationUnit</code> rather than
-<code>JavaAwareCompilationUnit</code>), step 4 is absent. Step 3 is therefore
-either harmless (skeletons get filled in later by the body pass and
-the result is bit-for-bit identical to the no-skeleton path) or, as
-a perf optimisation, also skipped — the body pass handles
-everything as it does today.</p>
+<code>JavaAwareCompilationUnit</code>), step 3 is absent. Shape A and Shape B
+transforms simply do their work at the declared phase as today.
+Shape C transforms see only the second (authoritative) piece run;
+the <code>CONVERSION</code>-phase piece is silently inert because no invoker
+fires it. This is by design: each shape&#8217;s later piece must remain
+authoritative for pure-Groovy compilation regardless of how the
+early piece is wired.</p>
+</div>
+<div class="sect3">
+<h4 id="_required_framework_adjustments_for_shape_c">Required framework adjustments for Shape C</h4>
+<div class="paragraph">
+<p>The spike validated two small framework changes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The existing guard in
+<code>ASTTransformationCollectorCodeVisitor.verifyAndAddTransform</code>
+rejected any local transform with <code>phase &lt; SEMANTIC_ANALYSIS</code>. It
+is relaxed to <code>phase &lt; CONVERSION</code>. <code>CONVERSION</code>-phase local
+transforms are now legal; they fire only in joint compilation
+(where step 3 above invokes them) and are inert in pure-Groovy
+compilation (no invoker exists for <code>CONVERSION</code> in standard
+<code>CompilationUnit</code>).</p>
+</li>
+<li>
+<p><code>ASTTransformationCustomizer.findASTTransformationClass</code> previously
+rejected annotations whose <code>@GroovyASTTransformationClass</code> listed
+more than one transform class. With Shape C, that list grows to
+two for any opted-in annotation. The customizer now drops
+<code>CONVERSION</code>-phase entries when at least one non-<code>CONVERSION</code>
+sibling exists, and otherwise keeps them all (preserving the
+existing customizer-only <code>CONVERSION</code> use cases such as
+<code>ContractAnnotation</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Other framework code that consumes
+<code>getAnnotation(GroovyASTTransformationClass).classes()</code> /
+<code>.value()</code> directly should adopt the same filter where the
+intent is "the canonical class for this annotation."</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -749,32 +1014,35 @@ added abstract methods on the supertype are not yet seen.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_body_pass_replacement_contract">Body-pass replacement contract</h3>
+<h3 id="_authoritative_pass_replacement_contract">Authoritative-pass replacement contract</h3>
 <div class="paragraph">
-<p>The body pass — the existing transform <code>visit</code> running at the
-declared phase — is updated for each joint-compile-aware transform
-to:</p>
+<p>The authoritative pass — the same transform&#8217;s normal-phase <code>visit</code>
+in Shapes A and B, or the sibling transform&#8217;s <code>visit</code> in Shape C —
+is updated for each joint-compile-aware transform to:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
 <p>Locate any skeleton members on the class node (via the metadata
-flag) that match what the transform would have added.</p>
+flag) that match what the pass would have added.</p>
 </li>
 <li>
-<p>For each match, replace the placeholder body and clear the flag.</p>
+<p>For each match, either replace the placeholder body and clear the
+flag, or — when the pass produces output that supersedes the
+skeleton entirely — discard the skeleton before doing its work
+(the spike&#8217;s <code>@TupleConstructor</code> takes this approach).</p>
 </li>
 <li>
-<p>For non-matches (skeleton pass not run, or new members the
+<p>For non-matches (stub pass not run, or new members the
 contribution did not anticipate), behave as today.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>This update is local to each transform. The body pass remains the
-canonical specification of what the transform produces; the stub
-contribution is constrained to be a subset (signature-only,
-annotations) of the body pass.</p>
+<p>This update is local to each transform. The authoritative pass
+remains the canonical specification of what the transform produces;
+the stub contribution is constrained to be a subset (signature-only
+plus modifier nudges, no body content) of the authoritative pass.</p>
 </div>
 </div>
 </div>
@@ -795,31 +1063,40 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 40%;">
-<col style="width: 60%;">
+<col style="width: 33.3333%;">
+<col style="width: 50%;">
+<col style="width: 16.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Transform</th>
 <th class="tableblock halign-left valign-top">Stub contribution</th>
+<th class="tableblock halign-left valign-top">Status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TupleConstructor</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Constructor signatures, including the cascade produced by the
- <code>defaults = true</code> shape. Parameters use field types with class
- generics applied. <code>pre</code> / <code>post</code> closures are body-only.</p></td>
+ <code>defaults = true</code> shape. Parameters use directly-declared property
+ types with class generics applied. Trait-injected and super
+ properties are not visible at <code>CONVERSION</code> (see <em>Tier 3</em>); the
+ stubber&#8217;s view is therefore a strict subset of the runtime
+ surface for those configurations. <code>pre</code> / <code>post</code> closures are
+ body-only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@MapConstructor</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MyClass(Map)</code> constructor signature.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Singleton</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Public static <code>INSTANCE</code> field of the enclosing type, public static
  <code>getInstance()</code> returning the enclosing type. Both with the
  enclosing class&#8217;s generics applied.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Bindable</code> (class-level)</p></td>
@@ -830,30 +1107,38 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
  <code>getPropertyChangeListeners(String)</code>. Plus the
  <code>propertyChangeSupport</code> field if non-private propagation is
  desired.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Vetoable</code> (class-level)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code> with <code>VetoableChangeListener</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ListenerList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addXxxListener</code>, <code>removeXxxListener</code>, <code>getXxxListeners</code>, and a
  <code>fireXxx(&#8230;&#8203;)</code> per listener-interface method. Listener interface
  method enumeration uses the field type&#8217;s resolved methods.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExternalizeMethods</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>writeExternal(ObjectOutput)</code>, <code>readExternal(ObjectInput)</code>, plus
  <code>Externalizable</code> on the implements clause.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@IndexedProperty</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Per indexed field: <code>getXxx(int)</code>, <code>setXxx(int, T)</code>, with <code>T</code> from
  the field&#8217;s element type.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sortable</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compareTo(T)</code> and <code>Comparable&lt;T&gt;</code> on the implements clause.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compareTo(T)</code> placeholder and <code>Comparable&lt;T&gt;</code> on the implements
+ clause; full transform replaces the placeholder body via the
+ metadata-key handoff at <code>CANONICALIZATION</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -875,32 +1160,45 @@ already adequately covered by inheritance. They migrate after Tier
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 40%;">
-<col style="width: 60%;">
+<col style="width: 33.3333%;">
+<col style="width: 50%;">
+<col style="width: 16.6667%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Transform</th>
 <th class="tableblock halign-left valign-top">Notes</th>
+<th class="tableblock halign-left valign-top">Status</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emits <code>toString()</code>. Java callers reach it via <code>Object</code>-inherited
- dispatch even without a stub contribution, but the contribution
- makes the stub faithful (and unblocks <code>MethodHandles.lookup</code> /
- reflection-style code that introspects the stub).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emits a placeholder <code>toString()</code> at <code>CONVERSION</code>; the full transform
+ replaces the body via the metadata-key handoff. Java callers reach
+ <code>toString()</code> via <code>Object</code>-inherited dispatch either way, but the
+ contribution makes the stub faithful — <code>super.toString()</code> chains
+ from a Java subclass resolve to the overridden form at runtime,
+ and tooling that distinguishes declared from inherited methods
+ sees the override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same shape as <code>@ToString</code> — already callable via <code>Object</code> but a
  contribution improves stub fidelity.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Verifier already synthesises an accessor for the property; the
- contribution refines the field shape.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Verifier</code> synthesises both <code>getX()</code> and <code>setX(&#8230;&#8203;)</code> for the
+ property by default. The stubber marks the property final at
+ <code>CONVERSION</code>, which causes <code>Verifier</code> to skip setter generation
+ (a single modifier flip — no need to duplicate the full transform&#8217;s
+ backing-field rewiring). The full transform replaces the property
+ entirely at <code>SEMANTIC_ANALYSIS</code>, so the final marker has no runtime
+ effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code> (<code>SimpleStrategy</code>, <code>DefaultStrategy</code>)</p></td>
@@ -908,12 +1206,14 @@ already adequately covered by inheritance. They migrate after Tier
  Configuration is in the <code>@Builder</code> annotation values
  (<code>builderClassName</code>, <code>builderMethodName</code>, <code>prefix</code>, etc.) and is
  fully readable at <code>CONVERSION</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoClone</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Emits <code>clone()</code> and adds <code>Cloneable</code> to the implements clause. The
  interface addition needs the contribution; <code>clone()</code> itself is
  already on <code>Object</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
@@ -922,12 +1222,14 @@ already adequately covered by inheritance. They migrate after Tier
  <code>@TupleConstructor</code>-family transforms, the super&#8217;s transform-added
  constructors are not yet visible at <code>CONVERSION</code> (deferred — see
  below).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RecordType</code> / record-style classes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Component accessors and the canonical constructor are derivable
  from declared components. Some record-specific finalisation runs
- later and is left to the body pass.</p></td>
+ later and is left to the authoritative pass.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
 </tr>
 </tbody>
 </table>
@@ -1160,6 +1462,9 @@ appear in generated documentation.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="https://github.com/apache/groovy/pull/2500">GEP-21 spike PR — Shape C implementation for <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@Lazy</code>, and <code>@ToString</code></a></p>
+</li>
+<li>
 <p><a href="https://groovy-lang.org/metaprogramming.html#_compilation_phases_guide">Groovy compilation phases guide</a></p>
 </li>
 <li>
@@ -1176,6 +1481,9 @@ appear in generated documentation.</p>
 </li>
 <li>
 <p><a href="https://groovy-lang.org/objectorientation.html#_traits">Traits — example of an existing stub-side back-channel for non-injection rendering decisions</a></p>
+</li>
+<li>
+<p>Existing split-transform precedents in the codebase: <code>SealedASTTransformation</code> / <code>SealedCompletionASTTransformation</code>, <code>ExternalizeMethodsASTTransformation</code> / <code>ExternalizeVerifierASTTransformation</code>. Both pairs run after <code>CONVERSION</code>; Shape C extends the same idiom by allowing the first piece at <code>CONVERSION</code>.</p>
 </li>
 </ul>
 </div>
