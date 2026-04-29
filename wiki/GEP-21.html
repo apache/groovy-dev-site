@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>3</p>
+<p>4</p>
 </td>
 </tr>
 <tr>
@@ -115,7 +115,7 @@
 <strong>Leader</strong>
 </td>
 <td class="hdlist2">
-<p>TBD</p>
+<p>Paul King</p>
 </td>
 </tr>
 <tr>
@@ -147,11 +147,12 @@
 <td class="content">
 A working spike for <strong>Shape C</strong> (the split-transform model described
 below) is available at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>. It
-covers nine transforms — <code>@Sortable</code>, <code>@TupleConstructor</code>,
-<code>@MapConstructor</code>, <code>@Lazy</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code>,
-<code>@Singleton</code>, <code>@IndexedProperty</code>, and <code>@ExternalizeMethods</code> — end-to-end
-through joint compilation, including before/after stub diffs. Findings
-from that spike are folded into this revision.
+covers all of Tier 1 plus several Tier 2 entries — <code>@Sortable</code>,
+<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@Singleton</code>, <code>@Bindable</code>,
+<code>@Vetoable</code>, <code>@ListenerList</code>, <code>@ExternalizeMethods</code>, <code>@IndexedProperty</code>,
+<code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code> — end-to-end through
+joint compilation, plus compositional tests for <code>@Canonical</code> and
+<code>@Immutable</code>. Findings from that spike are folded into this revision.
 </td>
 </tr>
 </table>
@@ -702,17 +703,68 @@ declared with placeholder bodies and the proper <code>throws IOException</code>
 on <code>writeExternal</code>. The full transform replaces the bodies with
 the real field-by-field write/read.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class-level final-ness is not visible in the stub. Java code can
+declare <code>class JavaSub extends ImmutableThing</code> against the stub even
+though the runtime class is final — compiles in joint compilation,
+breaks immutability invariants at runtime.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>final class</code> in the stub. Smallest possible stubber: one
+<code>OR ACC_FINAL</code> per class / field / method target. The full
+transform&#8217;s setter is idempotent so no metadata-key handoff is
+needed.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Bindable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None of <code>add/removePropertyChangeListener</code>,
+<code>firePropertyChange</code>, or <code>getPropertyChangeListeners</code> are visible.
+Java code attaching a <code>PropertyChangeListener</code> fails to compile.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All seven JavaBeans property-change methods are declared with
+placeholder bodies; the full transform discards the placeholders,
+installs the property-change-support field, and adds the real
+bodies.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Vetoable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code>: the seven Vetoable-listener methods —
+including <code>fireVetoableChange</code> with its <code>throws PropertyVetoException</code>
+— are not visible to Java consumers.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All seven methods are declared, with the <code>throws</code> clause on
+<code>fireVetoableChange</code> rendered into the stub.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ListenerList</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-field <code>addXxxListener</code>, <code>removeXxxListener</code>,
+<code>getXxxListeners</code>, and <code>fireYyy</code> (one per public listener method)
+are not visible. Java code registering listeners or firing events
+fails to compile.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">All listener-management methods plus per-listener-method <code>fireYyy</code>
+overloads are declared, with parameter types derived from the
+field&#8217;s generic type at CONVERSION. Same-unit Groovy listener
+interfaces with their own transform-added methods fall under the
+Tier 3 cross-class limit; classpath listeners (e.g.
+<code>java.beans.PropertyChangeListener</code>,
+<code>java.awt.event.ActionListener</code>) work fully.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In all nine cases the runtime output is unchanged — these are
+<p>In all thirteen cases the runtime output is unchanged — these are
 stub-fidelity fixes, not behavioural changes.</p>
+</div>
+<div class="paragraph">
+<p>Two compositional cases — <code>@Canonical</code> and <code>@Immutable</code> — are
+covered by dedicated joint-compilation tests in the spike that
+exercise the <code>@AnnotationCollector</code> expansion path. They need no
+new stubbers; they confirm that once the constituent transforms are
+joint-compile-aware, meta-annotations compose with Shape C without
+extra framework support.</p>
 </div>
 <div class="sect3">
 <h4 id="_recurring_patterns_and_implementation_gotchas">Recurring patterns and implementation gotchas</h4>
 <div class="paragraph">
-<p>Across the nine spiked transforms a small set of patterns emerged
-that future Shape C authors will want to know about:</p>
+<p>Across the spiked transforms a small set of patterns emerged that
+future Shape C authors will want to know about:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -767,7 +819,33 @@ the canonical example;
 <code>TupleConstructorASTTransformation.resolveDefaultsMode</code> is a
 smaller variant covering annotation-member resolution. Where the
 duplication isn&#8217;t real (each piece&#8217;s main loop is genuinely
-transform-specific), no helper is needed — don&#8217;t force it.</p>
+transform-specific), no helper is needed — don&#8217;t force it. The
+spike also extracts a small framework-level utility that any
+stubber can use for the recurring add-and-tag pattern, alongside
+predicates for "is this a stubber placeholder" and "clear the
+placeholder tag".</p>
+</li>
+<li>
+<p><strong>Bulk method removal needs <code>removeMethod</code>, not <code>removeIf</code>.</strong>
+<code>ClassNode</code> keeps both a <code>methodsList</code> and a parallel
+name-to-methods map. <code>getMethods().removeIf(&#8230;&#8203;)</code> mutates only the
+list; the map keeps the stale entries and the next
+<code>addGeneratedMethod</code> perceives a duplicate ("Repetitive method
+name/signature" verifier error). Stubber-tag cleanup that needs to
+remove methods (rather than replace bodies in place) must iterate
+and call <code>classNode.removeMethod(&#8230;&#8203;)</code> per node. Constructor
+cleanup is unaffected: constructors live in only one list.</p>
+</li>
+<li>
+<p><strong>Compositional ordering and "honour user-declared" guards.</strong> When
+two stubbers can target the same kind of member on the same class
+(the canonical case is <code>@TupleConstructor</code> and <code>@MapConstructor</code>
+combined under <code>@Immutable</code>), a guard like <em>"skip if the user
+already declared a constructor"</em> must filter out <em>other stubbers'</em>
+placeholders. Otherwise whichever stubber fires second silently
+no-ops. Single-transform tests don&#8217;t catch this — only
+compositional cases do; the spike&#8217;s <code>@Canonical</code> and <code>@Immutable</code>
+tests are the smallest reliable triggers.</p>
 </li>
 </ul>
 </div>
@@ -1226,22 +1304,25 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
  <code>addPropertyChangeListener(String, PropertyChangeListener)</code>,
  the matching removers, <code>firePropertyChange(String, Object, Object)</code>,
  <code>getPropertyChangeListeners()</code>,
- <code>getPropertyChangeListeners(String)</code>. Plus the
- <code>propertyChangeSupport</code> field if non-private propagation is
- desired.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+ <code>getPropertyChangeListeners(String)</code>. The
+ <code>propertyChangeSupport</code> field is private/synthetic and not stubbed.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Vetoable</code> (class-level)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code> with <code>VetoableChangeListener</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code> with <code>VetoableChangeListener</code>. Includes
+ <code>throws PropertyVetoException</code> on the stub&#8217;s <code>fireVetoableChange</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ListenerList</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addXxxListener</code>, <code>removeXxxListener</code>, <code>getXxxListeners</code>, and a
  <code>fireXxx(&#8230;&#8203;)</code> per listener-interface method. Listener interface
- method enumeration uses the field type&#8217;s resolved methods.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+ method enumeration uses the field type&#8217;s resolved methods at
+ CONVERSION; works for classpath listener types, defers to Tier 3
+ for same-unit Groovy listener interfaces with their own
+ transform-added methods.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExternalizeMethods</code></p></td>
@@ -1331,6 +1412,16 @@ already adequately covered by inheritance. They migrate after Tier
  backing-field rewiring). The full transform replaces the property
  entirely at <code>SEMANTIC_ANALYSIS</code>, so the final marker has no runtime
  effect.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modifier-only contribution: ORs <code>ACC_FINAL</code> onto the class / field /
+ method modifiers so the stub presents the runtime final-ness to
+ <code>javac</code>. Stubber skips interfaces (including <code>@interface</code> annotation
+ types) where final-on-abstract is illegal. Critical companion to
+ <code>@Immutable</code> — without it, Java code can spuriously declare
+ <code>extends ImmutableThing</code> against the stub.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
@@ -1691,7 +1782,8 @@ appear in generated documentation.</p>
 <div class="paragraph">
 <p>1 (2026-04-28) Initial proposal: motivation, design principles, Shapes A and B, migration tiers<br>
 2 (2026-04-29) Added Shape C (split-transform model) and the working spike (<a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>) covering <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@Lazy</code>, <code>@ToString</code>; before/after spike-results table; framework-adjustments subsection (rail relaxation + customizer filter)<br>
-3 (2026-04-29) Spike extended to nine transforms with <code>@MapConstructor</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>; added "Recurring patterns and implementation gotchas" subsection; updated migration tiers to reflect the broader spike validation</p>
+3 (2026-04-29) Spike extended to nine transforms with <code>@MapConstructor</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>; added "Recurring patterns and implementation gotchas" subsection; updated migration tiers to reflect the broader spike validation<br>
+4 (2026-04-29) Tier 1 complete: spike adds <code>@Final</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>; compositional <code>@Canonical</code> and <code>@Immutable</code> tests; "Transforms that need no stubber" subsection; two new gotchas (parallel-map method removal, compositional ordering guards)</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
