@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-21</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_migration' class='anchor-link'>Migration</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-21</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li class='active'><a href='#doc'>GEP-21</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-21</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>6</p>
+<p>7</p>
 </td>
 </tr>
 <tr>
@@ -147,17 +147,18 @@
 <td class="content">
 A working spike for <strong>Shape C</strong> (the split-transform model described
 below) is available at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>. It
-covers all of Tier 1 and Tier 2 — <code>@Sortable</code>, <code>@TupleConstructor</code>,
-<code>@MapConstructor</code>, <code>@NamedVariant</code>, <code>@Singleton</code>, <code>@Bindable</code>, <code>@Vetoable</code>,
-<code>@ListenerList</code>, <code>@ExternalizeMethods</code>, <code>@IndexedProperty</code>, <code>@ToString</code>,
+covers <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@MapConstructor</code>,
+<code>@NamedVariant</code>, <code>@Singleton</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>,
+<code>@ExternalizeMethods</code>, <code>@IndexedProperty</code>, <code>@ToString</code>,
 <code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code>, <code>@AutoClone</code>, <code>@Builder</code>,
-<code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code> — end-to-end through
-joint compilation, plus compositional tests for <code>@Canonical</code> and
-<code>@Immutable</code>. Tier 3 collapsed: the original entries graduated and the
-narrow remaining edges (transform-added abstract methods on same-unit
-supertypes; sub-declared-first ordering when a sibling stubber on the
-super hasn&#8217;t run yet) are documented inline. Findings are folded into this
-revision.
+<code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code>, <code>@RecordType</code> —
+end-to-end through joint compilation, plus compositional tests for
+<code>@Canonical</code> and <code>@Immutable</code>. Native records are additionally handled
+by a stub-side back-channel (GROOVY-11974). The narrow remaining edges
+(transform-added abstract methods on same-unit supertypes;
+sub-declared-first ordering when a sibling stubber on the super hasn&#8217;t
+run yet) are documented inline alongside each affected transform&#8217;s
+spike-results entry. Findings are folded into this revision.
 </td>
 </tr>
 </table>
@@ -592,9 +593,9 @@ which shapes to commit to in the first implementation.</p>
 <h3 id="spike-results">Spike results: before / after stub views</h3>
 <div class="paragraph">
 <p>The spike at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a> implements
-Shape C across Tier 1 and Tier 2. The table summarises what a Java
-source in the same joint-compilation unit sees via the generated stub
-before and after each transform opts in.</p>
+Shape C for every transform listed below. The table summarises what
+a Java source in the same joint-compilation unit sees via the
+generated stub before and after each transform opts in.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -673,7 +674,10 @@ inherited from <code>Object</code> only, so simple call sites work, but
 distinguishes declared from inherited methods see no override.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Both methods are declared on the class with placeholder bodies; the
 full transform replaces them with the real bodies via the
-metadata-key handoff. Java subclass overrides chain correctly.</p></td>
+metadata-key handoff. Java subclass overrides chain correctly. The
+metadata handoff treats stubber-tagged methods as "not yet generated"
+so the underscore-prefixed fallback machinery (<code>_equals</code> / <code>_hashCode</code>
+for genuine user-written overrides) remains intact.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Singleton</code></p></td>
@@ -715,9 +719,10 @@ declare <code>class JavaSub extends ImmutableThing</code> against the stub even
 though the runtime class is final — compiles in joint compilation,
 breaks immutability invariants at runtime.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>final class</code> in the stub. Smallest possible stubber: one
-<code>OR ACC_FINAL</code> per class / field / method target. The full
-transform&#8217;s setter is idempotent so no metadata-key handoff is
-needed.</p></td>
+<code>OR ACC_FINAL</code> per class / field / method target. The stubber skips
+interfaces (including <code>@interface</code> annotation types) where
+final-on-abstract is illegal. The full transform&#8217;s setter is
+idempotent so no metadata-key handoff is needed.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Bindable</code></p></td>
@@ -774,9 +779,10 @@ even though the runtime exposes the variant. Also covers
 both methods and constructors. Mixed
 <code>@NamedParam</code>/<code>@NamedDelegate</code> configurations produce a richer
 runtime signature that the stubber emits as a strict subset
-(single Map-arg form); the original was previously listed in
-Tier 3 and is now promoted to Tier 1 since the typical direct-use
-case has its target visible at CONVERSION.</p></td>
+(single Map-arg form). The typical direct-use case has its target
+visible at CONVERSION; an early plan to defer based on hypothetical
+transform-added targets turned out to be unnecessary (see the
+deferral-framing entry under <em>Recurring patterns</em>).</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code></p></td>
@@ -788,9 +794,11 @@ inline in the stub with placeholder fluent setters and <code>build()</code>,
 plus a static <code>Foo.builder()</code> factory on the buildee. For
 <code>SimpleStrategy</code> with a non-default <code>prefix</code> (e.g.,
 <code>prefix = "with"</code>): chained <code>Foo prefixName(T)</code> setters on the
-buildee. Default-prefix <code>SimpleStrategy</code>, <code>InitializerStrategy</code>,
-<code>ExternalStrategy</code>, method/constructor targets, and <code>forClass</code> are
-documented limitations rather than deferrals.</p></td>
+buildee. Default-prefix <code>SimpleStrategy</code> (where the chained setter
+would collide with the auto-generated void setter for the property),
+<code>InitializerStrategy</code>, <code>ExternalStrategy</code>, method/constructor
+targets, and <code>forClass</code> are documented limitations rather than
+deferrals.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code></p></td>
@@ -844,6 +852,30 @@ extracted from the full transform, so any method the runtime won&#8217;t add
 also won&#8217;t appear on the stub. Generic owner with generic-typed
 delegate (<code>class Bag&lt;T&gt; { @Delegate List&lt;T&gt; items }</code>) propagates the
 type parameter through delegated method signatures correctly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RecordType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For native records (target <code>&gt;= JDK16</code>, <code>mode != EMULATE</code>), <code>javac</code> does
+not see record syntax — the stub renders a plain class with default bean
+accessors and a missing canonical constructor. For emulated records,
+the stub additionally lacks the Groovy-specific record convenience
+methods (<code>getAt(int)</code>, <code>toList()</code>, <code>toMap()</code>, <code>size()</code>, opt-in
+<code>copyWith(Map)</code> and <code>components()</code>) and exposes bean-style getters /
+auto-synthesised setters that the runtime does not have.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Two complementary mechanisms cover the two modes. Native records are
+handled by a stub-side back-channel
+(<a href="https://issues.apache.org/jira/browse/GROOVY-11974">GROOVY-11974</a>):
+<code>JavaStubGenerator</code> calls
+<code>RecordTypeASTTransformation.wouldBeNativeRecord(&#8230;&#8203;)</code> at CONVERSION
+and emits <code>record Foo(&#8230;&#8203;)</code> syntax, leaving <code>javac</code> to synthesise the
+canonical constructor and component accessors. Emulated records are
+handled by a Shape C stubber on <code>@RecordBase</code> that flips property
+modifiers / getter names so the stub generator&#8217;s <code>Verifier</code> sub-pass
+emits <code>componentName()</code> accessors and skips setters, and emits stub
+placeholders for the convenience methods using the same
+<code>shouldAdd*</code> predicates the runtime transform uses (refactored as
+package-private statics on <code>RecordTypeASTTransformation</code>, mirroring the
+filter-sharing approach taken for <code>@Delegate</code>).</p></td>
 </tr>
 </tbody>
 </table>
@@ -950,18 +982,24 @@ tests are the smallest reliable triggers.</p>
 <p><strong>Filter mirroring prevents stub-superset divergence.</strong> For most
 spiked transforms the only failure mode is "stub is a strict subset of
 runtime" — Java callers may get a stub-time compile error for things
-that run fine, but never the reverse. Transforms with user-supplied
-filters (<code>@Delegate&#8217;s `includes</code> / <code>excludes</code> / <code>includeTypes</code> /
-<code>excludeTypes</code> / <code>deprecated</code> / <code>allNames</code>) introduce the <strong>opposite</strong>
-failure mode: if the stubber forgets to mirror the filter, the stub
-exposes methods the full transform won&#8217;t add, Java code compiles, then
-runtime fails with <code>MissingMethodException</code>. The fix is to share the
-enumeration / filter helpers between stubber and full transform rather
-than reproduce them. The <code>@Delegate</code> spike does this by promoting
+that run fine, but never the reverse. Transforms whose set of emitted
+members depends on user-supplied annotation attributes — <code>@Delegate&#8217;s
+`includes</code> / <code>excludes</code> / <code>includeTypes</code> / <code>excludeTypes</code> /
+<code>deprecated</code> / <code>allNames</code>, or <code>@RecordType&#8217;s {</code>@RecordOptions`}
+attributes (<code>getAt</code>, <code>toList</code>, <code>toMap</code>, <code>size</code>, <code>copyWith</code>,
+<code>components</code>) — introduce the <strong>opposite</strong> failure mode: if the
+stubber forgets to mirror the gating logic, the stub exposes methods
+the full transform won&#8217;t add, Java code compiles, then runtime fails
+with <code>MissingMethodException</code>. The fix is to share the enumeration
+/ predicate helpers between stubber and full transform rather than
+reproduce them. Both spikes follow the same pattern: promote the
+relevant private statics on the full transform to package-private and
+call them from the stubber. <code>DelegateASTTransformation</code> shares
 <code>collectMethods</code>, <code>filterMethods</code>, <code>extractAccessorInfo</code>, and friends
-from <code>private</code> to package-private static on
-<code>DelegateASTTransformation</code> and calling them from <code>DelegateASTStubber</code>
-— same source of truth, same answers.</p>
+with <code>DelegateASTStubber</code>. <code>RecordTypeASTTransformation</code> shares
+<code>shouldAddGetAt</code> / <code>shouldAddToList</code> / <code>shouldAddToMap</code> /
+<code>shouldAddSize</code> / <code>shouldAddCopyWith</code> / <code>shouldAddComponents</code> with
+<code>RecordBaseASTStubber</code>. Same source of truth, same answers.</p>
 </li>
 <li>
 <p><strong>Inner-class stubbing needs manual module wiring.</strong> The natural API
@@ -977,8 +1015,69 @@ cleanup then removes the stubber-tagged entry from the module
 before <code>addGeneratedInnerClass</code> runs. The spike&#8217;s <code>@Builder</code> with
 <code>DefaultStrategy</code> is the case that surfaces this.</p>
 </li>
+<li>
+<p><strong>Deferral framing — transform-on-transform stacking is rare in
+practice.</strong> It&#8217;s tempting to defer a transform "because another
+transform might add the target it operates on, and that target won&#8217;t
+be visible at CONVERSION." The spike showed this framing is
+often overly cautious: real users compose via parameters / properties
+/ interfaces on hand-written members, which are visible at
+CONVERSION. <code>@NamedVariant</code> was initially deferred on this basis
+before being covered once the typical direct-use case was examined;
+<code>@AutoImplement</code> was expected to lose coverage on same-unit Groovy
+traits and turned out to keep it. When sketching a deferral, validate
+the failure case against an actual user pattern rather than a
+hypothetical compositional scenario before accepting the deferral.</p>
+</li>
 </ul>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_transforms_that_need_no_stubber">Transforms that need no stubber</h4>
+<div class="paragraph">
+<p>A small number of transforms produce no stub-visible output, so they
+do not need a Shape C piece. Listed here for explicit
+"considered, no work needed" coverage rather than silent absence.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Transform</th>
+<th class="tableblock halign-left valign-top">Why no stubber is needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoFinal</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets {<code>Modifier.FINAL</code>} on each method / constructor / closure
+ <strong>parameter</strong>. The stub generator does not emit parameter modifiers
+ (<code>JavaStubGenerator.printParams</code> writes only annotations, type, and
+ name), so the change is invisible to Java consumers regardless of
+ when it runs. Pure internal-discipline annotation; if the stub
+ generator is ever enhanced to emit parameter modifiers, a stubber
+ mirroring the full transform&#8217;s parameter-walk would be the minimal
+ fix.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ImmutableBase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets fields to <code>private final</code>, adds <code>serialVersionUID</code>, marks
+ fields with the per-field <code>IMMUTABLE_BREADCRUMB</code> metadata key, and
+ wires the {<code>ImmutablePropertyHandler</code>}. All of these are runtime
+ semantics: defensive copies inside generated constructor bodies,
+ immutable-property handler integration, breadcrumbs that other
+ transforms (e.g. <code>@IndexedProperty</code>) consult later. The
+ <strong>Java-visible API</strong> — constructors, getters, no setters,
+ equals/hashCode/toString — is fully covered by the constituent
+ transforms (<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@ToString</code>,
+ <code>@EqualsAndHashCode</code>, <code>@Final</code>). The composing transforms cover
+ <code>@ImmutableBase&#8217;s contribution; nothing more is visible to `javac</code>.</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -1178,12 +1277,31 @@ contribution is rendered as-is by the stub printer.</p>
 <div class="sect2">
 <h3 id="_existing_back_channels">Existing back-channels</h3>
 <div class="paragraph">
-<p>The stub-side back-channels for <code>@PackageScope</code> and traits remain in
-place. They predate this proposal and target output that is not a
-new member but a <strong>modification</strong> to how an existing class node is
-rendered (modifier flags, class-vs-interface emission). Those are
+<p>The stub-side back-channels for <code>@PackageScope</code>, traits, and now
+native records (via
+<a href="https://issues.apache.org/jira/browse/GROOVY-11974">GROOVY-11974</a>)
+remain in place. They predate or sit alongside this proposal and
+target output that is not a new member but a <strong>modification</strong> to how
+an existing class node is rendered (modifier flags,
+class-vs-interface-vs-record emission, header syntax). Those are
 well-suited to stub-side handling and there is no benefit to
 migrating them.</p>
+</div>
+<div class="paragraph">
+<p>The native-records case is worth highlighting because it overlaps
+with <code>@RecordType&#8217;s migration. The stub generator now renders
+`record Foo(&#8230;&#8203;)</code> syntax when
+<code>RecordTypeASTTransformation.wouldBeNativeRecord(&#8230;&#8203;)</code> returns true
+at <code>Phases.CONVERSION</code>; <code>javac</code> then synthesises the canonical
+constructor and component accessors itself. No Shape C stubber is
+required for the native-records path — the back-channel pattern is
+the right shape because the change is about header syntax rather
+than member injection. Emulated records (target <code>&lt; JDK16</code> or
+explicit <code>mode = EMULATE</code>) still render as plain classes; the
+record-shaped surface (component accessors, no setters, canonical
+constructor) is provided on those by the Shape C stubber on
+<code>@RecordBase</code> working in concert with the existing
+<code>@TupleConstructor</code> stubber.</p>
 </div>
 <div class="paragraph">
 <p>Future modifier-only or rendering-only transforms should follow the
@@ -1247,7 +1365,7 @@ early piece is wired.</p>
 <div class="sect3">
 <h4 id="_required_framework_adjustments_for_shape_c">Required framework adjustments for Shape C</h4>
 <div class="paragraph">
-<p>The spike validated two small framework changes:</p>
+<p>The spike validated one small framework change:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1261,23 +1379,35 @@ transforms are now legal; they fire only in joint compilation
 compilation (no invoker exists for <code>CONVERSION</code> in standard
 <code>CompilationUnit</code>).</p>
 </li>
-<li>
-<p><code>ASTTransformationCustomizer.findASTTransformationClass</code> previously
-rejected annotations whose <code>@GroovyASTTransformationClass</code> listed
-more than one transform class. With Shape C, that list grows to
-two for any opted-in annotation. The customizer now drops
-<code>CONVERSION</code>-phase entries when at least one non-<code>CONVERSION</code>
-sibling exists, and otherwise keeps them all (preserving the
-existing customizer-only <code>CONVERSION</code> use cases such as
-<code>ContractAnnotation</code>).</p>
-</li>
 </ul>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_using_shape_c_annotations_through_asttransformationcustomizer">Using Shape C annotations through <code>ASTTransformationCustomizer</code></h4>
 <div class="paragraph">
-<p>Other framework code that consumes
-<code>getAnnotation(GroovyASTTransformationClass).classes()</code> /
-<code>.value()</code> directly should adopt the same filter where the
-intent is "the canonical class for this annotation."</p>
+<p><code>ASTTransformationCustomizer</code> is unchanged in scope: a single instance
+still represents a single transform class. With Shape C, an annotation
+like <code>@TupleConstructor</code> lists two transform classes in its
+<code>@GroovyASTTransformationClass</code> value, so users wanting to apply such an
+annotation through the customizer obtain one customizer per transform
+via the
+<a href="https://issues.apache.org/jira/browse/GROOVY-11973"><code>ASTTransformationCustomizer.forAnnotation(&#8230;&#8203;)</code></a>
+factory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">configuration.addCompilationCustomizers(
+    *ASTTransformationCustomizer.forAnnotation(TupleConstructor)
+)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The factory expands <code>@AnnotationCollector</code> aliases as well
+(e.g. <code>@AutoExternalize</code>), so the same call works for meta-annotations
+whose constituents have been migrated to Shape C. Direct construction
+(<code>new ASTTransformationCustomizer(SomeShapeCAnnotation)</code>) now throws
+with a pointer to <code>forAnnotation</code>; this is the only customizer-side
+behaviour change attributable to Shape C.</p>
 </div>
 </div>
 </div>
@@ -1370,384 +1500,6 @@ contribution did not anticipate), behave as today.</p>
 remains the canonical specification of what the transform produces;
 the stub contribution is constrained to be a subset (signature-only
 plus modifier nudges, no body content) of the authoritative pass.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_migration">Migration</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Existing transforms migrate to joint-compile-aware in three tiers,
-ordered by how much information their stub contribution needs.</p>
-</div>
-<div class="sect2">
-<h3 id="_tier_1_signatures_derivable_from_class_generics_declared_fields">Tier 1 — signatures derivable from class generics + declared fields</h3>
-<div class="paragraph">
-<p>These transforms emit member signatures that depend only on the
-declared class generics and the declared field types. All required
-information is unconditionally available at <code>CONVERSION</code>.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 50%;">
-<col style="width: 16.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Transform</th>
-<th class="tableblock halign-left valign-top">Stub contribution</th>
-<th class="tableblock halign-left valign-top">Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@TupleConstructor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Constructor signatures, including the cascade produced by the
- <code>defaults = true</code> shape. Parameters use directly-declared property
- types with class generics applied. Trait-injected and super
- properties are not visible at <code>CONVERSION</code> (same-unit cross-class
- limit); the stubber&#8217;s view is therefore a strict subset of the
- runtime surface for those configurations. <code>pre</code> / <code>post</code> closures
- are body-only.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@MapConstructor</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MyClass(Map)</code> constructor signature; optional no-arg when
- <code>noArg = true</code> (subject to the same "skip when no properties"
- guard the runtime applies).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Singleton</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public static <code>getInstance()</code> (or <code>getXxx()</code> for a custom
- <code>property = "xxx"</code>) returning the enclosing type. The
- corresponding public static <code>INSTANCE</code> field is intentionally
- not yet stubbed — see <em>Spike results</em> entry above.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Bindable</code> (class-level)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>addPropertyChangeListener(PropertyChangeListener)</code>,
- <code>addPropertyChangeListener(String, PropertyChangeListener)</code>,
- the matching removers, <code>firePropertyChange(String, Object, Object)</code>,
- <code>getPropertyChangeListeners()</code>,
- <code>getPropertyChangeListeners(String)</code>. The
- <code>propertyChangeSupport</code> field is private/synthetic and not stubbed.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Vetoable</code> (class-level)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Symmetric to <code>@Bindable</code> with <code>VetoableChangeListener</code>. Includes
- <code>throws PropertyVetoException</code> on the stub&#8217;s <code>fireVetoableChange</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ListenerList</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>addXxxListener</code>, <code>removeXxxListener</code>, <code>getXxxListeners</code>, and a
- <code>fireXxx(&#8230;&#8203;)</code> per listener-interface method. Listener interface
- method enumeration uses the field type&#8217;s resolved methods at
- CONVERSION; works for classpath listener types, partial for
- same-unit Groovy listener interfaces whose methods are
- transform-added (same-unit cross-class limit).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ExternalizeMethods</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>writeExternal(ObjectOutput)</code>, <code>readExternal(ObjectInput)</code>, plus
- <code>Externalizable</code> on the implements clause. Interface addition is
- idempotent so no metadata handoff is required for that piece.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@IndexedProperty</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Per indexed field: <code>getXxx(int)</code>, <code>setXxx(int, T)</code>, with <code>T</code> from
- the field&#8217;s element type (array component or list generic).
- Setter emission is suppressed when the enclosing class is
- Immutable-family — class-level proxy for the runtime&#8217;s per-field
- <code>IMMUTABLE_BREADCRUMB</code> (set at CANONICALIZATION, invisible at
- CONVERSION).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sortable</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compareTo(T)</code> placeholder and <code>Comparable&lt;T&gt;</code> on the implements
- clause; full transform replaces the placeholder body via the
- metadata-key handoff at <code>CANONICALIZATION</code>.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Map-arg variant alongside the user-written method or constructor
- (typical direct-use case). Mixed
- <code>@NamedParam</code>/<code>@NamedDelegate</code> configurations produce a richer
- runtime signature; the stubber&#8217;s single Map-arg form is a strict
- subset. Promoted from Tier 3 — the original deferral assumed the
- target method might be transform-added, but in practice
- <code>@NamedVariant</code> sits on hand-written members, with the target
- visible at CONVERSION.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>These transforms are the proposal&#8217;s primary beneficiaries. A Java
-caller using <code>new MyTuple(a, b)</code>, <code>MySingleton.getInstance()</code>,
-<code>bindable.addPropertyChangeListener(&#8230;&#8203;)</code>, and so on, compiles
-cleanly under joint compilation once the corresponding transform
-opts in.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_tier_2_signatures_from_supertypes_or_composition">Tier 2 — signatures from supertypes or composition</h3>
-<div class="paragraph">
-<p>These transforms either depend on supertype information, compose
-with Tier 1 transforms, or emit members whose Java visibility is
-already adequately covered by inheritance. They migrate after Tier
-1 with modest additional plumbing.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 50%;">
-<col style="width: 16.6667%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Transform</th>
-<th class="tableblock halign-left valign-top">Notes</th>
-<th class="tableblock halign-left valign-top">Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Emits a placeholder <code>toString()</code> at <code>CONVERSION</code>; the full transform
- replaces the body via the metadata-key handoff. Java callers reach
- <code>toString()</code> via <code>Object</code>-inherited dispatch either way, but the
- contribution makes the stub faithful — <code>super.toString()</code> chains
- from a Java subclass resolve to the overridden form at runtime,
- and tooling that distinguishes declared from inherited methods
- sees the override.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EqualsAndHashCode</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Same shape as <code>@ToString</code> — <code>equals(Object)</code> and <code>hashCode()</code> are
- inherited from <code>Object</code> so simple call sites compile either way,
- but exposing them as declared on the stub matters for
- <code>super.equals</code> / <code>super.hashCode</code> chaining and for tooling that
- distinguishes declared from inherited methods. The metadata-key
- handoff treats stubber-tagged methods as "not yet generated" so
- the underscore-prefixed fallback machinery (<code>_equals</code> /
- <code>_hashCode</code> for genuine user-written overrides) remains intact.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Verifier</code> synthesises both <code>getX()</code> and <code>setX(&#8230;&#8203;)</code> for the
- property by default. The stubber marks the property final at
- <code>CONVERSION</code>, which causes <code>Verifier</code> to skip setter generation
- (a single modifier flip — no need to duplicate the full transform&#8217;s
- backing-field rewiring). The full transform replaces the property
- entirely at <code>SEMANTIC_ANALYSIS</code>, so the final marker has no runtime
- effect.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Final</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Modifier-only contribution: ORs <code>ACC_FINAL</code> onto the class / field /
- method modifiers so the stub presents the runtime final-ness to
- <code>javac</code>. Stubber skips interfaces (including <code>@interface</code> annotation
- types) where final-on-abstract is illegal. Critical companion to
- <code>@Immutable</code> — without it, Java code can spuriously declare
- <code>extends ImmutableThing</code> against the stub.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Builder</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For <code>DefaultStrategy</code> (the default): inner builder class with
- fluent setters plus a <code>build()</code> method, accessed via a static
- <code>Foo.builder()</code> factory. For <code>SimpleStrategy</code> with a non-default
- <code>prefix</code>: chained setters on the buildee. Default-prefix
- <code>SimpleStrategy</code> (return-type collision with auto-generated void
- setters), <code>InitializerStrategy</code>, <code>ExternalStrategy</code>,
- method/constructor targets, and <code>forClass</code> are documented
- limitations rather than deferrals.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoClone</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Cloneable</code> on the implements clause and a public covariant
- <code>Foo clone() throws CloneNotSupportedException</code>. Body is a
- placeholder; the four styles (CLONE / COPY_CONSTRUCTOR /
- SERIALIZATION / SIMPLE) differ only in body content. Without the
- stubber, <code>Object.clone()&#8217;s `protected</code> visibility means Java
- callers cannot invoke <code>foo.clone()</code> against the stub.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mirrors super-class constructors with full generic substitution and a
- <code>super(args)</code> placeholder body so the stub Java compiles when the
- super has no no-arg constructor. Recursive pre-processing handles
- chained <code>@InheritConstructors</code> (Sub → Mid → Base). Boundary: when the
- super is in the same compilation unit and its constructors come from
- another CONVERSION-phase stubber (typically <code>@TupleConstructor</code>),
- within-phase ordering matters — super-declared-first sees those
- signatures, sub-declared-first does not. The runtime always produces
- the full surface; the stub remains a strict subset.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Walks the supertype / interface graph (shared
- <code>getAllCorrectedMethodsMap</code> with the full transform) and emits a
- default-value placeholder for each abstract reachable. Covers
- classpath supertypes, same-unit Groovy abstract classes, and
- same-unit Groovy traits with source-declared abstracts (the trait&#8217;s
- <code>abstract</code> method is on the trait <code>ClassNode</code> from CONVERSION
- onward; <code>TraitASTTransformation</code> rewriting at CANONICALIZATION is
- irrelevant to the walk). Narrow residual: a hypothetical transform
- that calls <code>cNode.addMethod(abstractMethod)</code> at SEMANTIC_ANALYSIS+
- on a same-unit supertype — no current transform does this.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Walks the delegate type&#8217;s methods, properties, and interfaces with
- the same enumeration and filter helpers the full transform uses
- (refactor-and-share via package-private statics on
- <code>DelegateASTTransformation</code>). Honours <code>interfaces</code>, <code>deprecated</code>,
- <code>includes</code> / <code>excludes</code>, <code>includeTypes</code> / <code>excludeTypes</code>, and
- <code>allNames</code> so the stub never exposes methods the runtime won&#8217;t add.
- Field-target and method-target are both supported. Generic owner
- with generic-typed delegate (e.g. <code>class Bag&lt;T&gt; { @Delegate List&lt;T&gt;
- items }</code>) propagates correctly. Boundary: when the delegate type is
- in the same compilation unit and gains methods from another
- CONVERSION-phase stubber, within-phase ordering applies (same as
- <code>@InheritConstructors</code> above). Default-arg prefix-overload expansion
- inside <code>collectMethods</code> (lines 224-251 of
- <code>DelegateASTTransformation</code>) is left to a future iteration; bites
- only for same-unit Groovy delegates with default-argument methods.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RecordType</code> / record-style classes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Component accessors and the canonical constructor are derivable
- from declared components. Some record-specific finalisation runs
- later and is left to the authoritative pass.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_tier_3_deferred">Tier 3 — deferred</h3>
-<div class="paragraph">
-<p>No transforms remain in this tier. The original entries —
-<code>@Delegate</code> of a same-unit Groovy delegate type, <code>@AutoImplement</code> of
-generic same-unit Groovy supertypes, <code>@NamedVariant</code> over
-transform-added methods, and <code>@Immutable</code> as a meta-transform —
-have all graduated into Tier 1 or Tier 2 as the spike progressed.
-The narrow residuals (within-phase ordering with a sibling
-constructor-generating stubber on the super; abstracts contributed by
-a hypothetical transform on a same-unit supertype) are documented
-inline on each Tier 2 entry; the framework-level limitation that
-underlies them is captured in <em>Excluded and deferred features</em> as
-"Same-unit cross-class transitive transform output."</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<code>@NamedVariant</code> was originally listed here as deferred because a
-target method "added by another transform" wouldn&#8217;t be visible at
-CONVERSION. In practice, transforms compose this kind of variant via
-<code>@NamedParam</code> annotations on parameters of an existing method, not by
-adding a <code>@NamedVariant</code>-annotated method; direct user-written
-<code>@NamedVariant</code> sits on hand-written members whose target is fully visible
-at CONVERSION. The original deferral was overly cautious; <code>@NamedVariant</code>
-is now in Tier 1.
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<code>@Immutable</code> was originally listed here as a deferred meta-transform
-pending its constituents. With Tier 1 / Tier 2 migrations and the
-addition of a <code>@Final</code> stubber, all of <code>@Immutable&#8217;s composing
-transforms (</code>@TupleConstructor(defaults=false)<code>, `@MapConstructor</code>,
-<code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Final</code>) are now joint-compile-aware
-in the spike, so <code>@Immutable</code> itself is transitively covered through
-<code>@AnnotationCollector</code> expansion. See
-<code>ImmutableJointCompilationStubTest</code> for end-to-end validation.
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_transforms_that_need_no_stubber">Transforms that need no stubber</h3>
-<div class="paragraph">
-<p>Some transforms are intentionally absent from the migration tiers
-above because they produce no stub-visible output. The work they do
-is real, but it sits below the line of what <code>JavaStubGenerator</code>
-renders. Adding a Shape C stubber for them would be dead code today.</p>
-</div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 40%;">
-<col style="width: 60%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Transform</th>
-<th class="tableblock halign-left valign-top">Why no stubber is needed</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoFinal</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets {<code>Modifier.FINAL</code>} on each method / constructor / closure
- <strong>parameter</strong>. The stub generator does not emit parameter modifiers
- (<code>JavaStubGenerator.printParams</code> writes only annotations, type, and
- name), so the change is invisible to Java consumers regardless of
- when it runs. Pure internal-discipline annotation; if the stub
- generator is ever enhanced to emit parameter modifiers, a stubber
- mirroring the full transform&#8217;s parameter-walk would be the minimal
- fix.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ImmutableBase</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sets fields to <code>private final</code>, adds <code>serialVersionUID</code>, marks
- fields with the per-field <code>IMMUTABLE_BREADCRUMB</code> metadata key, and
- wires the {<code>ImmutablePropertyHandler</code>}. All of these are runtime
- semantics: defensive copies inside generated constructor bodies,
- immutable-property handler integration, breadcrumbs that other
- transforms (e.g. <code>@IndexedProperty</code>) consult later. The
- <strong>Java-visible API</strong> — constructors, getters, no setters,
- equals/hashCode/toString — is fully covered by the constituent
- transforms (<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@ToString</code>,
- <code>@EqualsAndHashCode</code>, <code>@Final</code>). Once those are migrated,
- <code>@ImmutableBase&#8217;s contribution is invisible to `javac</code>.</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>This category exists to make the GEP&#8217;s coverage decisions explicit:
-"considered, no work needed" rather than silently absent.</p>
 </div>
 </div>
 </div>
@@ -1869,8 +1621,8 @@ appear in generated documentation.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>StaticTypeCheckingVisitor</code> runs at <code>INSTRUCTION_SELECTION</code>, far
  after <code>CONVERSION</code>. Stub contributions cannot use inferred types.
  In practice this is not a barrier: declared types from class
- generics, fields, and supertypes are sufficient for the migration
- list above.</p></td>
+ generics, fields, and supertypes are sufficient for every transform
+ the spike covers.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Cross-transform annotation propagation in stubs</p></td>
@@ -1920,7 +1672,7 @@ appear in generated documentation.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/apache/groovy/pull/2500">GEP-21 spike PR — Shape C implementation covering all of Tier 1 and Tier 2</a></p>
+<p><a href="https://github.com/apache/groovy/pull/2500">GEP-21 spike PR — Shape C implementation covering every transform whose runtime output has stub-visible signatures</a></p>
 </li>
 <li>
 <p><a href="https://groovy-lang.org/metaprogramming.html#_compilation_phases_guide">Groovy compilation phases guide</a></p>
@@ -1956,7 +1708,8 @@ appear in generated documentation.</p>
 3 (2026-04-29) Spike extended to nine transforms with <code>@MapConstructor</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>; added "Recurring patterns and implementation gotchas" subsection; updated migration tiers to reflect the broader spike validation<br>
 4 (2026-04-29) Tier 1 complete: spike adds <code>@Final</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>; compositional <code>@Canonical</code> and <code>@Immutable</code> tests; "Transforms that need no stubber" subsection; two new gotchas (parallel-map method removal, compositional ordering guards)<br>
 5 (2026-04-29) Tier 2 covered: spike adds <code>@AutoClone</code> and <code>@Builder</code> (DefaultStrategy + non-default-prefix SimpleStrategy); <code>@NamedVariant</code> promoted from Tier 3 to Tier 1; new gotcha (inner-class stubbing needs manual module wiring)<br>
-6 (2026-04-30) Tier 2 complete and Tier 3 collapsed: spike adds <code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code> (refactor-and-share with full transform); new gotcha (filter mirroring prevents stub-superset divergence)</p>
+6 (2026-04-30) Tier 2 complete and Tier 3 collapsed: spike adds <code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code> (refactor-and-share with full transform); new gotcha (filter mirroring prevents stub-superset divergence)<br>
+7 (2026-04-30) Reconciled with master and <code>@RecordType</code> validated: GROOVY-11974 covers native-record stubs via a stub-side back-channel; emulated records covered by a new <code>RecordBaseASTStubber</code> that flips property getter names + finalness so the stub <code>Verifier</code> sub-pass emits <code>componentName()</code> accessors and skips setters, and emits stub placeholders for the Groovy-specific record convenience methods (<code>getAt</code>, <code>toList</code>, <code>toMap</code>, <code>size</code>, opt-in <code>copyWith</code>, <code>components</code>) gated by the same <code>shouldAdd*</code> predicates the runtime uses (refactor-and-share, like <code>@Delegate</code>); GROOVY-11973&#8217;s <code>ASTTransformationCustomizer.forAnnotation(&#8230;&#8203;)</code> is the customizer path for multi-class annotations, removing the customizer-filter framework adjustment claimed in earlier revisions; with every covered transform now spike-validated, the migration tier section was retired — unique per-transform notes folded into the spike-results "After" column, "Transforms that need no stubber" relocated under spike-results, and a new "deferral framing" gotcha captures the lesson from `@NamedVariant&#8217;s initial over-cautious deferral</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
