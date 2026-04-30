@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, mina, sshd, parallel collections, virtual threads, pool, async, await, fleet, networking'/><meta name='description' content='A fleet of broker boxes over Apache MINA SSHD with Groovy 6 parallel collections, Pool.virtual and ParallelScope -- replacing Part 1&apos;s stub feed.'/><title>The Apache Groovy programming language - Blogs - Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='#_what_we_are_building' class='anchor-link'>What we are building</a></li><li><a href='#_a_60_second_tour_of_apache_mina_sshd' class='anchor-link'>A 60-second tour of Apache MINA SSHD</a></li><li><a href='#_the_broker_box' class='anchor-link'>The broker box</a></li><li><a href='#_the_fleetparallel_fan_out_via_ssh' class='anchor-link'>The fleet&#8201;&#8212;&#8201;parallel fan-out via SSH</a></li><li><a href='#_picking_the_right_pool' class='anchor-link'>Picking the right pool</a></li><li><a href='#_wiring_it_into_the_hub' class='anchor-link'>Wiring it into the hub</a></li><li><a href='#_trying_it' class='anchor-link'>Trying it</a></li><li><a href='#_recap' class='anchor-link'>Recap</a></li><li><a href='#_coming_up' class='anchor-link'>Coming up</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-async-await'>Async/await for Groovy&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2026-05-07 12:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
+<div class="paragraph">
+<p><span class="blue"><em>In Part 1 we built a streaming ticker hub on Apache MINA, refactored around Groovy 6&#8217;s
+async toolkit. The data source was a stub. Time to wire up a real fleet of broker boxes via
+Apache MINA SSHD and let Groovy 6&#8217;s parallel collections do the fan-out.</em></span></p>
+</div>
+</td></tr></table>
+<div class="paragraph">
+<p>In the <a href="groovy-mina.html">previous post</a> we built a streaming ticker hub on
+<a href="https://mina.apache.org/">Apache MINA</a> and refactored its <code>IoHandler</code> around Groovy 6&#8217;s
+<code>async</code>/<code>await</code>, <code>AsyncChannel</code>, <code>BroadcastChannel</code>, <code>@ActiveObject</code>, and <code>AsyncScope</code>. The
+last loose end was honest: the prices came from a synthetic <code>FakeTickSource</code> running locally.</p>
+</div>
+<div class="paragraph">
+<p>This post wires the hub up to a real-feeling source: a small <em>fleet</em> of "broker boxes" that
+each speak SSH. Every tick interval, we fan out across the fleet in parallel, ask each box
+for the latest price for every symbol, aggregate the responses, and publish to the same
+<code>BroadcastChannel</code>-backed registry from Part 1. The hub does not change at all&#8201;&#8212;&#8201;the new
+feed is a drop-in replacement.</p>
+</div>
+<div class="paragraph">
+<p>Three Groovy 6 features carry this episode:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://mina.apache.org/sshd-project/">Apache MINA SSHD</a> as both server (the broker boxes)
+and client (the fleet driver)</p>
+</li>
+<li>
+<p>Parallel collection methods&#8201;&#8212;&#8201;<code>collectParallel</code> here, and a quick tour of its siblings</p>
+</li>
+<li>
+<p><code>Pool.virtual()</code> and <code>ParallelScope.withPool { }</code> for binding the right execution pool
+to the right kind of work</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Examples in this post use Apache MINA SSHD 2.17.1 alongside the same MINA 2.2.6, Apache
+Commons RNG Simple 1.7, and Groovy 6 on JDK 21+ from Part 1. The full source is available
+<a href="https://github.com/paulk-asert/groovy-mina">on GitHub</a> (the new files sit alongside Part 1&#8217;s,
+so you can run either entry point).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_we_are_building">What we are building</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Conceptually, one tick of the new feed looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>hub                       ParallelScope            broker-1, broker-2, broker-3
+ │                              │                          │
+ ├─FleetTickSource (async)─────►│                          │
+ │                              ├─collectParallel──────────┼─►quote AAPL,GOOG,MSFT,TSLA
+ │                              │                          │   (one virtual thread per host)
+ │                              │◄──── per-host quotes ────┤
+ │                              │                          │
+ │◄──aggregate (mean) + publish─┤                          │
+ │                                                         │
+ ├─BroadcastChannel.send  → all subscribed sessions        │</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each broker box is an Apache MINA SSHD server running locally on its own port, backed by a
+custom <code>Command</code> implementation that handles a single shell command:
+<code>quote SYM1,SYM2,SYM3</code>. It returns <code>SYM PRICE</code> lines (one per symbol) and exits.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_60_second_tour_of_apache_mina_sshd">A 60-second tour of Apache MINA SSHD</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache MINA SSHD is a full SSH stack&#8201;&#8212;&#8201;both server and client, plus SFTP, SCP and port
+forwarding&#8201;&#8212;&#8201;built on the same NIO foundations as MINA itself. For our purposes there are
+only a handful of moving parts.</p>
+</div>
+<div class="paragraph">
+<p><strong>Server side (<code>BrokerBoxServer</code>):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SshServer.setUpDefaultServer()</code>&#8201;&#8212;&#8201;a server pre-configured with sensible ciphers, MACs,
+key-exchange algorithms, and signatures.</p>
+</li>
+<li>
+<p><code>SimpleGeneratorHostKeyProvider</code>&#8201;&#8212;&#8201;generates an in-memory host keypair on first use; no
+files written.</p>
+</li>
+<li>
+<p><code>AcceptAllPasswordAuthenticator.INSTANCE</code>&#8201;&#8212;&#8201;accepts any password (we are demonstrating,
+not shipping).</p>
+</li>
+<li>
+<p><code>CommandFactory</code>&#8201;&#8212;&#8201;given a command line, returns a <code>Command</code> whose <code>start(channel, env)</code>
+runs the work. The framework supplies it with stdin/stdout/stderr streams and an
+<code>ExitCallback</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Client side (<code>Fleet</code>):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SshClient.setUpDefaultClient()</code>&#8201;&#8212;&#8201;the client mirror of the server.</p>
+</li>
+<li>
+<p><code>AcceptAllServerKeyVerifier.INSTANCE</code>&#8201;&#8212;&#8201;skip host-key verification (again, demonstration).</p>
+</li>
+<li>
+<p><code>client.connect(user, host, port).verify(timeout).session</code>&#8201;&#8212;&#8201;open a session.</p>
+</li>
+<li>
+<p><code>session.addPasswordIdentity(&#8230;&#8203;)</code> then <code>session.auth().verify(timeout)</code>&#8201;&#8212;&#8201;log in.</p>
+</li>
+<li>
+<p><code>session.createExecChannel("quote AAPL")</code>&#8201;&#8212;&#8201;run a non-interactive command. Set an output
+stream, <code>open().verify(timeout)</code>, then <code>waitFor(EnumSet.of(ClientChannelEvent.CLOSED), timeout)</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>That is the entire SSHD surface area for this post. Now the fun part: making each round-trip
+happen across the whole fleet at once.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_broker_box">The broker box</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>BrokerBoxServer</code> boots an SSHD server with a one-line <code>CommandFactory</code>. The custom <code>Command</code>
+holds the wire streams the framework injects into it, parses the requested command on <code>start</code>,
+and writes one <code>SYM PRICE</code> line per requested symbol:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class BrokerBoxServer {
+    String name
+    int    port
+    Map&lt;String, BigDecimal&gt; basePrices
+
+    void start() {
+        sshd = SshServer.setUpDefaultServer()
+        sshd.host = '127.0.0.1'
+        sshd.port = port
+        sshd.keyPairProvider     = new SimpleGeneratorHostKeyProvider()
+        sshd.passwordAuthenticator = AcceptAllPasswordAuthenticator.INSTANCE
+        sshd.commandFactory = { ChannelSession ch, String line -&gt;
+            new QuoteCommand(commandLine: line, basePrices: basePrices, rng: rng)
+        } as CommandFactory
+        sshd.start()
+    }
+
+    private static class QuoteCommand implements Command {
+        String commandLine
+        Map&lt;String, BigDecimal&gt; basePrices
+        UniformRandomProvider rng
+        OutputStream out, err
+        ExitCallback callback
+        // ... setOutputStream / setErrorStream / setExitCallback ...
+
+        @Override
+        void start(ChannelSession channel, Environment env) {
+            async {
+                var parts = commandLine.trim().split(/\s+/, 2)
+                if (parts[0] != 'quote' || parts.length &lt; 2) {
+                    err.write("usage: quote SYM1,SYM2,...\n".getBytes('UTF-8'))
+                    callback.onExit(2); return
+                }
+                parts[1].split(',')*.trim().each { sym -&gt;
+                    var base = basePrices[sym]
+                    if (base == null) return
+                    var jitter = (rng.nextInt(40) - 20) / 100.0
+                    var price = base + jitter
+                    out.write("$sym $price\n".getBytes('UTF-8'))
+                }
+                out.flush()
+                callback.onExit(0)
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two small things worth noting:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The work happens inside <code>async { &#8230;&#8203; }</code>, not on the SSHD framework thread that called
+<code>start</code>. SSHD expects <code>start</code> to return promptly so the framework can keep handling other
+sessions; spawning the work onto a virtual thread is the modern fix.</p>
+</li>
+<li>
+<p>Each broker carries a small per-call price jitter, so different brokers report slightly
+different prices for the same symbol&#8201;&#8212;&#8201;giving us something interesting to aggregate.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_fleetparallel_fan_out_via_ssh">The fleet&#8201;&#8212;&#8201;parallel fan-out via SSH</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the heart of Part 2:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Fleet implements AutoCloseable {
+    List&lt;HostSpec&gt; hosts
+    private final SshClient client = SshClient.setUpDefaultClient()
+
+    Fleet() {
+        client.serverKeyVerifier = AcceptAllServerKeyVerifier.INSTANCE
+        client.start()
+    }
+
+    Map&lt;String, List&lt;BigDecimal&gt;&gt; sweep(List&lt;String&gt; symbols) {
+        // Pool.virtual() = one virtual thread per host. SSH I/O is overwhelmingly
+        // blocking and parking, exactly what virtual threads were designed for.
+        var perHost = ParallelScope.withPool(Pool.virtual()) { scope -&gt;
+            hosts.collectParallel { host -&gt;
+                try {
+                    fetchQuotes(host, symbols)
+                } catch (Throwable t) {
+                    System.err.println "WARN ${host.name}: ${t.message}"
+                    [:]
+                }
+            }
+        }
+        // Pivot List&lt;Map&lt;sym,price&gt;&gt; into Map&lt;sym, List&lt;price&gt;&gt;.
+        symbols.collectEntries { sym -&gt;
+            [(sym): perHost*.get(sym)]
+        }
+    }
+
+    private Map&lt;String, BigDecimal&gt; fetchQuotes(HostSpec host, List&lt;String&gt; symbols) {
+        var session = client.connect(host.user, host.host, host.port)
+                .verify(Duration.ofSeconds(2)).session
+        try {
+            session.addPasswordIdentity(host.password)
+            session.auth().verify(Duration.ofSeconds(2))
+            var out = new ByteArrayOutputStream()
+            var channel = session.createExecChannel("quote ${symbols.join(',')}")
+            try {
+                channel.out = out
+                channel.open().verify(Duration.ofSeconds(2))
+                channel.waitFor(EnumSet.of(ClientChannelEvent.CLOSED), Duration.ofSeconds(5))
+            } finally {
+                channel.close(false)
+            }
+            parseQuotes(out.toString('UTF-8'))
+        } finally {
+            session.close(false)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three things deserve attention.</p>
+</div>
+<div class="paragraph">
+<p><strong><code>hosts.collectParallel { &#8230;&#8203; }</code>.</strong> Groovy 6 adds a family of parallel extension methods to
+<code>Collection</code>: <code>collectParallel</code>, <code>findAllParallel</code>, <code>eachParallel</code>, <code>sumParallel</code>,
+<code>injectParallel</code>, <code>groupByParallel</code>. They are direct parallels of <code>collect</code>, <code>findAll</code>,
+<code>each</code>, etc., but each iteration runs in its own task on a pool. We use <code>collectParallel</code>
+because every host returns a quote map and we need them all back. If we only cared about
+side effects (e.g., kicking off a deploy on every host) <code>eachParallel</code> would be the right
+choice; if we wanted to shed slow hosts, <code>findAllParallel</code> with a quick health probe
+would do.</p>
+</div>
+<div class="paragraph">
+<p><strong><code>ParallelScope.withPool(Pool.virtual()) { scope &#8594; &#8230;&#8203; }</code>.</strong> The pool factory
+(<code>Pool.virtual()</code>, <code>Pool.io()</code>, <code>Pool.cpu()</code>, <code>Pool.fixed(n)</code>) decides what kind of executor
+runs each parallel task. We bind it for the scope of the closure; inside, every parallel
+collection method picks up the bound pool. SSH I/O is blocking I/O, so <code>Pool.virtual()</code> is
+the right choice on JDK 21+. The full picture is below.</p>
+</div>
+<div class="paragraph">
+<p><strong>Per-host failure isolation.</strong> A <code>try</code>/<code>catch</code> around <code>fetchQuotes</code> returns an empty map on
+failure for that one host. The other hosts' results still come through, the pivot still
+works, and the broken host gets logged. Without this, a single hung or unauthenticated box
+would poison the whole sweep.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_picking_the_right_pool">Picking the right pool</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy 6 ships four pool factories. The choice matters more than people think:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Factory</th>
+<th class="tableblock halign-left valign-top">When to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Pool.virtual()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Blocking I/O on JDK 21+. SSH, JDBC, blocking HTTP, file I/O. The carrier thread parks
+cheaply; you can have thousands of in-flight tasks for negligible cost. The default for
+<code>async { }</code> already chooses this on JDK 21+, so <code>ParallelScope.withPool(Pool.virtual())</code>
+just makes it explicit for parallel collections.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Pool.io()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Blocking I/O on JDK 17&#8212;&#8203;20, where virtual threads aren&#8217;t available. A bounded cached pool
+sized to handle moderate I/O concurrency without exhausting OS threads.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Pool.cpu()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU-bound work that wants <code>nCores</code> parallelism: image transforms, encoding, parsing
+hot paths, anything that pegs cores. Exceeding <code>nCores</code> here just adds context-switch cost.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Pool.fixed(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When you need a strict cap (<code>Pool.fixed(8)</code> to throttle external load on a downstream
+service, for instance), or when the default sizing doesn&#8217;t fit.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For our SSH fleet sweep, <code>Pool.virtual()</code> is the obvious pick. Each host fetch spends most of
+its life parked in <code>verify(&#8230;&#8203;)</code> or <code>waitFor(&#8230;&#8203;)</code>; we never want to limit ourselves to
+<code>nCores</code> of those.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wiring_it_into_the_hub">Wiring it into the hub</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the entire change to wire the fleet feed into Part 1&#8217;s MINA hub. Compare it with
+the equivalent block in Part 1&#8217;s <code>TickerServer.groovy</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Three brokers, each on its own ephemeral port
+var brokers = (1..3).collect { i -&gt;
+    new BrokerBoxServer(name: "broker-$i", port: freePort(), basePrices: basePrices).tap { start() }
+}
+var hosts = brokers.collect { b -&gt;
+    new HostSpec(name: b.name, host: '127.0.0.1', port: b.port, user: 'demo', password: 'demo')
+}
+
+var fleet    = new Fleet(hosts: hosts)
+var registry = new TickerRegistry()
+var feed     = new FleetTickSource(registry: registry, fleet: fleet, symbols: symbols, intervalMillis: 500)
+feed.start()
+
+// ----- everything below this line is unchanged from Part 1 -----
+var acceptor = new NioSocketAcceptor()
+acceptor.filterChain.with {
+    addLast 'codec',  new ProtocolCodecFilter(new TextLineCodecFactory(StandardCharsets.UTF_8))
+    addLast 'logger', new LoggingFilter()
+}
+acceptor.handler = new TickerHandler(registry: registry)
+acceptor.bind(new InetSocketAddress(0))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>FleetTickSource</code> is the only new class wired in, and it has the same shape as
+<code>FakeTickSource</code> from Part 1: same <code>start()</code> and <code>stop()</code>, same job of publishing to the
+registry. The whole protocol stack&#8201;&#8212;&#8201;<code>TickerHandler</code>, <code>TickerProtocol</code>, <code>TickerRegistry</code>,
+the per-session <code>AsyncChannel</code> and per-symbol <code>BroadcastChannel</code>&#8201;&#8212;&#8201;runs unchanged.</p>
+</div>
+<div class="paragraph">
+<p><code>FleetTickSource</code> itself is small:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class FleetTickSource {
+    TickerRegistry registry
+    Fleet fleet
+    List&lt;String&gt; symbols
+    long intervalMillis = 1000
+    private final running = new AtomicBoolean(false)
+
+    void start() {
+        running.set(true)
+        async {
+            while (running.get()) {
+                var quotes = fleet.sweep(symbols)
+                quotes.each { sym, prices -&gt;
+                    if (prices) {
+                        var mean = prices.sum() / prices.size()
+                        registry.publish(sym, mean)
+                    }
+                }
+                sleep intervalMillis
+            }
+        }
+    }
+
+    void stop() { running.set(false) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each tick, sweep the fleet, average the per-broker prices, publish. The whole feed is a
+seven-line <code>async { }</code> loop&#8201;&#8212;&#8201;and inside that one <code>fleet.sweep(&#8230;&#8203;)</code> call lurks a
+fan-out across every host on a virtual thread per host.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_trying_it">Trying it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The repository ships a <code>FleetTickerServer.groovy</code> script alongside Part 1&#8217;s <code>TickerServer</code>
+that boots three SSHD broker servers on ephemeral ports, builds the fleet, runs the same
+in-process socket client demo, and asserts the output. A typical run prints something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Started brokers on ports [54113, 54114, 54115]
+Ticker hub (fleet-backed) listening on port 54116
+--- received ---
+SUBSCRIBED AAPL
+SUBSCRIBED MSFT
+TICK AAPL 173.42
+TICK MSFT 412.05
+TICK AAPL 173.39
+TICK MSFT 412.13
+TICK AAPL 173.45
+QUOTE AAPL 173.45
+QUOTE GOOG 198.18
+QUOTE MSFT 412.13
+QUOTE TSLA 215.55
+UNSUBSCRIBED AAPL
+TICK MSFT 412.10
+BYE
+OK</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three things changed compared to Part 1&#8217;s run:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The startup banner mentions broker ports.</p>
+</li>
+<li>
+<p>The TICK and QUOTE prices are now consensus values across three brokers, not a single
+RNG walk&#8201;&#8212;&#8201;they cluster more tightly around the base price because the per-broker jitter
+averages out.</p>
+</li>
+<li>
+<p>The <code>QUOTE</code> reply for <code>GOOG</code> returns a real number instead of <code>NA</code>: even though no client
+ever subscribed to it, the fleet sweep populates the last-tick cache for every symbol on
+every cycle.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_recap">Recap</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Part 2 reused everything we built in Part 1&#8201;&#8212;&#8201;the <code>IoHandler</code> shuttle, the <code>for await</code>
+protocol loop, the <code>@ActiveObject</code> registry, the <code>BroadcastChannel`s, the `AsyncScope</code>
+fan-out for <code>QUOTE</code>&#8201;&#8212;&#8201;and slotted in a fleet-backed feed in front of it. The producer side
+is now real; the consumer side did not move.</p>
+</div>
+<div class="paragraph">
+<p>Each new Groovy 6 feature earned its place:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>collectParallel</code></strong> (and its siblings <code>eachParallel</code>, <code>findAllParallel</code>, <code>sumParallel</code>,
+<code>injectParallel</code>, <code>groupByParallel</code>) gives the fan-out an obvious shape: it is a <code>collect</code>,
+just done in parallel.</p>
+</li>
+<li>
+<p><strong><code>ParallelScope.withPool { }</code></strong> binds a pool for a block; every parallel collection method
+inside that block uses it.</p>
+</li>
+<li>
+<p><strong><code>Pool.virtual()</code></strong> picks the right executor for blocking I/O on JDK 21+. The same code
+falls back to <code>Pool.io()</code> semantics on JDK 17&#8212;&#8203;20 if you swap the factory.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And we added a third Apache project to the mix: <strong>Apache MINA SSHD</strong> as both server (the
+broker boxes) and client (the fleet driver), with the entire wire-level dance hidden behind
+<code>session.createExecChannel(cmd)</code> and a few <code>verify(&#8230;&#8203;)</code> calls.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_coming_up">Coming up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two threads naturally hang off the end of this post:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Async file I/O on <code>Path</code>.</strong> <code>textAsync</code>, <code>bytesAsync</code>, <code>writeAsync</code>, and
+<code>writeBytesAsync</code> make per-broker log capture a one-liner; we deliberately kept the
+sweep clean here, but a follow-up could thread that in.</p>
+</li>
+<li>
+<p><strong>A real CLI shell on top of the broker.</strong> SSHD also supports <code>setShellFactory</code> for an
+interactive shell. Pairing that with Groovy&#8217;s
+<a href="https://groovy.apache.org/blog/groovy-async-await"><code>async</code>/<code>await</code></a> and its
+new <code>groovy-http-builder</code> would let a broker proxy real-time market data from a backend
+HTTP source. That is its own post.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://mina.apache.org/sshd-project/">Apache MINA SSHD</a></p>
+</li>
+<li>
+<p><a href="https://mina.apache.org/">Apache MINA</a></p>
+</li>
+<li>
+<p><a href="https://commons.apache.org/proper/commons-rng/">Apache Commons RNG</a></p>
+</li>
+<li>
+<p><a href="groovy-mina.html">Part 1&#8201;&#8212;&#8201;Streaming Servers with Apache MINA and Groovy 6</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-18.html">GEP-18: Integrated Concurrency and Parallel Processing</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-mina">Source code on GitHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The producer side of a streaming system is often where the real-world messiness lives:
+multiple data sources, blocking network calls, partial failures, aggregation. Groovy 6&#8217;s
+parallel collection methods, pool factories, and <code>ParallelScope</code>&#8201;&#8212;&#8201;combined with Apache
+MINA SSHD as a first-class SSH client&#8201;&#8212;&#8201;make that messiness fit into a handful of small,
+readable classes. And because the producer is the only thing that changed from Part 1, the
+hub, the protocol, the channels, and every async primitive we built last time slot in
+unmodified.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>07/May/2026</strong>: Initial version.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>

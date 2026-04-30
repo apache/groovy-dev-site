@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, mina, async, await, channels, broadcast, activeobject, structured concurrency, virtual threads, networking'/><meta name='description' content='Build a small streaming server on Apache MINA and refactor its IoHandler around Groovy 6&apos;s async/await, channels, broadcast and @ActiveObject.'/><title>The Apache Groovy programming language - Blogs - Streaming Servers with Apache MINA and Groovy&trade; 6</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li><li><a href='#_what_we_are_building' class='anchor-link'>What we are building</a></li><li><a href='#_a_60_second_tour_of_mina' class='anchor-link'>A 60-second tour of MINA</a></li><li><a href='#_the_classic_shape_and_why_we_want_a_different_one' class='anchor-link'>The classic shape, and why we want a different one</a></li><li><a href='#_the_bridging_pattern' class='anchor-link'>The bridging pattern</a></li><li><a href='#_the_protocol_top_to_bottom' class='anchor-link'>The protocol, top-to-bottom</a></li><li><a href='#_shared_state_with_activeobject' class='anchor-link'>Shared state with <code>@ActiveObject</code></a></li><li><a href='#_per_session_subscription_with_for_await' class='anchor-link'>Per-session subscription with <code>for await</code></a></li><li><a href='#_structured_fan_out_for_quote' class='anchor-link'>Structured fan-out for <code>QUOTE</code></a></li><li><a href='#_a_simulated_tick_source' class='anchor-link'>A simulated tick source</a></li><li><a href='#_trying_it' class='anchor-link'>Trying it</a></li><li><a href='#_recap' class='anchor-link'>Recap</a></li><li><a href='#_coming_up' class='anchor-link'>Coming up</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-async-await'>Async/await for Groovy&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Streaming Servers with Apache MINA and Groovy&trade; 6</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2026-04-30 12:00PM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
+<div class="paragraph">
+<p><span class="blue"><em>Apache MINA gives us a battle-tested asynchronous network framework with a callback-driven <code>IoHandler</code> model.
+Groovy 6 adds <code>async</code>/<code>await</code>, channels, broadcast streams, and <code>@ActiveObject</code>&#8201;&#8212;&#8201;exactly the toolkit needed
+to flatten that callback model into protocol code that reads top-to-bottom.</em></span></p>
+</div>
+</td></tr></table>
+<div class="paragraph">
+<p><a href="https://mina.apache.org/">Apache MINA</a> is "a network application framework which helps users develop high
+performance and high scalability network applications easily". It wraps Java NIO behind a small set of
+event-driven abstractions: an acceptor, a filter chain (codecs, logging, SSL), a per-connection session,
+and an <code>IoHandler</code> you implement to react to lifecycle and message events.</p>
+</div>
+<div class="paragraph">
+<p>That callback shape is the same shape that motivated <code>async</code>/<code>await</code> to exist in the first place.
+Once a handler needs to do anything beyond echo bytes&#8201;&#8212;&#8201;talk to a database, fan out to several
+backends, broadcast to other sessions&#8201;&#8212;&#8201;the linear flow disappears into a tangle of <code>synchronized</code>
+sets, futures, and follow-on callbacks.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 adds a unified concurrency toolkit that lets us refactor those handlers into top-to-bottom
+async code:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Native <code>async { }</code> / <code>await</code> running on virtual threads (JDK 21+)</p>
+</li>
+<li>
+<p><code>AsyncChannel</code> and <code>BroadcastChannel</code> for Go-style and pub/sub communication</p>
+</li>
+<li>
+<p><code>for await</code> for iterating async sources (channels, generators, reactive streams)</p>
+</li>
+<li>
+<p><code>@ActiveObject</code> / <code>@ActiveMethod</code> for race-free shared state with ordinary class syntax</p>
+</li>
+<li>
+<p><code>AsyncScope</code> for structured concurrency</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In this post we put them to work together. We will build a small streaming "ticker hub":
+clients subscribe to symbols and receive a stream of price ticks; they can also issue a one-shot
+multi-symbol <code>QUOTE</code> that fans out concurrently. The result is a MINA server whose entire protocol
+fits in one method that you can read straight through.</p>
+</div>
+<div class="paragraph">
+<p>Examples in this post use the freshly released Apache MINA 2.2.6 and
+Apache Commons RNG Simple 1.7, together with Groovy 6 on JDK 21+.
+The full source is available
+<a href="https://github.com/paulk-asert/groovy-mina">on GitHub</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_we_are_building">What we are building</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A simple line-based protocol over TCP:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>SUBSCRIBE AAPL,GOOG     -&gt; server starts pushing TICK lines for those symbols
+UNSUBSCRIBE GOOG        -&gt; server stops pushing for that symbol
+QUOTE AAPL,MSFT,TSLA    -&gt; server returns one snapshot line per symbol concurrently
+QUIT                    -&gt; server replies BYE and closes the connection</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Server pushes look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>SUBSCRIBED AAPL
+TICK AAPL 173.42
+TICK AAPL 174.10
+QUOTE AAPL 174.10
+QUOTE MSFT 412.55
+BYE</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The ticks themselves are produced by a stub <code>FakeTickSource</code> for now. In a follow-up post we will
+replace that stub with real data fetched in parallel from a fleet of sources&#8201;&#8212;&#8201;but the protocol,
+broadcast machinery, and per-session async logic will not need to change.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_60_second_tour_of_mina">A 60-second tour of MINA</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A MINA server only needs five concepts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>NioSocketAcceptor</code>&#8201;&#8212;&#8201;the TCP listener (UDP, in-VM and serial transports also exist).</p>
+</li>
+<li>
+<p>The <em>filter chain</em>&#8201;&#8212;&#8201;a pipeline through which bytes flow in both directions. We add three:
+a codec filter (turns bytes into decoded messages), a logging filter, and&#8201;&#8212;&#8201;in production&#8201;&#8212;&#8201;an
+<code>SslFilter</code>.</p>
+</li>
+<li>
+<p>A <code>ProtocolCodecFilter</code> with a <code>TextLineCodecFactory</code>&#8201;&#8212;&#8201;turns the byte stream into newline-delimited
+<code>String</code> messages and back. Our handler will see `String`s, not raw `IoBuffer`s.</p>
+</li>
+<li>
+<p><code>IoHandlerAdapter</code>&#8201;&#8212;&#8201;the extension point. Override the lifecycle callbacks you care about:
+<code>sessionOpened</code>, <code>messageReceived</code>, <code>messageSent</code>, <code>sessionIdle</code>, <code>sessionClosed</code>,
+<code>exceptionCaught</code>.</p>
+</li>
+<li>
+<p><code>IoSession</code>&#8201;&#8212;&#8201;one per connected client. Use <code>session.write(obj)</code> to send (the codec encodes
+for you), <code>session.setAttribute(key, value)</code> for per-connection scratch state, and
+<code>session.closeOnFlush()</code> to disconnect.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The entire server boot is about ten lines:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var acceptor = new NioSocketAcceptor()
+acceptor.filterChain.with {
+    addLast 'codec',  new ProtocolCodecFilter(new TextLineCodecFactory(StandardCharsets.UTF_8))
+    addLast 'logger', new LoggingFilter()
+}
+acceptor.handler = new TickerHandler(registry: registry)
+acceptor.bind(new InetSocketAddress(0))    // ephemeral port</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So far, so MINA. The interesting bit is what we put inside <code>TickerHandler</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_classic_shape_and_why_we_want_a_different_one">The classic shape, and why we want a different one</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A MINA <code>IoHandler</code> traditionally does all of its work inside <code>messageReceived</code>. The
+<a href="https://github.com/apache/mina/blob/2.2.X/mina-example/src/main/java/org/apache/mina/example/chat/ChatProtocolHandler.java">chat
+example shipped with MINA</a> is a good representative&#8201;&#8212;&#8201;it carries the entire chat protocol inside one
+big switch over the parsed command, with shared state held in synchronized sets:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public class ChatProtocolHandler extends IoHandlerAdapter {
+    private final Set&lt;IoSession&gt; sessions = Collections.synchronizedSet(new HashSet&lt;&gt;());
+    private final Set&lt;String&gt;    users    = Collections.synchronizedSet(new HashSet&lt;&gt;());
+
+    @Override
+    public void messageReceived(IoSession session, Object message) {
+        String[] result = ((String) message).split(" ", 2);
+        switch (ChatCommand.valueOf(result[0]).toInt()) {
+            case ChatCommand.LOGIN:
+                /* register session, broadcast join, ... */
+                break;
+            case ChatCommand.BROADCAST:
+                /* iterate sessions, write to each ... */
+                break;
+            case ChatCommand.QUIT:
+                session.write("QUIT OK");
+                session.closeNow();
+                break;
+        }
+    }
+
+    public void broadcast(String message) {
+        synchronized (sessions) {
+            for (IoSession s : sessions) {
+                if (s.isConnected()) s.write("BROADCAST OK " + message);
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That works, and for many years it was the right shape. But every concurrent feature&#8201;&#8212;&#8201;broadcast,
+shared user list, session lifecycle&#8201;&#8212;&#8201;ends up either as <code>synchronized</code> collections or as more
+callbacks. Adding a downstream call (e.g., look up the user&#8217;s permissions over HTTP) means
+either blocking a precious NIO thread or chaining yet more callbacks.</p>
+</div>
+<div class="paragraph">
+<p>We will refactor along a single principle: <strong>the handler does nothing except shuttle events into a
+channel</strong>, and the actual protocol runs as one straight-line <code>async</code> task per session.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_bridging_pattern">The bridging pattern</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the entire MINA-facing surface of our server:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class TickerHandler extends IoHandlerAdapter {
+    static final String INBOX = 'inbox'
+    TickerRegistry registry
+
+    @Override
+    void sessionOpened(IoSession session) {
+        var inbox = AsyncChannel.create(64)            // bounded =&gt; back-pressure
+        session.setAttribute(INBOX, inbox)
+        async {
+            new TickerProtocol(session: session, inbox: inbox, registry: registry).run()
+        }
+    }
+
+    @Override
+    void messageReceived(IoSession session, message) {
+        session.getAttribute(INBOX).send(message.toString())
+    }
+
+    @Override
+    void sessionClosed(IoSession session) {
+        session.getAttribute(INBOX)?.close()
+    }
+
+    @Override
+    void exceptionCaught(IoSession session, Throwable cause) {
+        cause.printStackTrace()
+        session.getAttribute(INBOX)?.close()
+        session.closeNow()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is everything we will ever write against <code>IoHandler</code>. The handler now contains zero
+protocol logic. Each connected client gets a per-session <code>AsyncChannel</code> (a Go-style
+buffered channel) and a single <code>async { }</code> task that drives the protocol from start to finish.</p>
+</div>
+<div class="paragraph">
+<p>A few things worth noting:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AsyncChannel.create(64)</code> is bounded. If the protocol task ever falls behind, <code>send</code> will
+exert back-pressure on MINA. We size the buffer generously enough that the NIO thread never
+blocks in normal operation.</p>
+</li>
+<li>
+<p><code>async { }</code> launches the per-session task on a virtual thread (on JDK 21+). On JDK 17&#8212;&#8203;20
+it falls back to a cached thread pool. Either way, there is no <code>ExecutorFilter</code> and no SEDA
+tuning: virtual threads handle the I/O parking for us.</p>
+</li>
+<li>
+<p><code>sessionClosed</code> closes the channel. The <code>for await</code> loop reading from it will then exit
+cleanly, and the per-session async task will return.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_protocol_top_to_bottom">The protocol, top-to-bottom</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>With the bridging in place, here is the entire protocol&#8201;&#8212;&#8201;all the conversation logic that
+the bundled MINA chat handler scattered across callbacks now lives in one method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">void run() {
+    AsyncScope.withScope {
+        for (String line in inbox) {
+            var parts = line.trim().split(/\s+/, 2)
+            var cmd  = parts[0].toUpperCase()
+            var args = parts.length &gt; 1 ? parts[1] : ''
+            switch (cmd) {
+                case 'SUBSCRIBE'   -&gt; handleSubscribe(args)
+                case 'UNSUBSCRIBE' -&gt; handleUnsubscribe(args)
+                case 'QUOTE'       -&gt; handleQuote(args)
+                case 'QUIT'        -&gt; session.with{ write('BYE'); closeOnFlush() }
+                default            -&gt; session.write("ERROR unknown command: $cmd")
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A plain <code>for</code> loop consumes the inbox as it is filled by <code>messageReceived</code>&#8201;&#8212;&#8201;<code>AsyncChannel</code>
+exposes itself as a blocking iterable, so the loop reads top-to-bottom and exits when the
+channel is closed. The whole loop runs inside <code>AsyncScope.withScope { &#8230;&#8203; }</code> so any
+subscription tasks we launch underneath (see the next two sections) inherit a structured
+lifetime: when the loop exits&#8201;&#8212;&#8201;on <code>QUIT</code>, on the client disconnecting, or on any exception&#8201;&#8212;&#8201;the scope guarantees every child task has finished or been cancelled before <code>run()</code> returns.</p>
+</div>
+<div class="paragraph">
+<p><code>QUIT</code> is one line: send <code>BYE</code>, ask MINA to close on flush, and the resulting <code>sessionClosed</code>
+callback closes the inbox channel, which terminates the <code>for</code> loop. Compare that with calling
+<code>session.closeNow()</code> from deep inside a callback chain.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_shared_state_with_activeobject">Shared state with <code>@ActiveObject</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The price feeds and last-tick cache are shared across every session. The traditional answer
+is <code>Collections.synchronizedMap</code> or some other mutex dance. Groovy 6&#8217;s <code>@ActiveObject</code>
+turns ordinary class methods into messages on a serialised mailbox, so we get race-free state
+without writing <code>synchronized</code> once:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ActiveObject
+class TickerRegistry {
+    private final Map&lt;String, BroadcastChannel&gt; feeds = [:]
+    private final Map&lt;String, BigDecimal&gt;       latest = [:]
+
+    @ActiveMethod
+    Flow.Publisher&lt;BigDecimal&gt; subscribe(String symbol) {
+        feeds.computeIfAbsent(symbol) { BroadcastChannel.create() }.asPublisher()
+    }
+
+    @ActiveMethod
+    void publish(String symbol, BigDecimal price) {
+        latest[symbol] = price
+        feeds[symbol]?.send(price)
+    }
+
+    @ActiveMethod
+    BigDecimal lastTick(String symbol) {
+        latest[symbol]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@ActiveMethod</code> calls are routed through the registry&#8217;s internal actor, so two threads can
+freely call <code>publish</code> and <code>subscribe</code> at the same time without us thinking about locks.</p>
+</div>
+<div class="paragraph">
+<p><code>BroadcastChannel</code> is the other star of this section. Unlike a plain <code>AsyncChannel</code> (which
+delivers each value to one consumer), a broadcast delivers every value to every subscriber.
+Calling <code>asPublisher()</code> adapts it to the JDK <code>java.util.concurrent.Flow.Publisher</code> interface,
+which <code>for await</code> consumes natively. The same plumbing works against any reactive stream&#8201;&#8212;&#8201;a Reactor <code>Flux</code> (via the <code>groovy-reactor</code> module) or an RxJava <code>Observable</code> (via <code>groovy-rxjava</code>)
+would slot in unchanged.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Why <code>@ActiveObject</code> here and not <code>Agent</code>?</strong> <code>Agent</code> wraps a single value updated through a
+function&#8201;&#8212;&#8201;great for a counter, a single config snapshot, or any "one mutable thing". When
+the unit of state has multiple coordinated operations on related fields (as our registry
+does), <code>@ActiveObject</code> reads more naturally.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_per_session_subscription_with_for_await">Per-session subscription with <code>for await</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each <code>SUBSCRIBE</code> spawns a small async task that consumes the broadcast for the requested
+symbol and writes ticks to the session:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">private void handleSubscribe(String args) {
+    symbolsOf(args).each { sym -&gt;
+        if (subs.containsKey(sym)) return
+        var cancel = new AtomicBoolean(false)
+        subs[sym] = cancel
+        async {
+            for await (price in registry.subscribe(sym)) {
+                if (cancel.get()) break
+                session.write("TICK $sym $price")
+            }
+        }
+        session.write("SUBSCRIBED $sym")
+    }
+}
+
+private void handleUnsubscribe(String args) {
+    symbolsOf(args).each { sym -&gt;
+        subs.remove(sym)?.set(true)
+        session.write("UNSUBSCRIBED $sym")
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>UNSUBSCRIBE</code> flips an <code>AtomicBoolean</code>; the per-symbol loop notices on its next tick, breaks,
+and <code>for await</code> cancels the underlying subscription on the way out.</p>
+</div>
+<div class="paragraph">
+<p>Two pieces of the new toolkit are doing the heavy lifting here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>for await (price in registry.subscribe(sym))</code> consumes the per-symbol <code>Flow.Publisher</code> as if
+it were a regular collection, while the underlying subscriber/back-pressure protocol is hidden.</p>
+</li>
+<li>
+<p>The bounded <code>AsyncChannel</code> we created for the inbox in <code>sessionOpened</code> provides the
+back-pressure path between the network and our async tasks. If the client cannot drain ticks
+fast enough, MINA&#8217;s write queue eventually pushes back, the broadcast publisher slows its
+delivery, and nothing falls over.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_structured_fan_out_for_quote">Structured fan-out for <code>QUOTE</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>QUOTE AAPL,GOOG,MSFT,TSLA</code> asks for one snapshot per symbol. The natural shape is to fire all
+the lookups in parallel and join on the results&#8201;&#8212;&#8201;which is exactly what <code>AsyncScope</code> is for:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">private void handleQuote(String args) {
+    var syms = symbolsOf(args)
+    AsyncScope.withScope {
+        var lookups = syms.collect { sym -&gt; async { [sym, registry.lastTick(sym)] } }
+        lookups.each { l -&gt;
+            var (sym, price) = await(l)
+            session.write("QUOTE $sym ${price ?: 'NA'}")
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The scope owns the lifetime of the per-symbol tasks. If any single lookup blows up, the others
+are cancelled before the scope exits&#8201;&#8212;&#8201;no leaked tasks, no half-finished work, no manual
+<code>CompletableFuture.allOf</code> plus exception-handling boilerplate. With virtual threads, fanning
+out over hundreds of symbols costs essentially nothing.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_simulated_tick_source">A simulated tick source</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For now the ticks come from a stub: one async task per symbol drips a randomly walked price
+into the registry every 200&thinsp;ms.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class FakeTickSource {
+    TickerRegistry registry
+    List&lt;String&gt; symbols
+    long intervalMillis = 250
+
+    private final running = new AtomicBoolean(false)
+    private final rng = RandomSource.XO_RO_SHI_RO_128_PP.create(42L)
+
+    void start() {
+        running.set(true)
+        symbols.each { sym -&gt;
+            var price = 50.0G + rng.nextInt(200)
+            async {
+                while (running.get()) {
+                    var delta = (rng.nextInt(200) - 100) / 100.0
+                    price = (price + delta).max(0.01g)
+                    registry.publish(sym, price)
+                    sleep intervalMillis
+                }
+            }
+        }
+    }
+
+    void stop() { running.set(false) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We pulled the random number generator from
+<a href="https://commons.apache.org/proper/commons-rng/">Apache Commons RNG Simple</a> 1.7 (also a fresh
+release): <code>UniformRandomProvider</code> is a drop-in replacement for <code>java.util.Random</code> with the same
+<code>nextInt(n)</code> shape, but backed by faster, statistically stronger algorithms&#8201;&#8212;&#8201;in this case the
+recommended general-purpose <code>XO_RO_SHI_RO_128_PP</code>.</p>
+</div>
+<div class="paragraph">
+<p>In a follow-up post we will replace this stub with real prices fetched in parallel from a fleet
+of sources&#8201;&#8212;&#8201;using Apache MINA SSHD as a client, parallel collections, and <code>Pool.virtual()</code>.
+The consumer side&#8201;&#8212;&#8201;everything we built above&#8201;&#8212;&#8201;does not change at all.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_trying_it">Trying it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The repository ships a <code>TickerServer.groovy</code> script that boots the acceptor on an ephemeral
+port, opens an in-process socket client, exercises the protocol, and asserts the output.
+A typical run prints something like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Ticker hub listening on port 56432
+--- received ---
+SUBSCRIBED AAPL
+SUBSCRIBED MSFT
+TICK AAPL 173.42
+TICK MSFT 412.10
+TICK AAPL 174.18
+TICK MSFT 411.80
+TICK AAPL 173.95
+QUOTE AAPL 173.95
+QUOTE GOOG NA
+QUOTE MSFT 411.80
+QUOTE TSLA 215.55
+UNSUBSCRIBED AAPL
+TICK MSFT 412.45
+BYE
+OK</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can also try it interactively. Start the server, open another terminal, and use <code>nc</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="shell">$ nc localhost 9999
+SUBSCRIBE AAPL,MSFT
+SUBSCRIBED AAPL
+SUBSCRIBED MSFT
+TICK AAPL 173.42
+TICK MSFT 412.10
+...
+QUOTE GOOG,TSLA
+QUOTE GOOG 198.20
+QUOTE TSLA 215.55
+UNSUBSCRIBE AAPL
+UNSUBSCRIBED AAPL
+QUIT
+BYE</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_recap">Recap</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We started with the standard MINA pattern&#8201;&#8212;&#8201;a <code>messageReceived</code> callback containing the
+whole protocol switch, plus synchronised collections for shared state&#8201;&#8212;&#8201;and ended up with
+one ten-line <code>IoHandler</code> whose only job is to forward inbound messages into a channel,
+plus a single <code>runProtocol</code> method that reads top-to-bottom.</p>
+</div>
+<div class="paragraph">
+<p>Each Groovy 6 feature earned its place:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>async { }</code> and <code>for await</code> flatten the per-session loop, with virtual threads doing the
+parking on blocking I/O.</p>
+</li>
+<li>
+<p><code>AsyncChannel</code> bridges between MINA&#8217;s callback-driven world and the linear protocol
+loop, with bounded buffers providing natural back-pressure.</p>
+</li>
+<li>
+<p><code>BroadcastChannel</code> and its <code>asPublisher()</code> view give us pub/sub broadcast for free, with
+<code>for await</code> consuming reactive streams as if they were collections.</p>
+</li>
+<li>
+<p><code>@ActiveObject</code> makes shared state race-free by routing methods through a serialised mailbox,
+without a single <code>synchronized</code> keyword.</p>
+</li>
+<li>
+<p><code>AsyncScope</code> provides structured lifetimes&#8201;&#8212;&#8201;both for the protocol task itself and for
+the parallel <code>QUOTE</code> fan-out.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_coming_up">Coming up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our hub trusts whoever feeds it. Next time, we will wire a fleet of broker boxes
+to feed the <code>BroadcastChannel`s we built today&#8201;&#8212;&#8201;using Apache MINA SSHD as a client,
+parallel collection methods (`collectParallel</code>, <code>eachParallel</code>), <code>Pool.virtual()</code> for the
+I/O pool, and async file I/O on <code>Path</code> for log capture. The producer side gets all the
+attention; the consumer side&#8201;&#8212;&#8201;everything we built in this post&#8201;&#8212;&#8201;stays unchanged.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://mina.apache.org/">Apache MINA</a></p>
+</li>
+<li>
+<p><a href="https://mina.apache.org/mina-project/features.html">Apache MINA features overview</a></p>
+</li>
+<li>
+<p><a href="https://mina.apache.org/mina-project/quick-start-guide.html">Apache MINA quick-start guide</a></p>
+</li>
+<li>
+<p><a href="https://commons.apache.org/proper/commons-rng/">Apache Commons RNG</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-async-await">Groovy 6 async/await blog post</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-18.html">GEP-18: Integrated Concurrency and Parallel Processing</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-mina">Source code on GitHub</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Apache MINA&#8217;s filter chain and <code>IoHandler</code> model still give us a clean, well-understood
+place to plug in a network protocol. What changes with Groovy 6 is what we put <em>inside</em>
+the handler: instead of cramming protocol logic into callbacks and synchronising on shared
+collections, we let the handler shuttle events into a channel and write the protocol as
+one straightforward async method. The new toolkit&#8201;&#8212;&#8201;<code>async</code>/<code>await</code>, channels, broadcast,
+<code>@ActiveObject</code>, and <code>AsyncScope</code>&#8201;&#8212;&#8201;composes naturally with MINA, and the result is
+network code you can read top-to-bottom.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>30/Apr/2026</strong>: Initial version.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
