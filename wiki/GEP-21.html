@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>5</p>
+<p>6</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-04-29</p>
+<p>2026-04-30</p>
 </td>
 </tr>
 </table>
@@ -147,13 +147,17 @@
 <td class="content">
 A working spike for <strong>Shape C</strong> (the split-transform model described
 below) is available at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>. It
-covers all of Tier 1 plus most of Tier 2 — <code>@Sortable</code>,
-<code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@NamedVariant</code>, <code>@Singleton</code>,
-<code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>, <code>@ExternalizeMethods</code>,
-<code>@IndexedProperty</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code>,
-<code>@AutoClone</code>, <code>@Builder</code> — end-to-end through joint compilation, plus
-compositional tests for <code>@Canonical</code> and <code>@Immutable</code>. Findings from that
-spike are folded into this revision.
+covers all of Tier 1 and Tier 2 — <code>@Sortable</code>, <code>@TupleConstructor</code>,
+<code>@MapConstructor</code>, <code>@NamedVariant</code>, <code>@Singleton</code>, <code>@Bindable</code>, <code>@Vetoable</code>,
+<code>@ListenerList</code>, <code>@ExternalizeMethods</code>, <code>@IndexedProperty</code>, <code>@ToString</code>,
+<code>@EqualsAndHashCode</code>, <code>@Lazy</code>, <code>@Final</code>, <code>@AutoClone</code>, <code>@Builder</code>,
+<code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code> — end-to-end through
+joint compilation, plus compositional tests for <code>@Canonical</code> and
+<code>@Immutable</code>. Tier 3 collapsed: the original entries graduated and the
+narrow remaining edges (transform-added abstract methods on same-unit
+supertypes; sub-declared-first ordering when a sibling stubber on the
+super hasn&#8217;t run yet) are documented inline. Findings are folded into this
+revision.
 </td>
 </tr>
 </table>
@@ -588,9 +592,9 @@ which shapes to commit to in the first implementation.</p>
 <h3 id="spike-results">Spike results: before / after stub views</h3>
 <div class="paragraph">
 <p>The spike at <a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a> implements
-Shape C for four transforms. The table summarises what a Java source
-in the same joint-compilation unit sees via the generated stub
-before and after the transform opts in.</p>
+Shape C across Tier 1 and Tier 2. The table summarises what a Java
+source in the same joint-compilation unit sees via the generated stub
+before and after each transform opts in.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -626,7 +630,7 @@ chain (<code>Foo()</code>, <code>Foo(p1)</code>, &#8230;&#8203;, <code>Foo(p1..p
 mirroring what <code>Verifier</code> will produce at runtime. For
 <code>defaults = false</code>/<code>defaultsMode = OFF</code>/<code>AUTO</code>: only the maximal
 form, matching the runtime exactly. (Trait-injected and super
-properties remain invisible — see <em>Tier 3</em>.)</p></td>
+properties remain invisible — same-unit cross-class limit.)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Lazy</code></p></td>
@@ -743,8 +747,8 @@ fails to compile.</p></td>
 overloads are declared, with parameter types derived from the
 field&#8217;s generic type at CONVERSION. Same-unit Groovy listener
 interfaces with their own transform-added methods fall under the
-Tier 3 cross-class limit; classpath listeners (e.g.
-<code>java.beans.PropertyChangeListener</code>,
+same-unit cross-class limit (see <em>Excluded and deferred features</em>);
+classpath listeners (e.g. <code>java.beans.PropertyChangeListener</code>,
 <code>java.awt.event.ActionListener</code>) work fully.</p></td>
 </tr>
 <tr>
@@ -788,11 +792,64 @@ buildee. Default-prefix <code>SimpleStrategy</code>, <code>InitializerStrategy</
 <code>ExternalStrategy</code>, method/constructor targets, and <code>forClass</code> are
 documented limitations rather than deferrals.</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None of the abstract methods reachable through the supertype /
+interface graph are implemented on the stub. Java callers reaching
+for those methods get a stub-time compile error even though the
+runtime supplies default-value (or exception-throwing) implementations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Each abstract reachable through the same walk the full transform uses
+(classpath supertypes, same-unit Groovy abstract classes, and same-unit
+Groovy traits with source-declared abstracts) is declared on the stub
+with a default-value placeholder body. Empirically wider than initially
+analysed: same-unit trait abstracts are visible at CONVERSION because
+the trait&#8217;s source-declared <code>abstract</code> methods sit on the trait
+<code>ClassNode</code> from CONVERSION on. The narrow residual is abstracts that
+another transform <strong>adds</strong> (via <code>cNode.addMethod</code>) at SEMANTIC_ANALYSIS+
+on a same-unit supertype — no current transform does this.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None of the super class&#8217;s constructors are visible on the subclass
+stub. Java callers writing <code>new MyEx("boom")</code> against a
+<code>@InheritConstructors</code>-annotated <code>RuntimeException</code> subclass fail
+to compile.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Super class&#8217;s non-private declared constructors copied onto the
+subclass stub with full generic substitution and a <code>super(args)</code>
+placeholder body. Recursive pre-processing handles chained
+<code>@InheritConstructors</code> (Sub → Mid → Base) within the stubber pass.
+Boundary: when the super class is in the same compilation unit and
+its constructors come from another CONVERSION-phase stubber (typically
+<code>@TupleConstructor</code>), visibility depends on within-phase ordering —
+super-declared-first works, sub-declared-first leaves those tuple-derived
+signatures off the stub. Locked in by an explicit subset assertion in
+the test.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None of the delegate type&#8217;s public methods or properties are visible
+on the owner stub — Java callers writing <code>event.before(otherDate)</code>
+against an <code>@Delegate Date when</code> field fail to compile, and the owner
+does not appear to implement the delegate&#8217;s interfaces.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field-target and method-target both produce a stub that mirrors the
+runtime: every public delegate method is declared on the owner with a
+default-value placeholder body, property accessors honour the same
+<code>extractAccessorInfo</code> clash-avoidance the runtime uses, the array
+<code>getLength()</code> shortcut is included where applicable, and (when
+<code>interfaces=true</code>) the delegate&#8217;s interface graph is unioned into the
+owner&#8217;s <code>implements</code> clause. Filter mirroring is critical to the subset
+invariant: <code>excludes</code>, <code>excludeTypes</code>, <code>includes</code>, <code>includeTypes</code>,
+<code>deprecated</code>, and <code>allNames</code> reach the stubber via shared helpers
+extracted from the full transform, so any method the runtime won&#8217;t add
+also won&#8217;t appear on the stub. Generic owner with generic-typed
+delegate (<code>class Bag&lt;T&gt; { @Delegate List&lt;T&gt; items }</code>) propagates the
+type parameter through delegated method signatures correctly.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>In all sixteen cases the runtime output is unchanged — these are
-stub-fidelity fixes, not behavioural changes.</p>
+<p>In every case the runtime output is unchanged — these are stub-fidelity
+fixes, not behavioural changes.</p>
 </div>
 <div class="paragraph">
 <p>Two compositional cases — <code>@Canonical</code> and <code>@Immutable</code> — are
@@ -888,6 +945,23 @@ placeholders. Otherwise whichever stubber fires second silently
 no-ops. Single-transform tests don&#8217;t catch this — only
 compositional cases do; the spike&#8217;s <code>@Canonical</code> and <code>@Immutable</code>
 tests are the smallest reliable triggers.</p>
+</li>
+<li>
+<p><strong>Filter mirroring prevents stub-superset divergence.</strong> For most
+spiked transforms the only failure mode is "stub is a strict subset of
+runtime" — Java callers may get a stub-time compile error for things
+that run fine, but never the reverse. Transforms with user-supplied
+filters (<code>@Delegate&#8217;s `includes</code> / <code>excludes</code> / <code>includeTypes</code> /
+<code>excludeTypes</code> / <code>deprecated</code> / <code>allNames</code>) introduce the <strong>opposite</strong>
+failure mode: if the stubber forgets to mirror the filter, the stub
+exposes methods the full transform won&#8217;t add, Java code compiles, then
+runtime fails with <code>MissingMethodException</code>. The fix is to share the
+enumeration / filter helpers between stubber and full transform rather
+than reproduce them. The <code>@Delegate</code> spike does this by promoting
+<code>collectMethods</code>, <code>filterMethods</code>, <code>extractAccessorInfo</code>, and friends
+from <code>private</code> to package-private static on
+<code>DelegateASTTransformation</code> and calling them from <code>DelegateASTStubber</code>
+— same source of truth, same answers.</p>
 </li>
 <li>
 <p><strong>Inner-class stubbing needs manual module wiring.</strong> The natural API
@@ -1333,10 +1407,10 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Constructor signatures, including the cascade produced by the
  <code>defaults = true</code> shape. Parameters use directly-declared property
  types with class generics applied. Trait-injected and super
- properties are not visible at <code>CONVERSION</code> (see <em>Tier 3</em>); the
- stubber&#8217;s view is therefore a strict subset of the runtime
- surface for those configurations. <code>pre</code> / <code>post</code> closures are
- body-only.</p></td>
+ properties are not visible at <code>CONVERSION</code> (same-unit cross-class
+ limit); the stubber&#8217;s view is therefore a strict subset of the
+ runtime surface for those configurations. <code>pre</code> / <code>post</code> closures
+ are body-only.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
@@ -1375,9 +1449,9 @@ information is unconditionally available at <code>CONVERSION</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>addXxxListener</code>, <code>removeXxxListener</code>, <code>getXxxListeners</code>, and a
  <code>fireXxx(&#8230;&#8203;)</code> per listener-interface method. Listener interface
  method enumeration uses the field type&#8217;s resolved methods at
- CONVERSION; works for classpath listener types, defers to Tier 3
- for same-unit Groovy listener interfaces with their own
- transform-added methods.</p></td>
+ CONVERSION; works for classpath listener types, partial for
+ same-unit Groovy listener interfaces whose methods are
+ transform-added (same-unit cross-class limit).</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
@@ -1516,12 +1590,49 @@ already adequately covered by inheritance. They migrate after Tier
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@InheritConstructors</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mirrors super-class constructors. Works for classpath super
- classes; for same-unit Groovy super classes that themselves use
- <code>@TupleConstructor</code>-family transforms, the super&#8217;s transform-added
- constructors are not yet visible at <code>CONVERSION</code> (deferred — see
- below).</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Pending</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mirrors super-class constructors with full generic substitution and a
+ <code>super(args)</code> placeholder body so the stub Java compiles when the
+ super has no no-arg constructor. Recursive pre-processing handles
+ chained <code>@InheritConstructors</code> (Sub → Mid → Base). Boundary: when the
+ super is in the same compilation unit and its constructors come from
+ another CONVERSION-phase stubber (typically <code>@TupleConstructor</code>),
+ within-phase ordering matters — super-declared-first sees those
+ signatures, sub-declared-first does not. The runtime always produces
+ the full surface; the stub remains a strict subset.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Walks the supertype / interface graph (shared
+ <code>getAllCorrectedMethodsMap</code> with the full transform) and emits a
+ default-value placeholder for each abstract reachable. Covers
+ classpath supertypes, same-unit Groovy abstract classes, and
+ same-unit Groovy traits with source-declared abstracts (the trait&#8217;s
+ <code>abstract</code> method is on the trait <code>ClassNode</code> from CONVERSION
+ onward; <code>TraitASTTransformation</code> rewriting at CANONICALIZATION is
+ irrelevant to the walk). Narrow residual: a hypothetical transform
+ that calls <code>cNode.addMethod(abstractMethod)</code> at SEMANTIC_ANALYSIS+
+ on a same-unit supertype — no current transform does this.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Walks the delegate type&#8217;s methods, properties, and interfaces with
+ the same enumeration and filter helpers the full transform uses
+ (refactor-and-share via package-private statics on
+ <code>DelegateASTTransformation</code>). Honours <code>interfaces</code>, <code>deprecated</code>,
+ <code>includes</code> / <code>excludes</code>, <code>includeTypes</code> / <code>excludeTypes</code>, and
+ <code>allNames</code> so the stub never exposes methods the runtime won&#8217;t add.
+ Field-target and method-target are both supported. Generic owner
+ with generic-typed delegate (e.g. <code>class Bag&lt;T&gt; { @Delegate List&lt;T&gt;
+ items }</code>) propagates correctly. Boundary: when the delegate type is
+ in the same compilation unit and gains methods from another
+ CONVERSION-phase stubber, within-phase ordering applies (same as
+ <code>@InheritConstructors</code> above). Default-arg prefix-overload expansion
+ inside <code>collectMethods</code> (lines 224-251 of
+ <code>DelegateASTTransformation</code>) is left to a future iteration; bites
+ only for same-unit Groovy delegates with default-argument methods.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spike: validated</strong></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@RecordType</code> / record-style classes</p></td>
@@ -1535,35 +1646,19 @@ already adequately covered by inheritance. They migrate after Tier
 </div>
 <div class="sect2">
 <h3 id="_tier_3_deferred">Tier 3 — deferred</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 40%;">
-<col style="width: 60%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Transform</th>
-<th class="tableblock halign-left valign-top">Reason for deferral</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code> of a same-unit Groovy delegate type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">At <code>CONVERSION</code> the delegate type&#8217;s source-declared methods are
- visible, but its transform-added methods (e.g. when the delegate
- itself uses <code>@Delegate</code> recursively) are not. The contribution
- would emit a strictly smaller method set than the runtime class.
- Workable for classpath delegate types; deferred for same-unit
- Groovy delegates pending a fixed-point scheduling model.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@AutoImplement</code> of generic same-unit Groovy supertypes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Requires generic substitution against a same-unit type whose
- declared abstract methods may be transform-added. Workable for
- classpath supertypes.</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p>No transforms remain in this tier. The original entries —
+<code>@Delegate</code> of a same-unit Groovy delegate type, <code>@AutoImplement</code> of
+generic same-unit Groovy supertypes, <code>@NamedVariant</code> over
+transform-added methods, and <code>@Immutable</code> as a meta-transform —
+have all graduated into Tier 1 or Tier 2 as the spike progressed.
+The narrow residuals (within-phase ordering with a sibling
+constructor-generating stubber on the super; abstracts contributed by
+a hypothetical transform on a same-unit supertype) are documented
+inline on each Tier 2 entry; the framework-level limitation that
+underlies them is captured in <em>Excluded and deferred features</em> as
+"Same-unit cross-class transitive transform output."</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1798,18 +1893,6 @@ appear in generated documentation.</p>
  style.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Delegate</code> of same-unit Groovy delegate types</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">See Tier 3. A skeleton emitting only source-declared methods of the
- delegate is feasible but partial; full coverage needs the
- fixed-point model.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NamedVariant</code> over transform-added methods</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Same root cause as <code>@Delegate</code> Tier 3.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Re-running the entire transform pipeline at <code>CONVERSION</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Some transforms have legitimate dependencies on later-phase
@@ -1837,7 +1920,7 @@ appear in generated documentation.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/apache/groovy/pull/2500">GEP-21 spike PR — Shape C implementation covering nine transforms: <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@MapConstructor</code>, <code>@Lazy</code>, <code>@ToString</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code></a></p>
+<p><a href="https://github.com/apache/groovy/pull/2500">GEP-21 spike PR — Shape C implementation covering all of Tier 1 and Tier 2</a></p>
 </li>
 <li>
 <p><a href="https://groovy-lang.org/metaprogramming.html#_compilation_phases_guide">Groovy compilation phases guide</a></p>
@@ -1872,7 +1955,8 @@ appear in generated documentation.</p>
 2 (2026-04-29) Added Shape C (split-transform model) and the working spike (<a href="https://github.com/apache/groovy/pull/2500" class="bare">https://github.com/apache/groovy/pull/2500</a>) covering <code>@Sortable</code>, <code>@TupleConstructor</code>, <code>@Lazy</code>, <code>@ToString</code>; before/after spike-results table; framework-adjustments subsection (rail relaxation + customizer filter)<br>
 3 (2026-04-29) Spike extended to nine transforms with <code>@MapConstructor</code>, <code>@EqualsAndHashCode</code>, <code>@Singleton</code>, <code>@IndexedProperty</code>, <code>@ExternalizeMethods</code>; added "Recurring patterns and implementation gotchas" subsection; updated migration tiers to reflect the broader spike validation<br>
 4 (2026-04-29) Tier 1 complete: spike adds <code>@Final</code>, <code>@Bindable</code>, <code>@Vetoable</code>, <code>@ListenerList</code>; compositional <code>@Canonical</code> and <code>@Immutable</code> tests; "Transforms that need no stubber" subsection; two new gotchas (parallel-map method removal, compositional ordering guards)<br>
-5 (2026-04-29) Tier 2 covered: spike adds <code>@AutoClone</code> and <code>@Builder</code> (DefaultStrategy + non-default-prefix SimpleStrategy); <code>@NamedVariant</code> promoted from Tier 3 to Tier 1; new gotcha (inner-class stubbing needs manual module wiring)</p>
+5 (2026-04-29) Tier 2 covered: spike adds <code>@AutoClone</code> and <code>@Builder</code> (DefaultStrategy + non-default-prefix SimpleStrategy); <code>@NamedVariant</code> promoted from Tier 3 to Tier 1; new gotcha (inner-class stubbing needs manual module wiring)<br>
+6 (2026-04-30) Tier 2 complete and Tier 3 collapsed: spike adds <code>@AutoImplement</code>, <code>@InheritConstructors</code>, <code>@Delegate</code> (refactor-and-share with full transform); new gotcha (filter mirroring prevents stub-superset divergence)</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
