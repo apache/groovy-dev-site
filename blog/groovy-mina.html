@@ -159,6 +159,12 @@ broadcast machinery, and per-session async logic will not need to change.</p>
 <h2 id="_a_60_second_tour_of_mina">A 60-second tour of MINA</h2>
 <div class="sectionbody">
 <div class="paragraph">
+<p>MINA&#8217;s API surface is deliberately small&#8201;&#8212;&#8201;five concepts and a thin filter chain, with
+no surprise machinery layered on top. That simplicity is part of what makes the bridging
+pattern below pleasant: we&#8217;re refactoring <em>what we put inside</em> the handler, not fighting
+the framework.</p>
+</div>
+<div class="paragraph">
 <p>A MINA server only needs five concepts:</p>
 </div>
 <div class="ulist">
@@ -719,12 +725,11 @@ attention; the consumer side&#8201;&#8212;&#8201;everything we built in this pos
 <div class="sectionbody">
 <div class="paragraph">
 <p>Apache MINA&#8217;s filter chain and <code>IoHandler</code> model still give us a clean, well-understood
-place to plug in a network protocol. What changes with Groovy 6 is what we put <em>inside</em>
-the handler: instead of cramming protocol logic into callbacks and synchronising on shared
-collections, we let the handler shuttle events into a channel and write the protocol as
-one straightforward async method. The new toolkit&#8201;&#8212;&#8201;<code>async</code>/<code>await</code>, channels, broadcast,
-<code>@ActiveObject</code>, and <code>AsyncScope</code>&#8201;&#8212;&#8201;composes naturally with MINA, and the result is
-network code you can read top-to-bottom.</p>
+place to plug in a network protocol&#8201;&#8212;&#8201;and a deliberately small one. What changes with
+Groovy 6 is what we put <em>inside</em> the handler: instead of cramming protocol logic into
+callbacks and synchronising on shared collections, we let the handler shuttle events into
+a channel and write the protocol as one straightforward async method. The new toolkit&#8201;&#8212;&#8201;<code>async</code>/<code>await</code>, channels, broadcast, <code>@ActiveObject</code>, and <code>AsyncScope</code>&#8201;&#8212;&#8201;composes
+naturally with MINA, and the result is network code you can read top-to-bottom.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
