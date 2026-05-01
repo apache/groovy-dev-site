@@ -270,15 +270,20 @@ channel</strong>, and the actual protocol runs as one straight-line <code>async<
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">class TickerHandler extends IoHandlerAdapter {
     static final String INBOX = 'inbox'
+    static final String TASK  = 'task'
     TickerRegistry registry
 
     @Override
     void sessionOpened(IoSession session) {
         var inbox = AsyncChannel.create(64)            // bounded =&gt; back-pressure
         session.setAttribute(INBOX, inbox)
-        async {
+        var task = async {
             new TickerProtocol(session: session, inbox: inbox, registry: registry).run()
         }
+        task.whenComplete { _, throwable -&gt;
+            if (throwable) exceptionCaught(session, throwable)
+        }
+        session.setAttribute(TASK, task)
     }
 
     @Override
@@ -289,12 +294,14 @@ channel</strong>, and the actual protocol runs as one straight-line <code>async<
     @Override
     void sessionClosed(IoSession session) {
         session.getAttribute(INBOX)?.close()
+        session.getAttribute(TASK)?.cancel()
     }
 
     @Override
     void exceptionCaught(IoSession session, Throwable cause) {
         cause.printStackTrace()
         session.getAttribute(INBOX)?.close()
+        session.getAttribute(TASK)?.cancel()
         session.closeNow()
     }
 }</code></pre>
@@ -321,7 +328,14 @@ it falls back to a cached thread pool. Either way, there is no <code>ExecutorFil
 tuning: virtual threads handle the I/O parking for us.</p>
 </li>
 <li>
-<p><code>sessionClosed</code> closes the channel. The <code>for await</code> loop reading from it will then exit
+<p>The <code>Awaitable</code> returned by <code>async { }</code> is observed via <code>whenComplete</code>, so any failure
+inside the protocol task surfaces through <code>exceptionCaught</code> instead of vanishing into a
+dropped future. The same <code>Awaitable</code> is stashed on the session so that <code>sessionClosed</code> and
+<code>exceptionCaught</code> can cancel it as a backstop&#8201;&#8212;&#8201;binding the protocol task&#8217;s lifetime to
+the session.</p>
+</li>
+<li>
+<p><code>sessionClosed</code> closes the channel. The <code>for</code> loop reading from it will then exit
 cleanly, and the per-session async task will return.</p>
 </li>
 </ul>
@@ -634,8 +648,9 @@ plus a single <code>runProtocol</code> method that reads top-to-bottom.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><code>async { }</code> and <code>for await</code> flatten the per-session loop, with virtual threads doing the
-parking on blocking I/O.</p>
+<p><code>async { }</code>, <code>for</code> over channels, and <code>for await</code> over reactive streams flatten the
+per-session protocol into top-to-bottom code, with virtual threads doing the parking on
+blocking I/O.</p>
 </li>
 <li>
 <p><code>AsyncChannel</code> bridges between MINA&#8217;s callback-driven world and the linear protocol
