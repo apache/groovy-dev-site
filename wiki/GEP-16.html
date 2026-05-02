@@ -614,18 +614,45 @@ as a variable name. But, since <code>val</code> will be in the <code>identifier<
 <code>SemanticPredicates.isInvalidLocalVariableDeclaration()</code> to check
 what follows. <code>val = 42</code> is an assignment; <code>val x = 42</code> is a declaration.</p>
 </div>
+<div class="paragraph">
+<p>The remaining edge cases all share the same root: <code>val</code> (and <code>var</code>)
+are contextual keywords, so a few positions where they could be either
+keyword or identifier have to resolve one way. In summary:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Field named <code>val</code> (or <code>var</code>) before a method or constructor declaration&#8201;&#8212;&#8201;parsed as modifiers on the member that follows</p>
+</li>
+<li>
+<p><code>val</code> as a cast expression&#8201;&#8212;&#8201;<code>val as Type</code> reads <code>val</code> as the keyword</p>
+</li>
+<li>
+<p>Java class named <code>val</code>&#8201;&#8212;&#8201;the keyword wins in declared-type positions</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Each is detailed below with workarounds.</p>
+</div>
 <div class="sect3">
-<h4 id="_field_named_val_or_var_before_a_method_declaration">Field named <code>val</code> (or <code>var</code>) before a method declaration</h4>
+<h4 id="_field_named_val_or_var_before_a_method_or_constructor_declaration">Field named <code>val</code> (or <code>var</code>) before a method or constructor declaration</h4>
 <div class="paragraph">
 <p>A field declared as <code>def val</code> (or <code>def var</code>) immediately before a method
-declaration is misinterpreted by the parser as modifiers on the method.
-This is a pre-existing issue with <code>var</code> that equally applies to <code>val</code>:</p>
+or constructor declaration is misinterpreted by the parser as modifiers
+on the member that follows. This is a pre-existing issue with <code>var</code> that
+equally applies to <code>val</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">class Foo {
     def val            // intended as field, but parsed as
     void doSomething() {} // modifiers for this method -&gt; error
+}
+
+class Bar {
+    def val            // intended as field, but parsed as
+    Bar() {}           // return type for a method named Bar -&gt; error
 }</code></pre>
 </div>
 </div>
