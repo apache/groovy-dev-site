@@ -208,9 +208,9 @@ today.</p>
 </li>
 <li>
 <p><strong>No new keywords</strong> — the new shapes use only existing tokens (<code>*</code>,
-<code>:</code>). <code>def</code> and <code>var</code> are also accepted before a binder for
+<code>:</code>). <code>def</code>, <code>var</code>, and <code>val</code> are also accepted before a binder for
 symmetry with switch case patterns and the bracket-form grammar in
-GEP-19, but neither is required: <code>def (a, b) = &#8230;&#8203;</code> works without
+GEP-19, but no marker is required: <code>def (a, b) = &#8230;&#8203;</code> works without
 any inner marker.</p>
 </li>
 <li>
@@ -288,18 +288,16 @@ Under <code>@TypeChecked</code> / <code>@CompileStatic</code>, reading <code>_</
 </div>
 </div>
 <div class="sect2">
-<h3 id="_binder_markers_def_var">Binder markers (<code>def</code>, <code>var</code>)</h3>
+<h3 id="_binder_markers_def_var_val">Binder markers (<code>def</code>, <code>var</code>, <code>val</code>)</h3>
 <div class="paragraph">
-<p><code>def</code> and <code>var</code> may appear before any binder; both are equivalent to
-omitting a type. This is provided for symmetry with switch case
-patterns and the bracket-form declaration grammar in GEP-19, which
-use <code>var</code> as the canonical binding marker:</p>
+<p><code>def</code>, <code>var</code>, and <code>val</code> may appear before any binder; all are equivalent to
+omitting a type:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">def (var a, var b) = [1, 2]                  // same as: def (a, b) = [1, 2]
 def (def a, var b, int c) = [1, 2, 3]        // mix and match
-def (name: var n, age: var a) = person       // also in map-style</code></pre>
+def (name: var n, age: val a) = person       // also in map-style</code></pre>
 </div>
 </div>
 </div>
