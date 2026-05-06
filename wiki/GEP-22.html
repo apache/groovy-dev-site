@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-22</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-22</a></li><li><a href='#_abstract_traits' class='anchor-link'>Abstract: Traits</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_cross_version_evolution' class='anchor-link'>Cross-version evolution</a></li><li><a href='#_non_goals_and_potential_future_extensions' class='anchor-link'>Non-goals and potential future extensions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-22</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-22</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Traits</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Final</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Delivered in Groovy 2.3 and refined in later versions; static-member support remains incubating</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Cédric Champeau</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-06</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-06</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract_traits">Abstract: Traits</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Traits are a structural construct of the Groovy language that allow:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>composition of behaviour</p>
+</li>
+<li>
+<p>runtime implementation of interfaces</p>
+</li>
+<li>
+<p>behaviour overriding</p>
+</li>
+<li>
+<p>compatibility with static type checking and static compilation</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Conceptually a trait is an <strong>interface</strong> that may carry both <strong>default implementations</strong>
+and <strong>state</strong>. A class declares its participation in a trait via the <code>implements</code>
+clause exactly as it would for any other interface. Traits compose into the
+implementing class at compile time (or, optionally, at runtime via coercion)
+without requiring multiple inheritance of classes.</p>
+</div>
+<div class="paragraph">
+<p>This GEP specifies the language semantics of traits, captures the bytecode
+compilation model, and records the evolution of the feature across Groovy
+releases. Worked examples and tutorial-style code samples live in the
+language specification (<code>_traits.adoc</code>); this document is intentionally
+terse and prescriptive.</p>
+</div>
+<div class="sect2">
+<h3 id="_motivation">Motivation</h3>
+<div class="paragraph">
+<p>Object-oriented codebases routinely need to reuse behaviour across class
+hierarchies that cannot share a common ancestor. The available pre-existing
+mechanisms each carry trade-offs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Single inheritance</strong> forces all reuse through a single line, leading to
+deep hierarchies, fragile base-class problems, and inability to mix
+unrelated capabilities.</p>
+</li>
+<li>
+<p><strong>Java 8 default methods</strong> attach behaviour to interfaces but are stateless
+by design, do not support stackable composition through <code>super</code>, and
+their resolution rules are designed around binary compatibility rather
+than composition.</p>
+</li>
+<li>
+<p><strong>Runtime mixins</strong> (Groovy&#8217;s pre-2.3 <code>@Mixin</code> annotation, since deprecated)
+weave behaviour at runtime but the resulting object is not an
+<code>instanceof</code> the mixed-in type, defeating type-based dispatch and
+compile-time checks.</p>
+</li>
+<li>
+<p><strong>Delegation via <code>@Delegate</code></strong> expresses <em>has-a</em> relationships well but is
+verbose for genuine <em>is-a</em> composition and does not support overriding
+delegated behaviour transparently.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Traits address these gaps. Drawing on the work of Schärli, Ducasse, Black
+and Nierstrasz (ECOOP 2003), and on Scala&#8217;s analogous construct, a trait
+combines the contract role of an interface with the reusable-implementation
+role of a class while imposing deterministic composition rules. As Cédric
+Champeau put it when introducing them: traits <strong>extend the benefit of
+interfaces to concrete classes</strong> without producing inheritance pyramids,
+allowing new APIs to be layered onto existing classes without modification.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_specification">Specification</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_declaration">Declaration</h3>
+<div class="paragraph">
+<p>A trait is declared with the <code>trait</code> keyword:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait FlyingAbility {
+    String fly() { "I'm flying!" }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The annotation <code>@groovy.transform.Trait</code> is an exact synonym and may be
+applied to any class declaration that would otherwise satisfy the trait
+shape; the AST transform produces equivalent output. The <code>trait</code> keyword
+is preferred in source.</p>
+</div>
+<div class="paragraph">
+<p>A trait may declare any of: methods (public or private, abstract or
+concrete, static or instance), properties, fields (public or private,
+instance or static), and an <code>implements</code> clause naming interfaces and/or
+super-traits. A trait may extend at most one super-trait via <code>extends</code>,
+or any number of super-traits by listing them in <code>implements</code>.</p>
+</div>
+<div class="paragraph">
+<p>Constructors are not permitted on traits.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_methods">Methods</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Public and private methods are supported. <code>protected</code> and package-private
+are <strong>not</strong> supported.</p>
+</li>
+<li>
+<p>Abstract methods are permitted; concrete classes that implement the
+trait must provide an implementation unless they too are abstract.</p>
+</li>
+<li>
+<p>Private methods do not appear on the generated trait interface and are
+not visible to other classes.</p>
+</li>
+<li>
+<p>The <code>final</code> modifier records the intended modifier of the woven method
+in the implementing class. Mixing <code>final</code> and non-<code>final</code> declarations of
+the same signature across multiple inherited traits is permitted; normal
+trait method-selection rules apply and the resulting method takes the
+modifier of the selected source.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fields">Fields</h3>
+<div class="paragraph">
+<p>Fields declared in a trait are not stored on the generated trait
+interface (interfaces cannot hold instance state). Instead they are stored
+on a synthetic <em>field helper</em> class and woven into the implementing class
+under name-mangled identifiers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For a field <code>bar</code> of type <code>T</code> declared in trait <code>my.pkg.Foo</code>, the
+implementing class gains a field named <code>my_pkg_Foo__bar</code> of type <code>T</code>.</p>
+</li>
+<li>
+<p>The mangling rule is: replace each <code>.</code> in the package name with <code><em></code>,
+append <code></em>&lt;TraitSimpleName&gt;__&lt;fieldName&gt;</code>. The double underscore separates
+the trait identity from the field identity.</p>
+</li>
+<li>
+<p>Private fields follow the same scheme but are also marked private; the
+mangling guarantees no collisions when a class implements multiple
+traits that declare fields of the same name (the diamond problem for
+state).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use of public fields in traits is discouraged in favour of properties.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_properties">Properties</h3>
+<div class="paragraph">
+<p>A property declared in a trait yields the usual auto-generated accessor
+pair (<code>getX</code>/<code>setX</code>, or <code>isX</code> for <code>boolean</code>) on the generated trait
+interface, and a backing field on the implementing class woven via the
+field-helper mechanism. Property semantics are otherwise identical to
+those of a regular Groovy class.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_this_super_and_stackable_traits"><code>this</code>, <code>super</code>, and stackable traits</h3>
+<div class="paragraph">
+<p>Inside a trait method:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>this</code> refers to the <strong>implementing instance</strong>, never to a trait-level
+artefact. A trait should be reasoned about as if it were a superclass of
+the implementing class, despite the fact that no such class exists in
+the runtime hierarchy.</p>
+</li>
+<li>
+<p>An unqualified <code>super.m(&#8230;&#8203;)</code> call delegates to the <strong>next trait in the
+implementation chain</strong> (in the order produced by the <code>implements</code> clause
+of the implementing class, walked right-to-left). When the chain is
+exhausted, <code>super</code> resolves to the actual superclass of the implementing
+class.</p>
+</li>
+<li>
+<p>A qualified <code>T.super.m(&#8230;&#8203;)</code> call resolves to trait <code>T&#8217;s implementation
+of `m</code>, regardless of position in the chain. This is the explicit
+override form.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This rule set yields <strong>stackable traits</strong>: behaviours that delegate to the
+next trait via unqualified <code>super</code> can be composed in different orders
+to produce different overall behaviours, without those traits needing to
+know about each other.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_multiple_inheritance_and_conflict_resolution">Multiple inheritance and conflict resolution</h3>
+<div class="paragraph">
+<p>When a class implements two or more traits that supply conflicting
+implementations of a method with the same signature, the <strong>last trait
+listed in the <code>implements</code> clause wins</strong>. This is the deterministic
+default. The implementing class may override the resolution:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>by providing its own implementation of the method, or</p>
+</li>
+<li>
+<p>by calling <code>T.super.m(&#8230;&#8203;)</code> for the desired trait <code>T</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The same rule applies to property accessors and field-helper-backed
+state. Diamond conflicts on field state cannot arise: each trait&#8217;s
+fields live under their own mangled names.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sam_coercion">SAM coercion</h3>
+<div class="paragraph">
+<p>A trait that declares exactly one abstract method is a <strong>Single Abstract
+Method</strong> type for the purposes of closure coercion. A <code>Closure</code> may be
+assigned or coerced to such a trait, in which case the closure body
+becomes the implementation of the abstract method. SAM coercion of
+traits composes with the rules in GEP-12.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_runtime_application">Runtime application</h3>
+<div class="paragraph">
+<p>Traits may be applied to an existing object at runtime:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def proxy = subject as SomeTrait
+def proxy = subject.withTraits(TraitA, TraitB)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both forms produce a <strong>new proxy instance</strong> — never the original object —
+that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>implements <code>SomeTrait</code> (or <code>TraitA</code> and <code>TraitB</code>),</p>
+</li>
+<li>
+<p>implements every interface that the original object implemented, and</p>
+</li>
+<li>
+<p>delegates to the original object for behaviour not supplied by the
+applied trait(s).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A trait method always takes precedence over the corresponding method on
+the proxied object when both exist. The proxy is <strong>not</strong> an instance of
+the original class; consumers that rely on <code>instanceof</code> against the
+original concrete class must continue to use the underlying object.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_static_members">Static members</h3>
+<div class="paragraph">
+<p>Static methods, properties and fields in a trait are supported with
+the following constraints (collectively flagged <strong>incubating</strong> /
+experimental):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each implementing class receives its <strong>own copy</strong> of static members.
+Static state is not shared across implementing classes — a static field
+declared in a trait is conceptually a template, instantiated per
+implementer.</p>
+</li>
+<li>
+<p>Static members are <strong>not</strong> exposed on the generated trait interface.
+Calls of the form <code>Trait.staticMethod(&#8230;&#8203;)</code> are not statically valid.</p>
+</li>
+<li>
+<p>Static members are accessed dynamically and are not subject to static
+type checking; traits with static methods cannot be <code>@CompileStatic</code>.</p>
+</li>
+<li>
+<p>Mixing static and instance methods of the same signature across
+multiple traits is undefined behaviour and should be avoided. If
+selection chooses a static variant where an instance variant is
+required, a compilation error is raised; conversely, an instance
+selection silently shadows the static variant.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_selftype"><code>@SelfType</code></h3>
+<div class="paragraph">
+<p><code>@groovy.transform.SelfType</code> declares a list of types that any class
+implementing the annotated trait must extend or implement. The compiler
+verifies the constraint at compile time and reports a clear error if it
+is violated. Self types make traits that depend on the surrounding
+class&#8217;s API safe to type-check and statically compile, without resorting
+to explicit <code>(this as SomeBaseClass)</code> casts inside trait method bodies.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_with_sealed">Interaction with <code>@Sealed</code></h3>
+<div class="paragraph">
+<p>Traits may be sealed (see GEP-13). <code>@Sealed</code> and <code>@SelfType</code> are
+orthogonal:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@SelfType</code> constrains <strong>what an implementing class must already be</strong>
+(its supertype shape).</p>
+</li>
+<li>
+<p><code>@Sealed</code> constrains <strong>which specific classes are allowed to implement</strong>
+the trait at all.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A trait may carry both annotations. For the degenerate single-permitted-
+implementer case, <code>@SelfType(Foo)</code> is preferred over
+<code>@Sealed(permittedSubclasses = ['Foo'])</code> for clarity.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bytecode_and_stub_model">Bytecode and stub model</h3>
+<div class="paragraph">
+<p>A trait <code>pkg.T</code> produces, after compilation, the following artefacts:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>An interface</strong> <code>pkg.T</code> containing the abstract and public-method
+signatures, plus accessor signatures for any properties. This is the
+type that participates in <code>instanceof</code>, generics, and Java interop.
+The interface contains <strong>no</strong> default methods — trait method bodies are
+not bytecode-default-method bodies, even on JDK 8+.</p>
+</li>
+<li>
+<p><strong>A trait helper class</strong> named <code>pkg.T$Trait$Helper</code> (constant
+<code>Traits.TRAIT_HELPER</code>). Each non-abstract trait method <code>m(args)</code> is
+emitted as a <code>static</code> method on the helper, taking the receiver as an
+explicit first parameter (and threading any captured trait state
+through field-helper accessors). Bridge methods are woven into each
+implementing class to forward instance calls to the helper.</p>
+</li>
+<li>
+<p><strong>A field helper class</strong> named <code>pkg.T$Trait$FieldHelper</code> (constant
+<code>Traits.FIELD_HELPER</code>). It exposes get/set accessors for trait
+instance fields, parameterised by the receiver. The implementing class
+is given mangled fields and small bridge accessors that delegate to
+this helper.</p>
+</li>
+<li>
+<p><strong>A static field helper class</strong> named <code>pkg.T$Trait$StaticFieldHelper</code>
+(constant <code>Traits.STATIC_FIELD_HELPER</code>) when the trait declares static
+fields, providing per-implementer storage for static state.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This four-class model is what makes traits visible to Java callers as
+plain interfaces (with no default methods to surprise Java consumers),
+while still supplying state, stackable <code>super</code>, and conflict resolution
+that a Java-default-method approach cannot.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_limitations">Limitations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>AST transform compatibility</strong> is best-effort. Some transforms
+(<code>@CompileStatic</code>, <code>@TypeChecked</code>, logging transforms) apply cleanly to
+traits; others apply only to the implementing class; others are
+unsupported. New transforms should be evaluated case by case.</p>
+</li>
+<li>
+<p><strong>Prefix and postfix operators</strong> (<code>+`, `--`) on a trait field are
+rejected at compile time. The workaround is `=</code> / <code>-=</code>. The reason is
+that the field-helper indirection cannot represent the read-modify-write
+sequence atomically.</p>
+</li>
+<li>
+<p><strong>Constructors</strong> on traits are not supported. Initialisation logic
+should be expressed via abstract methods supplied by the implementing
+class, or via property defaults.</p>
+</li>
+<li>
+<p><strong>Inheritance-of-state gotcha</strong>: trait method bodies that read a trait
+field directly read the <strong>trait&#8217;s own</strong> field, not any same-named property
+declared by the implementing class. To pick up an overriding value,
+trait code should access state through accessors (<code>getX()</code>), not by
+direct field reference.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cross_version_evolution">Cross-version evolution</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Year</th>
+<th class="tableblock halign-left valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2014</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial release of traits. <code>trait</code> keyword and <code>@Trait</code> annotation
+introduced; public/private methods; abstract methods; instance fields
+with name mangling; properties; multiple inheritance with last-wins
+conflict resolution; explicit <code>T.super.m()</code> resolution; stackable
+unqualified <code>super</code>; runtime application via <code>as</code> and
+<code>Object.withTraits(&#8230;&#8203;)</code>; SAM coercion of single-abstract-method
+traits.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2015</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@SelfType</code> annotation introduced (GROOVY-7134), enabling statically
+checked traits whose method bodies depend on members supplied by the
+implementing class&#8217;s superclass hierarchy.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2020</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default methods declared in <code>interface</code> types using the Java 8 syntax
+were accepted by the parser and implemented under the hood by
+delegating to the trait machinery (incubating). No spec-level change to
+trait semantics.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2022</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sealed traits supported via <code>@Sealed</code> / the <code>sealed</code> keyword and the
+<code>permits</code> clause (see GEP-13). Distinction between <code>@Sealed</code> and
+<code>@SelfType</code> formalised in the spec. Java stub generation for static
+trait properties hardened.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default, private and static methods in <code>interface</code> types are now
+implemented as <strong>native</strong> JVM bytecode rather than via the trait
+machinery (GROOVY-8299). This decouples the interface-default-method
+feature from traits and improves Java interop. Multiple bug fixes
+landed for trait + <code>@TupleConstructor</code> default-value handling
+(GROOVY-8219, GROOVY-8788) and for trait static-field generation under
+static compilation (GROOVY-11817, GROOVY-11907).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No spec-level changes to traits planned at the time of writing. This
+GEP is the canonical location to record any future change.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_non_goals_and_potential_future_extensions">Non-goals and potential future extensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following items are deliberately out of scope for this GEP and for
+the current implementation. Any of them would warrant a follow-up
+revision of this document or a successor GEP.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Promoting static-member support out of incubating status. The current
+per-implementer template semantics is a deliberate JVM-shaped
+compromise; a "true" shared-static-member model would require either
+breaking that semantics or moving static state into a separate runtime
+holder.</p>
+</li>
+<li>
+<p>Emitting trait methods as native interface default methods on JDK 8+.
+The four-class helper model deliberately avoids this so that Java
+callers see traits as plain interfaces. Switching would be a
+Java-interop change.</p>
+</li>
+<li>
+<p>First-class compatibility guarantees for arbitrary AST transforms on
+traits.</p>
+</li>
+<li>
+<p>Constructor support on traits.</p>
+</li>
+<li>
+<p><code>protected</code> or package-private trait methods.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Schärli, Ducasse, Nierstrasz, Black. <em>Traits: Composable Units of
+Behaviour.</em> ECOOP 2003. — the academic foundation.</p>
+</li>
+<li>
+<p><a href="https://docs.scala-lang.org/tour/traits.html">Scala traits</a> — the
+closest sibling construct in another JVM language.</p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/126">JEP 126: Default Methods</a> — Java&#8217;s
+stateless analogue, contrasted in the Motivation section.</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-12.html">GEP-12: SAM coercion</a> —
+underlies trait SAM coercion.</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-13.html">GEP-13: Sealed classes</a> —
+applies to traits (sealed traits).</p>
+</li>
+<li>
+<p><a href="https://speakerdeck.com/melix/rethinking-api-design-with-traits">Cédric
+Champeau, <em>Rethinking API design with traits</em></a> — original design
+motivation and worked examples.</p>
+</li>
+<li>
+<p>The language specification chapter on traits in the Groovy
+documentation contains worked tutorial examples that complement this
+spec-only document.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_reference_implementation">Reference implementation</h3>
+<div class="paragraph">
+<p>Package: <code>org.codehaus.groovy.transform.trait</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>TraitASTTransformation</code> — entry point invoked for every trait
+declaration; produces the interface, helper, field-helper and (where
+applicable) static-field-helper artefacts.</p>
+</li>
+<li>
+<p><code>TraitComposer</code> — weaves trait methods, accessors and bridge methods
+into each implementing class.</p>
+</li>
+<li>
+<p><code>TraitReceiverTransformer</code> — rewrites references inside trait method
+bodies so that <code>this</code>, <code>super</code> and field accesses resolve to the
+implementing-instance receiver and to helper-routed state.</p>
+</li>
+<li>
+<p><code>Traits</code> — utility class holding helper-class naming constants
+(<code>$Trait$Helper</code>, <code>$Trait$FieldHelper</code>, <code>$Trait$StaticFieldHelper</code>),
+trait detection predicates, and self-type collection logic.</p>
+</li>
+<li>
+<p><code>TraitTypeCheckingExtension</code> — integrates traits with the static type
+checker (GEP-8).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Public API:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groovy.transform.Trait</code> (since 2.3.0)</p>
+</li>
+<li>
+<p><code>groovy.transform.SelfType</code> (since 2.4.0)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_representative_jira_issues">Representative JIRA issues</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-7134">GROOVY-7134</a>:
+introduce <code>@SelfType</code> for statically checked traits.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8233">GROOVY-8233</a>: Java
+stub generation for static properties of traits.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8299">GROOVY-8299</a>: native
+default/private/static methods in interfaces (decoupling from trait
+machinery in 5.0).</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8219">GROOVY-8219</a>,
+<a href="https://issues.apache.org/jira/browse/GROOVY-8788">GROOVY-8788</a>:
+<code>@TupleConstructor</code> interaction with traits and default values.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8951">GROOVY-8951</a>: trait
+getter conflicts with generated getter (pre-compiled case).</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11674">GROOVY-11674</a>:
+deterministic ordering of trait methods for reproducible builds.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11907">GROOVY-11907</a>:
+trait field reference transform restructure.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2026-05-06) Initial draft. Retrospective specification capturing
+trait semantics as shipped in 2.3.0 and refined through 5.0, the
+four-class bytecode model, and the cross-version evolution table.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 the Apache Groovy project &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html' alt='Apache 2 License'>license</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
