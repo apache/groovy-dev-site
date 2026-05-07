@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>4</p>
+<p>6</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-04-12</p>
+<p>2026-05-07</p>
 </td>
 </tr>
 </table>
@@ -628,6 +628,9 @@ keyword or identifier have to resolve one way. In summary:</p>
 <p><code>val</code> as a cast expression&#8201;&#8212;&#8201;<code>val as Type</code> reads <code>val</code> as the keyword</p>
 </li>
 <li>
+<p>Standalone <code>val</code> (or <code>var</code>) expression-statement before a declaration&#8201;&#8212;&#8201;parsed as a modifier on the declaration that follows</p>
+</li>
+<li>
 <p>Java class named <code>val</code>&#8201;&#8212;&#8201;the keyword wins in declared-type positions</p>
 </li>
 </ul>
@@ -706,12 +709,77 @@ This also applies to <code>var</code>. It is a pre-existing issue.
 </div>
 </div>
 <div class="sect3">
+<h4 id="_standalone_val_or_var_expression_statement_before_a_declaration">Standalone <code>val</code> (or <code>var</code>) expression-statement before a declaration</h4>
+<div class="paragraph">
+<p>A bare <code>val</code> reference used as an expression-statement immediately before
+a declaration is misparsed as a modifier on the declaration that follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def m(Object obj) {
+    def val = obj
+    if (val instanceof String) {
+        println val.trim()
+    }
+    val                       // intended: reference the variable
+    def var = obj             // ...but parsed as `val def var = obj`
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Workarounds:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val;                          // terminate the statement explicitly
+(val)                         // parenthesise
+                              // or simply remove the reference if it has no effect</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This also applies to <code>var</code>. It is a pre-existing issue.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
 <h4 id="_java_class_named_val">Java class named <code>val</code></h4>
 <div class="paragraph">
 <p>A Java class named <code>val</code> cannot be used directly as a declared type or
 method return type in Groovy&#8201;&#8212;&#8201;the keyword takes precedence in those
 positions. The workaround is to use a fully-qualified name or import alias.
 This matches the behavior <code>var</code> would have if Java permitted <code>class var</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_ide_syntax_highlighting_cosmetic">IDE syntax highlighting (cosmetic)</h4>
+<div class="paragraph">
+<p>A pre-existing <code>var</code> issue (<a href="https://issues.apache.org/jira/browse/GROOVY-9630">GROOVY-9630</a>)
+extends to <code>val</code> under GEP-16. When <code>def val</code> (or <code>def var</code>) is followed by
+a line break or trailing comment and then a separate assignment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def val //
+val = 1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Groovy parser folds these into a single declaration&#8201;&#8212;&#8201;the first <code>val</code>
+is treated as a modifier and the second as the variable name&#8201;&#8212;&#8201;so the
+runtime result is the same as the intended <code>def val; val = 1</code>. However,
+some IDEs (e.g. Eclipse) tokenize independently and may colorize the first
+<code>val</code> as a variable declaration rather than a modifier, leading to
+misleading highlighting. This is purely cosmetic; no workaround is needed
+for correctness, but adding a semicolon (<code>def val;</code>) or initializer
+(<code>def val = null</code>) makes the intent unambiguous to both parser and IDE.</p>
 </div>
 </div>
 </div>
@@ -737,6 +805,9 @@ All breaking changes listed above are resolved:</p>
 </li>
 <li>
 <p><code>val as String</code> works (cast expression)</p>
+</li>
+<li>
+<p>Standalone <code>val</code> expression-statement before a declaration works</p>
 </li>
 <li>
 <p><code>class val {}</code> works (type declaration)</p>
@@ -791,6 +862,11 @@ was less widely understood. Since then, Kotlin adoption has grown
 significantly and <code>val</code>/<code>var</code> semantics are now familiar to a broad
 audience, making the case for this feature stronger.</p>
 </li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-9630">GROOVY-9630: var/val IDE syntax highlighting</a>&#8201;&#8212;&#8201;pre-existing cosmetic issue for <code>var</code> (declaration split across lines is
+colorized as if the keyword were the variable name). The same situation
+applies to <code>val</code> under GEP-16; runtime behavior is unaffected.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -804,7 +880,8 @@ audience, making the case for this feature stronger.</p>
 2 (2026-04-12) Added Java interop edge cases, spike implementation summary<br>
 3 (2026-04-12) Added field naming edge case, Gradle motivation<br>
 4 (2026-04-12) Added cast expression edge case, split code stats, linked spike branch and JIRA<br>
-5 (2026-04-16) Added <code>groovy.val.enabled</code> migration flag</p>
+5 (2026-04-16) Added <code>groovy.val.enabled</code> migration flag<br>
+6 (2026-05-07) Added standalone <code>val</code> expression-statement edge case; noted IDE highlighting issue (GROOVY-9630)</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
