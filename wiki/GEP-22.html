@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-22</a></li><li><a href='#_abstract_traits' class='anchor-link'>Abstract: Traits</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_cross_version_evolution' class='anchor-link'>Cross-version evolution</a></li><li><a href='#_non_goals_and_potential_future_extensions' class='anchor-link'>Non-goals and potential future extensions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-22</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-22</a></li><li><a href='#_abstract_traits' class='anchor-link'>Abstract: Traits</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_comparison_with_related_constructs' class='anchor-link'>Comparison with related constructs</a></li><li><a href='#_cross_version_evolution' class='anchor-link'>Cross-version evolution</a></li><li><a href='#_non_goals_and_potential_future_extensions' class='anchor-link'>Non-goals and potential future extensions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-22</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-05-06</p>
+<p>2026-05-11</p>
 </td>
 </tr>
 </table>
@@ -225,6 +225,12 @@ role of a class while imposing deterministic composition rules. As Cédric
 Champeau put it when introducing them: traits <strong>extend the benefit of
 interfaces to concrete classes</strong> without producing inheritance pyramids,
 allowing new APIs to be layered onto existing classes without modification.</p>
+</div>
+<div class="paragraph">
+<p>A side-by-side comparison with Scala traits, Kotlin interfaces, and Java
+default methods is given in
+<a href="#_comparison_with_related_constructs">Comparison with related constructs</a>
+below.</p>
 </div>
 </div>
 </div>
@@ -577,6 +583,167 @@ direct field reference.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_comparison_with_related_constructs">Comparison with related constructs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy traits occupy a design space shared with Scala traits, Kotlin
+interfaces (including their companion-object machinery), and Java default
+methods. Each construct trades expressiveness for simplicity in its own
+way. The table below cross-references the load-bearing features of Groovy
+traits against the closest analogue in each language.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4288%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Groovy <code>trait</code></th>
+<th class="tableblock halign-left valign-top">Scala <code>trait</code></th>
+<th class="tableblock halign-left valign-top">Kotlin <code>interface</code></th>
+<th class="tableblock halign-left valign-top">Java <code>interface</code> (default methods)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Instance state (fields)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes. Woven into the implementing class via a field-helper class with name-mangled identifiers; no diamond-of-state risk.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes. First-class <code>val</code>/<code>var</code> members; conflicts resolved by linearization.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No backing fields. Only abstract or computed properties are permitted.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No state of any kind.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static methods</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (incubating). Each implementing class receives its own copy; not exposed on the generated interface. See <a href="#_static_members">Static members</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indirect, via a companion <code>object</code>. Static-like state lives on a singleton, not per implementer.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Indirect, via a <code>companion object</code> declared inside the interface. Members are instance members of the companion; <code>@JvmStatic</code> promotes them to true JVM statics.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (since Java 8). Resolved against the declaring interface; <strong>not</strong> inherited by sub-interfaces or implementing classes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static state (fields)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (incubating). Stored in a per-implementer static-field-helper class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Via the companion <code>object</code> — one copy per trait.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Via the companion <code>object</code> — one copy per interface.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — one copy per interface.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constructors / parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not permitted.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scala 3 supports trait parameters (e.g. <code>trait T(val name: String)</code>); Scala 2 does not.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not permitted.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not permitted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Method visibility</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code> and <code>private</code> only (also <code>private static</code>); <code>protected</code> and package-private are rejected.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full range, including <code>protected</code> and qualified <code>private[pkg]</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code> and <code>private</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>public</code>, <code>public static</code>, and <code>private</code> (Java 9+).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inherited-method conflict resolution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Last-wins by <code>implements</code>-clause order; override by re-declaring in the implementing class or via <code>T.super.m()</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C3 linearization — deterministic right-to-left walk of the inheritance graph; <code>super[T].m()</code> selects a specific ancestor.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diamond is a <strong>compile error</strong>. The implementing class must resolve it explicitly via <code>super&lt;T&gt;.foo()</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Diamond is a <strong>compile error</strong>. The implementing class must resolve it explicitly via <code>T.super.foo()</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stackable <code>super</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes. Unqualified <code>super.m()</code> walks the trait chain in <code>implements</code> order; <code>T.super.m()</code> jumps directly to trait <code>T</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes. <code>super.m()</code> follows the linearization order; <code>super[T].m()</code> is the explicit form.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No. <code>super</code> requires a type qualifier wherever it is ambiguous; there is no walked chain.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No. <code>T.super.m()</code> is the only stack form; there is no chain to walk.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Self-types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@groovy.transform.SelfType(Foo.class)</code> annotation; statically checked.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">First-class syntax <code>self: Foo =&gt;</code> inside the trait body.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported; expressed via bounded generics where unavoidable.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime application to existing instances</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subject as Trait</code> and <code>subject.withTraits(A, B)</code> produce a new proxy that implements the trait(s) and delegates to the original.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only at construction: <code>new C with TraitA with TraitB</code>. No way to attach a trait to an existing instance.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SAM coercion from a closure / lambda</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, for a single-abstract-method trait. See GEP-12.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, via SAM types and function literals.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, for <code>fun interface</code> declarations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, for any functional interface.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java-callable view of the construct</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A plain interface — <strong>no</strong> default methods. State and behaviour live in helper classes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A JVM interface containing <code>default</code> methods (since Scala 2.12).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A JVM interface; default-method generation is controlled by <code>-Xjvm-default</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A JVM interface natively.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A few qualitative observations follow from the table:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>State is the dividing line.</strong> Only Groovy and Scala give traits true
+instance state; Kotlin and Java explicitly avoid it. Groovy&#8217;s
+field-helper indirection is the price paid for keeping the Java-visible
+view of a trait as a <strong>plain</strong> interface (no default methods, no surprise
+multiple-inheritance behaviour for Java consumers).</p>
+</li>
+<li>
+<p><strong>Conflict-resolution philosophies differ.</strong> Groovy chooses a
+deterministic <strong>default</strong> (last-wins) so that conflicts compile without
+intervention. Scala chooses a deterministic <strong>algorithm</strong> (linearization)
+that the developer is expected to internalise. Kotlin and Java refuse to
+choose and require the developer to resolve every conflict explicitly.
+Each position is internally consistent; Groovy&#8217;s optimises for
+ergonomics, Scala&#8217;s for expressiveness, and Java/Kotlin&#8217;s for safety
+against accidental composition.</p>
+</li>
+<li>
+<p><strong>Stackable <code>super</code> is a Groovy/Scala feature.</strong> It is what enables the
+mixin-style decorator composition that motivates traits in the first
+place. Kotlin and Java interfaces cannot express the same pattern
+without auxiliary delegation.</p>
+</li>
+<li>
+<p><strong>Static members are the rough edge in every language.</strong> Java and Kotlin
+treat them as per-interface (no inheritance, no overriding). Scala
+routes them through a separate companion object whose members live on
+a singleton rather than per implementer. Groovy is the only one of the
+four that gives each implementing class its own copy of static members;
+this is what enables patterns such as overriding static defaults from
+the implementing class (e.g. Grails' <code>Validateable</code>), but is also why
+static-method dispatch remains an open design point — see
+<a href="#_non_goals_and_potential_future_extensions">Non-goals</a>.</p>
+</li>
+<li>
+<p><strong>Runtime trait application</strong> (the <code>as</code> / <code>withTraits</code> form) is unique to
+Groovy. None of the other three constructs offers a way to attach a
+trait to an <strong>existing</strong> instance at runtime.</p>
+</li>
+<li>
+<p><strong>Self-types</strong> are first-class in Scala, an annotation in Groovy, and
+absent from Kotlin and Java. The Groovy and Scala forms enable
+statically checked traits whose bodies depend on members supplied by
+the implementing class without resorting to defensive casts.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_cross_version_evolution">Cross-version evolution</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
@@ -814,6 +981,13 @@ trait field reference transform restructure.</p>
 <p>1 (2026-05-06) Initial draft. Retrospective specification capturing
 trait semantics as shipped in 2.3.0 and refined through 5.0, the
 four-class bytecode model, and the cross-version evolution table.</p>
+</div>
+<div class="paragraph">
+<p>2 (2026-05-11) Added <em>Comparison with related constructs</em> section
+contrasting Groovy traits with Scala traits, Kotlin interfaces, and
+Java default methods across state, conflict resolution, stackable
+<code>super</code>, static members, self-types, runtime application, and the
+Java-callable view.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
