@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-13</a></li><li><a href='#_abstract_sealed_classes' class='anchor-link'>Abstract: Sealed classes</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-13</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-13</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_differences_from_java' class='anchor-link'>Differences from Java</a></li><li><a href='#_pattern_matching_integration' class='anchor-link'>Pattern matching integration</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-13</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -83,7 +83,7 @@
 <strong>Title</strong>
 </td>
 <td class="hdlist2">
-<p>Sealed classes</p>
+<p>Sealed Types</p>
 </td>
 </tr>
 <tr>
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -107,7 +107,7 @@
 <strong>Status</strong>
 </td>
 <td class="hdlist2">
-<p>Draft</p>
+<p>Final</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2021-07-22</p>
+<p>2026-05-05</p>
 </td>
 </tr>
 </table>
@@ -141,129 +141,551 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_abstract_sealed_classes">Abstract: Sealed classes</h2>
+<h2 id="_abstract">Abstract</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Sealed classes and interfaces restrict which other classes or interfaces may extend or implement them.
-By supporting sealed classes and interfaces, the Groovy programming language
-can offer an additional mechanism for controlling class hierarchy construction.</p>
+<p>Sealed types — classes, interfaces, and traits — restrict the set of
+permitted direct subtypes. They sit between the unconstrained
+extensibility of public types and the absolute closure of <code>final</code>,
+enabling enumerable hierarchies suitable for algebraic data type
+modelling, compiler-checked exhaustiveness analysis, and stable API
+design where the implementation set is intentionally bounded.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Inheritance is a powerful mechanism but is binary as expressed by the
+existing modifiers: a public, non-final class invites unbounded
+extension; <code>final</code> prevents all of it. Visibility modifiers
+(<code>protected</code>, package-private) constrain extension at the cost of
+losing the parent type as a public abstraction.</p>
+</div>
+<div class="paragraph">
+<p>Sealed types fill the gap. A sealed type is publicly accessible — it
+can be a method parameter type, a switch selector, a return type — but
+the set of types that may extend or implement it is explicitly
+enumerated. Code receiving a value of a sealed type knows the
+exhaustive list of its possible runtime shapes.</p>
+</div>
+<div class="paragraph">
+<p>This makes sealed types the type-system foundation for several
+adjacent features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>algebraic data type modelling, particularly when combined with records;</p>
+</li>
+<li>
+<p>compiler-checked exhaustiveness in structural switch (a potential topic for GEP-19);</p>
+</li>
+<li>
+<p>stable APIs whose implementation set is intentionally closed.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_specification">Specification</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_sealed_type_declarations">Sealed type declarations</h3>
+<div class="paragraph">
+<p>A class, interface, or trait is sealed by declaring it with the
+<code>sealed</code> modifier and an optional <code>permits</code> clause:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sealed interface Shape permits Circle, Square, Triangle {}
+
+sealed class Vehicle permits Car, Truck, Motorcycle {}
+
+sealed trait Auditable permits LedgerEntry, JournalEntry {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Enums and annotation definitions cannot be sealed.</p>
+</div>
+<div class="paragraph">
+<p>The annotation form <code>@Sealed</code> is provided as an equivalent surface for
+environments where keyword grammar is inconvenient:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Sealed(permittedSubclasses = [Circle, Square, Triangle])
+interface Shape {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The keyword and annotation forms are interchangeable.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_motivation">Motivation</h3>
+<h3 id="_the_permits_clause">The <code>permits</code> clause</h3>
 <div class="paragraph">
-<p>Inheritance is a powerful mechanism for creating hierarchies of related class and interfaces.
-Sometimes, it is desirable to restrict the definition of children in such hierarchies.
-Modifiers already provide some mechanisms:</p>
+<p>The <code>permits</code> clause enumerates the direct subtypes permitted to
+extend or implement the sealed type. A permitted subtype must:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>If all of our classes and interfaces are public, this indicates that we want
-maximum reuse.</p>
+<p>declare the sealed type as a direct supertype (via <code>extends</code> or <code>implements</code>);</p>
 </li>
 <li>
-<p>The <code>final</code> modifier offers one mechanism for restricting further inheritance at the method or class level.
-It effectively limits all further extension and indicates no further code reuse is desired.</p>
+<p>be accessible to the compiler when the sealed type is loaded;</p>
 </li>
 <li>
-<p>By making a base class package-private we can limit extension to only classes within
-the same package. If an abstract <code>Shape</code> class is package-private, we could have
-public classes <code>Square</code> and <code>Circle</code> in the same package. This indicates that we want
-code reuse to occur only within the package. While it does limit creation of
-new shapes outside the original package, it offers no abstraction for a shape which
-could be either a square or circle since <code>Shape</code> is not public.</p>
-</li>
-<li>
-<p>We can use <code>protected</code> visibility to limit access of members strictly to children
-but that doesn&#8217;t help us solve the aforementioned problems like lack of a visible
-abstraction for <code>Shape</code> in the discussed example.</p>
+<p>not be the sealed type itself (self-references are rejected at compile time).</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>Sealed classes or interfaces can be public but have an associated list of allowed children.
-Classes or interfaces which are not in that list cannot inherit from those sealed types.
-This indicates that we want code reuse within the hierarchy but not beyond.
-Parent classes in the hierarchy can be made <em>accessible</em>, without also making them <em>extensible</em>.
-This allows hierarchies to be created with maximum reuse within but without having
-to defensively code for arbitrary extensions added at a later time.</p>
-</div>
-<div class="paragraph">
-<p>Such classes are useful in defining Algebraic Data Types (ADTs) and in scenarios where
-we might want to reason about whether we have accounted for all possible types, e.g.&nbsp;the
-static compiler may wish to give a warning if a switch block doesn&#8217;t exhaustively
-cover all possible types by respective case branches.</p>
 </div>
 <div class="sect3">
-<h4 id="_initial_implementation">Initial implementation</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Provide a <code>@Sealed</code> marker annotation or AST transform which allows a list of
-permitted children to be defined. Use of this annotation will be an incubating
-feature subject to change. Explicit use may eventually be discouraged and instead
-a keyword, e.g. <code>sealed</code> would be encouraged instead. However, the annotation
-could be retained to offer support for this feature on earlier JVMs or versions
-of Groovy prior to any grammar changes.</p>
-</li>
-<li>
-<p>Prohibit extension of JDK17+ sealed classes or annotated <code>@Sealed</code> classes.
-This also applies for interfaces, anonymous inner classes and traits.</p>
-</li>
-<li>
-<p>Provide checks in other places where such extension might occur implicitly, e.g.:&nbsp;with <code>@Delegate</code>,
-when using type coercion, etc.</p>
-</li>
-<li>
-<p>Support <code>non-sealed</code> or <code>unsealed</code> sub-hierarchies. (See JEP-409)</p>
-</li>
-<li>
-<p>Allow the permitted subclasses to be inferred automatically just for the case
-where the base and all permitted subclasses are in the same file. (See JEP-409)</p>
-</li>
-<li>
-<p>Introduce the <code>sealed</code> modifier and <code>permits</code> clause in the grammar.</p>
-</li>
-<li>
-<p>By default, when running on JDK17+, sealed class information is added into the bytecode.
-We refer to such classes as <em>native</em> sealed classes.</p>
-</li>
-<li>
-<p>By default, when running on earlier JDKs, an annotation is added to a class to indicate that
-a class is sealed. Such classes will be recognized by Groovy 4+ compilers but not by Java.</p>
-</li>
-<li>
-<p>The <code>@SealedOptions</code> annotation has a <code>mode</code> annotation attribute which can override the default behavior.</p>
-</li>
-</ul>
+<h4 id="_inference">Inference</h4>
+<div class="paragraph">
+<p>If the <code>permits</code> clause is omitted (and <code>permittedSubclasses</code> is not
+set on <code>@Sealed</code>), the compiler infers permitted subtypes by collecting
+all direct subtypes declared in the same compilation unit. If no such
+subtypes exist, the declaration is treated as having an empty <code>permits</code>
+set, equivalent to <code>final</code>.</p>
+</div>
+<div class="paragraph">
+<p>Inference does not consult other compilation units.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_permitted_subtype_obligations">Permitted-subtype obligations</h3>
+<div class="paragraph">
+<p>Every direct permitted subtype of a sealed type adopts one of three
+stances:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 33.3333%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Stance</th>
+<th class="tableblock halign-left valign-top">Declaration</th>
+<th class="tableblock halign-left valign-top">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>final</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>final class C extends S</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C is closed; no further subtypes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sealed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sealed class C extends S permits &#8230;&#8203;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C continues the closed hierarchy with its own enumerated subtypes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-sealed (explicit)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>non-sealed class C extends S</code> or <code>@NonSealed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C is open; descendants of C are unconstrained and require no marker.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-sealed (implicit)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>class C extends S</code> (no other sealed-related modifier)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same effect as explicit <code>non-sealed</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="sect3">
+<h4 id="_implicit_non_sealed_default">Implicit non-sealed default</h4>
+<div class="paragraph">
+<p>Where Java requires one of <code>final</code>, <code>sealed</code>, or <code>non-sealed</code> to be
+stated, Groovy infers <code>non-sealed</code> when none is given. This is a
+deliberate divergence motivated by Groovy&#8217;s preference for terse
+declarations.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_potential_extensions">Potential extensions</h4>
+<h4 id="_propagation_past_a_non_sealed_boundary">Propagation past a non-sealed boundary</h4>
 <div class="paragraph">
-<p>The following potential extensions are possibly all desirable but
-are non-goals for the first implementation:</p>
+<p>The <code>permits</code> constraint applies to <strong>direct</strong> subtypes only. Once a
+non-sealed type appears in a hierarchy descending from a sealed root,
+that branch is unconstrained: descendants of a non-sealed type require
+no sealed-related modifier and are not <code>permits</code>-restricted by virtue
+of the sealed ancestor.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sealed interface Shape permits Polygon, Circle {}
+final class Circle implements Shape {}
+class Polygon implements Shape {}        // implicit non-sealed
+class RegularPolygon extends Polygon {}  // unrestricted
+class Hexagon extends RegularPolygon {}  // unrestricted</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_constraint_applicability">Constraint applicability</h4>
+<div class="paragraph">
+<p>A class declared <code>non-sealed</code> (whether by keyword or <code>@NonSealed</code>)
+must have a sealed direct parent. A class without a sealed parent
+cannot be marked <code>non-sealed</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_restricted_identifiers">Restricted identifiers</h3>
+<div class="paragraph">
+<p><code>sealed</code>, <code>non-sealed</code>, and <code>permits</code> are <strong>restricted identifiers</strong>,
+not reserved keywords. They retain their identifier meaning in
+expression and identifier positions, taking on grammatical meaning
+only in type-declaration contexts. Existing code using these names as
+identifiers continues to compile.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_anonymous_classes_traits_and_proxy_paths">Anonymous classes, traits, and proxy paths</h3>
+<div class="paragraph">
+<p>The set of types extending or implementing a sealed type is enumerated
+in <code>permits</code>; no other type may do so. Specifically prohibited:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Require that all classes within a sealed hierarchy be compiled at the same time.</p>
+<p>anonymous inner classes targeting a sealed type that does not permit
+the enclosing type;</p>
 </li>
 <li>
-<p>Require that all classes within a sealed hierarchy belong to the same JPMS module.</p>
+<p>traits not in the <code>permits</code> set;</p>
 </li>
 <li>
-<p>Add warnings to the static compiler if a switch is used for a sealed hierarchy
-and not all types are exhaustively covered.</p>
+<p>coercion-generated proxies (<code>x as Bar</code> where <code>Bar</code> is sealed and the
+source type is not permitted);</p>
+</li>
+<li>
+<p>delegate-generated subclasses (<code>@Delegate</code> targeting a sealed type
+from a non-permitted enclosing class).</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>These extension paths are checked at compile time; runtime proxy
+generation paths perform the same check at proxy-construction time.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bytecode_representation">Bytecode representation</h3>
+<div class="paragraph">
+<p>Sealed types are represented in bytecode using one of two mechanisms,
+selected by <code>@SealedOptions(mode = &#8230;&#8203;)</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mode</th>
+<th class="tableblock halign-left valign-top">Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIVE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emit JVM-level sealed metadata (<code>ACC_SEALED</code> access flag and
+ <code>PermittedSubclasses</code> attribute). Requires <code>--target 17</code> or later.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>EMULATE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Emit <code>@Sealed</code> annotation only, recognised by the Groovy compiler.
+ Compatible with all target bytecode versions supported by the Groovy
+ compiler, but invisible to the Java compiler and to JVM-level sealed
+ checks.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AUTO</code> (default)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NATIVE</code> when target bytecode is 17 or later, otherwise <code>EMULATE</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The <code>alwaysAnnotate</code> attribute of <code>@SealedOptions</code> (default <code>true</code>)
+controls whether the <code>@Sealed</code> annotation is also emitted alongside
+native metadata. Setting it to <code>false</code> suppresses the annotation for
+hierarchies that are confirmed JDK-17-only and want to avoid duplicate
+metadata.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_annotation_forms">Annotation forms</h3>
+<div class="paragraph">
+<p>The annotation forms parallel the keyword forms and exist for
+environments where keyword grammar is inconvenient.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sealed(permittedSubclasses = [&#8230;&#8203;])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sealed &#8230;&#8203; permits &#8230;&#8203;</code>. <code>permittedSubclasses</code> defaults to the
+ inferred set when omitted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NonSealed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>non-sealed</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@SealedOptions(mode = &#8230;&#8203;, alwaysAnnotate = &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fine-grained control over bytecode representation; no keyword
+ equivalent.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><code>@Sealed</code> has <code>RUNTIME</code> retention; <code>@NonSealed</code> and <code>@SealedOptions</code>
+have <code>SOURCE</code> retention.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_joint_compilation_and_decompiled_types">Joint compilation and decompiled types</h3>
+<div class="paragraph">
+<p>Sealed type information flows correctly across joint Groovy/Java
+compilation:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a Groovy class extending a Java sealed class is checked against the
+Java type&#8217;s <code>permits</code> set;</p>
+</li>
+<li>
+<p>a Java class extending a Groovy sealed class likewise honours the
+Groovy <code>permits</code> set;</p>
+</li>
+<li>
+<p>the implicit non-sealed rule applies on the Groovy side; Java&#8217;s
+explicit-modifier-required rule applies on the Java side; descendants
+on either side compute non-sealed status from the immediate parent&#8217;s
+sealed flag.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a class loaded from bytecode (without source available), non-sealed
+status is computed as: <strong>the parent is sealed</strong> AND <strong>this type is neither
+final nor sealed</strong>. The JVM has no <code>non-sealed</code> flag, so this derivation
+is the canonical algorithm.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_references_and_useful_links">References and useful links</h2>
+<h2 id="_differences_from_java">Differences from Java</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aspect</th>
+<th class="tableblock halign-left valign-top">Java</th>
+<th class="tableblock halign-left valign-top">Groovy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subtype modifier</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>final</code> / <code>sealed</code> / <code>non-sealed</code> is mandatory</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to implicit <code>non-sealed</code> when none is given</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile-together enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required: all permitted subclasses must be available and compiled
+ together with the sealed parent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not enforced; permitted-subclass references are resolved when
+ available</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module membership</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Permitted subclasses must be in the same module (or in the unnamed
+ module within the same package)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not enforced</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation form</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sealed</code>, <code>@NonSealed</code>, <code>@SealedOptions</code> are equivalent surface
+ forms</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Earlier-JDK targets</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not supported; sealed metadata requires JDK 17+ bytecode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation-based emulation works on earlier target bytecode and is
+ recognised by the Groovy compiler (invisible to the Java compiler
+ and to JVM-level sealed checks)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_pattern_matching_integration">Pattern matching integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sealed types provide the closed-set semantics that compiler-checked
+exhaustiveness analysis requires. A switch over a value of a sealed
+type whose arms cover every permitted subtype is, in principle,
+exhaustive without a <code>default</code> arm. Recursion into sealed-or-<code>final</code>
+permitted subtypes contributes to exhaustiveness; a non-sealed
+permitted subtype requires a fallback arm.</p>
+</div>
+<div class="paragraph">
+<p>The switch surface that consumes sealed types — type patterns and
+record patterns over a sealed-typed selector — already works in
+Groovy. The remaining piece is the exhaustiveness analysis itself,
+which is a potential topic for <a href="GEP-19.html">GEP-19</a>. GEP-13
+contributes the type-system primitives; any consumer that performs
+exhaustiveness analysis operates as a compile-time check on the
+consumer side and does not change sealed-type semantics, on-disk
+representation, or public API. The severity of such consumer-side
+checking — warning, opt-in error, or default error — is a consumer
+decision and is not constrained by this GEP.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mandatory compile-together enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java&#8217;s hard requirement raises the cost of using sealed types in
+ multi-module builds. May be surfaced as an opt-in compiler check.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mandatory module-membership enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Same reasoning; cross-module sealed hierarchies are occasionally
+ useful and a hard JPMS check would block them.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Any future tightening of these constraints is opt-in. See
+<em>Compatibility</em> for the stability commitment. Severity of consumer-side
+checks (such as exhaustiveness analysis on a structural switch) is out
+of scope for this GEP — see <em>Pattern matching integration</em>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_public_api_surface">Public API surface</h3>
+<div class="paragraph">
+<p>The following are part of Groovy&#8217;s public API and stable:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <code>sealed</code> / <code>non-sealed</code> / <code>permits</code> grammar;</p>
+</li>
+<li>
+<p>the <code>@Sealed</code>, <code>@NonSealed</code>, and <code>@SealedOptions</code> annotations,
+including their attributes and retention;</p>
+</li>
+<li>
+<p><code>ClassNode.isSealed()</code> and <code>ClassNode.getPermittedSubclasses()</code>;</p>
+</li>
+<li>
+<p>the public helpers in <code>SealedASTTransformation</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The annotations and public AST API shipped under <code>@Incubating</code> in
+Groovy 4.0 and remained incubating through the Groovy 5 line; they
+were promoted out of incubation in Groovy 6.0.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_stability_commitment">Stability commitment</h3>
+<div class="paragraph">
+<p>Sealed-type semantics — declaration syntax, the <code>permits</code> contract,
+bytecode representation (native and emulated), public API surface,
+and joint-compilation interoperability — are stable. Programs that
+declare or extend sealed types under this specification continue to
+compile and produce equivalent bytecode across subsequent revisions.</p>
+</div>
+<div class="paragraph">
+<p>The deferred items in <em>Excluded and deferred features</em> — mandatory
+compile-together enforcement and mandatory module-membership
+enforcement — are subject to this commitment: if introduced, they
+are opt-in checks (compiler flag or <code>@SealedOptions</code> attribute)
+rather than default behaviour.</p>
+</div>
+<div class="paragraph">
+<p>Compile-time checks performed by <strong>consumers</strong> of sealed types — most
+notably exhaustiveness analysis on a structural switch (see
+<a href="GEP-19.html">GEP-19</a>) — fall outside this commitment. Their
+severity may evolve independently and may, in a future major
+revision, default to error. Such evolution is a consumer-side
+language change, not a change to sealed types: it does not alter
+sealed-type semantics or the on-disk representation, and existing
+sealed declarations are unaffected.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_bytecode_interoperability">Bytecode interoperability</h3>
+<div class="paragraph">
+<p>Native sealed bytecode (<code>mode = NATIVE</code>, or <code>AUTO</code> on target 17 or
+later) is JVM-level sealed metadata. Java and Groovy compilers consume
+each other&#8217;s sealed types under the standard JVM rules.</p>
+</div>
+<div class="paragraph">
+<p>The <code>EMULATE</code> mode produces an annotation that is recognised by the
+Groovy compiler but not by the Java compiler or the JVM. Mixing
+emulated sealed Groovy types with Java consumers is therefore not
+sealed-checked from the Java side; this is a known consequence of
+emulation and is the reason <code>AUTO</code> defaults to <code>NATIVE</code> whenever the
+target permits.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -277,10 +699,28 @@ and not all types are exhaustively covered.</p>
 <p><a href="https://openjdk.org/jeps/409">JEP 409: Sealed Classes</a></p>
 </li>
 <li>
+<p><a href="https://openjdk.org/jeps/394">JEP 394: Pattern Matching for instanceof</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/440">JEP 440: Record Patterns</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/441">JEP 441: Pattern Matching for switch</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/456">JEP 456: Unnamed Variables and Patterns</a></p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/507">JEP 507: Primitive Types in Patterns</a></p>
+</li>
+<li>
 <p><a href="https://kotlinlang.org/docs/sealed-classes.html">Sealed Classes</a> in Kotlin</p>
 </li>
 <li>
 <p><a href="https://github.com/scala/improvement-proposals/pull/43">Sealed Types</a> in Scala (withdrawn)</p>
+</li>
+<li>
+<p><a href="GEP-19.html">GEP-19: Structural Pattern Matching in switch</a></p>
 </li>
 </ul>
 </div>
@@ -295,7 +735,37 @@ and not all types are exhaustively covered.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://issues.apache.org/jira/browse/GROOVY-10148">GROOVY-10148: Groovy should not allow classes to extend sealed Java classes</a></p>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10148">GROOVY-10148</a> — Initial implementation</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10193">GROOVY-10193</a> — <code>sealed</code> / <code>permits</code> / <code>non-sealed</code> grammar</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10201">GROOVY-10201</a> — Proxy generation against JDK 17 sealed interfaces</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10233">GROOVY-10233</a> — Native sealed bytecode for JDK 17+</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10240">GROOVY-10240</a> — Record/sealed grammar consistency</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10340">GROOVY-10340</a> — Drop system-property gating</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10433">GROOVY-10433</a> — Restricted identifiers</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10434">GROOVY-10434</a> — Public AST API for sealed status</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10451">GROOVY-10451</a> — Self-reference guard in <code>permittedSubclasses</code></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10565">GROOVY-10565</a> — Packaged sealed type <code>ClassFormatError</code> fix</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11292">GROOVY-11292</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-11750">-11750</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-11768">-11768</a> — Implicit non-sealed propagation across hierarchies and joint-compilation chains</p>
 </li>
 </ul>
 </div>
@@ -307,7 +777,8 @@ and not all types are exhaustively covered.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>1 (2021-07-22) Initial draft<br>
-2 (2021-11-06) Update to align with 4.0.0-beta-2</p>
+2 (2021-11-06) Update to align with 4.0.0-beta-2<br>
+3 (2026-05-05) Specification rewrite: implicit non-sealed propagation, joint-compilation rules, restricted identifiers, public API stability commitment, pattern-matching integration</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
