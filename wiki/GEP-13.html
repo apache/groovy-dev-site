@@ -347,33 +347,16 @@ identifiers continues to compile.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_anonymous_classes_traits_and_proxy_paths">Anonymous classes, traits, and proxy paths</h3>
+<h3 id="_subtype_creating_paths">Subtype-creating paths</h3>
 <div class="paragraph">
 <p>The set of types extending or implementing a sealed type is enumerated
-in <code>permits</code>; no other type may do so. Specifically prohibited:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>anonymous inner classes targeting a sealed type that does not permit
-the enclosing type;</p>
-</li>
-<li>
-<p>traits not in the <code>permits</code> set;</p>
-</li>
-<li>
-<p>coercion-generated proxies (<code>x as Bar</code> where <code>Bar</code> is sealed and the
-source type is not permitted);</p>
-</li>
-<li>
-<p>delegate-generated subclasses (<code>@Delegate</code> targeting a sealed type
-from a non-permitted enclosing class).</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>These extension paths are checked at compile time; runtime proxy
-generation paths perform the same check at proxy-construction time.</p>
+in <code>permits</code>; no other type may do so. Any path that would otherwise
+produce a subtype of a sealed type must honour the <code>permits</code> contract
+— whether the path is an explicit declaration, anonymous-class
+generation, trait composition, <code>as</code> coercion, <code>@Delegate</code>, or runtime
+proxy construction. How each path complies (compile-time rejection,
+silent omission, runtime check) is left to the compiler and the
+relevant AST transform.</p>
 </div>
 </div>
 <div class="sect2">
@@ -597,6 +580,15 @@ decision and is not constrained by this GEP.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Same reasoning; cross-module sealed hierarchies are occasionally
  useful and a hard JPMS check would block them.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Synthesized subtypes in inferred <code>permits</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When <code>permits</code> is inferred from the compilation unit, only
+ source-declared subtypes are currently considered. Whether to relax
+ this so that subtypes synthesized by AST transformations (e.g.
+ <code>@Delegate</code>) also contribute to the inferred set is a future
+ decision.</p></td>
 </tr>
 </tbody>
 </table>
