@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-05-19</p>
+<p>2026-05-20</p>
 </td>
 </tr>
 </table>
@@ -161,7 +161,7 @@ Haskell-style do-notation ergonomics for any type with monadic shape —
 that opt in.</p>
 </div>
 <div class="paragraph">
-<p>Three artefacts are introduced:</p>
+<p>The following artefacts are introduced:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -174,9 +174,14 @@ rewrite at compile time;</p>
 and may declare non-conventional bind/map method names;</p>
 </li>
 <li>
-<p>a type-checking extension that enforces the monadic shape under
-<code>@CompileStatic</code>/<code>@TypeChecked</code> and supplies the static types that flow
-through the rewritten chain.</p>
+<p><code>groovy.typecheckers.MonadicChecker</code> — a type-checking extension that
+enforces the monadic shape under <code>@CompileStatic</code>/<code>@TypeChecked</code> and supplies
+the static types that flow through the rewritten chain;</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.MonadicShapeChecker</code> — a sibling type-checking
+extension that lints hand-written <code>flatMap</code>/<code>map</code> chains over the same
+carrier set, independent of <code>DO</code>.</p>
 </li>
 </ul>
 </div>
@@ -445,6 +450,8 @@ by simple name, in the manner of <code>@Reducer</code>/<code>@Associative</code>
 value that does not respond to the resolved bind method fails at runtime
 with the usual <code>MissingMethodException</code>.</p>
 </div>
+<div class="sect3">
+<h4 id="_do_under_static_compilation_monadicchecker"><code>DO</code> under static compilation: <code>MonadicChecker</code></h4>
 <div class="paragraph">
 <p>Under <code>@CompileStatic</code>/<code>@TypeChecked</code>, the <code>groovy.typecheckers.MonadicChecker</code>
 type-checking extension (GEP-8) is activated via the <code>extensions</code> member:</p>
@@ -470,7 +477,17 @@ body type-checks;</p>
 </li>
 <li>
 <p>restores the comprehension&#8217;s result type, so chained and nested use
-type-checks rather than degrading to <code>Object</code>.</p>
+type-checks rather than degrading to <code>Object</code>;</p>
+</li>
+<li>
+<p>for <strong>trusted</strong> carriers (allow-list or <code>@Monadic</code>), enforces the
+closure-return contract that the dispatcher&#8217;s erased
+<code>(Object, Closure):Object</code> signature hides from STC: a <code>bind</code> closure must
+yield the same carrier (catching a bare-value body and a cross-carrier
+body, including in nested <code>DO</code>), and a hand-written <code>Comprehensions.map</code>
+closure must not yield the same carrier (catching the <code>M&lt;M&lt;T&gt;&gt;</code> foot-gun).
+Structural-only carriers are not asserted against, matching the permissive
+treatment of participation.</p>
 </li>
 </ul>
 </div>
@@ -478,6 +495,55 @@ type-checks rather than degrading to <code>Object</code>.</p>
 <p>Dependent generators (a later generator whose source expression uses an
 earlier bound name) and nested comprehensions are supported under static
 compilation.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_native_chains_monadicshapechecker">Native chains: <code>MonadicShapeChecker</code></h4>
+<div class="paragraph">
+<p>A sibling extension <code>groovy.typecheckers.MonadicShapeChecker</code> lints
+hand-written <code>flatMap</code>/<code>map</code>/<code>thenCompose</code>/<code>thenApply</code> chains over the same
+carrier set. It is independent of <code>DO</code>; use it on codebases that mix or
+favour native chains.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic(extensions = 'groovy.typecheckers.MonadicShapeChecker')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It flags three high-confidence problems:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>bind</code> returning a non-carrier — e.g. <code>Optional.flatMap { it + 1 }</code>,
+where Groovy&#8217;s SAM coercion can let an Integer-returning closure slip past
+STC;</p>
+</li>
+<li>
+<p><code>bind</code> returning a different carrier — e.g.
+<code>Stream.flatMap { Optional.of(it) }</code>;</p>
+</li>
+<li>
+<p><code>map</code> returning the same carrier — e.g.
+<code>Optional.map { Optional.of(it) }</code>, the classic <code>M&lt;M&lt;T&gt;&gt;</code> foot-gun.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Carriers and method-name conventions are read from the same registry as
+<code>MonadicChecker</code>; <code>@Monadic</code>-annotated types also participate. Calls routed
+through the bind/map dispatcher are skipped (that is `MonadicChecker&#8217;s
+domain). A strict mode additionally flags chains whose function-return type
+cannot be statically resolved.</p>
+</div>
+<div class="paragraph">
+<p>The two extensions are complementary but independent: <code>MonadicChecker</code>
+repairs erasure on the <code>DO</code>-macro dispatcher and asserts the dispatcher&#8217;s
+closure-return shape; <code>MonadicShapeChecker</code> asserts the same shape on
+native chains the dispatcher never sees. Code that mixes <code>DO</code> with native
+chains may opt into both.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -698,11 +764,13 @@ and structural matching alone is too narrow.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2026</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Initial release (incubating). The <code>DO</code> macro; the bind/map dispatcher and
 carrier registry in the core runtime; <code>@groovy.transform.Monadic</code>; the
-<code>groovy.typecheckers.MonadicChecker</code> type-checking extension; the standard
-allow-list (<code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, <code>CompletionStage</code>,
-<code>Awaitable</code>, <code>DataflowVariable</code>) and the by-name recognition of common
-Functional Java carriers; general single-abstract-method coercion of the
-generator closure.</p></td>
+<code>groovy.typecheckers.MonadicChecker</code> type-checking extension (participation,
+inference, and closure-return shape under <code>@CompileStatic</code>); the sibling
+<code>groovy.typecheckers.MonadicShapeChecker</code> extension for native
+<code>flatMap</code>/<code>map</code> chains; the standard allow-list (<code>Optional</code>, <code>Stream</code>,
+<code>CompletableFuture</code>, <code>CompletionStage</code>, <code>Awaitable</code>, <code>DataflowVariable</code>)
+and the by-name recognition of common Functional Java carriers; general
+single-abstract-method coercion of the generator closure.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
@@ -827,7 +895,13 @@ optional <code>bind</code>/<code>map</code> string attributes and no AST transfo
 </li>
 <li>
 <p><code>groovy.typecheckers.MonadicChecker</code> — the type-checking extension that
-enforces the monadic shape and supplies static types under <code>@CompileStatic</code>.</p>
+enforces the receiver and closure-return monadic shape and supplies static
+types under <code>@CompileStatic</code>.</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.MonadicShapeChecker</code> — sibling type-checking
+extension that lints hand-written native <code>flatMap</code>/<code>map</code> chains against the
+same carrier set; independent of <code>DO</code>.</p>
 </li>
 </ul>
 </div>
@@ -846,6 +920,10 @@ enforces the monadic shape and supplies static types under <code>@CompileStatic<
 <p><code>groovy.typecheckers.MonadicChecker</code>, in the <code>groovy-typecheckers</code>
 module (since 6.0.0)</p>
 </li>
+<li>
+<p><code>groovy.typecheckers.MonadicShapeChecker</code>, in the <code>groovy-typecheckers</code>
+module (since 6.0.0)</p>
+</li>
 </ul>
 </div>
 </div>
@@ -854,22 +932,7 @@ module (since 6.0.0)</p>
 <div class="ulist">
 <ul>
 <li>
-<p>GROOVY-XXXX: introduce the <code>DO</code> monadic-comprehension macro.</p>
-</li>
-<li>
-<p>GROOVY-XXXX: bind/map dispatcher and carrier registry in the core
-runtime.</p>
-</li>
-<li>
-<p>GROOVY-XXXX: <code>@groovy.transform.Monadic</code> annotation.</p>
-</li>
-<li>
-<p>GROOVY-XXXX: <code>groovy.typecheckers.MonadicChecker</code> type-checking
-extension.</p>
-</li>
-<li>
-<p>GROOVY-XXXX: language-specification chapter with inline-tested examples
-and the tool-selection matrix row.</p>
+<p>GROOVY-12021: Initial implementation of the <code>DO</code> monadic-comprehension macro and related type checkers.</p>
 </li>
 </ul>
 </div>
@@ -879,6 +942,14 @@ and the tool-selection matrix row.</p>
 <div class="sect1">
 <h2 id="_update_history">Update history</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>2 (2026-05-20) Adds closure-return shape enforcement to <code>MonadicChecker</code>
+(rejects bare-value and cross-carrier <code>DO</code> bodies for trusted carriers via
+the dispatcher); introduces the sibling
+<code>groovy.typecheckers.MonadicShapeChecker</code> extension for native
+<code>flatMap</code>/<code>map</code>/<code>thenCompose</code>/<code>thenApply</code> chains across the same carrier
+set.</p>
+</div>
 <div class="paragraph">
 <p>1 (2026-05-19) Initial draft. Specifies the <code>DO</code> macro, the <code>@Monadic</code>
 annotation, the type-checking extension, the standard carrier allow-list
