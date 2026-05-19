@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-23</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-23</a></li><li><a href='#_abstract_monadic_comprehensions' class='anchor-link'>Abstract: Monadic comprehensions</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_relationship_to_the_concurrency_primitives' class='anchor-link'>Relationship to the concurrency primitives</a></li><li><a href='#_comparison_with_related_constructs' class='anchor-link'>Comparison with related constructs</a></li><li><a href='#_cross_version_evolution' class='anchor-link'>Cross-version evolution</a></li><li><a href='#_non_goals_and_potential_future_extensions' class='anchor-link'>Non-goals and potential future extensions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-23</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-23</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Monadic comprehensions</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Final</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Delivered in Groovy 6.0 via the <code>DO</code> macro; the feature is incubating and subject to change</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>(to be assigned)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-19</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-19</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract_monadic_comprehensions">Abstract: Monadic comprehensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>DO</code> is a comprehension macro that rewrites a sequence of name-binding
+generators followed by a body into a chain of bind operations on a
+participating <strong>carrier</strong> type. It provides Scala-style for-comprehension and
+Haskell-style do-notation ergonomics for any type with monadic shape —
+<code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, Groovy&#8217;s <code>Awaitable</code> and
+<code>DataflowVariable</code>, common Functional Java types, and user-defined carriers
+that opt in.</p>
+</div>
+<div class="paragraph">
+<p>Three artefacts are introduced:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <code>DO</code> macro in the macro library, performing a purely syntactic tree
+rewrite at compile time;</p>
+</li>
+<li>
+<p>the <code>@groovy.transform.Monadic</code> annotation, by which a user type opts in
+and may declare non-conventional bind/map method names;</p>
+</li>
+<li>
+<p>a type-checking extension that enforces the monadic shape under
+<code>@CompileStatic</code>/<code>@TypeChecked</code> and supplies the static types that flow
+through the rewritten chain.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The proposal is deliberately narrow. It does not introduce higher-kinded
+types, a <code>Functor</code>/<code>Applicative</code>/<code>Monad</code> interface hierarchy, monad
+transformers, or automatic <code>pure</code>/<code>unit</code> lifting. It generalises a
+composition pattern Groovy already commits to for <code>Awaitable</code> so that the
+same notation is available to any carrier with the same shape.</p>
+</div>
+<div class="paragraph">
+<p>This GEP specifies the language semantics. Worked, tutorial-style examples
+live in the language specification chapter on monadic comprehensions; this
+document is intentionally terse and prescriptive.</p>
+</div>
+<div class="sect2">
+<h3 id="_motivation">Motivation</h3>
+<div class="paragraph">
+<p>Composing values that live inside a carrier — an <code>Optional</code> that may be
+absent, an <code>Awaitable</code> that will complete later, a validation result that
+may have failed — is normally expressed either as hand-written
+<code>flatMap</code>/<code>then</code> chains, which nest deeply and obscure data flow as the
+number of participants grows, or, for the asynchronous case, as imperative
+<code>async { &#8230;&#8203; await x; await y; &#8230;&#8203; }</code>, which reads well but does not extend
+to non-async carriers.</p>
+</div>
+<div class="paragraph">
+<p>Other languages addressed this with notation that lives one level above the
+underlying carrier: Scala&#8217;s <code>for</code>-comprehensions, Haskell&#8217;s <code>do</code>-notation,
+F#'s computation expressions. Each desugars a sequence of name-binding
+generators into a chain of bind operations; the notation is uniform across
+carriers and the carrier-specific behaviour is delivered entirely by the
+methods of the carrier itself.</p>
+</div>
+<div class="paragraph">
+<p>Groovy already has the facilities to deliver this outcome without inventing
+an abstraction hierarchy: compile-time macros for the syntactic rewrite, and
+type-checking extensions (GEP-8) for teaching static compilation new
+structural rules without altering the type system. <code>DO</code> combines the two.</p>
+</div>
+<div class="paragraph">
+<p>A side-by-side comparison with Scala <code>for</code>, Haskell <code>do</code>, Kotlin
+coroutine-based composition, and F# computation expressions is given in
+<a href="#_comparison_with_related_constructs">Comparison with related constructs</a>
+below.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_specification">Specification</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_surface_syntax">Surface syntax</h3>
+<div class="paragraph">
+<p><code>DO</code> takes a comma-separated list of <strong>generators</strong> followed by a closure
+body:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def result = DO(x in m1,
+                y in f(x),
+                z in g(x, y)) {
+    body(x, y, z)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Each generator has the form <code>name in expression</code>. The bound name is in
+scope in the source expression of every subsequent generator and in the
+body. Every generator&#8217;s source expression, and the body, must evaluate to a
+value of the same carrier type.</p>
+</div>
+<div class="paragraph">
+<p>The all-uppercase name follows the convention of the existing macro-library
+entries (<code>SV</code>, <code>NV</code>, and friends). The uppercase form signals to readers
+that the call is rewritten at compile time and is not an ordinary method
+invocation. <code>DO</code> is a contextual name and remains usable as an ordinary
+identifier elsewhere.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_desugaring">Desugaring</h3>
+<div class="paragraph">
+<p>Every generator becomes a bind; the body is the innermost closure body. The
+rewrite is:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">Expansion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO(x in m1) { body }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m1</code> bound with <code>{ x -&gt; body }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO(x in m1, y in f(x)) { body }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m1</code> bound with <code>{ x -&gt; f(x)</code> bound with <code>{ y -&gt; body } }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO(x in m1, y in f(x), z in g(x, y)) { body }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m1</code> bound with <code>{ x -&gt; f(x)</code> bound with <code>{ y -&gt; g(x, y)</code> bound with <code>{ z -&gt; body } } }</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Because the macro expands before type information is available, it does not
+emit a carrier-specific method name directly; it emits calls to a bind
+dispatcher (see <a href="#_runtime_model">Runtime model</a>). The body must itself
+yield a value of the carrier type — there is no implicit lifting of a plain
+value back into the carrier in this version (see
+<a href="#_non_goals_and_potential_future_extensions">Non-goals</a>).</p>
+</div>
+<div class="paragraph">
+<p>Short-circuiting is delivered by the carrier, not by the macro: an empty or
+failed carrier propagates through the chain and the body is never
+evaluated.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_monadic_shape">The monadic shape</h3>
+<div class="paragraph">
+<p>A type <em>M</em> qualifies as a carrier when it exposes a bind operation of the
+shape <code>&lt;B&gt; M&lt;B&gt; bind(fn)</code> where <code>fn</code> maps the element type to <code>M&lt;B&gt;</code>, and,
+for the map role, an analogous <code>&lt;B&gt; M&lt;B&gt; map(fn)</code>. The structural check is
+generous about the surface and strict about the algebra: the function
+argument may be declared as <code>java.util.function.Function</code>, a <code>Closure</code>, or
+any other single-abstract-method interface; the generator closure is
+adapted to whichever the carrier declares.</p>
+</div>
+<div class="paragraph">
+<p>The monad laws (left identity, right identity, associativity) are not
+enforced by the compiler. This matches the treatment of
+<code>@groovy.transform.Reducer</code>/<code>@groovy.transform.Associative</code>: structural
+participation, algebraic-law obligation on the implementer, intended to be
+backed by tests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_participating_carriers">Participating carriers</h3>
+<div class="paragraph">
+<p>Participation is resolved in the following order, the first match winning:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Standard allow-list.</strong> A fixed table covers stdlib and Groovy-core
+carriers whose method names diverge from the structural convention, matched
+by type:</p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Carrier</th>
+<th class="tableblock halign-left valign-top">Source</th>
+<th class="tableblock halign-left valign-top">bind</th>
+<th class="tableblock halign-left valign-top">map</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.Optional</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.stream.Stream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.concurrent.CompletableFuture</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenCompose</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenApply</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.concurrent.CompletionStage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JDK</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenCompose</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenApply</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.concurrent.Awaitable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenCompose</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>then</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.concurrent.DataflowVariable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>thenCompose</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>then</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>Awaitable</code> and <code>DataflowVariable</code> bind via <code>thenCompose</code>; their
+<code>then</code> method is the <em>map</em> operation, not bind.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p><strong>Standard allow-list (by name).</strong> Common Functional Java carriers —
+<code>fj.data.Option</code>, <code>fj.data.List</code>, <code>fj.data.Stream</code>, <code>fj.data.Validation</code>
+and <code>fj.P1</code> — are recognised by fully-qualified name using that library&#8217;s
+<code>bind</code>/<code>map</code> convention. Groovy takes no dependency on Functional Java; the
+names are matched reflectively and the generator closure is adapted to
+<code>fj.F</code>. <code>fj.data.Either</code> is not directly monadic in Functional Java (bind
+lives on its <code>.right()</code>/<code>.left()</code> projections) and is not a carrier.</p>
+</li>
+<li>
+<p><strong>Structural match.</strong> A type offering a single-argument <code>flatMap</code> (and, for
+the map role, <code>map</code>) qualifies without further declaration. This covers
+third-party libraries and user types that follow the convention.</p>
+</li>
+<li>
+<p><strong><code>@Monadic</code> opt-in.</strong> A type annotated <code>@groovy.transform.Monadic</code>
+participates even where its methods diverge from the structural convention.
+The annotation may declare alternative names:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Monadic(bind = 'chain', map = 'transform')
+class Result&lt;A&gt; {
+    &lt;B&gt; Result&lt;B&gt; chain(Function&lt;A, Result&lt;B&gt;&gt; f) { ... }
+    &lt;B&gt; Result&lt;B&gt; transform(Function&lt;A, B&gt; f) { ... }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When both attributes are omitted the annotation merely opts the type in and
+the structural defaults (<code>flatMap</code>, <code>map</code>) apply. The annotation is matched
+by simple name, in the manner of <code>@Reducer</code>/<code>@Associative</code>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_behaviour_under_compilestatic">Behaviour under <code>@CompileStatic</code></h3>
+<div class="paragraph">
+<p>Under dynamic Groovy, the rewritten code is ordinary method dispatch; a
+value that does not respond to the resolved bind method fails at runtime
+with the usual <code>MissingMethodException</code>.</p>
+</div>
+<div class="paragraph">
+<p>Under <code>@CompileStatic</code>/<code>@TypeChecked</code>, the <code>groovy.typecheckers.MonadicChecker</code>
+type-checking extension (GEP-8) is activated via the <code>extensions</code> member:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic(extensions = 'groovy.typecheckers.MonadicChecker')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The extension:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>rejects, at compile time, any <code>DO</code> whose carrier fails all participation
+tests, with an error naming the offending type and the missing method
+shape;</p>
+</li>
+<li>
+<p>types each generator&#8217;s bound name as the carrier&#8217;s element type, so the
+body type-checks;</p>
+</li>
+<li>
+<p>restores the comprehension&#8217;s result type, so chained and nested use
+type-checks rather than degrading to <code>Object</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Dependent generators (a later generator whose source expression uses an
+earlier bound name) and nested comprehensions are supported under static
+compilation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scoping_return_break_continue">Scoping, <code>return</code>, <code>break</code>, <code>continue</code></h3>
+<div class="paragraph">
+<p>The desugared form turns the body into a chain of closure bodies. The
+consequences are the same as for any closure-bodied rewrite, and the same
+as the <code>@Parallel</code> for-loop transform documents:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>break</code> and <code>continue</code> are not supported inside the body and produce a
+compile error. The corresponding monadic notion — short-circuiting — is
+delivered by the carrier and propagates naturally through the chain.</p>
+</li>
+<li>
+<p><code>return</code> inside a generator source expression or the body returns from
+the enclosing closure, following the standard Groovy closure rule.</p>
+</li>
+<li>
+<p>Names bound by earlier generators are visible to later generators and to
+the body by closure capture.</p>
+</li>
+<li>
+<p>The body closure must not declare parameters; generator names are already
+in scope.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_error_semantics">Error semantics</h3>
+<div class="paragraph">
+<p>An exception thrown inside a generator source expression or inside the body
+propagates through the bind chain according to the carrier&#8217;s own rules; the
+macro introduces no <code>try</code>/<code>catch</code>. For <code>Awaitable</code> and <code>CompletableFuture</code>
+the exception is captured into the resulting carrier and surfaces on
+<code>await</code>/<code>join</code>. For <code>Optional</code> and <code>Stream</code> the JDK semantics apply. For
+<code>@Monadic</code> user types the exception path is whatever the type implements.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_runtime_model">Runtime model</h3>
+<div class="paragraph">
+<p>The macro emits calls to a bind/map dispatcher rather than to a
+carrier-specific method, because at the point of expansion the carrier type
+is unknown. The dispatcher resolves the bind/map method per the
+participation rules and invokes it, adapting the generator closure to the
+declared functional-interface or <code>Closure</code> parameter.</p>
+</div>
+<div class="paragraph">
+<p>The macro and the type-checking extension are <strong>compile-time only</strong>: the
+macro expands and vanishes, and the extension runs only during static
+compilation. The dispatcher is runtime support and resides in the core
+runtime, so a program compiled with <code>DO</code> requires only the core <code>groovy</code>
+jar at run time. The macro library and the type-checkers module are
+compile-time dependencies.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_relationship_to_the_concurrency_primitives">Relationship to the concurrency primitives</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>DO</code> is a value-composition notation; it complements rather than competes
+with Groovy&#8217;s concurrency surface.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Awaitable</code> / <code>DataflowVariable</code></strong> are primary motivating carriers.
+Imperative <code>async</code>/<code>await</code> is the right tool when code reads as a sequence
+of dependent steps to run now; <code>DO</code> is the right tool when the composed
+<code>Awaitable</code> is the deliverable and will be combined further (raced,
+gathered, scheduled) before being awaited.</p>
+</li>
+<li>
+<p><strong>Parallel collections and <code>@Parallel</code></strong> are deliberately <strong>not</strong> <code>DO</code>
+participants. <code>collectParallel</code>/<code>collectManyParallel</code> are <code>map</code>/<code>flatMap</code>
+with parallel semantics; emitting them from a comprehension would silently
+change the execution model. Collection participation, where offered, is
+sequential.</p>
+</li>
+<li>
+<p><strong>Generators, <code>for await</code>, channels, actors and agents</strong> are stream or
+message-passing tools, orthogonal to <code>DO</code>. A composed <code>Awaitable</code> produced
+by <code>DO</code> may of course be consumed by an outer <code>async</code>/<code>await</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The language specification&#8217;s tool-selection matrix carries a row for <code>DO</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comparison_with_related_constructs">Comparison with related constructs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Monadic comprehensions occupy a design space shared with Scala&#8217;s <code>for</code>,
+Haskell&#8217;s <code>do</code>, F#'s computation expressions, and Kotlin&#8217;s coroutine-based
+composition. The table cross-references the load-bearing features of <code>DO</code>
+against the closest analogue in each.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4285%;">
+<col style="width: 21.4288%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Groovy <code>DO</code></th>
+<th class="tableblock halign-left valign-top">Scala <code>for</code></th>
+<th class="tableblock halign-left valign-top">Haskell <code>do</code></th>
+<th class="tableblock halign-left valign-top">F# computation expr.</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Underlying abstraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Allow-list (by type and by name) + structural duck typing + <code>@Monadic</code>; no abstraction hierarchy.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Name-based desugaring to <code>flatMap</code>/<code>map</code>/<code>withFilter</code>/<code>foreach</code>; no type-class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>Monad</code> type class, backed by higher-kinded types.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Builder methods (<code>Bind</code>, <code>Return</code>, …) on a user-supplied builder type.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit <code>pure</code>/<code>return</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No. The body must yield a carrier value.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inferred via the trailing <code>yield</code> form.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes; <code>return</code> is a type-class member.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes; <code>Return</code> on the builder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Guards / filtering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes; <code>if</code> guards desugar to <code>withFilter</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes; via <code>MonadPlus</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes; via builder methods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mixed-carrier composition</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No; one carrier per <code>DO</code>. Nest for more.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No; transformers/libraries fill the gap.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No; transformers fill the gap.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes, via <code>Bind</code> overloads on the builder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Carrier-shape enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@CompileStatic</code> via a type-checking extension; runtime <code>MissingMethodException</code> otherwise.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile-time via name resolution.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile-time via the type class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile-time via builder-method resolution.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Carrier-method-name conventions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Structural (<code>flatMap</code>/<code>map</code>) + allow-list + <code>@Monadic</code> override.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed names (<code>flatMap</code>/<code>map</code>/<code>withFilter</code>/<code>foreach</code>).</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed type-class operations.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fixed builder-method names.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A few qualitative observations follow:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Abstraction commitment is the dividing line.</strong> Haskell and Scala invest
+in language-level abstraction so a single <code>do</code>/<code>for</code> form works
+generically. Groovy aligns most closely with Scala — no type-class, name-
+based desugaring, structural participation — the differences being the
+allow-list (for stdlib/third-party carriers with non-conventional names)
+and the <code>@Monadic</code> opt-in (for user types).</p>
+</li>
+<li>
+<p><strong>Implicit <code>pure</code> is an inference problem, not a design one.</strong> Scala and
+F# synthesise <code>pure</code> because they have target-typed inference; Groovy
+declines the inference in this version and requires the body to produce a
+carrier value explicitly.</p>
+</li>
+<li>
+<p><strong><code>@Monadic</code> has no exact analogue.</strong> Scala does not need it because the
+conventional method names are universal in its ecosystem; F# does not need
+it because the builder is the opt-in. Groovy needs it because the
+conventional names are not universally followed across the JVM ecosystem,
+and structural matching alone is too narrow.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cross_version_evolution">Cross-version evolution</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Version</th>
+<th class="tableblock halign-left valign-top">Year</th>
+<th class="tableblock halign-left valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2026</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Initial release (incubating). The <code>DO</code> macro; the bind/map dispatcher and
+carrier registry in the core runtime; <code>@groovy.transform.Monadic</code>; the
+<code>groovy.typecheckers.MonadicChecker</code> type-checking extension; the standard
+allow-list (<code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, <code>CompletionStage</code>,
+<code>Awaitable</code>, <code>DataflowVariable</code>) and the by-name recognition of common
+Functional Java carriers; general single-abstract-method coercion of the
+generator closure.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Candidate: user-configurable carrier registration, symmetric across the
+type checker and the runtime dispatcher. No other spec-level changes
+planned at the time of writing. This GEP is the canonical location to
+record future changes.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_non_goals_and_potential_future_extensions">Non-goals and potential future extensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following are deliberately out of scope. Any of them would warrant a
+follow-up revision of this document or a successor GEP.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Higher-kinded types.</strong> No language-level support for abstracting over
+type constructors.</p>
+</li>
+<li>
+<p><strong>Implicit <code>pure</code>/<code>unit</code> lifting in the body.</strong> This version requires the
+body to produce a carrier value. A future revision may add it when
+target-type inference can be made to flow reliably through the rewritten
+chain.</p>
+</li>
+<li>
+<p><strong>Guard clauses</strong> (<code>if</code> filters inside <code>DO</code>). Not all carriers support
+filtering; adding guards would restrict the participant set or require
+carrier-specific filter desugaring.</p>
+</li>
+<li>
+<p><strong>Mixed-carrier comprehensions.</strong> Each <code>DO</code> works over a single carrier;
+nesting is the workaround.</p>
+</li>
+<li>
+<p><strong>Parallel desugaring.</strong> A form emitting <code>collectParallel</code>/
+<code>collectManyParallel</code> would change the execution model and is not offered.</p>
+</li>
+<li>
+<p><strong>Synthesis of <code>flatMap</code>/<code>map</code> from a single user-supplied bind</strong> via the
+<code>@Monadic</code> annotation, in the spirit of generated boilerplate.</p>
+</li>
+<li>
+<p><strong>A <code>Functor</code>/<code>Applicative</code>/<code>Monad</code> interface hierarchy</strong> in <code>groovy.lang</code>.
+Structural participation plus <code>@Monadic</code> covers the same ground without
+committing the language to a hierarchy that is awkward without
+higher-kinded types.</p>
+</li>
+<li>
+<p><strong>User-configurable carrier registration.</strong> The built-in allow-list ships
+now; a configuration channel symmetric across the checker and the runtime
+dispatcher is candidate future work (see Cross-version evolution).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-8.html">GEP-8: type-checking
+extensions</a> — the mechanism the <code>@CompileStatic</code> rules rely on.</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-22.html">GEP-22: Traits</a> — referenced
+for the structural-participation pattern and the spec-style format adopted
+here.</p>
+</li>
+<li>
+<p>The language specification chapter on monadic comprehensions contains
+worked tutorial examples that complement this spec-only document.</p>
+</li>
+<li>
+<p>The Groovy specification chapters on async/await, dataflow, and parallel
+collections — the concurrency carriers and the tool-selection matrix that
+<code>DO</code> extends.</p>
+</li>
+<li>
+<p>Scala <code>for</code>-comprehensions and Haskell <code>do</code>-notation — the closest
+analogue notations.</p>
+</li>
+<li>
+<p>Yallop &amp; White, <em>Lightweight Higher-Kinded Polymorphism</em> — the formal
+basis for the higher-kinded-type simulations this proposal makes
+unnecessary for the common case.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_reference_implementation">Reference implementation</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>org.apache.groovy.macrolib.MacroLibGroovyMethods</code> — hosts the <code>DO</code>
+macro method, registered alongside the other macro-library entries; parses
+the generator list, validates the <code>name in expression</code> shape, and emits the
+nested bind chain. Compile-time only.</p>
+</li>
+<li>
+<p><code>org.apache.groovy.runtime.Comprehensions</code> — the runtime bind/map
+dispatcher; resolves participation and invokes the carrier method, adapting
+the generator closure to the declared parameter type. Core runtime support.</p>
+</li>
+<li>
+<p><code>org.apache.groovy.runtime.MonadicCarrierRegistry</code> — the standard
+allow-list, both type-keyed and name-keyed; shared by the dispatcher and
+the type checker.</p>
+</li>
+<li>
+<p><code>groovy.transform.Monadic</code> — the opt-in annotation; a pure marker with
+optional <code>bind</code>/<code>map</code> string attributes and no AST transformation.</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.MonadicChecker</code> — the type-checking extension that
+enforces the monadic shape and supplies static types under <code>@CompileStatic</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Public API:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groovy.transform.Monadic</code> (since 6.0.0)</p>
+</li>
+<li>
+<p>the <code>DO</code> macro, in the <code>groovy-macro-library</code> module (since 6.0.0)</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.MonadicChecker</code>, in the <code>groovy-typecheckers</code>
+module (since 6.0.0)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_representative_jira_issues">Representative JIRA issues</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>GROOVY-XXXX: introduce the <code>DO</code> monadic-comprehension macro.</p>
+</li>
+<li>
+<p>GROOVY-XXXX: bind/map dispatcher and carrier registry in the core
+runtime.</p>
+</li>
+<li>
+<p>GROOVY-XXXX: <code>@groovy.transform.Monadic</code> annotation.</p>
+</li>
+<li>
+<p>GROOVY-XXXX: <code>groovy.typecheckers.MonadicChecker</code> type-checking
+extension.</p>
+</li>
+<li>
+<p>GROOVY-XXXX: language-specification chapter with inline-tested examples
+and the tool-selection matrix row.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2026-05-19) Initial draft. Specifies the <code>DO</code> macro, the <code>@Monadic</code>
+annotation, the type-checking extension, the standard carrier allow-list
+(including by-name recognition of Functional Java), the runtime model and
+its dependency footprint, the relationship to the Groovy concurrency
+primitives, the comparison with Scala <code>for</code>, Haskell <code>do</code>, Kotlin
+coroutines and F# computation expressions, and the deliberate non-goals.</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
