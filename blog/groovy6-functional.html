@@ -205,22 +205,36 @@ In Groovy 6 the algebra moves <em>onto the method</em>:</p>
 import groovy.transform.Reducer
 
 class Sum {
-    @Associative @Reducer(zero = '0')
+    @Reducer(zero = '0')
     static int add(int a, int b) { a + b }
 }
 
 class Concat {
-    @Associative @Reducer(zero = '""')
+    @Reducer(zero = '""')
     static String join(String a, String b) { a + b }
 }
 
 class Tally {
-    @Associative @Reducer(zero = '[:]')
+    @Reducer(zero = '[:]')
     static Map&lt;String, Integer&gt; merge(Map&lt;String, Integer&gt; a, Map&lt;String, Integer&gt; b) {
         var out = new LinkedHashMap(a)
         b.each { k, v -&gt; out.merge(k, v) { x, y -&gt; x + y } }
         out
     }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@Reducer</code> is the monoid form: associative plus a named identity. Use
+<code>@Associative</code> alone when the operation is associative but has no
+natural identity in the problem domain — a semigroup, usable with
+unseeded reductions only:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Largest {
+    @Associative
+    static int max(int a, int b) { a &gt;= b ? a : b }
 }</code></pre>
 </div>
 </div>
@@ -234,6 +248,7 @@ extension behind them:</p>
 def reductions() {
     assert (1..100).toList().injectParallel(0, Sum.&amp;add) == 5050
     assert ['a', 'b', 'c'].sumParallel(Concat.&amp;join) == 'abc'
+    assert [3, 1, 4, 1, 5, 9, 2, 6].sumParallel(Largest.&amp;max) == 9
 
     // REJECTED at compile time — subtraction is not associative:
     // [1, 2, 3].injectParallel(0) { a, b -&gt; a - b }
@@ -271,7 +286,7 @@ declarations, no lift / unlift:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.PurityChecker',
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.PurityChecker(allows: "LOGGING")',
                            'groovy.typecheckers.ModifiesChecker'])
 class Calculator {
     BigDecimal total = 0
@@ -290,7 +305,7 @@ class Calculator {
         ledger &lt;&lt; "+$amount"
     }
 
-    @Pure(allows = Pure.Effect.LOGGING)
+    @Pure
     BigDecimal balance() {
         log.fine "balance read"
         total
@@ -319,10 +334,11 @@ state-transition function — pre- and post-conditions, with `old.</code>
 referring to pre-state.</p>
 </li>
 <li>
-<p><code>balance</code> is pure <em>modulo logging</em>. The <code>allows</code> set is a small
-effect lattice (<code>LOGGING</code>, <code>METRICS</code>, <code>IO</code>, <code>NONDETERMINISM</code>) —
-graded effects, in the cats-effect sense, but the verification work
-is in the checker rather than the type.</p>
+<p><code>balance</code> is pure <em>modulo logging</em>. The checker&#8217;s <code>allows</code> option
+declares a small effect lattice (<code>LOGGING</code>, <code>METRICS</code>, <code>IO</code>,
+<code>NONDETERMINISM</code>) and tolerates calls in those categories from any
+<code>@Pure</code> method in scope — graded effects, in the cats-effect sense,
+but the verification work is in the checker rather than the type.</p>
 </li>
 </ul>
 </div>
