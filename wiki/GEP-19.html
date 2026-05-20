@@ -172,15 +172,14 @@ We welcome feedback and discussion, but please keep in mind that the details are
 <div class="sectionbody">
 <div class="paragraph">
 <p>This GEP extends Groovy&#8217;s <code>switch</code> expression with structural pattern
-matching for lists, maps, and types, building on the record patterns
-introduced in 5.0 and aligning with Java&#8217;s pattern-matching trajectory
-(JEPs 440, 441, 456, 507).</p>
+matching for lists, maps, records, and types, aligning with Java&#8217;s
+pattern-matching trajectory (JEPs 440, 441, 456, 507).</p>
 </div>
 <div class="paragraph">
 <p>The proposal adds list patterns (<code>[var h, var&#8230;&#8203; t]</code>), map patterns
-(<code>[name: var n, var&#8230;&#8203; rest]</code>), type patterns with binding (<code>String s</code>),
-guard clauses (<code>when</code>), and a unified wildcard form (<code>_</code> inside record
-patterns; <code>var _</code> elsewhere). The same pattern grammar is also accepted
+(<code>[name: var n, var&#8230;&#8203; rest]</code>), record patterns (<code>Type(var x, var y)</code>),
+type patterns with binding (<code>String s</code>), guard clauses (<code>when</code>), and a
+unified wildcard form (<code>_</code> inside record patterns; <code>var _</code> elsewhere). The same pattern grammar is also accepted
 in <code>def [&#8230;&#8203;] = &#8230;&#8203;</code> bracket-form declarations, providing a consistent
 destructuring grammar between switch case labels and assignment for
 users who want it. The everyday parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) is
@@ -200,9 +199,11 @@ markers that distinguish a structural pattern from a legacy case label.</p>
 <div class="paragraph">
 <p>Groovy&#8217;s <code>switch</code> already exceeds Java&#8217;s classic switch through the
 <code>isCase</code> protocol — case labels can be classes, ranges, regex patterns,
-collections, and closures. Groovy 5.0 added record patterns aligned with
-Java 21&#8217;s JEP 440. What remains absent is structural decomposition of
-the most common data shapes: lists, maps, and arrays.</p>
+collections, and closures. What remains absent is structural
+decomposition: type-narrowing bindings, record deconstruction, and the
+destructuring of the most common data shapes (lists and maps). This
+proposal adds all four together, aligned with Java&#8217;s pattern-matching
+trajectory (JEPs 440, 441, 456, 507).</p>
 </div>
 <div class="paragraph">
 <p>Languages that have shipped this — Scala, Rust, Swift, Kotlin (limited),
@@ -305,16 +306,15 @@ type, binding a new local variable in the case body:</p>
 <div class="paragraph">
 <p>The bound name is narrowed to the declared type within the case body
 and any <code>when</code> guard. <code>@CompileStatic</code> and <code>@TypeChecked</code> see the
-narrowed type via the same flow analysis already used for record
-patterns.</p>
+narrowed type within the binding&#8217;s scope.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_record_patterns">Record patterns</h3>
 <div class="paragraph">
-<p>Record patterns (introduced in Groovy 5.0) deconstruct record-typed
-values positionally. Component positions accept nested patterns,
-including the unnamed pattern <code>_</code>:</p>
+<p>Record patterns deconstruct record-typed values positionally.
+Component positions accept nested patterns, including the unnamed
+pattern <code>_</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -838,8 +838,10 @@ key-set difference for rest),</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Record patterns reuse the lowering already present in 5.0. When Java&#8217;s
-deconstructor JEP ships, surface forms like
+<p>Record patterns lower via the same <code>Deconstructable</code> strategy: a type
+check on the record class, component extraction via the record&#8217;s
+accessor methods, and recursive lowering for nested component patterns.
+When Java&#8217;s deconstructor JEP ships, surface forms like
 <code>case List.of(var h, var&#8230;&#8203; t) -&gt;</code> and
 <code>case Map.of("name", var n) -&gt;</code> are accepted as additional spellings
 that lower to the same <code>Deconstructable</code> calls — no re-architecture.</p>
@@ -893,12 +895,12 @@ side effects.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching for <code>instanceof</code> (JEP 394, 16)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Type and record patterns valid in <code>instanceof</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type and record patterns in <code>instanceof</code> added in this proposal</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Record patterns (JEP 440, 21)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Already in Groovy 5.0; extended in this proposal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Added in this proposal</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching for <code>switch</code> (JEP 441, 21)</p></td>
@@ -1065,7 +1067,7 @@ triggered only by syntactic forms that currently fail to parse:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>case String s &#8594;</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No — new (5.0 supported only <code>Type(&#8230;&#8203;)</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No — new</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [var h, var&#8230;&#8203; t] = list</code></p></td>
