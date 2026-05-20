@@ -80,7 +80,7 @@ closures, immutable collections and <code>java.util.stream.Stream</code>.</p>
 </div>
 <div class="paragraph">
 <p>What Groovy 6 <em>does</em> do is close a handful of the gaps that send
-functional programmers reaching for FunctionalJava or highj when they
+functional programmers reaching for FunctionalJava or HighJ when they
 work on the JVM. The new pieces fit together:</p>
 </div>
 <div class="ulist">
@@ -196,8 +196,9 @@ class Semigroup a =&gt; Monoid a where mempty :: a</code></pre>
 </div>
 <div class="paragraph">
 <p>In FunctionalJava you build a <code>Monoid&lt;A&gt;</code> by passing a combiner closure
-and a zero. In highj you import the typeclass instance for <code>Monoid&lt;µ&gt;</code>.
-In Groovy 6 the algebra moves <em>onto the method</em>:</p>
+and a zero. In HighJ you import the typeclass instance for <code>Monoid&lt;µ&gt;</code>.
+While you can also use those libraries from Groovy as is,
+you now also have the option of moving the algebra <em>onto the method</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -268,7 +269,7 @@ Haskell, but without lifting <code>add</code> into a wrapper and unlifting the
 result.</p>
 </div>
 <div class="paragraph">
-<p>The <code>Monoid</code>/<code>Semigroup</code> types from FunctionalJava and highj are also
+<p>The <code>Monoid</code>/<code>Semigroup</code> types from FunctionalJava and HighJ are also
 recognised, which means existing FJ-shaped combiners flow through
 <code>sumParallel</code> without rewriting.</p>
 </div>
@@ -302,7 +303,7 @@ declarations, no lift / unlift:</p>
     @TypeChecked(extensions = 'groovy.typecheckers.ModifiesChecker')
     void post(BigDecimal amount) {
         total += amount
-        ledger &lt;&lt; "+$amount"
+        ledger &lt;&lt; "+$amount".toString()
     }
 
     @Pure
@@ -407,8 +408,8 @@ Validation&lt;String, Integer&gt; add(String a, String b) {
         Validation.success(x + y)
     }
 }
-assert add('2', '3').successE() == 5
-assert add('hi', '3').failE()   == 'not numeric: hi'</code></pre>
+assert add('2', '3').success() == 5
+assert add('hi', '3').fail()   == 'not numeric: hi'</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -704,7 +705,7 @@ spec, not as a comment.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>For a JVM-resident FP audience, the comparison set is FunctionalJava,
-highj, and the language alternatives Scala and Kotlin.</p>
+HighJ, and the language alternatives Scala and Kotlin.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -720,7 +721,7 @@ highj, and the language alternatives Scala and Kotlin.</p>
 <th class="tableblock halign-left valign-top">Concept</th>
 <th class="tableblock halign-left valign-top">Groovy 6</th>
 <th class="tableblock halign-left valign-top">FunctionalJava</th>
-<th class="tableblock halign-left valign-top">highj</th>
+<th class="tableblock halign-left valign-top">HighJ</th>
 <th class="tableblock halign-left valign-top">Scala</th>
 <th class="tableblock halign-left valign-top">Haskell</th>
 </tr>
@@ -843,8 +844,8 @@ to libraries.</p>
 <div class="paragraph">
 <p>For new code on the JVM, the takeaway is that <code>@Pure</code>, <code>@Modifies</code>,
 <code>@Associative</code> and <code>@Reducer</code> cover most of what teams used
-FunctionalJava and highj for — and they do it on your own types,
-without inheritance and without lift/unlift. FunctionalJava and highj
+FunctionalJava and HighJ for — and they do it on your own types,
+without inheritance and without lift/unlift. FunctionalJava and HighJ
 remain useful when you want the libraries' richer value-level
 combinators (notably <code>Validation</code> for applicative-style error
 accumulation, which Groovy 6 happily embeds in <code>DO</code>).</p>
