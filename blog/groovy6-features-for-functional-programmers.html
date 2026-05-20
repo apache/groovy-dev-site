@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='functional programming, monoid, semigroup, monad, purity, type checker, property-based testing'/><meta name='description' content='Groovy 6&apos;s stance on functional programming — same starting point as Java, but with checked algebra (Monoid/Semigroup), verified purity, monadic comprehensions, and machine-actionable annotations.'/><title>The Apache Groovy programming language - Blogs - Groovy 6 features for Functional Programmers</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-05-20 08:00AM (Last updated: 2026-05-20 08:00AM)</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy is not Haskell. It is not Scala. It does not have higher-kinded
+types, a <code>Functor</code>/<code>Applicative</code>/<code>Monad</code> hierarchy, or a totality checker
+in the compiler. Its starting point is Java&#8217;s — a JVM language with
+closures, immutable collections and <code>java.util.stream.Stream</code>.</p>
+</div>
+<div class="paragraph">
+<p>What Groovy 6 <em>does</em> do is close a handful of the gaps that send
+functional programmers reaching for FunctionalJava or highj when they
+work on the JVM. The new pieces fit together:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Associative</code>/<code>@Reducer</code> annotations that put a <strong>monoid</strong> contract
+on a binary method, verified at compile time by <code>CombinerChecker</code>.</p>
+</li>
+<li>
+<p><code>@Pure</code>/<code>@Modifies</code> annotations that let the compiler tell you a
+method has no side effects (or only the ones you allow) — a
+specification-driven alternative to lifting effects into an <code>IO</code> monad.</p>
+</li>
+<li>
+<p>A <code>DO</code> macro (GEP-23) giving Scala-<code>for</code> / Haskell-<code>do</code> notation
+across <code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, Groovy&#8217;s <code>Awaitable</code>,
+and any user type that opts in.</p>
+</li>
+<li>
+<p><code>NullChecker</code> — including a flow-sensitive <code>strict</code> mode requiring
+no annotations — for compile-time <code>Maybe</code> without the wrapper.</p>
+</li>
+<li>
+<p><code>val</code>, nested <code>copyWith</code> and richer destructuring on top of records
+and <code>@Immutable</code>, for the everyday immutable-update shapes that
+otherwise need a lens library.</p>
+</li>
+<li>
+<p><code>@Decreases</code> and <code>@Invariant</code> on loops, providing termination
+measures and loop invariants of the kind a totality checker would
+require.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>None of that turns Groovy into a pure-functional language. It does mean
+the parts of the FP toolkit that pay their way on a real JVM project —
+algebraic laws on combiners, declared purity, monadic value
+composition, exhaustive null handling, immutable updates — are now
+first-class.</p>
+</div>
+<div class="paragraph">
+<p>A companion project at
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>
+holds runnable versions of every example in this post.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_groovy_already_gave_you">What Groovy already gave you</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy has been a usable language for functional programmers since the
+2.x line. Five things were already in the toolbox:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>First-class closures and function composition.</strong> Closures are
+values; <code>&lt;&lt;</code> and <code>&gt;&gt;</code> compose them; <code>curry</code> and <code>rcurry</code> partially
+apply.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var trim     = { String s -&gt; s.trim() }
+var upper    = String::toUpperCase
+var sizeSq   = (String::size) &gt;&gt; { it ** 2 }
+var composed = sizeSq &lt;&lt; (trim &gt;&gt; upper)
+assert composed(' foo bar ') == 49</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><strong>Memoization and trampolining.</strong>
+<code>closure.memoize()</code>, <code>memoizeAtMost(n)</code>, and <code>Closure.trampoline()</code>
+turn naive recursive definitions into something fit for production.</p>
+</li>
+<li>
+<p><strong>Records, <code>@Immutable</code>, deep-immutable lists/maps via <code>.asImmutable()</code>.</strong>
+Value semantics without ceremony.</p>
+</li>
+<li>
+<p><strong>Tail-recursive methods</strong> via <code>@TailRecursive</code> — the
+transform rewrites the body to a loop. No stack growth for <code>factorial</code>,
+<code>mutualOddEven</code>, list folds.</p>
+</li>
+<li>
+<p><strong>Lazy streams and GINQ.</strong> <code>Stream</code>, lazy iterators, and GINQ
+(a comprehension over collections and SQL-like sources) cover the
+lazy/declarative end of the lane.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>That toolkit was good for the workaday side of FP. It said little about
+the parts that distinguish FP-with-checking from FP-with-conventions:
+algebraic laws, declared effects, monadic composition for non-stream
+carriers, and ironclad immutability. Groovy 6 is mostly about those.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monoids_and_semigroups_checked">Monoids and Semigroups, checked</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A <strong>monoid</strong> is an associative binary operation with an identity. In
+Haskell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="haskell">class Semigroup a where (&lt;&gt;)   :: a -&gt; a -&gt; a
+class Semigroup a =&gt; Monoid a where mempty :: a</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In FunctionalJava you build a <code>Monoid&lt;A&gt;</code> by passing a combiner closure
+and a zero. In highj you import the typeclass instance for <code>Monoid&lt;µ&gt;</code>.
+In Groovy 6 the algebra moves <em>onto the method</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.transform.Associative
+import groovy.transform.Reducer
+
+class Sum {
+    @Associative @Reducer(zero = '0')
+    static int add(int a, int b) { a + b }
+}
+
+class Concat {
+    @Associative @Reducer(zero = '""')
+    static String join(String a, String b) { a + b }
+}
+
+class Tally {
+    @Associative @Reducer(zero = '[:]')
+    static Map&lt;String, Integer&gt; merge(Map&lt;String, Integer&gt; a, Map&lt;String, Integer&gt; b) {
+        var out = new LinkedHashMap(a)
+        b.each { k, v -&gt; out.merge(k, v) { x, y -&gt; x + y } }
+        out
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The point is not the annotations. The point is the type-checking
+extension behind them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.CombinerChecker')
+def reductions() {
+    assert (1..100).toList().injectParallel(0, Sum.&amp;add) == 5050
+    assert ['a', 'b', 'c'].sumParallel(Concat.&amp;join) == 'abc'
+
+    // REJECTED at compile time — subtraction is not associative:
+    // [1, 2, 3].injectParallel(0) { a, b -&gt; a - b }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>injectParallel</code> and <code>sumParallel</code> partition, reorder and recombine
+input. They are only correct when the combiner is associative — and
+that is the bug class FP people normally protect themselves from by
+encoding the structure as a <code>Monoid&lt;A&gt;</code> value. A non-associative
+combiner like the subtraction example is a <em>semantic</em> error: it
+compiles cleanly in Java and in Groovy without the checker, and
+surfaces as a non-deterministic wrong answer at runtime. The checker
+gives you the same guarantee a typeclass constraint gives Scala or
+Haskell, but without lifting <code>add</code> into a wrapper and unlifting the
+result.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Monoid</code>/<code>Semigroup</code> types from FunctionalJava and highj are also
+recognised, which means existing FJ-shaped combiners flow through
+<code>sumParallel</code> without rewriting.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_purity_and_frame_conditions_groovys_answer_to_io_state">Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The other classical FP move is to lift effectful work into the type
+system: <code>IO</code> for arbitrary effects, <code>State s</code> for threaded state,
+<code>Reader r</code> for environment access, <code>Writer w</code> for log accumulation.
+Groovy 6 takes a different route to the same outcome — verified
+declarations, no lift / unlift:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.PurityChecker',
+                           'groovy.typecheckers.ModifiesChecker'])
+class Calculator {
+    BigDecimal total = 0
+    List&lt;String&gt; ledger = []
+
+    @Pure
+    static BigDecimal vat(BigDecimal net, BigDecimal rate) {
+        net * (1 + rate)
+    }
+
+    @Requires({ amount &gt; 0 })
+    @Ensures ({ total == old.total + amount })
+    @Modifies({ [this.total, this.ledger] })
+    void post(BigDecimal amount) {
+        total += amount
+        ledger &lt;&lt; "+$amount"
+    }
+
+    @Pure(allows = Pure.Effect.LOGGING)
+    BigDecimal balance() {
+        log.fine "balance read"
+        total
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are four FP-flavoured facts the compiler now knows about
+<code>Calculator</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>vat</code> is pure — referentially transparent in the Haskell sense.
+<code>PurityChecker</code> rejects any side-effecting body.</p>
+</li>
+<li>
+<p><code>post</code> may only modify <code>total</code> and <code>ledger</code>. Touch any other field
+and <code>ModifiesChecker</code> errors. This is the <code>State</code> monad&#8217;s job
+(<em>what</em> state can change) without the bind boilerplate.</p>
+</li>
+<li>
+<p><code>@Requires</code>/<code>@Ensures</code> are the Hoare-logic dual of <code>State&#8217;s
+state-transition function — pre- and post-conditions, with `old.</code>
+referring to pre-state.</p>
+</li>
+<li>
+<p><code>balance</code> is pure <em>modulo logging</em>. The <code>allows</code> set is a small
+effect lattice (<code>LOGGING</code>, <code>METRICS</code>, <code>IO</code>, <code>NONDETERMINISM</code>) —
+graded effects, in the cats-effect sense, but the verification work
+is in the checker rather than the type.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For an FP audience the unfamiliar half is that none of these methods
+return a wrapped value. The familiar half is that the compiler knows
+what each method may and may not do, and a reader (or an AI agent) can
+work from the signature alone.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_monadic_comprehensions_do">Monadic comprehensions: <code>DO</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GEP-23 introduces <code>DO</code> — a comprehension macro that desugars to the
+carrier&#8217;s <code>flatMap</code>/<code>map</code> (or <code>thenCompose</code>/<code>thenApply</code>, or whatever
+the carrier&#8217;s standard pair is). The notation is Scala-<code>for</code> /
+Haskell-<code>do</code> shaped:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import static org.apache.groovy.macrolib.MacroLibGroovyMethods.DO
+
+@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Optional&lt;String&gt; greet(Map&lt;String, String&gt; users, String userId) {
+    DO(user in Optional.ofNullable(users[userId]),
+       name in Optional.ofNullable(user.split(/\|/)[0])) {
+        Optional.of("Hello, $name!".toString())
+    }
+}
+
+assert greet([u42: 'Alice|admin'], 'u42').get() == 'Hello, Alice!'
+assert greet([u42: 'Alice|admin'], 'u99') == Optional.empty()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same shape works over <code>Awaitable</code> (so the dependency graph in an
+async computation is in the source rather than spread across
+<code>thenCompose</code> calls):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Awaitable&lt;String&gt; greetByKey(String key) {
+    DO(id   in fetchId(key),
+       name in fetchName(id),
+       msg  in greeting(name)) {
+        async { msg }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And over FunctionalJava&#8217;s <code>Validation</code> — no annotation, no wrapper, no
+Groovy dependency on FunctionalJava, because <code>fj.data.Validation</code> is
+recognised by name in `DO&#8217;s standard allow-list:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Validation&lt;String, Integer&gt; add(String a, String b) {
+    DO(x in parsePositive(a),
+       y in parsePositive(b)) {
+        Validation.success(x + y)
+    }
+}
+assert add('2', '3').successE() == 5
+assert add('hi', '3').failE()   == 'not numeric: hi'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What <code>DO</code> does <strong>not</strong> do: it does not introduce higher-kinded types, it
+does not mix carriers in one comprehension (nest for that), and it does
+not synthesise a <code>pure</code>/<code>return</code> — the body must explicitly yield a
+carrier value. That is the deliberate non-goal list in
+<a href="../wiki/GEP-23.html">GEP-23</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_linting_native_chains_monadicshapechecker">Linting native chains: <code>MonadicShapeChecker</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For codebases that prefer <code>flatMap</code>/<code>map</code> chains over comprehensions,
+<code>MonadicShapeChecker</code> lints the chain against the same registry that
+<code>DO</code> uses. It catches three classic foot-guns:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mistake</th>
+<th class="tableblock halign-left valign-top">Checker says</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Optional.of(1).flatMap { it + 1 }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code> must return a carrier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Stream.of(1).flatMap { Optional.of(it) }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bind must return the <em>same</em> carrier</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Optional.of(1).map { Optional.of(it) }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>M&lt;M&lt;T&gt;&gt;</code> — did you mean <code>flatMap</code>?</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The first two would be compile errors in Java, but Groovy&#8217;s
+single-abstract-method coercion of closures normally lets them through —
+the checker restores the Java guarantee. The third compiles cleanly in
+<strong>both</strong> Java and Groovy: an <code>Optional&lt;Optional&lt;Integer&gt;&gt;</code> is a perfectly
+well-typed value, just (almost certainly) not the one you intended. That
+is the <code>flatMap</code>/<code>map</code> mix-up the checker catches for everyone.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compile_time_maybe_without_the_wrapper">Compile-time <code>Maybe</code> without the wrapper</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In Haskell, <code>Maybe a</code> is a discipline you adopt: every value that
+might be absent is wrapped, the compiler tracks it, you handle the
+<code>Nothing</code> case at the leaf.</p>
+</div>
+<div class="paragraph">
+<p>In Groovy 6, <code>NullChecker</code> is the equivalent discipline <em>without</em> the
+wrapper. You can drive it with <code>@Nullable</code>/<code>@NonNull</code> if you like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker')
+int safeLength(@Nullable String text) {
+    if (text != null) {
+        return text.length()         // ok — narrowed
+    }
+    -1
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>…but a deliberate goal of the Groovy 6 approach is to <em>not</em> make you
+litter code with annotations. Flow-sensitive <code>strict</code> mode does the
+same analysis on entirely unannotated code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
+def strictDemo() {
+    def x = null
+    // x.toString()                  // compile error: x may be null
+    x = 'hello'
+    assert x.toString() == 'hello'   // ok — reassigned
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That covers code under your control. The trickier case is the
+boundary: a third-party library that exposes possibly-null returns and
+never annotated them. Groovy 6 stacks a few mitigations here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Nullable</code>/<code>@NonNull</code> are matched <em>by simple name from any package</em>
+— JSpecify, JSR-305, JetBrains, SpotBugs, Checker Framework, or your
+own marker — so whichever vendor&#8217;s annotations the library author did
+or didn&#8217;t pick, the checker sees them.</p>
+</li>
+<li>
+<p>Where the library is annotation-free, contract annotations contribute
+nullability facts: a top-level <code>x != null</code> conjunct in <code>@Requires</code> marks
+the parameter as implicitly <code>@NonNull</code>, and <code>result != null</code> in
+<code>@Ensures</code> does the same for the return. You assert the boundary fact
+once at your wrapping method and the checker propagates it inward.</p>
+</li>
+<li>
+<p><code>@NullCheck</code> auto-generates null guards on parameters where you
+want fail-fast behaviour rather than tracked nullability.</p>
+</li>
+<li>
+<p><code>@MonotonicNonNull</code> covers the lazy-init case (read as nullable until
+first assignment, non-null afterwards).</p>
+</li>
+<li>
+<p>Safe navigation (<code>?.</code>) and the Elvis operator (<code>?:</code>) — Groovy
+features that pre-date NullChecker — are recognised by the checker as
+narrowing forms, so the idiomatic <code>lib.maybe()?.size() ?: 0</code> typechecks
+without further annotation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The trade — versus <code>Optional&lt;T&gt;</code> everywhere — is the one Kotlin made:
+the analysis is on the variable, not in the type, and the cost at the
+call site is zero.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_immutability_ergonomics">Immutability ergonomics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Three Groovy 6 changes make the day-to-day immutable-update shapes
+match what you get from a Haskell record-update syntax or a Scala
+<code>copy</code> call:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Immutable(copyWith = true) class Address { String city, zip }
+@Immutable(copyWith = true) class Person  { String name; Address address }
+
+val alice = new Person('Alice', new Address('NYC', '10001'))
+
+val moved = alice.copyWith('address.city': 'Boston')
+assert moved.address.zip == '10001'         // structural sharing — untouched
+
+val swapped = alice.copyWith {
+    name = 'Alice2'
+    address.city = old.address.city.reverse()
+}
+
+val (name: who, age: _) = [name: 'Bob', age: 30]
+def (h, *t) = [1, 2, 3, 4]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>val</code> is the immutable-binding companion to <code>var</code>. Nested <code>copyWith</code>
+gives you lens-style updates without a lens library — structural
+sharing is preserved transitively, so <code>is</code>-identity holds on untouched
+branches. The destructuring extension reaches the "match the parts you
+care about" cases pattern matching is normally used for.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_termination_and_loop_invariants">Termination and loop invariants</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Totality matters to FP people. <code>@TailRecursive</code> was already there;
+<code>@Decreases</code> and <code>@Invariant</code> on loops are new:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ result.isSorted() })
+List merge(List in1, List in2) {
+    var out = []
+    var count = in1.size() + in2.size()
+    @Invariant({ in1.size() + in2.size() + out.size() == count })
+    @Decreases({ [in1.size(), in2.size()] })
+    while (in1 || in2) {
+        if (!in1) return out + in2
+        if (!in2) return out + in1
+        out += (in1[0] &lt; in2[0]) ? in1.pop() : in2.pop()
+    }
+    out
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>@Invariant</code> says nothing is lost or gained across iterations.
+The <code>@Decreases</code> gives a lexicographic termination measure: the pair
+<code>[in1.size(), in2.size()]</code> strictly decreases each round. That is the
+sort of obligation a totality checker in Idris or Agda would impose.
+The checker is contract-grade rather than proof-grade, but the
+declaration is the same shape.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_property_based_tests_mechanically_derived_from_the_annotations">Property-based tests, mechanically derived from the annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The single biggest payoff of these annotations is that they are <strong>not
+just for the compiler</strong>. They are machine-readable, structurally
+identical across the codebase, and compiler-enforced — so an AI agent
+or a small ASM walker can use them as a specification:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="markdown">Prompt:
+  For every static method annotated @groovy.transform.Associative,
+  emit a jqwik @Property method asserting f(f(a,b), c) == f(a, f(b,c)).
+  If the method also carries @Reducer(zero = "&lt;expr&gt;"), emit a second
+  @Property asserting f(a, &lt;expr&gt;) == a and f(&lt;expr&gt;, a) == a.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which produces, mechanically:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class MonoidLawsTest {
+    @Property boolean addIsAssociative(@ForAll int a, @ForAll int b, @ForAll int c) {
+        Sum.add(Sum.add(a, b), c) == Sum.add(a, Sum.add(b, c))
+    }
+    @Property boolean addHasZero(@ForAll int a) {
+        Sum.add(a, 0) == a &amp;&amp; Sum.add(0, a) == a
+    }
+    @Property boolean tallyIsAssociative(@ForAll Map&lt;String, Integer&gt; a,
+                                          @ForAll Map&lt;String, Integer&gt; b,
+                                          @ForAll Map&lt;String, Integer&gt; c) {
+        Tally.merge(Tally.merge(a, b), c) == Tally.merge(a, Tally.merge(b, c))
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The agent never reads the body of <code>add</code> or <code>merge</code>. The compile-time
+<code>CombinerChecker</code> is the guarantee that the annotation is trustworthy
+enough to treat as a specification.</p>
+</div>
+<div class="paragraph">
+<p>The same idea applies more broadly:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Derivable property</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Associative</code> on <code>f(a, b)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f(f(a, b), c) == f(a, f(b, c))</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Reducer(zero = z)</code> on <code>f(a, b)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f(a, z) == a</code> and <code>f(z, a) == a</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Pure</code> (no <code>allows</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">invocation idempotent, no observable effect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Modifies({ [fields&#8230;&#8203;] })</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">every field not listed is bit-for-bit identical after the call</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This is the Groovy 6 design pitch in one sentence: declarations whose
+compile-time guarantee makes them safe for an agent to read as a
+spec, not as a comment.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_it_stacks_up">How it stacks up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For a JVM-resident FP audience, the comparison set is FunctionalJava,
+highj, and the language alternatives Scala and Kotlin.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Concept</th>
+<th class="tableblock halign-left valign-top">Groovy 6</th>
+<th class="tableblock halign-left valign-top">FunctionalJava</th>
+<th class="tableblock halign-left valign-top">highj</th>
+<th class="tableblock halign-left valign-top">Scala</th>
+<th class="tableblock halign-left valign-top">Haskell</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closures and composition</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native (<code>&gt;&gt;</code>, <code>&lt;&lt;</code>, curry)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.F</code>, <code>.o()</code>, curry on <code>F2..F8</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Functions</code> combinators</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native (<code>andThen</code>, <code>compose</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monoid / Semigroup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Associative</code>/<code>@Reducer</code> + <code>CombinerChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;A&gt;</code>, <code>Semigroup&lt;A&gt;</code> values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;µ&gt;</code> typeclass instance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.Monoid</code> typeclass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid</code> class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Purity &amp; effects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Pure(allows = &#8230;&#8203;)</code> + <code>PurityChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a (convention only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO&lt;µ&gt;</code> simulation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.effect.IO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO</code>, <code>State</code>, etc.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frame conditions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Modifies</code> + <code>ModifiesChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Monadic comprehension</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO</code> (GEP-23, no HKT)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a (hand-written <code>.bind</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">simulated, with µ tags</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>for { &#8230;&#8203; } yield</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do { &#8230;&#8203; }</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Null / absence</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullChecker</code> (strict)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe&lt;µ&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validation / errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Validation</code> in <code>DO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Validation&lt;E, A&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either&lt;µ, µ&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validation</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Termination</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Decreases</code> (Hoare)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">totality checker (extensions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Higher-kinded abstraction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no (encoded by hand)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">simulated HKT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The point of the table is not that Groovy 6 ranks ahead of Scala or
+Haskell on any of these rows. It is that the column for the <strong>checked</strong>
+features used to be empty in Java&#8217;s heritage — and now isn&#8217;t.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy 6 is not asking you to think about endofunctors. It is asking
+you to declare what your methods do, accepting that the compiler will
+check, and giving you the notation to compose values across the carrier
+types you already use.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Monoid / Semigroup is now a <strong>contract on a method</strong>, not a wrapper
+type — verified by <code>CombinerChecker</code>.</p>
+</li>
+<li>
+<p><code>@Pure</code>, <code>@Modifies</code> and the contract annotations turn each method
+into a self-contained spec — a different shape from <code>IO</code>/<code>State</code>, the
+same reasoning payoff.</p>
+</li>
+<li>
+<p><code>DO</code> gives you the <code>for</code>/<code>do</code> notation across <code>Optional</code>, <code>Stream</code>,
+<code>CompletableFuture</code>, <code>Awaitable</code>, the FunctionalJava carriers and any
+user type with the right shape, without committing the language to
+higher-kinded types.</p>
+</li>
+<li>
+<p><code>NullChecker</code>, nested <code>copyWith</code>, destructuring, <code>val</code>,
+<code>@Decreases</code> and <code>@Invariant</code> fill the everyday gaps that send people
+to libraries.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For new code on the JVM, the takeaway is that <code>@Pure</code>, <code>@Modifies</code>,
+<code>@Associative</code> and <code>@Reducer</code> cover most of what teams used
+FunctionalJava and highj for — and they do it on your own types,
+without inheritance and without lift/unlift. FunctionalJava and highj
+remain useful when you want the libraries' richer value-level
+combinators (notably <code>Validation</code> for applicative-style error
+accumulation, which Groovy 6 happily embeds in <code>DO</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="../wiki/GEP-23.html">GEP-23 — Monadic comprehensions</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type checking extensions</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#human-ai-reasoning">Groovy 6 release notes — Designed for Human and AI Reasoning</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-16.html">GEP-16 — <code>val</code> keyword</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-20.html">GEP-20 — Destructuring</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-async-await">Native Async/Await for Groovy</a> — the <code>Awaitable</code> carrier <code>DO</code> composes</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-null-checker">NullChecker walkthrough</a></p>
+</li>
+<li>
+<p><a href="https://www.functionaljava.org/">FunctionalJava</a></p>
+</li>
+<li>
+<p><a href="https://github.com/highj/highj">highj — lightweight HKT for Java</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a></p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>20/May/2026</strong>: Initial version.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
