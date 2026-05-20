@@ -286,13 +286,12 @@ declarations, no lift / unlift:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.PurityChecker(allows: "LOGGING")',
-                           'groovy.typecheckers.ModifiesChecker'])
-class Calculator {
+<pre class="prettyprint highlight"><code data-lang="groovy">class Calculator {
     BigDecimal total = 0
     List&lt;String&gt; ledger = []
 
     @Pure
+    @TypeChecked(extensions = 'groovy.typecheckers.PurityChecker')
     static BigDecimal vat(BigDecimal net, BigDecimal rate) {
         net * (1 + rate)
     }
@@ -300,12 +299,14 @@ class Calculator {
     @Requires({ amount &gt; 0 })
     @Ensures ({ total == old.total + amount })
     @Modifies({ [this.total, this.ledger] })
+    @TypeChecked(extensions = 'groovy.typecheckers.ModifiesChecker')
     void post(BigDecimal amount) {
         total += amount
         ledger &lt;&lt; "+$amount"
     }
 
     @Pure
+    @TypeChecked(extensions = 'groovy.typecheckers.PurityChecker(allows: "LOGGING")')
     BigDecimal balance() {
         log.fine "balance read"
         total
@@ -334,11 +335,11 @@ state-transition function — pre- and post-conditions, with `old.</code>
 referring to pre-state.</p>
 </li>
 <li>
-<p><code>balance</code> is pure <em>modulo logging</em>. The checker&#8217;s <code>allows</code> option
-declares a small effect lattice (<code>LOGGING</code>, <code>METRICS</code>, <code>IO</code>,
-<code>NONDETERMINISM</code>) and tolerates calls in those categories from any
-<code>@Pure</code> method in scope — graded effects, in the cats-effect sense,
-but the verification work is in the checker rather than the type.</p>
+<p><code>balance</code> is pure <em>modulo logging</em>. Its <code>@TypeChecked</code> extension
+configures <code>PurityChecker(allows: "LOGGING")</code>; the <code>allows</code> option
+draws from a small effect lattice (<code>LOGGING</code>, <code>METRICS</code>, <code>IO</code>,
+<code>NONDETERMINISM</code>) — graded effects, in the cats-effect sense, but
+the verification work is in the checker rather than the type.</p>
 </li>
 </ul>
 </div>
