@@ -114,7 +114,7 @@ annotations?</a> below.</p>
 <div class="paragraph">
 <p>The new pieces close a handful of the gaps that send functional
 programmers reaching for FunctionalJava, HighJ or Vavr when they work
-on the JVM, and they fit together:</p>
+on the JVM:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -129,7 +129,8 @@ specification-driven alternative to lifting effects into an <code>IO</code> mona
 </li>
 <li>
 <p>A <code>DO</code> macro (GEP-23) giving Scala-<code>for</code> / Haskell-<code>do</code> notation
-across <code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, Groovy&#8217;s <code>Awaitable</code>,
+across <code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, Groovy&#8217;s <code>Awaitable</code>
+and <code>DataflowVariable</code>, recognised FunctionalJava and Vavr carriers,
 and any user type that opts in.</p>
 </li>
 <li>
@@ -432,7 +433,7 @@ Awaitable&lt;String&gt; greetByKey(String key) {
 </div>
 </div>
 <div class="paragraph">
-<p><code>DO</code> and <code>for await</code> (the other "await"-shaped new Groovy 6 construct)
+<p><code>DO</code> and <code>for await</code> (Groovy 6&#8217;s other "await"-shaped construct)
 operate at different layers and are easy to confuse. <code>DO</code> composes
 <strong>one</strong> result from a chain of dependent monadic steps; <code>for await</code>
 iterates over <strong>many</strong> values pulled from a stream-shaped source
@@ -445,9 +446,9 @@ by <code>DO</code> can be one element of an upstream publisher consumed by
 <code>for await</code> — but neither replaces the other.</p>
 </div>
 <div class="paragraph">
-<p>And over FunctionalJava&#8217;s <code>Validation</code> — no annotation, no wrapper, no
-Groovy dependency on FunctionalJava, because <code>fj.data.Validation</code> is
-recognised by name in `DO&#8217;s standard allow-list:</p>
+<p><code>DO</code> also composes over FunctionalJava&#8217;s <code>Validation</code> — no annotation,
+no wrapper, no Groovy dependency on FunctionalJava, because
+<code>fj.data.Validation</code> is recognised by name in the standard allow-list:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -463,11 +464,11 @@ assert add('hi', '3').fail()   == 'not numeric: hi'</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The same allow-list also recognises Vavr&#8217;s control carriers
+<p>The same allow-list recognises Vavr&#8217;s control carriers
 (<code>io.vavr.control.Option</code>, <code>io.vavr.control.Try</code>, <code>io.vavr.control.Either</code>,
-<code>io.vavr.control.Validation</code>) by name, so existing Vavr-shaped code composes
-through <code>DO</code> without rewriting and without Groovy taking a dependency on
-Vavr:</p>
+<code>io.vavr.control.Validation</code>) by name, so existing Vavr-shaped code
+composes through <code>DO</code> without rewriting and without Groovy taking a
+dependency on Vavr:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -741,7 +742,7 @@ or a small ASM walker can use them as a specification:</p>
 enough to treat as a specification.</p>
 </div>
 <div class="paragraph">
-<p>The same idea applies more broadly:</p>
+<p>The same idea applies elsewhere:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1095,6 +1096,12 @@ following the same two-layer pattern used elsewhere in this post.</p>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>22/May/2026</strong>: Vavr added to comparison set
+and <code>DO</code> allow-list; producer-side / consumer-side framing for
+declaration-driven features; <code>for await</code> vs <code>DO</code> distinction; GEP-24
+forward-reference for the <code>Try</code> / errors-as-values gap.</p>
+</div>
 <div class="paragraph">
 <p><strong>20/May/2026</strong>: Initial version.</p>
 </div>
