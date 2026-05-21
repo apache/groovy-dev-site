@@ -656,9 +656,24 @@ change the execution model. Collection participation, where offered, is
 sequential.</p>
 </li>
 <li>
-<p><strong>Generators, <code>for await</code>, channels, actors and agents</strong> are stream or
-message-passing tools, orthogonal to <code>DO</code>. A composed <code>Awaitable</code> produced
-by <code>DO</code> may of course be consumed by an outer <code>async</code>/<code>await</code>.</p>
+<p><strong><code>for await</code></strong> deserves a specific note because of the naming
+overlap. <code>DO</code> and <code>for await</code> operate at different layers: <code>DO</code>
+composes <em>one</em> result from a chain of dependent monadic steps and
+produces a single carrier value; <code>for await</code> consumes a stream-shaped
+source (a <code>Flow.Publisher</code>, an <code>AsyncChannel</code>, a generator) item by
+item. The two compose cleanly — a <code>DO</code> chain can live inside the body
+of a <code>for await</code> loop when each pulled item is itself worth composing
+further, and an <code>Awaitable</code> produced by <code>DO</code> can be one element of an
+upstream publisher consumed by <code>for await</code> — but neither is a
+substitute for the other. Pick <code>DO</code> when the question is "three
+dependent steps produce one answer"; pick <code>for await</code> when the
+question is "a stream of events to process as they arrive".</p>
+</li>
+<li>
+<p><strong>Generators, channels, actors and agents</strong> are stream or
+message-passing tools, orthogonal to <code>DO</code>. A composed <code>Awaitable</code>
+produced by <code>DO</code> may of course be consumed by an outer <code>async</code>/<code>await</code>,
+or yielded into a channel for downstream consumers.</p>
 </li>
 </ul>
 </div>

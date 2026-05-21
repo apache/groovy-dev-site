@@ -423,6 +423,19 @@ Awaitable&lt;String&gt; greetByKey(String key) {
 </div>
 </div>
 <div class="paragraph">
+<p><code>DO</code> and <code>for await</code> (the other "await"-shaped new Groovy 6 construct)
+operate at different layers and are easy to confuse. <code>DO</code> composes
+<strong>one</strong> result from a chain of dependent monadic steps; <code>for await</code>
+iterates over <strong>many</strong> values pulled from a stream-shaped source
+(<code>Flow.Publisher</code>, <code>AsyncChannel</code>, a generator). If the problem is
+"three dependent calls produce a single answer", reach for <code>DO</code>. If it
+is "a stream of events to process as they arrive", reach for
+<code>for await</code>. The two compose at different layers — a <code>DO</code> chain can
+sit inside the body of a <code>for await</code> loop, and an <code>Awaitable</code> produced
+by <code>DO</code> can be one element of an upstream publisher consumed by
+<code>for await</code> — but neither replaces the other.</p>
+</div>
+<div class="paragraph">
 <p>And over FunctionalJava&#8217;s <code>Validation</code> — no annotation, no wrapper, no
 Groovy dependency on FunctionalJava, because <code>fj.data.Validation</code> is
 recognised by name in `DO&#8217;s standard allow-list:</p>
