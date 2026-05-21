@@ -73,15 +73,39 @@
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Groovy is not Haskell. It is not Scala. It does not have higher-kinded
-types, a <code>Functor</code>/<code>Applicative</code>/<code>Monad</code> hierarchy, or a totality checker
-in the compiler. Its starting point is Java&#8217;s — a JVM language with
-closures, immutable collections and <code>java.util.stream.Stream</code>.</p>
+<p>What&#8217;s the best way to do functional programming on the JVM?</p>
 </div>
 <div class="paragraph">
-<p>What Groovy 6 <em>does</em> do is close a handful of the gaps that send
-functional programmers reaching for FunctionalJava, HighJ or Vavr when
-they work on the JVM. The new pieces fit together:</p>
+<p>Groovy starts by inheriting Java&#8217;s answer in full. <code>Optional</code>, <code>Stream</code>,
+<code>CompletableFuture</code>, <code>Function</code>, records, immutable collections,
+virtual threads — every JDK carrier and combinator is available, with
+the usual Groovy sugar on top (closures, GINQ, parallel collections,
+<code>Awaitable</code>, async/await). For a lot of workaday code, that is already
+enough.</p>
+</div>
+<div class="paragraph">
+<p>When you want more discipline than the JDK ships with — applicative
+validation, persistent collections, an effect monad, a <code>Try</code> for
+errors-as-values — your favourite existing library still works.
+FunctionalJava, HighJ, and Vavr compose in Groovy unchanged; the <code>DO</code>
+macro recognises their control carriers by name, no glue code required.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 adds a third option, complementary to both. Keep the plain
+values, keep <code>try</code>/<code>catch</code>, keep the carriers Java already gave you —
+and shift the discipline onto <strong>declarations the compiler verifies</strong>.
+Purity is <code>@Pure</code> enforced by <code>PurityChecker</code>. Monoid is
+<code>@Reducer</code>/<code>@Associative</code> enforced by <code>CombinerChecker</code>. Absence is
+<code>@Nullable</code> enforced by <code>NullChecker</code> (with a strict mode that needs
+no annotations at all). The discipline the wrapper-heavy path gives
+you, without the cost of lifting every call boundary into a carrier —
+the simplicity of the pragmatic path with the guarantees of the
+elaborate one.</p>
+</div>
+<div class="paragraph">
+<p>The new pieces close a handful of the gaps that send functional
+programmers reaching for FunctionalJava, HighJ or Vavr when they work
+on the JVM, and they fit together:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -116,8 +140,10 @@ require.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>None of that turns Groovy into a pure-functional language. It does mean
-the parts of the FP toolkit that pay their way on a real JVM project —
+<p>None of that turns Groovy into a pure-functional language: there are
+still no higher-kinded types, no <code>Functor</code>/<code>Applicative</code>/<code>Monad</code>
+hierarchy, and no totality checker in the compiler. It does mean the
+parts of the FP toolkit that pay their way on a real JVM project —
 algebraic laws on combiners, declared purity, monadic value
 composition, exhaustive null handling, immutable updates — are now
 first-class.</p>
