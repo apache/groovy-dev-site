@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-24</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-24</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_specification' class='anchor-link'>Specification</a></li><li><a href='#_examples' class='anchor-link'>Examples</a></li><li><a href='#_annotations_live_where_the_api_lives' class='anchor-link'>Annotations live where the API lives</a></li><li><a href='#_rationale_and_alternatives_considered' class='anchor-link'>Rationale and alternatives considered</a></li><li><a href='#_implementation_notes' class='anchor-link'>Implementation notes</a></li><li><a href='#_migration_and_compatibility' class='anchor-link'>Migration and compatibility</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_status_of_related_work' class='anchor-link'>Status of related work</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-24</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-24</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Errors as values — compile-time <code>Try</code> without the wrapper</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Targets Groovy 7.0; the spec-side checker (<code>@Raises</code> + <code>ExceptionChecker</code>) may incubate earlier in a Groovy 6.x point release</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-21</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-05-21</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+We are currently working on Groovy 6.0 and this proposal targets Groovy 7.0.
+The final version of this proposal may differ significantly from the current draft,
+but having this draft available allows us to gather early feedback, align design
+decisions in Groovy 6 as best we can, and iterate on the design.
+We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP brings Vavr / Scala / Rust style "errors as values" composition to
+Groovy without committing to a single runtime carrier. It splits the
+functionality into two complementary layers, mirroring the approach Groovy 6
+already takes for nullability (<code>@Nullable</code> + <code>NullChecker</code> /
+<code>Optional&lt;T&gt;</code> in <code>DO</code>):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Spec layer</strong> — <code>@Raises(X.class)</code> on Groovy methods plus
+<code>groovy.typecheckers.ExceptionChecker</code>, a flow-sensitive type-checking
+extension that verifies every potentially-thrown exception is either declared
+or discharged. This is "compile-time <code>Try</code> without the wrapper" — the runtime
+stays plain <code>try</code>/<code>catch</code> and stack traces stay legible.</p>
+</li>
+<li>
+<p><strong>Carrier layer</strong> — <code>groovy.util.Result&lt;T&gt;</code> (a sealed
+<code>Success</code>/<code>Failure</code> pair), an <code>attempt { … }</code> macro that lifts an
+exception-throwing block into a <code>Result</code>, an <code>@AsResult</code> AST transform that
+lifts a whole method body, and an entry in <code>DO&#8217;s standard allow-list so
+`Result</code> composes monadically alongside <code>Optional</code>, <code>Awaitable</code>,
+<code>fj.data.Validation</code>, etc.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The two layers are independent: the spec layer is the default, lighter path
+for code that just wants the compile-time guarantee; the carrier layer is
+opt-in when failure genuinely needs to be a first-class value (collecting
+per-element outcomes, structured logging, railway-style chaining, passing
+failures across module boundaries).</p>
+</div>
+<div class="paragraph">
+<p>The proposal introduces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groovy.transform.Raises</code> — repeatable marker annotation declaring the
+exception types a method may throw, suitable for both Groovy and Java
+consumers (the latter via the bytecode signature emitted by the AST
+transform).</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.ExceptionChecker</code> — type-checking extension with
+default (lenient) and <code>strict</code> modes.</p>
+</li>
+<li>
+<p><code>groovy.util.Result&lt;T&gt;</code> — sealed <code>interface</code> with <code>Success&lt;T&gt;</code> and
+<code>Failure&lt;T&gt;</code> record implementations, exposing
+<code>map</code>/<code>flatMap</code>/<code>recover</code>/<code>recoverWith</code>/<code>onSuccess</code>/<code>onFailure</code>/
+<code>getOrElse</code>/<code>getOrThrow</code>/<code>toOptional</code>/<code>toAwaitable</code>.</p>
+</li>
+<li>
+<p><code>attempt { … }</code> — macro in the macro library that lifts a block to a
+<code>Result&lt;T&gt;</code>.</p>
+</li>
+<li>
+<p><code>groovy.transform.AsResult</code> — AST transform that rewrites a method body
+into the corresponding <code>try</code>/<code>catch</code> returning a <code>Result&lt;T&gt;</code>.</p>
+</li>
+<li>
+<p><code>Result</code> entered into <code>MonadicChecker</code> / <code>MonadicShapeChecker</code> /
+<code>DO</code> carrier registry from <a href="#gep-23">GEP-23</a>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Groovy 6 design pitch in one sentence is <em>verified declarations beat
+runtime wrappers</em>. The proof points are already in place:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Library concept</th>
+<th class="tableblock halign-left valign-top">Spec layer in Groovy 6</th>
+<th class="tableblock halign-left valign-top">Carrier layer in Groovy 6</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe</code>/<code>Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nullable</code> + <code>NullChecker(strict)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Optional&lt;T&gt;</code> in <code>DO</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;A&gt;</code> / <code>Semigroup&lt;A&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Reducer</code>/<code>@Associative</code> + <code>CombinerChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(none — algebra moves onto the method)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO</code> / <code>State</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Pure(allows = …)</code> / <code>@Modifies</code> + checkers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(none — declarations replace lift/unlift)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>do</code>-notation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MonadicChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO</code> macro (GEP-23)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Async</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Pure(allows = NONDETERMINISM)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>async { }</code> macro + <code>Awaitable</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The conspicuous gap is <strong>errors as values</strong>. A Groovy 6 codebase that wants
+Vavr-style <code>Try.of) &#8594; risky(.map(…).recover(…)</code> semantics has no native
+answer: Vavr (or fj&#8217;s <code>Validation</code>, or hand-rolled <code>Either</code>) must be imported,
+and the resulting code lifts every failable call into a wrapper that does not
+compose with the rest of the Groovy 6 surface (it is invisible to
+<code>NullChecker</code>, <code>PurityChecker</code>, <code>MonadicChecker</code>, and the contract
+annotations).</p>
+</div>
+<div class="paragraph">
+<p>The deliberate Groovy 6 stance on exception handling (per release notes,
+<code>async</code>/<code>await</code> section) is <em>"Exception handling works with standard
+<code>try</code>/<code>catch</code>&#8201;&#8212;&#8201;no <code>.exceptionally()</code> chains."</em> This GEP keeps that stance
+for the everyday path and adds opt-in mechanisms — at the <strong>declaration</strong>
+level, not the <strong>type</strong> level — for code that wants compile-time guarantees
+about which exceptions cross which boundaries, plus a runtime <code>Result&lt;T&gt;</code>
+carrier when failure genuinely is a value.</p>
+</div>
+<div class="paragraph">
+<p>The companion observation is that <strong>every existing Groovy 6 spec-layer
+mechanism already has a runtime sibling that participates in <code>DO</code></strong>. The same
+two-layer pattern applied to errors completes the picture.</p>
+</div>
+<div class="sect2">
+<h3 id="_goals">Goals</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Provide a <strong>declaration-driven, compile-time-verifiable</strong> way to track which
+exceptions cross which boundaries, without re-introducing Java&#8217;s
+language-level checked-exception ceremony.</p>
+</li>
+<li>
+<p>Provide a <strong>runtime <code>Result&lt;T&gt;</code> carrier</strong> with the standard
+<code>map</code>/<code>flatMap</code>/<code>recover</code> API, idiomatic for Groovy, free of <code>µ</code>-tag
+encodings and free of HKT machinery.</p>
+</li>
+<li>
+<p>Make the spec layer and the carrier layer interoperate without ceremony:
+the same <code>@Raises</code> declaration informs the checker and the AST transform;
+<code>Result.toAwaitable()</code> and <code>attempt { }</code> desugar via the same primitives
+already used by <code>async { }</code> / <code>Awaitable.exceptionally</code>.</p>
+</li>
+<li>
+<p>Recognise existing third-party error carriers (Vavr&#8217;s <code>Try</code> / <code>Either</code> /
+<code>Validation</code>, fj&#8217;s <code>Validation</code>) in `DO&#8217;s allow-list by simple name, so
+codebases that already use them get DO composition for free.</p>
+</li>
+<li>
+<p>Provide <strong>machine-actionable specs</strong>: <code>@Raises</code> declarations are
+compiler-enforced and AI-readable in the same way <code>@Pure</code> / <code>@Modifies</code> /
+<code>@Associative</code> / <code>@Reducer</code> already are.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_non_goals">Non-goals</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Re-introducing Java&#8217;s checked-exception ceremony at the language level.
+The spec layer is opt-in per file via the <code>@TypeChecked</code> extension; default
+Groovy code is unchanged.</p>
+</li>
+<li>
+<p>Higher-kinded types. <code>Result&lt;T&gt;</code> is a concrete type. No <code>Monad&lt;µ&gt;</code>
+typeclass, no synthesised <code>pure</code>/<code>return</code>, no carrier-mixing in <code>DO</code>. Same
+non-goals as <a href="#gep-23">GEP-23</a>.</p>
+</li>
+<li>
+<p>A <code>Try</code> <strong>language keyword</strong>. The block-level lift is the <code>attempt { }</code>
+macro; the method-level lift is the <code>@AsResult</code> AST transform. The Java
+keyword <code>try</code> is unchanged in meaning.</p>
+</li>
+<li>
+<p>A new exception hierarchy. <code>Result.Failure</code> wraps <code>Throwable</code>; existing
+exception classes are reused as-is.</p>
+</li>
+<li>
+<p>Supervision strategies for actors / agents. Those remain a separate
+question for <code>groovy.concurrent.Actor</code> / <code>Agent</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_specification">Specification</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_spec_layer">Spec layer</h3>
+<div class="sect3">
+<h4 id="_raises_annotation"><code>@Raises</code> annotation</h4>
+<div class="paragraph">
+<p>Marker on methods that may propagate one or more exceptions to callers, in
+addition to (or beyond) anything visible in the method&#8217;s <code>throws</code> clause.
+Repeatable so individual exception types can be listed per-line for
+readability.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package groovy.transform
+
+import org.apache.groovy.lang.annotation.Incubating
+
+@Documented
+@Incubating
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Repeatable(Raises.Container)
+@interface Raises {
+    Class&lt;? extends Throwable&gt;[] value()
+    String when() default ''             // optional condition expression, for docs / tooling
+
+    @Documented
+    @Incubating
+    @Target(ElementType.METHOD)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Container { Raises[] value() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Usage:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Raises(NumberFormatException)
+int parsePositive(String s) {
+    var n = Integer.parseInt(s)            // throws NFE
+    if (n &lt;= 0) throw new IllegalArgumentException("not positive: $s")
+    n
+}
+
+// Repeatable:
+@Raises(NumberFormatException)
+@Raises(value = IllegalArgumentException, when = 'n &lt;= 0')
+int parsePositive2(String s) { … }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The AST transform that backs <code>@Raises</code> <strong>also emits a bytecode <code>throws</code>
+clause</strong> on the generated method, so Java consumers see the declaration in
+the standard place. (For Groovy methods that already use Java-style
+<code>throws X</code> in the signature, <code>@Raises</code> is redundant and the checker treats
+both as authoritative.)</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_exceptionchecker"><code>ExceptionChecker</code></h4>
+<div class="paragraph">
+<p>A type-checking extension under
+<code>groovy.typecheckers.ExceptionChecker</code>, used like any other extension:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Lenient mode — flags only unhandled checked exceptions and unhandled
+// exceptions declared via @Raises that appear at call sites.
+@TypeChecked(extensions = 'groovy.typecheckers.ExceptionChecker')
+
+// Strict mode — additionally flags every potentially-thrown unchecked
+// exception that can be statically inferred from bytecode / @Raises,
+// requiring an explicit catch, rethrow declaration, or @Raises propagation
+// on the enclosing method.
+@TypeChecked(extensions = 'groovy.typecheckers.ExceptionChecker(strict: true)')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Inference sources (in priority order):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>@Raises(X)</code> on the called method (Groovy-side declaration).</p>
+</li>
+<li>
+<p>Bytecode <code>throws</code> clause on the called method (Java methods and Groovy
+methods declaring <code>throws X</code>).</p>
+</li>
+<li>
+<p>The <code>@Pure</code> family — a method declared <code>@Pure(allows = NONE)</code> (the
+default) is taken to throw nothing. A <code>@Pure(allows = THROWS_SAFELY)</code>
+variant may be added if useful (subject to discussion).</p>
+</li>
+<li>
+<p><strong>(strict mode only)</strong> Standard JVM unchecked exceptions implied by the
+expression form — division by zero, array bounds, null dereferences
+(when not separately discharged by <code>NullChecker</code>), <code>ClassCastException</code>
+in casts, etc., catalogued in a configurable table.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Discharge mechanisms (a hit on any of these removes the obligation):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>try</code>/<code>catch</code> whose catch covers the inferred type (or a supertype). The
+checker handles multi-catch and <code>Throwable</code> / <code>Exception</code> / <code>RuntimeException</code>
+catch-all forms.</p>
+</li>
+<li>
+<p>ARM / try-with-resources blocks for resources whose <code>close()</code> declares
+the exception in question.</p>
+</li>
+<li>
+<p><code>groovy.util.IOGroovyMethods.withCloseable</code> / <code>withStream</code> / similar
+closure-scoped resource methods, recognised by name.</p>
+</li>
+<li>
+<p><code>@Raises(X)</code> on the enclosing method — explicit propagation.</p>
+</li>
+<li>
+<p><code>throws X</code> clause on the enclosing method — same, Java-side spelling.</p>
+</li>
+<li>
+<p>A <code>@Requires({ … })</code> whose top-level conjuncts statically rule out the
+precondition that would cause the throw (parallel to how
+<code>@Requires({ x != null })</code> already feeds <code>NullChecker</code>). Example:
+<code>@Requires({ s ==~ /\d+/ })</code> discharges <code>NumberFormatException</code> from a
+subsequent <code>Integer.parseInt(s)</code>.</p>
+</li>
+<li>
+<p><code>attempt { }</code> — see <a href="#attempt-macro">below</a>.</p>
+</li>
+<li>
+<p><code>@AsResult</code> — see <a href="#as-result">below</a>.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Diagnostic shape (same idiom as <code>NullChecker</code>):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ExceptionChecker: 'parsePositive' may throw NumberFormatException;
+  declare via @Raises, add it to the method's throws clause, or wrap the
+  call in a try/catch / attempt { } block.</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="attempt-macro">Carrier layer</h3>
+<div class="sect3">
+<h4 id="_resultt"><code>Result&lt;T&gt;</code></h4>
+<div class="paragraph">
+<p>A new type under <code>groovy.util.Result&lt;T&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package groovy.util
+
+import org.apache.groovy.lang.annotation.Incubating
+
+@Incubating
+sealed interface Result&lt;T&gt; permits Success, Failure {
+
+    static &lt;T&gt; Result&lt;T&gt; success(T value)            { new Success&lt;&gt;(value) }
+    static &lt;T&gt; Result&lt;T&gt; failure(Throwable error)    { new Failure&lt;&gt;(error) }
+
+    /** Lift a thunk; any Throwable becomes Failure. Used by the attempt macro. */
+    static &lt;T&gt; Result&lt;T&gt; of(Supplier&lt;T&gt; thunk)       { try { success(thunk.get()) } catch (Throwable t) { failure(t) } }
+
+    &lt;U&gt; Result&lt;U&gt; map(Function&lt;? super T, ? extends U&gt; fn)
+    &lt;U&gt; Result&lt;U&gt; flatMap(Function&lt;? super T, Result&lt;U&gt;&gt; fn)
+    Result&lt;T&gt;     recover(Function&lt;? super Throwable, ? extends T&gt; fn)
+    Result&lt;T&gt;     recoverWith(Function&lt;? super Throwable, Result&lt;T&gt;&gt; fn)
+    Result&lt;T&gt;     filter(Predicate&lt;? super T&gt; pred, Supplier&lt;? extends Throwable&gt; ifFalse)
+
+    void          onSuccess(Consumer&lt;? super T&gt; fn)
+    void          onFailure(Consumer&lt;? super Throwable&gt; fn)
+
+    T             getOrElse(T fallback)
+    T             getOrThrow()                          // unwraps Success; rethrows wrapped Throwable from Failure
+    boolean       isSuccess()
+    boolean       isFailure()
+
+    Optional&lt;T&gt;   toOptional()
+    Awaitable&lt;T&gt;  toAwaitable()                         // completed CompletableFuture-backed
+}
+
+@Incubating
+record Success&lt;T&gt;(T value)        implements Result&lt;T&gt; { … }
+
+@Incubating
+record Failure&lt;T&gt;(Throwable error) implements Result&lt;T&gt; { … }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Choice notes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>sealed interface</code> + <code>record</code> permits members enables GEP-19 record-pattern
+deconstruction at the case site without special compiler support:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (compute(input)) {
+    case Success(var v) -&gt; use(v)
+    case Failure(var e) -&gt; log.warn("failed", e)
+}</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>Result.of(Supplier)</code> is the runtime primitive; the macro and AST transform
+desugar to it. The <code>try</code>/<code>catch</code> lives in one place, in the JDK-trusted
+<code>groovy.util.Result</code> implementation.</p>
+</li>
+<li>
+<p><code>Result</code> is <strong>not</strong> an <code>Awaitable</code> (despite both carrying success-or-failure)
+— <code>Awaitable</code> semantics imply scheduling; <code>Result</code> is synchronous. Use
+<code>result.toAwaitable()</code> for explicit interop.</p>
+</li>
+<li>
+<p>The catch in <code>map</code>/<code>flatMap</code> is <code>Throwable</code> <strong>except</strong> for <code>VirtualMachineError</code>,
+<code>ThreadDeath</code>, and <code>LinkageError</code>, which propagate (matching Vavr&#8217;s
+"fatal exceptions" rule).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_attempt_macro"><code>attempt { … }</code> macro</h4>
+<div class="paragraph">
+<p>A macro in <code>org.apache.groovy.macrolib.MacroLibGroovyMethods</code> (alongside
+<code>DO</code>) lifting an arbitrary block to a <code>Result&lt;T&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import static org.apache.groovy.macrolib.MacroLibGroovyMethods.attempt
+
+Result&lt;Integer&gt; r = attempt { Integer.parseInt(s) }
+
+Result&lt;Integer&gt; r2 = attempt {
+    var x = Integer.parseInt(s1)
+    var y = Integer.parseInt(s2)
+    x + y
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The macro rewrites to a call on <code>Result.of</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Result&lt;Integer&gt; r = Result.of(() -&gt; Integer.parseInt(s))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The static type inferred for the call is <code>Result&lt;T&gt;</code> where <code>T</code> is the static
+type of the block&#8217;s last expression (mirroring `async { }&#8217;s type
+inference).</p>
+</div>
+<div class="paragraph">
+<p>Interaction with <code>ExceptionChecker</code>: an <code>attempt { }</code> block discharges every
+exception that would otherwise escape that block — same effect as wrapping
+in <code>try { … } catch (Throwable t) { … }</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="as-result"><code>@AsResult</code> AST transform</h4>
+<div class="paragraph">
+<p>A method-level annotation that rewrites the body to return a <code>Result&lt;T&gt;</code>,
+catching any throw and converting it to <code>Failure</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AsResult
+Result&lt;Integer&gt; parseAndAdd(String s1, String s2) {
+    Integer.parseInt(s1) + Integer.parseInt(s2)
+}
+
+// Rewrites to:
+Result&lt;Integer&gt; parseAndAdd(String s1, String s2) {
+    try {
+        Result.success(Integer.parseInt(s1) + Integer.parseInt(s2))
+    } catch (Throwable t) {
+        Result.failure(t)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@AsResult(catches = [NumberFormatException, IOException])</code> for selective
+catching — uncaught throws propagate normally. Fatal errors
+(<code>VirtualMachineError</code>, <code>ThreadDeath</code>, <code>LinkageError</code>) always propagate.</p>
+</div>
+<div class="paragraph">
+<p>Constraints:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The declared return type of the annotated method <strong>must</strong> be <code>Result&lt;T&gt;</code>
+(or a supertype). The transform errors at compile time otherwise.</p>
+</li>
+<li>
+<p>The body&#8217;s last expression&#8217;s static type must conform to <code>T</code>. Reuses the
+existing return-type inference machinery.</p>
+</li>
+<li>
+<p><code>@AsResult</code> is mutually exclusive with <code>@Raises</code>: the method either
+<strong>reifies</strong> failures as <code>Result</code> or <strong>declares</strong> them via <code>@Raises</code>. The
+checker errors on combination.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_do_and_monadicchecker_integration">DO and MonadicChecker integration</h3>
+<div class="paragraph">
+<p><code>Result&lt;T&gt;</code> is added to the standard carrier registry consumed by
+<code>groovy.typecheckers.MonadicChecker</code>, <code>MonadicShapeChecker</code>, and the <code>DO</code>
+macro from <a href="#gep-23">GEP-23</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Result&lt;Integer&gt; compute(String a, String b) {
+    DO(x in attempt { Integer.parseInt(a) },
+       y in attempt { Integer.parseInt(b) }) {
+        Result.success(x + y)
+    }
+}
+
+assert compute('2', '3') instanceof Success
+assert compute('hi', '3') instanceof Failure</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>DO short-circuits on the first <code>Failure</code> (via <code>flatMap&#8217;s pass-through
+semantics), so the second `parseInt</code> is skipped when the first fails. No
+new macro work; just an allow-list entry.</p>
+</div>
+<div class="paragraph">
+<p><code>MonadicShapeChecker</code> likewise lints <code>Result.of(() &#8594; x).map { Result.success(it) }</code>
+as a <code>flatMap</code>/<code>map</code> mix-up (the body returns a <code>Result</code>, so it should be
+<code>flatMap</code>). Same checker, new carrier — no new checking logic.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_third_party_carrier_recognition">Third-party carrier recognition</h3>
+<div class="paragraph">
+<p>DO&#8217;s standard allow-list is extended to recognise the following error carriers
+by <strong>simple name from any package</strong>, in the same manner <code>@Reducer</code> /
+<code>@Associative</code> are recognised:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Carrier</th>
+<th class="tableblock halign-left valign-top">bind/map convention used by <code>DO</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.control.Try</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code> / <code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.control.Either</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code> / <code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.control.Validation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code> / <code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.control.Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>flatMap</code> / <code>map</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Validation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bind</code> / <code>map</code>   <em>(already in standard allow-list)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Either</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>right.bind</code> / <code>right.map</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>These additions do not require Groovy to depend on Vavr or FunctionalJava —
+recognition is by simple class name, the same trick used for the existing
+allow-list entries.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples">Examples</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_spec_layer_only_no_carrier_in_sight">Spec layer only — no carrier in sight</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Raises(IOException)
+String readConfig() {
+    Files.readString(Path.of('config.yml'))
+}
+
+@TypeChecked(extensions = 'groovy.typecheckers.ExceptionChecker')
+def main() {
+    var cfg = readConfig()         // compile error: unhandled IOException
+}
+
+@TypeChecked(extensions = 'groovy.typecheckers.ExceptionChecker')
+@Raises(IOException)
+def main2() {
+    var cfg = readConfig()         // ok: propagated via @Raises
+    process(cfg)
+}
+
+@TypeChecked(extensions = 'groovy.typecheckers.ExceptionChecker')
+def main3() {
+    try {
+        var cfg = readConfig()
+        process(cfg)
+    } catch (IOException ioe) {
+        log.error("config load failed", ioe)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is "Try, the static analysis" — no <code>Result&lt;T&gt;</code> anywhere, no lift, no
+unlift. The stack trace from an unhandled <code>IOException</code> in <code>main2</code> is the
+ordinary JVM stack trace.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_carrier_layer_failure_as_a_value">Carrier layer — failure as a value</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.util.Result
+import static org.apache.groovy.macrolib.MacroLibGroovyMethods.attempt
+
+@TypeChecked
+List&lt;Result&lt;Integer&gt;&gt; parseAll(List&lt;String&gt; inputs) {
+    inputs.collect { s -&gt; attempt { Integer.parseInt(s) } }
+}
+
+var outcomes = parseAll(['1', '2', 'oops', '4'])
+assert outcomes.count { it.isSuccess() } == 3
+outcomes.findAll { it.isFailure() }.each { f -&gt;
+    log.warn("input rejected", (f as Failure).error)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here <code>Result&lt;T&gt;</code> earns its place: per-element outcomes are stored in a
+list, both branches are observable, no exception escapes the loop.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_method_level_lift_via_asresult">Method-level lift via <code>@AsResult</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AsResult
+Result&lt;Config&gt; loadConfig(Path path) {
+    var raw = Files.readString(path)               // may throw IOException
+    var parsed = ConfigParser.parse(raw)            // may throw ParseException
+    parsed.validate()                                // may throw ValidationException
+    parsed
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The body reads as normal throwing code; the annotation provides the
+boundary. Caller composes via <code>Result.map</code> / <code>Result.flatMap</code> / <code>DO</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Result&lt;App&gt; startUp(Path configPath, Path keysPath) {
+    DO(cfg  in loadConfig(configPath),
+       keys in loadKeys(keysPath)) {
+        Result.success(new App(cfg, keys))
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mixing_with_awaitable">Mixing with <code>Awaitable</code></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AsResult
+Result&lt;UserProfile&gt; loadProfile(String id) {
+    var raw = await async { httpClient.get("/users/$id") }    // may throw
+    UserProfile.parse(raw)
+}
+
+// Or sync → async interop:
+Awaitable&lt;UserProfile&gt; profileAsync = loadProfile('u42').toAwaitable()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Awaitable.exceptionally</code> and <code>Result.recover</code> are the synchronous /
+asynchronous siblings — same algebra.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annotations_live_where_the_api_lives">Annotations live where the API lives</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@Raises</code> is a <strong>library-author</strong> annotation, not an application-developer
+one. A typed CSV parser declares <code>@Raises(MalformedCsvException)</code> on its
+parse methods once; every caller compiled under <code>ExceptionChecker</code>
+benefits without writing any annotation of their own. The same applies
+to JDK methods (Java&#8217;s existing <code>throws</code> clauses are read by
+<code>ExceptionChecker</code> as <code>@Raises</code>-equivalent declarations).</p>
+</div>
+<div class="paragraph">
+<p>Application code acquires <code>@Raises</code> only at boundaries it owns and
+propagates — public APIs, framework handlers, top-level methods that
+need callers to see the contract. The everyday case of "call library;
+either handle the failure or propagate to caller" needs no local
+annotation beyond the optional <code>@Raises</code> on the boundary method itself,
+and that one annotation re-emits as a bytecode <code>throws</code> clause so the
+contract is visible to Java consumers without further coordination.</p>
+</div>
+<div class="paragraph">
+<p>This is the same producer-side / consumer-side split that
+<code>@Nullable</code>/<code>NullChecker</code>, <code>@Associative</code>/<code>CombinerChecker</code>,
+<code>@Monadic</code>/<code>MonadicChecker</code> and <code>@Pure</code>/<code>PurityChecker</code> already adopt
+in Groovy 6: the declaration is an investment the library author makes
+once; the verification is a property consumer codebases enable
+per-file. A consequence worth naming explicitly is that the "compile-time
+<code>Try</code> without the wrapper" pitch reaches full strength only when the
+libraries the user depends on are themselves annotated (or were
+compiled with Java&#8217;s <code>throws</code> clauses, which works equally well).
+Annotating a single well-used library benefits every downstream codebase
+that runs <code>ExceptionChecker</code>; the cost is paid once.</p>
+</div>
+<div class="paragraph">
+<p>The carrier-side path is the symmetric story for the runtime
+composition layer: <code>Result&lt;T&gt;</code> enters <code>DO&#8217;s allow-list in core, so
+codebases that lift to `Result</code> get <code>DO</code> composition without writing
+<code>@Monadic</code> themselves. Vavr&#8217;s <code>Try</code>/<code>Either</code>/<code>Validation</code>/<code>Option</code> and
+FunctionalJava&#8217;s <code>Validation</code> are recognised by name for the same
+reason — application code chooses a carrier and composes; the
+declarations live elsewhere.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rationale_and_alternatives_considered">Rationale and alternatives considered</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_why_two_layers_spec_carrier_rather_than_one">Why two layers (spec + carrier) rather than one?</h3>
+<div class="paragraph">
+<p>A single-carrier design (lift everything to <code>Result&lt;T&gt;</code>, like Vavr) forces
+every call site in the affected call graph to thread the wrapper through.
+Groovy 6&#8217;s design philosophy explicitly rejects this for null
+(<code>NullChecker</code> strict mode), monoids (<code>@Reducer</code>), purity (<code>@Pure</code>), and
+async (<code>async</code>/<code>await</code> with structured <code>try</code>/<code>catch</code>). Extending the same
+two-layer pattern to errors keeps the codebase coherent:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>code that just wants the compile-time guarantee uses <code>@Raises</code> and
+<code>ExceptionChecker</code> — no <code>Result&lt;T&gt;</code> import</p>
+</li>
+<li>
+<p>code that genuinely needs failure as a value uses <code>Result&lt;T&gt;</code>,
+<code>attempt { }</code>, or <code>@AsResult</code></p>
+</li>
+<li>
+<p>both layers share the <code>@Raises</code> declaration, so the spec is the
+single source of truth</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_not_adopt_vavrs_try_directly">Why not adopt Vavr&#8217;s <code>Try</code> directly?</h3>
+<div class="paragraph">
+<p>Considered. Vavr is the dominant FP library on the JVM today and <code>Try</code>
+is its canonical error monad. The argument for adoption:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>mature implementation, large user base, well-documented</p>
+</li>
+<li>
+<p><code>Try</code> already integrates with Vavr&#8217;s <code>Option</code>, <code>Either</code>, <code>Validation</code>,
+<code>Future</code> ecosystem</p>
+</li>
+<li>
+<p>zero implementation cost</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Arguments against, in priority order:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Wrapper viral spread.</strong> Once <code>Try&lt;T&gt;</code> enters a call graph, every
+boundary in that graph carries it. There is no
+declaration-only path. This is the same objection that drove
+<code>NullChecker</code> strict mode rather than mandatory <code>Optional&lt;T&gt;</code>.</p>
+</li>
+<li>
+<p><strong>Groovy dependency footprint.</strong> Vavr is ~700KB; bundling it into core
+is heavier than the spec-layer-only design needs.</p>
+</li>
+<li>
+<p><strong>Doesn&#8217;t compose with the rest of Groovy 6.</strong> Vavr&#8217;s <code>Try</code> is opaque to
+<code>PurityChecker</code>, <code>ModifiesChecker</code>, <code>NullChecker</code>, contract <code>@Requires</code>,
+and the AI-spec story. Native <code>@Raises</code> + <code>ExceptionChecker</code> is
+machine-readable in the same way.</p>
+</li>
+<li>
+<p><strong>Vavr is not abandoned in this proposal.</strong> <code>io.vavr.control.{Try,
+Either, Option, Validation}</code> are recognised by name in DO&#8217;s allow-list,
+so existing Vavr-shaped code composes through <code>DO</code> without rewriting.</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_not_java_checked_exceptions">Why not Java checked exceptions?</h3>
+<div class="paragraph">
+<p>Groovy historically and intentionally rejects Java&#8217;s compulsory
+checked-exception enforcement: it interacts poorly with
+closures / lambdas, generates ceremony in scripts and DSLs, and produces
+the well-documented "swallow with <code>e.printStackTrace()`" anti-pattern.
+This GEP does not change that default. `ExceptionChecker</code> is opt-in per
+file via <code>@TypeChecked(extensions = …)</code>; absence of the annotation
+leaves Groovy&#8217;s existing behaviour untouched.</p>
+</div>
+<div class="paragraph">
+<p>The differences from Java&#8217;s checked exceptions, even when
+<code>ExceptionChecker(strict: true)</code> is on:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the rule is <strong>configurable per file</strong>, not language-wide</p>
+</li>
+<li>
+<p>unchecked exceptions can also be tracked (strict mode)</p>
+</li>
+<li>
+<p><code>@Requires</code> clauses participate in discharge — a precondition that
+rules out the throw counts</p>
+</li>
+<li>
+<p>fluent recovery via <code>attempt { }</code> and <code>@AsResult</code> is part of the
+same proposal, not a separate convenience</p>
+</li>
+<li>
+<p><code>@Raises</code> is <strong>informational</strong> in dynamic Groovy code (no enforcement
+when the file does not enable the checker)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_raises_rather_than_throws">Why <code>@Raises</code> rather than <code>@Throws</code>?</h3>
+<div class="paragraph">
+<p><code>@Throws</code> conflicts with the Java <code>throws</code> keyword visually (and in
+class-name spelling). Kotlin uses <code>@Throws</code> but specifically for Java
+interop on Kotlin functions that don&#8217;t otherwise advertise checked
+exceptions — different problem space. <code>@Raises</code> is unambiguous, reads
+naturally ("this method raises NFE"), and parallels the
+<code>@Pure</code>/<code>@Modifies</code>/<code>@Associative</code>/<code>@Reducer</code> family in tone.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_resultt_rather_than_tryt_for_the_carrier">Why <code>Result&lt;T&gt;</code> rather than <code>Try&lt;T&gt;</code> for the carrier?</h3>
+<div class="paragraph">
+<p><code>Try&lt;T&gt;</code> echoes Vavr/Scala and has FP-tradition recognition. <code>Result&lt;T&gt;</code>
+aligns with Swift, Kotlin, and Rust and reads as a noun outside FP
+contexts. The Groovy 6 audience straddles both communities; <code>Result&lt;T&gt;</code>
+is the lower-friction choice for the non-FP half and loses nothing for
+the FP half. The annotation <code>@AsResult</code> reads naturally for the same
+reason.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_an_attempt_macro_rather_than_a_method_call">Why an <code>attempt { }</code> macro rather than a method call?</h3>
+<div class="paragraph">
+<p><code>Result.of { … }</code> already works as a plain static factory. The macro adds
+two things:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>block-statement syntax</strong> — <code>attempt { … }</code> works as a statement (assigned
+to <code>var r = …</code>) without the lambda-ceremony of <code>Result.of(() &#8594; { … })</code></p>
+</li>
+<li>
+<p><strong>checker discharge</strong> — <code>ExceptionChecker</code> recognises the macro form
+syntactically and discharges any exception that would escape the block,
+without depending on type inference of the lambda&#8217;s return type</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The plain <code>Result.of(Supplier)</code> factory remains the runtime primitive.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_an_asresult_ast_transform_rather_than_just_attempt_at_method_scope">Why an <code>@AsResult</code> AST transform rather than just <code>attempt { }</code> at method scope?</h3>
+<div class="paragraph">
+<p><code>attempt { … return … }</code> at the top of a method body achieves the same
+runtime effect. The transform adds:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>signature-level visibility</strong> — readers see <code>@AsResult Result&lt;T&gt; foo(…)</code>
+on the declaration line and know the body is naturally written as throwing
+code; no <code>attempt { }</code> indentation in the body</p>
+</li>
+<li>
+<p><strong>return-type enforcement</strong> — the transform errors at compile time if the
+declared return type is not <code>Result&lt;T&gt;</code>, catching a class of mistakes</p>
+</li>
+<li>
+<p><strong>parallel to <code>@TailRecursive</code></strong> — same shape: an annotation that rewrites
+the body into a form the runtime can execute</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation_notes">Implementation notes</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><code>@Raises</code> AST transform: lives in the existing <code>groovy.transform</code> package,
+emits a bytecode <code>throws</code> clause as well as retaining annotation metadata
+(so both Groovy <code>ExceptionChecker</code> and Java compilers see the declaration).</p>
+</li>
+<li>
+<p><code>ExceptionChecker</code> implementation: parallels <code>NullChecker&#8217;s structure —
+`GroovyTypeCheckingExtensionSupport.TypeCheckingDSL</code> subclass with
+<code>afterMethodCall</code> / <code>beforeVisitClass</code> hooks. Reuses the existing
+flow-sensitive infrastructure that <code>NullChecker</code> already employs for
+narrowing analysis.</p>
+</li>
+<li>
+<p><code>Result&lt;T&gt;</code> lives in <code>groovy.util</code>. Sealed-interface + record members rely
+on Groovy 5+ features that already exist. Same sealed-interface technique
+used internally by other groovy.util types.</p>
+</li>
+<li>
+<p><code>attempt { }</code> macro: trivial syntactic rewrite to <code>Result.of(() &#8594; body)</code>
+in the <code>MacroLibGroovyMethods</code> host. ~50 LOC, parallel to other macros in
+that file.</p>
+</li>
+<li>
+<p><code>@AsResult</code> AST transform: rewrites the method body to a single
+<code>try</code>/<code>catch</code> returning <code>Result</code>. ~150 LOC.</p>
+</li>
+<li>
+<p>DO allow-list entry for <code>Result</code>: one line in the <code>MonadicChecker</code> carrier
+registry. Third-party carrier (Vavr) entries are similarly minimal.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Module layout:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groovy-transform</code>: <code>@Raises</code>, <code>@AsResult</code>, transforms</p>
+</li>
+<li>
+<p><code>groovy-typecheckers</code>: <code>ExceptionChecker</code></p>
+</li>
+<li>
+<p><code>groovy-runtime</code> (or <code>groovy.util</code>): <code>Result&lt;T&gt;</code>, <code>Success&lt;T&gt;</code>, <code>Failure&lt;T&gt;</code></p>
+</li>
+<li>
+<p><code>groovy-macro-library</code>: <code>attempt { }</code> macro</p>
+</li>
+<li>
+<p><code>groovy-concurrent</code> (existing): no changes — <code>Awaitable.exceptionally</code>
+already provides the asynchronous side</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_migration_and_compatibility">Migration and compatibility</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Pre-Groovy-7 code is unaffected. None of the new types/annotations are
+referenced by default.</p>
+</li>
+<li>
+<p>The <code>@TypeChecked</code> extension form is opt-in per file, so codebases
+introducing <code>ExceptionChecker</code> do so incrementally.</p>
+</li>
+<li>
+<p>The bytecode <code>throws</code> clause emitted by <code>@Raises</code> is recognised by <code>javac</code>
+and IDE inspection tooling — no Groovy dependency required on the consumer
+side for the propagation contract to be visible.</p>
+</li>
+<li>
+<p><code>Result&lt;T&gt;</code> is binary-compatible with usage as a plain interface from
+Java (the sealed-interface permits both Success and Failure as the only
+implementers; switch-on-type works in Java 21+).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_open_questions">Open questions</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Should <code>@Pure</code> imply <code>@Raises({})</code> (i.e., "throws nothing")?</strong> The cleanest
+story says yes, since a pure method that throws is observably impure to a
+caller using <code>try</code>/<code>catch</code> for control flow. Counter-argument: lots of
+legitimately-<code>@Pure</code> methods do throw on invalid input (<code>Integer.parseInt</code>,
+arithmetic overflow). A new <code>@Total</code> annotation may be cleaner.</p>
+</li>
+<li>
+<p><strong>Should the inferred-exception set be transitive by default?</strong> Calling a
+method that calls a method that may throw <code>IOException</code> — should the
+outer method automatically inherit the obligation, or only when explicitly
+propagated via <code>@Raises</code>? Java&#8217;s checked-exception rule says yes
+(transitive); a Groovy-idiomatic answer might say no (explicit, like
+`@Pure&#8217;s allow-list).</p>
+</li>
+<li>
+<p><strong>Where does <code>@AsResult</code> interact with <code>@Pure</code>?</strong> An <code>@AsResult</code> method
+catches Throwables and returns them as values — does this make the method
+<code>@Pure</code>? Probably yes, since the method becomes total over its declared
+return type.</p>
+</li>
+<li>
+<p><strong>Carrier naming for <code>Failure&#8217;s wrapped error.</strong> Should `Failure.error</code> be
+called <code>error</code>, <code>cause</code>, or <code>throwable</code>? <code>error</code> reads cleanly; <code>cause</code>
+risks confusion with Throwable&#8217;s <code>cause</code> chain; <code>throwable</code> is verbose.
+Leaning toward <code>error</code>.</p>
+</li>
+<li>
+<p><strong>Integration with <code>groovy-contracts</code>.</strong> A contract violation in
+<code>@Requires</code> / <code>@Ensures</code> throws <code>AssertionViolation</code>. Should <code>@AsResult</code>
+catch these, or always propagate? Recommendation: propagate (contracts
+indicate programmer error, not domain failure).</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_status_of_related_work">Status of related work</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP composes with several other in-flight features:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#gep-23">GEP-23</a> (DO and <code>MonadicChecker</code>) — <code>Result&lt;T&gt;</code> is a new entry
+in the same registry; depends on GEP-23 landing first.</p>
+</li>
+<li>
+<p><code>Awaitable.exceptionally</code> (Groovy 6) — provides the asynchronous sibling
+of <code>Result.recover</code>; <code>Result.toAwaitable()</code> is the bridge.</p>
+</li>
+<li>
+<p><code>NullChecker</code> (Groovy 6) — provides the template <code>ExceptionChecker</code>
+parallels. The <code>@Requires</code> discharge mechanism is shared.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div id="gep-23" class="ulist">
+<ul>
+<li>
+<p><a href="GEP-23.html">GEP-23 — Monadic comprehensions</a></p>
+</li>
+<li>
+<p><a href="GEP-18.html">GEP-18 — Integrated concurrency and parallel processing</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type-checking extensions</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#human-ai-reasoning">Groovy 6 release notes — Designed for human and AI reasoning</a></p>
+</li>
+<li>
+<p><a href="https://www.vavr.io/">Vavr</a> — the reference design for <code>Try&lt;T&gt;</code> and related carriers</p>
+</li>
+<li>
+<p><a href="https://www.functionaljava.org/">FunctionalJava</a> — <code>fj.data.Validation</code> lineage</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html#exceptionally(java.util.function.Function)"><code>CompletableFuture.exceptionally</code></a> — JDK precedent for the recover-callback shape</p>
+</li>
+<li>
+<p><a href="https://github.com/joeduffy/articles/blob/master/error-model.md">Joe Duffy — "The Error Model"</a> — Midori&#8217;s hybrid exception/Result design that informs the spec-layer / carrier-layer split</p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>21/May/2026</strong>: Initial draft.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>

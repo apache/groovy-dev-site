@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>2</p>
+<p>3</p>
 </td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-05-20</p>
+<p>2026-05-21</p>
 </td>
 </tr>
 </table>
@@ -157,8 +157,8 @@ generators followed by a body into a chain of bind operations on a
 participating <strong>carrier</strong> type. It provides Scala-style for-comprehension and
 Haskell-style do-notation ergonomics for any type with monadic shape —
 <code>Optional</code>, <code>Stream</code>, <code>CompletableFuture</code>, Groovy&#8217;s <code>Awaitable</code> and
-<code>DataflowVariable</code>, common Functional Java types, and user-defined carriers
-that opt in.</p>
+<code>DataflowVariable</code>, common Functional Java and Vavr types, and
+user-defined carriers that opt in.</p>
 </div>
 <div class="paragraph">
 <p>The following artefacts are introduced:</p>
@@ -415,6 +415,18 @@ and <code>fj.P1</code> — are recognised by fully-qualified name using that lib
 names are matched reflectively and the generator closure is adapted to
 <code>fj.F</code>. <code>fj.data.Either</code> is not directly monadic in Functional Java (bind
 lives on its <code>.right()</code>/<code>.left()</code> projections) and is not a carrier.</p>
+<div class="paragraph">
+<p>The Vavr control carriers — <code>io.vavr.control.Option</code>,
+<code>io.vavr.control.Try</code>, <code>io.vavr.control.Either</code> (right-biased), and
+<code>io.vavr.control.Validation</code> — are likewise recognised by fully-qualified
+name. Vavr&#8217;s carriers follow the structural <code>flatMap</code>/<code>map</code> convention, so
+they would also be picked up by the structural-match rule below; the
+explicit name entries are retained so that the names appear in the standard
+allow-list, the participation check succeeds without the structural probe,
+and <code>MonadicChecker</code> errors point readers at a documented carrier set when
+they get the shape wrong. As with Functional Java, Groovy takes no
+dependency on Vavr; the names are matched reflectively.</p>
+</div>
 </li>
 <li>
 <p><strong>Structural match.</strong> A type offering a single-argument <code>flatMap</code> (and, for
@@ -441,6 +453,20 @@ by simple name, in the manner of <code>@Reducer</code>/<code>@Associative</code>
 </div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p><code>@Monadic</code> is a <strong>carrier-author</strong> concern, not a user-application
+concern. Application code composing values typically uses <code>Optional</code>,
+<code>Awaitable</code>, <code>Validation</code>, <code>Try</code> and so on directly — with participation
+either inferred structurally, registered by name in the core allow-list
+(stdlib, FJ, Vavr), or declared once by the carrier author. The
+<code>@Monadic</code> annotation, like <code>@Reducer</code> / <code>@Associative</code> / <code>@Pure</code>
+elsewhere in Groovy 6, is intended primarily to be written by library
+authors on the public types they own; user code is then verified
+against those declarations without acquiring annotations of its own.
+The user-configurable registration channel deferred to Groovy 7.0 fills
+the remaining gap — third-party carriers whose owners have not (yet)
+applied <code>@Monadic</code> and whose method names are non-structural.</p>
 </div>
 </div>
 <div class="sect2">
@@ -769,16 +795,21 @@ inference, and closure-return shape under <code>@CompileStatic</code>); the sibl
 <code>groovy.typecheckers.MonadicShapeChecker</code> extension for native
 <code>flatMap</code>/<code>map</code> chains; the standard allow-list (<code>Optional</code>, <code>Stream</code>,
 <code>CompletableFuture</code>, <code>CompletionStage</code>, <code>Awaitable</code>, <code>DataflowVariable</code>)
-and the by-name recognition of common Functional Java carriers; general
+and the by-name recognition of common Functional Java and Vavr carriers
+(<code>io.vavr.control.{Option, Try, Either, Validation}</code>); general
 single-abstract-method coercion of the generator closure.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TBD</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Candidate: user-configurable carrier registration, symmetric across the
-type checker and the runtime dispatcher. No other spec-level changes
-planned at the time of writing. This GEP is the canonical location to
-record future changes.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred from 6.0: user-configurable carrier registration, symmetric
+across the type checker and the runtime dispatcher. The 6.0 release
+ships with the built-in allow-list only; a configuration channel that
+lets applications and libraries extend the registry — covering both the
+runtime bind/map dispatcher and <code>MonadicChecker</code>/<code>MonadicShapeChecker</code>
+without divergence — is targeted for Groovy 7.0. No other spec-level
+changes are planned at the time of writing. This GEP is the canonical
+location to record future changes.</p></td>
 </tr>
 </tbody>
 </table>
@@ -828,8 +859,16 @@ higher-kinded types.</p>
 </li>
 <li>
 <p><strong>User-configurable carrier registration.</strong> The built-in allow-list ships
-now; a configuration channel symmetric across the checker and the runtime
-dispatcher is candidate future work (see Cross-version evolution).</p>
+in 6.0; a configuration channel symmetric across the checker and the
+runtime dispatcher is <strong>deferred until Groovy 7.0</strong> (see Cross-version
+evolution). Until then, third-party carriers participate either by
+following the structural <code>flatMap</code>/<code>map</code> convention or by carrying
+<code>@groovy.transform.Monadic</code>; carriers with non-conventional method
+names that cannot be annotated (because the type is owned by another
+project) require a registry entry, which Groovy 6.0 only supports by
+extending the standard allow-list in core. The Vavr and Functional Java
+entries added in version 3 of this document are examples of that
+core-only path.</p>
 </li>
 </ul>
 </div>
@@ -942,6 +981,14 @@ module (since 6.0.0)</p>
 <div class="sect1">
 <h2 id="_update_history">Update history</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>3 (2026-05-21) Extends the standard by-name allow-list to recognise the
+Vavr control carriers (<code>io.vavr.control.Option</code>, <code>io.vavr.control.Try</code>,
+<code>io.vavr.control.Either</code>, <code>io.vavr.control.Validation</code>). Vavr&#8217;s carriers
+follow the structural <code>flatMap</code>/<code>map</code> convention, so the addition is a
+documentation and participation-test convenience rather than new
+dispatcher logic; Groovy takes no dependency on Vavr.</p>
+</div>
 <div class="paragraph">
 <p>2 (2026-05-20) Adds closure-return shape enforcement to <code>MonadicChecker</code>
 (rejects bare-value and cross-carrier <code>DO</code> bodies for trusted carriers via

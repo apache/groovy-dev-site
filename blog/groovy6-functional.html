@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#_who_writes_the_annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -80,8 +80,8 @@ closures, immutable collections and <code>java.util.stream.Stream</code>.</p>
 </div>
 <div class="paragraph">
 <p>What Groovy 6 <em>does</em> do is close a handful of the gaps that send
-functional programmers reaching for FunctionalJava or HighJ when they
-work on the JVM. The new pieces fit together:</p>
+functional programmers reaching for FunctionalJava, HighJ or Vavr when
+they work on the JVM. The new pieces fit together:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -197,8 +197,10 @@ class Semigroup a =&gt; Monoid a where mempty :: a</code></pre>
 <div class="paragraph">
 <p>In FunctionalJava you build a <code>Monoid&lt;A&gt;</code> by passing a combiner closure
 and a zero. In HighJ you import the typeclass instance for <code>Monoid&lt;µ&gt;</code>.
-While you can also use those libraries from Groovy as is,
-you now also have the option of moving the algebra <em>onto the method</em>:</p>
+Vavr stops short of a <code>Monoid</code> abstraction and reduces via
+<code>Foldable.reduce</code> instead. While you can also use those libraries from
+Groovy as is, you now also have the option of moving the algebra <em>onto
+the method</em>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -411,6 +413,36 @@ Validation&lt;String, Integer&gt; add(String a, String b) {
 assert add('2', '3').success() == 5
 assert add('hi', '3').fail()   == 'not numeric: hi'</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>The same allow-list also recognises Vavr&#8217;s control carriers
+(<code>io.vavr.control.Option</code>, <code>io.vavr.control.Try</code>, <code>io.vavr.control.Either</code>,
+<code>io.vavr.control.Validation</code>) by name, so existing Vavr-shaped code composes
+through <code>DO</code> without rewriting and without Groovy taking a dependency on
+Vavr:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import io.vavr.control.Try
+import static org.apache.groovy.macrolib.MacroLibGroovyMethods.DO
+
+@TypeChecked(extensions = 'groovy.typecheckers.MonadicChecker')
+Try&lt;Integer&gt; divide(String a, String b) {
+    DO(x in Try.of { Integer.parseInt(a) },
+       y in Try.of { Integer.parseInt(b) }) {
+        Try.success(x.intdiv(y))
+    }
+}
+assert divide('20', '5').get()      == 4
+assert divide('hi', '5').isFailure()        // short-circuits at x
+assert divide('20', '0').isFailure()        // short-circuits at the body</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Vavr ships its own <code>For(&#8230;&#8203;).yield(&#8230;&#8203;)</code> form ("For-Comprehension") that
+serves the same purpose in straight Java; <code>DO</code> reads as the Groovy-native
+analogue, and a codebase that already uses Vavr-shaped control types in Java
+gets the comprehension for free.</p>
 </div>
 <div class="paragraph">
 <p>What <code>DO</code> does <strong>not</strong> do: it does not introduce higher-kinded types, it
@@ -701,26 +733,96 @@ spec, not as a comment.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_who_writes_the_annotations">Who writes the annotations?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A reader skimming this post might infer that turning these features on
+means scattering <code>@Pure</code>, <code>@Modifies</code>, <code>@Associative</code>, <code>@Reducer</code>,
+<code>@Monadic</code>, <code>@Nullable</code> and friends throughout application code. That is
+not the intent.</p>
+</div>
+<div class="paragraph">
+<p>Declarations are a <strong>producer-side</strong> property; checkers are a
+<strong>consumer-side</strong> property. The natural division of labour:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Libraries</strong> — Groovy stdlib, the JDK, FP-style libraries, and domain
+frameworks — declare annotations on the APIs they own. A repository
+library marks its lookup methods <code>@Nullable User findById(Long id)</code>; a
+monetary library carries <code>@Associative @Reducer(zero = '0')</code> on its
+<code>add</code>; a domain service marks its mutating methods with
+<code>@Modifies({…})</code> and its read methods with <code>@Pure</code>; a monadic carrier
+carries <code>@Monadic</code> (or its conventional method names match the
+structural rule and no annotation is needed at all). JSpecify,
+JSR-305, JetBrains and SpotBugs <code>@Nullable</code>/<code>@NonNull</code> annotations —
+matched by simple name from any package — already feed <code>NullChecker</code>
+without anyone changing the library.</p>
+</li>
+<li>
+<p><strong>User code</strong> consumes those declarations. Calling <code>repository.findById(id)</code>
+under <code>@TypeChecked(extensions = 'NullChecker(strict: true)')</code> is enough
+to surface a "may dereference null" diagnostic — the library has already
+declared the contract. Calling <code>sumParallel(money.&amp;add)</code> under
+<code>CombinerChecker</code> validates against the library&#8217;s <code>@Associative</code>.
+Calling <code>service.update(x)</code> under <code>ModifiesChecker</code> validates against
+the library&#8217;s frame condition. No annotation on the user&#8217;s side.</p>
+</li>
+<li>
+<p><strong>Registries</strong> fill the gap when the library is owned elsewhere and not
+yet annotated. Vavr&#8217;s control types compose through <code>DO</code> because the
+core allow-list names them, not because Vavr was modified or because
+the user wrote <code>@Monadic</code> on a wrapper.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>User code acquires annotations of its own only at <strong>system boundaries</strong> —
+public APIs the user owns, framework handlers, code that needs to
+propagate a contract to its own callers, or local logic the user wants
+the compiler to double-check against an <code>@Ensures</code> postcondition. For
+everyday application code that just calls libraries, the checkers do
+their work against the libraries' declarations and the application
+stays annotation-free.</p>
+</div>
+<div class="paragraph">
+<p>This matters for every checker in the post. The
+"compile-time <code>Maybe</code> without the wrapper" pitch reaches full strength
+exactly when the libraries you depend on already carry <code>@Nullable</code> /
+<code>@NonNull</code> (or were compiled with JSpecify) — <code>NullChecker</code> then
+delivers the static guarantee on the consumer file with no local
+ceremony. The same property holds for <code>CombinerChecker</code>,
+<code>PurityChecker</code>, <code>ModifiesChecker</code>, <code>MonadicChecker</code> and the contract
+annotations. The annotations are an investment the library author
+makes once; every downstream codebase running the matching checker
+recovers the value of it on every build.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_how_it_stacks_up">How it stacks up</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>For a JVM-resident FP audience, the comparison set is FunctionalJava,
-HighJ, and the language alternatives Scala and Kotlin.</p>
+Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 28.5714%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2857%;">
-<col style="width: 14.2858%;">
+<col style="width: 25%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Concept</th>
 <th class="tableblock halign-left valign-top">Groovy 6</th>
 <th class="tableblock halign-left valign-top">FunctionalJava</th>
+<th class="tableblock halign-left valign-top">Vavr</th>
 <th class="tableblock halign-left valign-top">HighJ</th>
 <th class="tableblock halign-left valign-top">Scala</th>
 <th class="tableblock halign-left valign-top">Haskell</th>
@@ -731,6 +833,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closures and composition</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native (<code>&gt;&gt;</code>, <code>&lt;&lt;</code>, curry)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.F</code>, <code>.o()</code>, curry on <code>F2..F8</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Function0..Function8</code>, <code>andThen</code>/<code>compose</code>/<code>curried</code>/<code>memoized</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Functions</code> combinators</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native (<code>andThen</code>, <code>compose</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
@@ -739,6 +842,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Monoid / Semigroup</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Associative</code>/<code>@Reducer</code> + <code>CombinerChecker</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;A&gt;</code>, <code>Semigroup&lt;A&gt;</code> values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a (uses <code>Foldable.reduce</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;µ&gt;</code> typeclass instance</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.Monoid</code> typeclass</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid</code> class</p></td>
@@ -747,6 +851,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Purity &amp; effects</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Pure(allows = &#8230;&#8203;)</code> + <code>PurityChecker</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (convention only)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try</code> lifts effects to a value</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO&lt;µ&gt;</code> simulation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.effect.IO</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO</code>, <code>State</code>, etc.</p></td>
@@ -756,6 +861,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Modifies</code> + <code>ModifiesChecker</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
@@ -763,6 +869,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Monadic comprehension</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DO</code> (GEP-23, no HKT)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (hand-written <code>.bind</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>For(&#8230;&#8203;).yield(fn)</code> ("For-Comprehension")</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulated, with µ tags</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>for { &#8230;&#8203; } yield</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>do { &#8230;&#8203; }</code></p></td>
@@ -771,21 +878,33 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Null / absence</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullChecker</code> (strict)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Option</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe&lt;µ&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Option</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Validation / errors</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Validation</code> in <code>DO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.Validation</code> and <code>io.vavr.control.{Try, Either, Validation}</code> in <code>DO</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Validation&lt;E, A&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try</code>, <code>Either</code>, <code>Validation</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either&lt;µ, µ&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validated</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validation</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Persistent collections</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.asImmutable()</code> (view); <code>@Immutable</code> (deep-frozen)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fj.data.List</code>, <code>fj.data.Stream</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.collection.{List, Vector, HashMap, &#8230;&#8203;}</code> (HAMT-based, structural sharing)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>scala.collection.immutable.*</code> (persistent)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native (persistent everywhere)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Termination</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Decreases</code> (Hoare)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
@@ -794,6 +913,7 @@ HighJ, and the language alternatives Scala and Kotlin.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Higher-kinded abstraction</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no (encoded by hand)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no (encoded by hand)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulated HKT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
@@ -830,7 +950,8 @@ same reasoning payoff.</p>
 </li>
 <li>
 <p><code>DO</code> gives you the <code>for</code>/<code>do</code> notation across <code>Optional</code>, <code>Stream</code>,
-<code>CompletableFuture</code>, <code>Awaitable</code>, the FunctionalJava carriers and any
+<code>CompletableFuture</code>, <code>Awaitable</code>, the FunctionalJava and Vavr control
+carriers (<code>io.vavr.control.{Option, Try, Either, Validation}</code>), and any
 user type with the right shape, without committing the language to
 higher-kinded types.</p>
 </li>
@@ -845,10 +966,14 @@ to libraries.</p>
 <p>For new code on the JVM, the takeaway is that <code>@Pure</code>, <code>@Modifies</code>,
 <code>@Associative</code> and <code>@Reducer</code> cover most of what teams used
 FunctionalJava and HighJ for — and they do it on your own types,
-without inheritance and without lift/unlift. FunctionalJava and HighJ
-remain useful when you want the libraries' richer value-level
-combinators (notably <code>Validation</code> for applicative-style error
-accumulation, which Groovy 6 happily embeds in <code>DO</code>).</p>
+without inheritance and without lift/unlift. FunctionalJava, HighJ, and
+Vavr remain useful when you want the libraries' richer value-level
+combinators: FunctionalJava and Vavr for applicative-style error
+accumulation via <code>Validation</code> (which Groovy 6 happily embeds in <code>DO</code>);
+Vavr additionally for <code>Try</code>/<code>Either</code> as runtime-composable carriers
+where <em>failure-as-a-value</em> is the requirement, and for persistent
+collections with structural sharing — both gaps not yet filled in
+Groovy core.</p>
 </div>
 </div>
 </div>
@@ -883,6 +1008,9 @@ accumulation, which Groovy 6 happily embeds in <code>DO</code>).</p>
 </li>
 <li>
 <p><a href="https://github.com/highj/highj">highj — lightweight HKT for Java</a></p>
+</li>
+<li>
+<p><a href="https://vavr.io/">Vavr</a> — Java FP library with <code>Try</code>/<code>Either</code>/<code>Validation</code>/<code>Option</code> control carriers, persistent collections, tuples, and the <code>For(&#8230;&#8203;).yield(&#8230;&#8203;)</code> For-Comprehension form. The control carriers are in `DO&#8217;s standard allow-list (Groovy 6).</p>
 </li>
 <li>
 <p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a></p>
