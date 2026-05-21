@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#_who_writes_the_annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -101,6 +101,15 @@ no annotations at all). The discipline the wrapper-heavy path gives
 you, without the cost of lifting every call boundary into a carrier —
 the simplicity of the pragmatic path with the guarantees of the
 elaborate one.</p>
+</div>
+<div class="paragraph">
+<p>And — relevant before assuming this means scattering annotations
+throughout your codebase — most of these declarations are a <strong>library-side</strong>
+concern: written once by API authors, or by AI agents producing code
+that downstream readers (human or agent) can then reason about, and
+consumed by everyday application code without local annotation. We
+come back to that in <a href="#who-writes-annotations">Who writes the
+annotations?</a> below.</p>
 </div>
 <div class="paragraph">
 <p>The new pieces close a handful of the gaps that send functional
@@ -772,7 +781,7 @@ spec, not as a comment.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_who_writes_the_annotations">Who writes the annotations?</h2>
+<h2 id="who-writes-annotations">Who writes the annotations?</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>A reader skimming this post might infer that turning these features on
@@ -813,6 +822,18 @@ the library&#8217;s frame condition. No annotation on the user&#8217;s side.</p>
 yet annotated. Vavr&#8217;s control types compose through <code>DO</code> because the
 core allow-list names them, not because Vavr was modified or because
 the user wrote <code>@Monadic</code> on a wrapper.</p>
+</li>
+<li>
+<p><strong>Config scripts and compile-time customisers</strong> remove the only
+annotation that user files do otherwise carry — the
+<code>@TypeChecked(extensions = '&#8230;&#8203;')</code> that turns each checker on. A single
+<code>ASTTransformationCustomizer</code> registered in a Groovy <code>-configscript</code>
+enables the relevant checker for an entire module; build-tool
+equivalents exist for Gradle (<code>compileGroovy.groovyOptions.configurationScript</code>)
+and Maven. The examples in this post carry the per-file annotation as a
+<strong>pedagogical convenience</strong> — a reader can then see exactly which checker
+is in play — but the production deployment lives in build config,
+once, and user files stay annotation-free.</p>
 </li>
 </ul>
 </div>
