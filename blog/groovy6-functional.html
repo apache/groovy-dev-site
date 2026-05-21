@@ -798,6 +798,15 @@ annotations. The annotations are an investment the library author
 makes once; every downstream codebase running the matching checker
 recovers the value of it on every build.</p>
 </div>
+<div class="paragraph">
+<p><a href="../wiki/GEP-24.html">GEP-24</a> is the natural extension of this
+story to errors: a candidate for Groovy 7 sketching library-side
+<code>@Raises</code> plus consumer-side <code>ExceptionChecker</code> for the declaration
+path, and an opt-in <code>Result&lt;T&gt;</code> carrier (with an <code>attempt { }</code> macro
+and an <code>@AsResult</code> AST transform) recognised by <code>DO</code> for the
+runtime-composition path — all following the same producer-side /
+consumer-side split.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -973,7 +982,10 @@ accumulation via <code>Validation</code> (which Groovy 6 happily embeds in <code
 Vavr additionally for <code>Try</code>/<code>Either</code> as runtime-composable carriers
 where <em>failure-as-a-value</em> is the requirement, and for persistent
 collections with structural sharing — both gaps not yet filled in
-Groovy core.</p>
+Groovy core. The <code>Try</code>/<code>Either</code> gap is the subject of
+<a href="../wiki/GEP-24.html">GEP-24</a>, a Groovy 7 candidate that proposes
+spec-side <code>@Raises</code> + <code>ExceptionChecker</code> and carrier-side <code>Result&lt;T&gt;</code>
+following the same two-layer pattern used elsewhere in this post.</p>
 </div>
 </div>
 </div>
@@ -984,6 +996,9 @@ Groovy core.</p>
 <ul>
 <li>
 <p><a href="../wiki/GEP-23.html">GEP-23 — Monadic comprehensions</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-24.html">GEP-24 — Errors as values: compile-time <code>Try</code> without the wrapper</a> (Groovy 7 candidate)</p>
 </li>
 <li>
 <p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type checking extensions</a></p>
