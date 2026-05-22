@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>3</p>
+<p>4</p>
 </td>
 </tr>
 <tr>
@@ -107,7 +107,7 @@
 <strong>Status</strong>
 </td>
 <td class="hdlist2">
-<p>Draft</p>
+<p>Final</p>
 </td>
 </tr>
 <tr>
@@ -115,7 +115,7 @@
 <strong>Comment</strong>
 </td>
 <td class="hdlist2">
-<p>Targeted for Groovy 6.0 via the <code>DO</code> macro; the feature is incubating and subject to change</p>
+<p>Delivered in Groovy 6.0 as an incubating feature via the <code>DO</code> macro; subject to refinement during the 6.x line</p>
 </td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-05-21</p>
+<p>2026-05-22</p>
 </td>
 </tr>
 </table>
@@ -996,6 +996,16 @@ module (since 6.0.0)</p>
 <div class="sect1">
 <h2 id="_update_history">Update history</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>4 (2026-05-22) Status moved from Draft to Final on merge of
+<a href="https://github.com/apache/groovy/pull/2545">PR #2545</a> (GROOVY-12021).
+The <code>DO</code> macro, the bind/map dispatcher, the <code>@Monadic</code> annotation, the
+standard carrier registry (including the Functional Java and Vavr
+by-name entries), <code>MonadicChecker</code> and <code>MonadicShapeChecker</code> all ship
+in Groovy 6.0 as incubating. No spec-level changes from version 3;
+the user-configurable carrier registration channel remains deferred to
+Groovy 7.0.</p>
+</div>
 <div class="paragraph">
 <p>3 (2026-05-21) Extends the standard by-name allow-list to recognise the
 Vavr control carriers (<code>io.vavr.control.Option</code>, <code>io.vavr.control.Try</code>,
