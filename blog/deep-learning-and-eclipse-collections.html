@@ -168,7 +168,7 @@ assert counts == expected</code></pre>
 <p>The first attempt was to write the emojis into swing JLabel components and then save using a buffered image. This lead to poor looking images:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/pet_emoji_fonts.jpg" alt="PetAsFonts"></span></p>
+<p><span class="image"><img src="img/img/pet_emoji_fonts.jpg" alt="PetAsFonts"></span></p>
 </div>
 <div class="paragraph">
 <p>And consequently, poor image inference. Recent JDK versions on some platforms might do better, but we gave up on this approach.</p>
@@ -177,7 +177,7 @@ assert counts == expected</code></pre>
 <p>Instead, emoji image files from the <a href="https://fonts.google.com/noto/specimen/Noto+Color+Emoji?preview.text=%F0%9F%98%BB%F0%9F%90%B6%F0%9F%90%B9%F0%9F%90%A2%F0%9F%90%A6%F0%9F%90%8D&amp;preview.text_type=custom">Noto Color Emoji</a> font were used and saved under the pet type in the <code>resources</code> folder. These look much nicer:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/pet_emoji.png" alt="Noto Color Emoji"></span></p>
+<p><span class="image"><img src="img/img/pet_emoji.png" alt="Noto Color Emoji"></span></p>
 </div>
 <div class="paragraph">
 <p>Here is the code which makes use of those saved images to detect the animal types (note the use of type aliasing since we have two <code>PetType</code> classes; we rename one to <code>PT</code>):</p>

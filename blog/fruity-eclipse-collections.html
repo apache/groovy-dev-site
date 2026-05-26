@@ -165,7 +165,7 @@ of the related emoji. As in the previous blog, we&#8217;ll use the slightly nice
 fonts for our fruit as shown here:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/fruit_emoji.png" alt="Noto Color Emoji"></span></p>
+<p><span class="image"><img src="img/img/fruit_emoji.png" alt="Noto Color Emoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We&#8217;ll use an Eclipse Collections <code>BiMap</code> to switch back and forth between the color names
@@ -241,7 +241,7 @@ static range(int deg) {
 <div class="paragraph">
 <p>We used a <a href="https://plotly.com/javascript/">Plotly</a> 3D interactive scatterplot
 (as supported by the <a href="https://jtablesaw.github.io/tablesaw/userguide/Introduction_to_Plotting">Tablesaw</a> Java dataframe and visualization library to visualize our emoji colors (as degrees on the color spectrum) vs the XY coordinates:
-<span class="image"><img src="img/fruity_eclipse_collections_color_vs_xy.png" alt="Color vs xy plot"></span></p>
+<span class="image"><img src="img/img/fruity_eclipse_collections_color_vs_xy.png" alt="Color vs xy plot"></span></p>
 </div>
 <div class="paragraph">
 <p>We are going to try out 3 approaches for determining the predominant color of each emoji:</p>
@@ -263,14 +263,14 @@ static range(int deg) {
 <h3 id="_most_common_color">Most Common Color</h3>
 <div class="paragraph">
 <p>Ignoring the background white color, the most common color for our PEACH emoji is a shade of orange. The graph below shows the count of each color:
-<span class="image"><img src="img/fruity_eclipse_collections_peach_color_histogram.png" alt="Color histogram for PEACH"></span></p>
+<span class="image"><img src="img/img/fruity_eclipse_collections_peach_color_histogram.png" alt="Color histogram for PEACH"></span></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_most_common_range">Most Common Range</h3>
 <div class="paragraph">
 <p>If instead of counting each color, we group colors into their range and count the numbers in each range, we get the following graph for PEACH:
-<span class="image"><img src="img/fruity_eclipse_collections_peach_range_histogram.png" alt="Range histogram for PEACH"></span></p>
+<span class="image"><img src="img/img/fruity_eclipse_collections_peach_range_histogram.png" alt="Range histogram for PEACH"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -280,19 +280,19 @@ static range(int deg) {
 3 random points as our starting centroids.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/kmeans_step1.png" alt="kmeans step 1"></span></p>
+<p><span class="image"><img src="img/img/kmeans_step1.png" alt="kmeans step 1"></span></p>
 </div>
 <div class="paragraph">
 <p>We allocate all points to their closest centroid:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/kmeans_step2.png" alt="kmeans step 2"></span></p>
+<p><span class="image"><img src="img/img/kmeans_step2.png" alt="kmeans step 2"></span></p>
 </div>
 <div class="paragraph">
 <p>Given this allocation, we re-calculate each centroid from all of its points:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/kmeans_step3.png" alt="kmeans step 3"></span></p>
+<p><span class="image"><img src="img/img/kmeans_step3.png" alt="kmeans step 3"></span></p>
 </div>
 <div class="paragraph">
 <p>We repeat this process until either a stable centroid selection
@@ -308,11 +308,11 @@ The centroid with the most points allocated to it should be the
 most predominant color. (This is another interactive 3D scatterplot.)</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/rgb_peach3d.png" alt="RgbPeach3d"></span>
+<p><span class="image"><img src="img/img/rgb_peach3d.png" alt="RgbPeach3d"></span>
 We can plot the number of points allocated to each cluster as a
 bar chart. (We used a <a href="https://github.com/alexarchambault/plotly-scala">Scala plotting library</a>
 to show Groovy integration with Scala.)
-<span class="image"><img src="img/peach_centroid_sizes.png" alt="Peach colour centroid sizes"></span></p>
+<span class="image"><img src="img/img/peach_centroid_sizes.png" alt="Peach colour centroid sizes"></span></p>
 </div>
 <div class="paragraph">
 <p>The code for drawing the above chart looks like this:</p>
@@ -440,18 +440,18 @@ results.each { fruit, maxRange, maxColor, maxCentroid -&gt;
 <p>Here are the resulting images:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/peach_images.png" alt="peach images"></span>
-<span class="image"><img src="img/banana_images.png" alt="banana images"></span>
-<span class="image"><img src="img/cherry_images.png" alt="cherry images"></span>
-<span class="image"><img src="img/orange_images.png" alt="orange images"></span>
-<span class="image"><img src="img/grape_images.png" alt="grape images"></span>
-<span class="image"><img src="img/apple_images.png" alt="apple images"></span></p>
+<p><span class="image"><img src="img/img/peach_images.png" alt="peach images"></span>
+<span class="image"><img src="img/img/banana_images.png" alt="banana images"></span>
+<span class="image"><img src="img/img/cherry_images.png" alt="cherry images"></span>
+<span class="image"><img src="img/img/orange_images.png" alt="orange images"></span>
+<span class="image"><img src="img/img/grape_images.png" alt="grape images"></span>
+<span class="image"><img src="img/img/apple_images.png" alt="apple images"></span></p>
 </div>
 <div class="paragraph">
 <p>And, here are the final results:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/fruit_emoji_color_prediction_results.png" alt="results"></span></p>
+<p><span class="image"><img src="img/img/fruit_emoji_color_prediction_results.png" alt="results"></span></p>
 </div>
 <div class="paragraph">
 <p>In our case, all three approaches yielded the same results.

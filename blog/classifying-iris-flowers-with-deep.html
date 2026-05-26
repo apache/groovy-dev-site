@@ -66,7 +66,7 @@
                         </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./groovy-text-similarity'>Groovy&trade; Text Similarity</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./wayang-tensorflow'>Using TensorFlow from Apache Wayang</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-25 10:52AM (Last updated: 2022-06-27 11:16AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p><span class="image right"><img src="img/iris_flowers.png" alt="iris flowers" width="200"></span>
+<p><span class="image right"><img src="img/img/iris_flowers.png" alt="iris flowers" width="200"></span>
 A classic data science <a href="https://en.wikipedia.org/wiki/Iris_flower_data_set">dataset</a> captures flower characteristics of Iris flowers.
 It captures the <em>width</em> and <em>length</em> of the <em>sepals</em> and <em>petals</em> for three <em>species</em> (<a href="https://en.wikipedia.org/wiki/Iris_setosa">Setosa</a>, <a href="https://en.wikipedia.org/wiki/Iris_versicolor">Versicolor</a>, and <a href="https://en.wikipedia.org/wiki/Iris_virginica">Virginica</a>).</p>
 </div>
@@ -113,7 +113,7 @@ comparing and contrasting various libraries and various classification algorithm
 <p>Feel free to browse these other examples and the Jupyter/BeakerX notebook if you are interested in any of these additional techniques.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/iris_beakerx.png" alt="Jupyter/BeakerX notebook image of the Iris problem"></span></p>
+<p><span class="image"><img src="img/img/iris_beakerx.png" alt="Jupyter/BeakerX notebook image of the Iris problem"></span></p>
 </div>
 <div class="paragraph">
 <p>For this blog, let&#8217;s just look at the Deep Learning examples. We&#8217;ll look at solutions using Encog, Eclipse DeepLearning4J and Deep Netts (with standard Java and as a native image using GraalVM) but first a brief introduction.</p>
@@ -130,7 +130,7 @@ but we can give some basic details. We will have four input nodes corresponding 
 We will have three output nodes corresponding to each possible <em>class</em> (<em>species</em>). We will also have one or more additional layers in between.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/deep_network.png" alt="Iris neural net layers"></span></p>
+<p><span class="image"><img src="img/img/deep_network.png" alt="Iris neural net layers"></span></p>
 </div>
 <div class="paragraph">
 <p>Each node in this network mimics to some degree a neuron in the human brain. Again, we&#8217;ll simplify the details.
@@ -138,7 +138,7 @@ Each node has multiple inputs, which are given a particular weight, as well as a
 determine whether our node "fires". Training the model is a process which works out what the best weights should be.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/deep_node.png" alt="Neural net node"></span></p>
+<p><span class="image"><img src="img/img/deep_node.png" alt="Neural net node"></span></p>
 </div>
 <div class="paragraph">
 <p>The math involved for converting inputs to output for any node isn&#8217;t too hard. We could write it ourselves (as shown <a href="https://github.com/paulk-asert/groovy-data-science/blob/master/subprojects/Mnist/src/main/groovy/MnistTrainer.groovy">here</a> using matrices

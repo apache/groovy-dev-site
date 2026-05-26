@@ -106,7 +106,7 @@ In my case, I took the opportunity to do a bicycle ride East of Halifax mostly a
 cyclist-friendly bike trails.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/HalifaxRideMap.png" alt="HalifaxRideMap"></span></p>
+<p><span class="image"><img src="img/img/HalifaxRideMap.png" alt="HalifaxRideMap"></span></p>
 </div>
 <div class="paragraph">
 <p>The route was 90% on trails built upon now disused railroad tracks
@@ -121,7 +121,7 @@ The views were spectacular. I particularly like some of the autumn color scenery
 where I live.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/HalifaxRideCollage.jpg" alt="HalifaxRideCollage"></span></p>
+<p><span class="image"><img src="img/img/HalifaxRideCollage.jpg" alt="HalifaxRideCollage"></span></p>
 </div>
 </div>
 </div>
@@ -314,12 +314,12 @@ Groovy 5 has 80+ AST transforms.</p>
 <li>
 <p>While we like, many of the exciting changes for switch expressions coming along with
 recent Java versions, Groovy still provides numerous additional options (for JDK8+):
-<span class="image"><img src="img/Groovy2023Switch.png" alt="Groovy switch expressions"></span></p>
+<span class="image"><img src="img/img/Groovy2023Switch.png" alt="Groovy switch expressions"></span></p>
 </li>
 <li>
 <p>Groovy gives you the choice of emulated records for JDK8+
 or native records for JDK16+ with many record enhancements:
-<span class="image"><img src="img/Groovy2023Records.png" alt="Groovy records"></span>
+<span class="image"><img src="img/img/Groovy2023Records.png" alt="Groovy records"></span>
 Over and above the built-in enhancements, record development is made
 easier by Groovy&#8217;s AST transforms. The slides have examples of combining
 records with the following AST transforms:
@@ -377,7 +377,7 @@ It also showed examples of a few advanced tools you might want to consider as pa
 simple mathematical calculation originally implemented using the following Java code:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava1.png" alt="Buggy code" width="80%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava1.png" alt="Buggy code" width="80%"></span></p>
 </div>
 <div class="paragraph">
 <p>We write a Groovy test using the <a href="https://spockframework.org/">Spock</a> testing framework which
@@ -385,21 +385,21 @@ at first glance seems to indicate our initial implementation is correct since al
 pass and we have 100% test coverage.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava2.png" alt="Code coverage" width="90%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava2.png" alt="Code coverage" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>But this is 100% line and branch coverage but doesn&#8217;t reflect 100% state coverage.
 We can illustrate this by adding one more test case, which now fails:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava3.png" alt="Add fault revealing test case" width="90%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava3.png" alt="Add fault revealing test case" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>It turns out there was one edge case the initial implementation didn&#8217;t cater
 for but it is simple enough to fix:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava4.png" alt="Corrected algorithm" width="90%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava4.png" alt="Corrected algorithm" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>We now have all test cases passing and still 100% coverage.</p>
@@ -431,7 +431,7 @@ indeed reveals some surviving mutations and analysis indicates that indeed the m
 correspond to the faulty edge case:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava5.png" alt="Pitest result" width="90%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava5.png" alt="Pitest result" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>This should direct us to add the additional test case like we did manually earlier
@@ -452,7 +452,7 @@ under test with random data. Indeed, such testing also reveals the flaw in the
 original code, with no flaw found in the fixed code.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/TestingJava6.png" alt="Jqwik result" width="90%"></span></p>
+<p><span class="image"><img src="img/img/TestingJava6.png" alt="Jqwik result" width="90%"></span></p>
 </div>
 </div>
 <div class="sect2">
@@ -596,14 +596,14 @@ using <a href="https://ignite.apache.org/">Apache Ignite</a>.</p>
 86 single malt scotch whiskies.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Clustering0.png" alt="Whiskey flavour profiles"></span></p>
+<p><span class="image"><img src="img/img/Clustering0.png" alt="Whiskey flavour profiles"></span></p>
 </div>
 <div class="paragraph">
 <p>There are different algorithms that can be used to do the clustering.
 Here K-Means clustering was used.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Clustering1.png" alt="The k-means algorithm"></span></p>
+<p><span class="image"><img src="img/img/Clustering1.png" alt="The k-means algorithm"></span></p>
 </div>
 <div class="paragraph">
 <p>For this particular dataset, the number of datapoints is relatively small
@@ -611,7 +611,7 @@ and scaling up isn&#8217;t crucial. But larger datasets would be split up in the
 so we&#8217;ll look at how we&#8217;d scale this up. First we read in the data:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Clustering2.png" alt="Whiskey flavour profiles"></span></p>
+<p><span class="image"><img src="img/img/Clustering2.png" alt="Whiskey flavour profiles"></span></p>
 </div>
 <div class="paragraph">
 <p>Apache Ignite has special features for reading in data within a cluster environment,
@@ -626,19 +626,19 @@ in the same way we&#8217;d use a non-distributed version and Ignite does the har
 Here is the result:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Clustering3.png" alt="Whiskey flavour profiles"></span></p>
+<p><span class="image"><img src="img/img/Clustering3.png" alt="Whiskey flavour profiles"></span></p>
 </div>
 <div class="paragraph">
 <p>There are various options we have to tweak the algorithm and various
 ways to visualize the results.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/Clustering4.png" alt="Whiskey flavour profiles"></span></p>
+<p><span class="image"><img src="img/img/Clustering4.png" alt="Whiskey flavour profiles"></span></p>
 </div>
 <div class="paragraph">
 <p>As a side note, it is rumoured that additional extensive research on this topic may (or may not)
 have been held in conjunction with the conference. Only because the conference was in (Nova) Scotia no doubt!
-<span class="image"><img src="img/HalifaxWhisky.png" alt="Citadel"></span></p>
+<span class="image"><img src="img/img/HalifaxWhisky.png" alt="Citadel"></span></p>
 </div>
 <div class="paragraph">
 <p><span class="image right"><img src="https://photos.apachecon.com/_data/i/upload/2023/10/13/20231013192401-65a58458-cu_s9999x410.jpg" alt="Jeremy Meyer" width="200"></span>
@@ -659,7 +659,7 @@ compute grid, and clever peer class loading?
 <p>For those that know Ignite, it can be used in numerous ways:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks1.png" alt="Ignite" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks1.png" alt="Ignite" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>In this scenario, it was going to be used for distributed computing
@@ -667,38 +667,38 @@ and the task at hand was to solve Rubik&#8217;s cubes. In this case,
 particular non-destructive corner moves of a 3x3x2 cube.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks2.png" alt="Numbers" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks2.png" alt="Numbers" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>First up was to create a little domain model to represent the cube:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks3.png" alt="Model" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks3.png" alt="Model" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>Then piece together a cluster of computers of varying skills for the compute grid:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks4.png" alt="Team" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks4.png" alt="Team" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>Or a different visualization of the machines if you&#8217;re not
 a Guardians of the Galaxy fan:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks5.png" alt="Machines" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks5.png" alt="Machines" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>Then code up the corner swapping algorithm:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks6.png" alt="Algorithm" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks6.png" alt="Algorithm" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>And finally get the results:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/IgniteRubiks7.png" alt="Results" width="90%"></span></p>
+<p><span class="image"><img src="img/img/IgniteRubiks7.png" alt="Results" width="90%"></span></p>
 </div>
 <div class="paragraph">
 <p>I won&#8217;t steal Jeremy&#8217;s thunder. Check out the link for details.
@@ -716,16 +716,16 @@ First covered was the traditional GORM functionality including dynamic finders,
 the Criteria API, Where queries, and HQL:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/GORM1.png" alt="1"></span></p>
+<p><span class="image"><img src="img/img/GORM1.png" alt="1"></span></p>
 </div>
 <div class="paragraph">
 <p>Then he covered GORM Data Services:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/GORM2.png" alt="2"></span></p>
+<p><span class="image"><img src="img/img/GORM2.png" alt="2"></span></p>
 </div>
 <div class="paragraph">
-<p><span class="image right"><img src="img/JeffOpenSourceSoftwareAndYou.jpg" alt="Jeff Scott Brown" width="300"></span>
+<p><span class="image right"><img src="img/img/JeffOpenSourceSoftwareAndYou.jpg" alt="Jeff Scott Brown" width="300"></span>
 Jeff also gave the final talk for the track: <em>Open Source Software and You</em>.
 In this talk, Jeff gave an insight into his own open source journey.
 He covered some of his insights from his 30+ years working in open source.
@@ -849,7 +849,7 @@ to be sent great distances quickly. A message that might take half a day
 to deliver on horseback could be done in 30 minutes using the signal masts and codes.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/HalifaxCitadel.png" alt="Citadel"></span></p>
+<p><span class="image"><img src="img/img/HalifaxCitadel.png" alt="Citadel"></span></p>
 </div>
 </div>
 </div>
@@ -862,7 +862,7 @@ There&#8217;s great people, great food, hallway conversations, a chance to chat 
 Infra folks. And did I say great people and great food?</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/HalifaxConferenceOverall.png" alt="conference"></span></p>
+<p><span class="image"><img src="img/img/HalifaxConferenceOverall.png" alt="conference"></span></p>
 </div>
 <div class="paragraph">
 <p>I hope to see you at a future ASF conference.</p>
@@ -877,7 +877,7 @@ Infra folks. And did I say great people and great food?</p>
 In my case, this involved a weekend away at the beach.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/MermaidBeach.jpg" alt="Mermaid Beach"></span></p>
+<p><span class="image"><img src="img/img/MermaidBeach.jpg" alt="Mermaid Beach"></span></p>
 </div>
 <div class="paragraph">
 <p>If you visit Australia, make sure to pop in.</p>
