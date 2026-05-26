@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -871,6 +871,154 @@ consumer-side split.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_building_your_own_checked_dsl_a_wire_diagram_demo">Building your own checked DSL: a wire-diagram demo</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every checker shown so far ships with Groovy. The same machinery —
+annotations, type-checking extensions, macros, runtime libraries —
+has always been open to anyone willing to write a <code>groovy.transform</code>
+analogue for their own domain. The producer/consumer split applies
+to user libraries too: you publish the annotation + the checker, your
+callers add <code>@TypeChecked(extensions = '…')</code> and write annotation-free
+code against your contract.</p>
+</div>
+<div class="paragraph">
+<p>To make that concrete, the companion repo contains a worked example.
+It ports the cartesian-categories idea from
+<a href="https://guaraqe.com/posts/2026-05-24-why-cartesian-categories.html">a recent Haskell post</a>
+(<code>WireCat</code>) into a small Groovy library that captures a composition
+of named primitives both as something <strong>runnable</strong> and as something
+<strong>drawable</strong>. The two views derive from one definition — the property
+WireCat preserves by forbidding <code>arr</code>, the property a tiny
+<code>@Wirable</code> annotation plus a <code>wire { }</code> builder preserves here.</p>
+</div>
+<div class="paragraph">
+<p>Producer side — a class of primitives, each declaring the env fields
+it reads and contributes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@WireSource
+class WordCountPrimitives {
+    @Wirable(outputs = ['path'])
+    static Map&lt;String, ?&gt; readPath() {
+        [path: System.getenv('WC_FILE') ?: defaultSample()]
+    }
+
+    @Wirable(inputs = ['path'], outputs = ['text'])
+    static Map&lt;String, ?&gt; loadText(String path) { [text: new File(path).text] }
+
+    @Wirable(inputs = ['text'], outputs = ['words'])
+    static Map&lt;String, ?&gt; countWords(String text) { [words: text.split(/\s+/).findAll{ it }.size()] }
+
+    @Wirable(inputs = ['text'], outputs = ['lines'])
+    static Map&lt;String, ?&gt; countLines(String text) { [lines: text.readLines().size()] }
+
+    @Wirable(inputs = ['text'], outputs = ['chars'])
+    static Map&lt;String, ?&gt; countChars(String text) { [chars: text.length()] }
+
+    @Wirable(inputs = ['path', 'words', 'lines', 'chars'])
+    static Map&lt;String, ?&gt; writeReport(String path, int words, int lines, int chars) {
+        println "${path}: ${words} words, ${lines} lines, ${chars} chars"; [:]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Consumer side — a <code>wire { }</code> block composes the primitives. The
+wiring is implicit from the <code>@Wirable</code> declarations the primitives
+themselves carry; the builder fails fast if a step asks for a field
+no earlier step contributed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def wc = Wire.wire('WordCount') {
+    step WordCountPrimitives::readPath
+    step WordCountPrimitives::loadText
+    step WordCountPrimitives::countWords
+    step WordCountPrimitives::countLines
+    step WordCountPrimitives::countChars
+    step WordCountPrimitives::writeReport
+}
+
+wc.run([:])                                 // executes the pipeline
+new File('WordCount.puml').text = wc.toPlantUml()   // structural form</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The structural form, generated <strong>from the same <code>wc</code> value</strong> — not
+hand-drawn, not maintained separately, regenerated on every build:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="WordCount.svg" alt="WordCount" width="659" height="235">
+</div>
+</div>
+<div class="paragraph">
+<p>The whole library is about 200 lines of Groovy across
+<code>Wirable</code>/<code>WireSource</code>/<code>WireDiagram</code> annotations, <code>WireNode</code> /
+<code>WireGraph</code> / <code>WireBuilder</code> runtime, and a <code>PlantUmlRenderer</code>. No
+compiler change, no GEP, no AST transform of its own — every piece is
+constructible from what Groovy 6 already gives you, the same way the
+built-in <code>@Reducer</code> / <code>CombinerChecker</code> family is constructed.</p>
+</div>
+<div class="paragraph">
+<p>Three things would lift the demo from "user library" to "feels native"
+without changing the library&#8217;s external API:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>A compile-time <code>WireChecker</code>.</strong> The fail-fast check in the builder
+is the runtime-deferred form of what a <code>@TypeChecked(extensions =
+'…WireChecker')</code> extension would do, shaped exactly like
+<code>CombinerChecker</code> / <code>PurityChecker</code> shown earlier. The same
+declarations on the same primitives — the diagnostic just moves
+from build time to compile time, and the IDE underlines it.</p>
+</li>
+<li>
+<p><strong>A <code>WIRE { … }</code> macro form.</strong> The builder reads cleanly, but a macro
+desugaring <code>WIRE { readPath(); loadText(path); … }</code> into the same
+<code>step</code> calls would lift the primitive invocations into the source
+language directly, closer to Haskell <code>do</code> / Scala <code>for</code> /
+WireCat&#8217;s <code>proc</code>. Macros run at compile time, so the macro class
+must be on the classpath <strong>before</strong> the code that uses it is compiled
+— that is the demo&#8217;s two-subproject layout (<code>wire/</code> defines the
+runtime, <code>wire-demo/</code> consumes it). The same constraint would
+apply to a macro.</p>
+</li>
+<li>
+<p><strong>A <code>@RenderInGroovydoc</code> hook.</strong> The <code>@WireDiagram(plantuml = '…')</code>
+annotation in the demo already holds the diagram in a
+machine-readable place; what is missing is a Groovydoc-side
+mechanism to embed annotation contents in the generated API doc.
+Pitched the same way as the rest of the post: declarations as
+specs, now also consumed by the docs tool. Until that hook exists,
+the demo writes the <code>.puml</code> to a sidecar file that asciidoc and
+markdown pipelines can include — exactly how this section above
+embeds the rendered diagram.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>None of those three need to land as language changes. The first is a
+type-checking extension (same SPI as the existing checkers). The
+second is a macro (same SPI as <code>DO</code>). The third is a Groovydoc
+enhancement, narrower in scope than a GEP. What the demo as it stands
+already shows is the more interesting claim: the <strong>pattern</strong> the post
+has been describing — declared contracts, compiler-enforced spec,
+producer/consumer split — transfers cleanly to library authors.</p>
+</div>
+<div class="paragraph">
+<p>The full code is in the
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a>
+and
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>
+subprojects of the companion repo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_how_it_stacks_up">How it stacks up</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1030,6 +1178,13 @@ higher-kinded types.</p>
 <code>@Decreases</code> and <code>@Invariant</code> fill the everyday gaps that send people
 to libraries.</p>
 </li>
+<li>
+<p>The same annotation + checker + builder + macro pattern the language
+team used for those features is open to library authors: the
+<code>@Wirable</code> / <code>wire { }</code> / PlantUML example in the companion repo
+ports the WireCat cartesian-categories idea in around 200 lines, no
+GEP required.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
@@ -1089,13 +1244,26 @@ following the same two-layer pattern used elsewhere in this post.</p>
 <p><a href="https://vavr.io/">Vavr</a> — Java FP library with <code>Try</code>/<code>Either</code>/<code>Validation</code>/<code>Option</code> control carriers, persistent collections, tuples, and the <code>For(&#8230;&#8203;).yield(&#8230;&#8203;)</code> For-Comprehension form. The control carriers are in `DO&#8217;s standard allow-list (Groovy 6).</p>
 </li>
 <li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a></p>
+<p><a href="https://guaraqe.com/posts/2026-05-24-why-cartesian-categories.html">WireCat: Visual Programming with Cartesian Categories</a> — the Haskell post that the <code>wire</code> demo is modelled on</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — see the
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a> and
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>
+subprojects for the user-built checked-DSL example</p>
 </li>
 </ul>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>26/May/2026</strong>: Added "Building your own checked DSL" section with a
+<code>@Wirable</code> + <code>wire { }</code> + PlantUML worked example (companion
+<code>wire/</code> and <code>wire-demo/</code> subprojects), modelled on the cartesian
+categories from the recent WireCat post — making the producer/consumer
+split transferable to library authors.</p>
+</div>
 <div class="paragraph">
 <p><strong>22/May/2026</strong>: Vavr added to comparison set
 and <code>DO</code> allow-list; producer-side / consumer-side framing for
