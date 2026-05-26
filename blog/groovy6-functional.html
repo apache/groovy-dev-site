@@ -878,9 +878,9 @@ consumer-side split.</p>
 annotations, type-checking extensions, macros, runtime libraries —
 has always been open to anyone willing to write a <code>groovy.transform</code>
 analogue for their own domain. The producer/consumer split applies
-to user libraries too: you publish the annotation + the checker, your
-callers add <code>@TypeChecked(extensions = '…')</code> and write annotation-free
-code against your contract.</p>
+to user libraries too: the library publishes the annotation, the
+checker and any macro; callers add <code>@TypeChecked(extensions = '…')</code>
+and write annotation-free code against the contract.</p>
 </div>
 <div class="paragraph">
 <p>To make that concrete, the companion repo contains a worked example.
@@ -889,132 +889,222 @@ It ports the cartesian-categories idea from
 (<code>WireCat</code>) into a small Groovy library that captures a composition
 of named primitives both as something <strong>runnable</strong> and as something
 <strong>drawable</strong>. The two views derive from one definition — the property
-WireCat preserves by forbidding <code>arr</code>, the property a tiny
-<code>@Wirable</code> annotation plus a <code>wire { }</code> builder preserves here.</p>
+WireCat preserves by forbidding <code>arr</code>, the property a small
+<code>WIRE { }</code> macro preserves here.</p>
 </div>
+<div class="sect2">
+<h3 id="_producer_side">Producer side</h3>
 <div class="paragraph">
-<p>Producer side — a class of primitives, each declaring the env fields
-it reads and contributes:</p>
+<p>Plain Groovy methods. The macro reads the wiring from the call
+site, so the primitives carry no wire-specific annotation:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@WireSource
-class WordCountPrimitives {
-    @Wirable(outputs = ['path'])
-    static Map&lt;String, ?&gt; readPath() {
-        [path: System.getenv('WC_FILE') ?: defaultSample()]
-    }
-
-    @Wirable(inputs = ['path'], outputs = ['text'])
-    static Map&lt;String, ?&gt; loadText(String path) { [text: new File(path).text] }
-
-    @Wirable(inputs = ['text'], outputs = ['words'])
-    static Map&lt;String, ?&gt; countWords(String text) { [words: text.split(/\s+/).findAll{ it }.size()] }
-
-    @Wirable(inputs = ['text'], outputs = ['lines'])
-    static Map&lt;String, ?&gt; countLines(String text) { [lines: text.readLines().size()] }
-
-    @Wirable(inputs = ['text'], outputs = ['chars'])
-    static Map&lt;String, ?&gt; countChars(String text) { [chars: text.length()] }
-
-    @Wirable(inputs = ['path', 'words', 'lines', 'chars'])
-    static Map&lt;String, ?&gt; writeReport(String path, int words, int lines, int chars) {
-        println "${path}: ${words} words, ${lines} lines, ${chars} chars"; [:]
+<pre class="prettyprint highlight"><code data-lang="groovy">class WordCountPrimitives {
+    static String readPath()              { System.getenv('WC_FILE') ?: defaultSample() }
+    static String loadText(String path)   { new File(path).text }
+    static int    countWords(String text) { text.split(/\s+/).findAll { it }.size() }
+    static int    countLines(String text) { text.readLines().size() }
+    static int    countChars(String text) { text.length() }
+    static void   writeReport(String path, int words, int lines, int chars) {
+        println "${path}: ${words} words, ${lines} lines, ${chars} chars"
     }
 }</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_consumer_side">Consumer side</h3>
 <div class="paragraph">
-<p>Consumer side — a <code>wire { }</code> block composes the primitives. The
-wiring is implicit from the <code>@Wirable</code> declarations the primitives
-themselves carry; the builder fails fast if a step asks for a field
-no earlier step contributed:</p>
+<p>A proc-notation <code>WIRE { … }</code> macro using <code>&lt;&lt;</code> as the binding
+marker — the same operator Groovy 6 already uses for
+<code>DataflowVariable.bind</code>. Argument lists <strong>are</strong> the wiring, not
+visual sugar:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def wc = Wire.wire('WordCount') {
-    step WordCountPrimitives::readPath
-    step WordCountPrimitives::loadText
-    step WordCountPrimitives::countWords
-    step WordCountPrimitives::countLines
-    step WordCountPrimitives::countChars
-    step WordCountPrimitives::writeReport
-}
-
-wc.run([:])                                 // executes the pipeline
-new File('WordCount.puml').text = wc.toPlantUml()   // structural form</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">def wc = WIRE(WordCountPrimitives, 'WordCount', ['path']) {
+    text  &lt;&lt; loadText(path)
+    words &lt;&lt; countWords(text)
+    lines &lt;&lt; countLines(text)
+    chars &lt;&lt; countChars(text)
+    writeReport(path, words, lines, chars)
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The structural form, generated <strong>from the same <code>wc</code> value</strong> — not
-hand-drawn, not maintained separately, regenerated on every build:</p>
+<p>At compile time the macro rewrites this body into literal Groovy 6
+dataflow code, auto-adding the <code>async { }</code> wrapping and the
+<code>df.</code> prefixes so each binding becomes a real
+<code>groovy.concurrent.DataflowVariable</code> write:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">{ Dataflows __df -&gt;
+    def __tasks = []
+    __tasks &lt;&lt; async { __df.text  = WordCountPrimitives.loadText(__df.path) }
+    __tasks &lt;&lt; async { __df.words = WordCountPrimitives.countWords(__df.text) }
+    __tasks &lt;&lt; async { __df.lines = WordCountPrimitives.countLines(__df.text) }
+    __tasks &lt;&lt; async { __df.chars = WordCountPrimitives.countChars(__df.text) }
+    __tasks &lt;&lt; async { WordCountPrimitives.writeReport(__df.path, __df.words, __df.lines, __df.chars) }
+    __tasks.each { await(it) }
+    [path: __df.path, text: __df.text, words: __df.words, lines: __df.lines, chars: __df.chars]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The macro is sugar over the idiomatic Groovy 6 form; nothing
+special happens at runtime. Concurrency, blocking reads, and
+single-assignment semantics are all the built-ins doing their
+normal job.</p>
+</div>
+<div class="paragraph">
+<p>The result is a <code>WireResult</code> with <code>.toPlantUml()</code> (the diagram,
+captured at compile time) and <code>.run(inputs)</code> (executes the
+auto-generated dataflow code, returns the bindings as a Map).</p>
+</div>
+<div class="paragraph">
+<p>The wire library has three pieces — an <code>@Wirable</code> annotation, a
+<code>WireChecker</code> type-checking extension, and the <code>WIRE</code> macro —
+usable individually or in combination. The macro form shown above
+uses just the macro. The companion repo also includes a direct
+<code>Wire.wire('name') { task X::y }</code> builder that takes method
+references to primitives carrying their wiring as annotations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Wirable(inputs = ['path'], outputs = ['text'])
+static String loadText(String path) { new File(path).text }
+
+@Wirable(inputs = ['text'], outputs = ['words'])
+static int countWords(String text) { text.split(/\s+/).findAll { it }.size() }
+
+// …</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Adding <code>@TypeChecked(extensions = 'groovy/wire/WireChecker.groovy')</code>
+to the method enclosing the <code>Wire.wire { … }</code> call lifts the same
+field-flow check from runtime to compile time. The three pieces
+layer freely — annotation alone for the runtime check, annotation
+plus checker for compile-time validation, or the macro when
+you&#8217;d rather skip the metadata altogether.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_diagram_derived">The diagram, derived</h3>
+<div class="paragraph">
+<p><code>wc.toPlantUml()</code> returns the structural view captured at the
+same compile-time pass that emitted the executor — not hand-drawn,
+not maintained separately, regenerated on every build:</p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="WordCount.svg" alt="WordCount" width="659" height="235">
+<img src="WordCount.svg" alt="WordCount" width="584" height="248">
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_whats_checked_what_isnt">What&#8217;s checked, what isn&#8217;t</h3>
 <div class="paragraph">
-<p>The whole library is about 200 lines of Groovy across
-<code>Wirable</code>/<code>WireSource</code>/<code>WireDiagram</code> annotations, <code>WireNode</code> /
-<code>WireGraph</code> / <code>WireBuilder</code> runtime, and a <code>PlantUmlRenderer</code>. No
-compiler change, no GEP, no AST transform of its own — every piece is
-constructible from what Groovy 6 already gives you, the same way the
-built-in <code>@Reducer</code> / <code>CombinerChecker</code> family is constructed.</p>
-</div>
-<div class="paragraph">
-<p>Three things would lift the demo from "user library" to "feels native"
-without changing the library&#8217;s external API:</p>
+<p>Three compile-time checks fire as the macro walks the body:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>A compile-time <code>WireChecker</code>.</strong> The fail-fast check in the builder
-is the runtime-deferred form of what a <code>@TypeChecked(extensions =
-'…WireChecker')</code> extension would do, shaped exactly like
-<code>CombinerChecker</code> / <code>PurityChecker</code> shown earlier. The same
-declarations on the same primitives — the diagnostic just moves
-from build time to compile time, and the IDE underlines it.</p>
+<p>every reference must be bound — a graph-level input or the
+LHS of an earlier <code>&lt;&lt;</code>;</p>
 </li>
 <li>
-<p><strong>A <code>WIRE { … }</code> macro form.</strong> The builder reads cleanly, but a macro
-desugaring <code>WIRE { readPath(); loadText(path); … }</code> into the same
-<code>step</code> calls would lift the primitive invocations into the source
-language directly, closer to Haskell <code>do</code> / Scala <code>for</code> /
-WireCat&#8217;s <code>proc</code>. Macros run at compile time, so the macro class
-must be on the classpath <strong>before</strong> the code that uses it is compiled
-— that is the demo&#8217;s two-subproject layout (<code>wire/</code> defines the
-runtime, <code>wire-demo/</code> consumes it). The same constraint would
-apply to a macro.</p>
+<p>the using class must contain a method matching each call name;</p>
 </li>
 <li>
-<p><strong>A <code>@RenderInGroovydoc</code> hook.</strong> The <code>@WireDiagram(plantuml = '…')</code>
-annotation in the demo already holds the diagram in a
-machine-readable place; what is missing is a Groovydoc-side
-mechanism to embed annotation contents in the generated API doc.
-Pitched the same way as the rest of the post: declarations as
-specs, now also consumed by the docs tool. Until that hook exists,
-the demo writes the <code>.puml</code> to a sidecar file that asciidoc and
-markdown pipelines can include — exactly how this section above
-embeds the rendered diagram.</p>
+<p>at least one overload of that method must have the right arity.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>None of those three need to land as language changes. The first is a
-type-checking extension (same SPI as the existing checkers). The
-second is a macro (same SPI as <code>DO</code>). The third is a Groovydoc
-enhancement, narrower in scope than a GEP. What the demo as it stands
-already shows is the more interesting claim: the <strong>pattern</strong> the post
-has been describing — declared contracts, compiler-enforced spec,
-producer/consumer split — transfers cleanly to library authors.</p>
+<p>For example, <code>words &lt;&lt; countWrods(text)</code> reports:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>WIRE: WordCountPrimitives has no method named 'countWrods'</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The full code is in the
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a>
-and
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>
-subprojects of the companion repo.</p>
+<p><code>words &lt;&lt; countWords(path, text)</code> reports:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>WIRE: WordCountPrimitives.countWords takes 1 arg(s),
+but called with 2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What remains a runtime concern: per-field type compatibility
+(does the <code>String</code> that producer <code>text</code> binds match the <code>String</code>
+parameter consumer <code>countWords</code> expects), and full type
+propagation through the DSL. Neither is hard — the first is
+roughly another 50 lines on the macro; the second is more
+substantial — and both are deferred for a follow-up.</p>
+</div>
+<div class="paragraph">
+<p>That partial-static-checking position is the same trade made
+elsewhere in this post: flow-sensitive analysis lives outside the
+type system (cf. <code>NullChecker(strict: true)</code>); declarations carry
+the contract; the type stays simple and the checker does the work.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_one_thing_still_missing">One thing still missing</h3>
+<div class="paragraph">
+<p>The companion repo writes the generated PlantUML to a sidecar
+<code>.puml</code> file that asciidoctor (<code>[plantuml]</code> blocks above) and
+markdown pipelines can include directly. The natural next step is
+a Groovydoc hook — say <code>@RenderInGroovydoc</code> as a meta-annotation
+on the annotation type — that would let an API doc embed the same
+PlantUML from a method&#8217;s <code>@WireDiagram(plantuml = '…')</code> annotation
+without a separate file. Pitched the same way as everything else
+here: declarations as specs, now consumed by the docs tool too.
+Strictly smaller than a GEP, narrower than a language change.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_the_code_lives">Where the code lives</h3>
+<div class="paragraph">
+<p>Six small subprojects under
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a>
+— annotations (<code>@Wirable</code>, <code>@WireSource</code>, <code>@WireDiagram</code>), builder DSL,
+dataflow runtime, PlantUML renderer.</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-checker"><code>wire-checker/</code></a>
+— the <code>WireChecker</code> type-checking extension.</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-macro"><code>wire-macro/</code></a>
+— the <code>WIRE</code> <code>@Macro</code> method plus its DGM extension descriptor.</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>,
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo-checked"><code>wire-demo-checked/</code></a>,
+<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo-macro"><code>wire-demo-macro/</code></a>
+— consumer demos for the builder, builder-with-checker, and macro
+forms respectively.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No compiler change, no GEP. The pattern this post has been describing
+— declared contracts, compiler-enforced spec, producer/consumer split
+— transfers cleanly to library authors using only the SPI hooks the
+Groovy team uses to build the in-tree checkers.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1179,11 +1269,12 @@ higher-kinded types.</p>
 to libraries.</p>
 </li>
 <li>
-<p>The same annotation + checker + builder + macro pattern the language
-team used for those features is open to library authors: the
-<code>@Wirable</code> / <code>wire { }</code> / PlantUML example in the companion repo
-ports the WireCat cartesian-categories idea in around 200 lines, no
-GEP required.</p>
+<p>The same extensibility hooks the language team used for the
+in-tree checkers are open to library authors: a <code>WIRE { name &lt;&lt;
+call(args) }</code> proc-notation macro that compiles to literal
+<code>async { df.X = … }</code> Groovy 6 dataflow code, with bound-name,
+existence and arity checks at expansion time, ports the
+WireCat cartesian-categories idea on the same SPI surface.</p>
 </li>
 </ul>
 </div>
@@ -1247,10 +1338,9 @@ following the same two-layer pattern used elsewhere in this post.</p>
 <p><a href="https://guaraqe.com/posts/2026-05-24-why-cartesian-categories.html">WireCat: Visual Programming with Cartesian Categories</a> — the Haskell post that the <code>wire</code> demo is modelled on</p>
 </li>
 <li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — see the
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a> and
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>
-subprojects for the user-built checked-DSL example</p>
+<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — six <code>wire-*</code>
+subprojects covering the macro form (shown above) plus the
+builder and builder-with-checker variants</p>
 </li>
 </ul>
 </div>
@@ -1258,11 +1348,17 @@ subprojects for the user-built checked-DSL example</p>
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>26/May/2026</strong>: Added "Building your own checked DSL" section with a
-<code>@Wirable</code> + <code>wire { }</code> + PlantUML worked example (companion
-<code>wire/</code> and <code>wire-demo/</code> subprojects), modelled on the cartesian
-categories from the recent WireCat post — making the producer/consumer
-split transferable to library authors.</p>
+<p><strong>26/May/2026</strong>: Added "Building your own checked DSL" section
+demonstrating the producer/consumer split transferred to library
+authors. The headline form is a <code>WIRE</code> macro using <code>&lt;&lt;</code> (the
+<code>DataflowVariable.bind</code> operator) that auto-adds <code>async { }</code>
+wrapping and <code>df.</code> prefixes — sugar over literal Groovy 6
+dataflow code rather than a competing DSL. Bound-name,
+method-existence and arity checks fire at macro-expansion time
+with source-located errors. The companion repo additionally
+carries an <code>@Wirable</code>-driven builder and a <code>WireChecker</code>
+type-checking extension across six subprojects. Worked example
+ported from the recent WireCat Haskell post.</p>
 </div>
 <div class="paragraph">
 <p><strong>22/May/2026</strong>: Vavr added to comparison set
