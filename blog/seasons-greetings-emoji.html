@@ -135,14 +135,14 @@ We&#8217;ll check that the 3 Unicode code points for that String
 all correspond to emojis using one of the new API calls:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji1.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji1.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We can check using the newly added regex binary properties as well.
 The Groovy regex operator (<code>==~</code>) ensures that the String exactly matches 3 emojis:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji2.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji2.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>Unicode supports various forms of modification by sequencing Unicode characters.
@@ -156,7 +156,7 @@ base, but the two Claus emojis can. Also, we can see that all 5 skin
 tone emoji characters can be used as emoji modifiers:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji3.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji3.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s try some combinations. We&#8217;ll combine the Santa emoji with
@@ -169,7 +169,7 @@ it will be the same as the "bare" Santa emoji plus the code points
 from the skin tone emoji:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji4.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji4.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We are also checking the emoji roles using a regex.
@@ -179,7 +179,7 @@ We can see the base followed by the modifier.</p>
 <p>We can put all this together to check all five toned Santas as follows:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji5.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji5.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>Another sequencing trick offered by Unicode is to combine related
@@ -203,7 +203,7 @@ emoji using Unicode. The first and last parts are represented as surrogate
 pairs which are combined into the correct code points automatically.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji6.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji6.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>The last two lines show checking the combined emoji with regex.
@@ -216,7 +216,7 @@ emoji names using the <code>\N{&#8230;&#8203;}</code> notation.</p>
 combines 3 emojis, with interleaved ZWJ characters.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji7.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji7.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We can do similar regex checks as previously, checking the
@@ -233,7 +233,7 @@ The "♀️" emoji combines the female sign character "♀" with a special
 should be treated as an emoji rather than a character.</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji8.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji8.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We can put the new emoji API calls through their paces by checking
@@ -245,7 +245,7 @@ We can check for an exact match of the Unicode characters exactly,
 by their emoji names, or by role each part plays as shown below:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="img/img/emoji9.png" alt="using isEmoji"></span></p>
+<p><span class="image"><img src="./img/emoji9.png" alt="using isEmoji"></span></p>
 </div>
 <div class="paragraph">
 <p>We hope you have enjoyed this little exploration of the
