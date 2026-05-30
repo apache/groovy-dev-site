@@ -1495,7 +1495,12 @@ in-tree checkers are open to library authors: a <code>WIRE { name &lt;&lt;
 call(args) }</code> proc-notation macro that compiles to literal
 <code>async { df.X = … }</code> Groovy 6 dataflow code, with bound-name,
 existence and arity checks at expansion time, ports the
-WireCat cartesian-categories idea on the same SPI surface.</p>
+WireCat cartesian-categories idea on the same SPI surface. The
+same surface reaches further still — a type-checking extension
+that runs an SMT solver during compilation turns a contract-grade
+<code>@Requires</code> proof-grade for a linear-integer fragment, emitting
+Dafny-style counterexamples: a theorem prover hosted in <code>groovyc</code>,
+no compiler change required.</p>
 </li>
 </ul>
 </div>
