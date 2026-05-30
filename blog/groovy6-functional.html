@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_from_contract_grade_to_proof_grade_an_smt_backed_precondition_checker' class='anchor-link'>From contract-grade to proof-grade: an SMT-backed precondition checker</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -1109,6 +1109,227 @@ Groovy team uses to build the in-tree checkers.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_from_contract_grade_to_proof_grade_an_smt_backed_precondition_checker">From contract-grade to proof-grade: an SMT-backed precondition checker</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The previous demo wrote a <strong>structural</strong> checker — names, arity, field
+flow. This one writes a <strong>semantic</strong> one, and it is worth dwelling on
+how far the same SPI reaches.</p>
+</div>
+<div class="paragraph">
+<p>Look back at the <code>@Requires</code>/<code>@Ensures</code>/<code>@Invariant</code>/<code>@Decreases</code>
+surface from earlier. Those names were not invented for Groovy. They
+are, almost verbatim, the keywords of
+<a href="https://dafny.org">Dafny</a> — <code>requires</code>, <code>ensures</code>, <code>invariant</code>,
+<code>decreases</code> — and the diagnostic taxonomy (precondition, postcondition,
+loop invariant, negative index, division by zero, null dereference)
+is lifted from <a href="https://www.openjml.org">OpenJML</a>. The design-by-contract
+lineage runs back through Eiffel; Groovy&#8217;s contribution is wearing it
+as annotations a type-checking extension can read. But as noted when
+they first appeared, the in-tree checkers are <strong>contract-grade, not
+proof-grade</strong>: the annotation states the obligation, and structural
+checks fire, but nothing discharges the verification condition against
+the call site. Dafny and OpenJML close that gap with an SMT solver.</p>
+</div>
+<div class="paragraph">
+<p>Here is the part that might be surprising: for a tractable fragment, you can
+close it in Groovy <strong>today</strong> — no compiler change, no GEP — by putting a
+solver behind a type-checking extension. The spike below scopes itself
+to exactly one check (preconditions) over one fragment (linear integer
+arithmetic, comparisons, and booleans). Anything outside that fragment
+is reported as a loud "skipped", never a silent pass — OpenJML&#8217;s
+ESC-mode discipline, kept honest.</p>
+</div>
+<div class="sect2">
+<h3 id="_producer_side_2">Producer side</h3>
+<div class="paragraph">
+<p>The classic Dafny example, an integer square root that requires a
+non-negative input:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class ISqrt {
+    @Requires({ x &gt;= 0 })
+    static int isqrt(int x) {
+        (int) Math.sqrt((double) x)
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_consumer_side_2">Consumer side</h3>
+<div class="paragraph">
+<p>Turn the checker on with <code>@TypeChecked(extensions = '…')</code> — no
+<code>@CompileStatic</code>, which suppresses extension-hook dispatch — and write
+ordinary code. Here is a call that <strong>looks</strong> guarded:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
+static int go(int n) {
+    if (n != 0) {
+        return ISqrt.isqrt(n)   // looks safe — but n could be -1
+    }
+    0
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The guard <code>n != 0</code> is the off-by-one a tired developer writes when
+they meant "not negative". The build does not let it through. As the
+type checker walks the body, the extension harvests the path condition
+from the enclosing <code>if</code>, asserts it together with the <strong>negation</strong> of
+the precondition, and asks Z3 whether that is satisfiable. It is — and
+the model is the counterexample:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove precondition of isqrt at this call site
+    required: (x &gt;= 0)
+    counterexample: n = -1, x = -1</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That last line is the whole point. The diagnostic does not say
+"constraint not satisfied"; it says <strong>with <code>n = -1</code> it fails</strong>, the way
+Dafny does — and here it is the default, not a <code>--counterexample</code>
+flag. Tighten the guard and the obligation discharges; the same code
+now compiles clean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">if (n &gt;= 0) {
+    return ISqrt.isqrt(n)   // verified: n &gt;= 0 ⇒ x &gt;= 0
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The almost-correct version, the message that names the bad value, the
+one-character fix, the green build — that loop is the experience a
+proof assistant gives you, running inside <code>groovyc</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_it_proves">What it proves</h3>
+<div class="paragraph">
+<p>The checker is reasoning, not pattern-matching. Each of these call
+shapes compiles because Z3 discharges <code>x &gt;= 0</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Call shape</th>
+<th class="tableblock halign-left valign-top">Why it verifies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>isqrt(5)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Literal — <code>¬(5 &gt;= 0)</code> is unsatisfiable.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if (n &gt;= 0) isqrt(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path condition matches the precondition exactly.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if (n &gt; 0) isqrt(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n &gt; 0</code> strictly implies <code>n &gt;= 0</code>; Z3 chains the inference.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if (n &lt; 0) … else isqrt(n)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>else</code> branch carries the negated guard, i.e. <code>n &gt;= 0</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if (k &gt; 0) isqrt(k * 1)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Linear arithmetic over a literal multiplier, under <code>k &gt; 0</code>.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>And the rejections all arrive with a refuting model: the bare literal
+<code>isqrt(-1)</code> (<code>x = -1</code>), the unguarded <code>isqrt(n)</code> (<code>n = -1</code>), and the
+contradictory <code>if (n &lt; 0) isqrt(n)</code> (<code>n = -1</code>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_whats_checked_what_isnt_2">What&#8217;s checked, what isn&#8217;t</h3>
+<div class="paragraph">
+<p>Same honesty as the wire demo. The checker reasons about the <strong>argument
+expression</strong> and the <strong>enclosing <code>if</code> guards</strong>, and nothing else. It does
+not symbolically execute the method body, so an intermediate local —
+<code>int sq = k * 1; isqrt(sq)</code> — is outside scope: <code>sq</code> is an
+unconstrained variable as far as the call site is concerned. Anything
+beyond the linear-integer fragment (division, method calls, arrays,
+quantifiers) is reported as skipped, loudly, rather than waved through.
+That is the same trade made throughout this post: flow-sensitive work
+lives outside the type system, declarations carry the contract, and
+the type stays simple while the checker does the work.</p>
+</div>
+<div class="paragraph">
+<p>One engineering detail is worth surfacing because it reframes what a
+type-checking extension <strong>is</strong>. This extension does not merely reference
+Z3 — it <strong>runs</strong> Z3 while the consumer compiles. A type-checking
+extension is just code on the compiler&#8217;s classpath, free to call out
+to anything on the JVM; "runs a theorem prover during `groovyc`" is a
+perfectly fine thing for it to do.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_it_could_go">Where it could go</h3>
+<div class="paragraph">
+<p>The scaffold generalises along the lines OpenJML&#8217;s taxonomy suggests,
+each a new obligation site on the same solver pipeline: array-bounds
+and division-by-zero as <strong>implicit</strong> preconditions (<code>0 &#8656; i &amp;&amp; i &lt;
+arr.size()</code>, <code>divisor != 0</code>) fired automatically at each index or
+division; then <code>@Ensures</code> postconditions, which need symbolic
+execution of the body — the jump from per-call to per-method
+reasoning; then <code>@Invariant</code>/<code>@Decreases</code> as the classical inductive
+loop proof. Each is strictly smaller than a GEP, and none needs a
+compiler change. The spike deliberately ships one check done well
+rather than five done shakily.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_where_the_code_lives_2">Where the code lives</h3>
+<div class="paragraph">
+<p>Two subprojects under
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/verification"><code>verification/</code></a>
+— a sibling <code>@Requires</code> annotation and its text-capturing transformation,
+the path-condition collector, the Groovy-to-SMT encoder, the
+<code>VerifyChecker</code> type-checking extension, and the Z3 backend.
+Tweaking Groovy&#8217;s existing <code>@Requires</code> wasn&#8217;t pursued here but would be a natural next step if taking this further.</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/verification-demo"><code>verification-demo/</code></a>
+— the <code>ISqrt</code> producer, a <code>GoodCalls</code> consumer that compiles only
+because every call is proven safe, and a <code>BadCalls</code> runner that
+prints the diagnostics for the wrong calls.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is a spike, not a product — in the same spirit as WireCat, it
+demonstrates <strong>reach</strong>, not a finished tool. But the reach is the
+message: the very SPI the Groovy team uses for its in-tree checkers
+is enough to host a real SMT solver and turn a contract-grade
+annotation proof-grade, for a fragment, with counterexamples, today.
+A hat-tip to Dafny for setting the counterexample-UX bar and to
+OpenJML for the loud-unknown discipline this spike borrows wholesale.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_how_it_stacks_up">How it stacks up</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1338,15 +1559,33 @@ following the same two-layer pattern used elsewhere in this post.</p>
 <p><a href="https://guaraqe.com/posts/2026-05-24-why-cartesian-categories.html">WireCat: Visual Programming with Cartesian Categories</a> — the Haskell post that the <code>wire</code> demo is modelled on</p>
 </li>
 <li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — six <code>wire-*</code>
+<p><a href="https://dafny.org">Dafny</a> — the verification-aware language whose
+<code>requires</code>/<code>ensures</code>/<code>invariant</code>/<code>decreases</code> keywords and
+counterexample UX the contract annotations and the SMT spike echo</p>
+</li>
+<li>
+<p><a href="https://www.openjml.org">OpenJML</a> — JML + SMT for Java; source of the
+diagnostic taxonomy and the loud-"unknown"-over-silent-pass discipline</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — the <code>wire-*</code>
 subprojects covering the macro form (shown above) plus the
-builder and builder-with-checker variants</p>
+builder and builder-with-checker variants, and the <code>verification</code>
+/ <code>verification-demo</code> subprojects for the SMT-backed precondition spike</p>
 </li>
 </ul>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>30/May/2026</strong>: Added "From contract-grade to proof-grade" section — a
+spike that puts a Z3 solver behind a <code>@TypeChecked</code> extension to
+discharge <code>@Requires</code> preconditions at compile time, with Dafny-style
+counterexamples, for a linear-integer fragment. Notes that Groovy&#8217;s
+contract annotations echo Dafny&#8217;s keywords and OpenJML&#8217;s taxonomy.
+Two new companion subprojects, <code>verification</code> and <code>verification-demo</code>.</p>
+</div>
 <div class="paragraph">
 <p><strong>26/May/2026</strong>: Added "Building your own checked DSL" section
 demonstrating the producer/consumer split transferred to library
