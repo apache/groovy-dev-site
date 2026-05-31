@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_compile_time_maybe_without_the_wrapper' class='anchor-link'>Compile-time <code>Maybe</code> without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_from_contract_grade_to_proof_grade_an_smt_backed_precondition_postcondition_and_loop_checker' class='anchor-link'>From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_maybe_style_null_safety_without_the_wrapper' class='anchor-link'>Maybe-style null-safety without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_from_contract_grade_to_proof_grade_an_smt_backed_precondition_postcondition_and_loop_checker' class='anchor-link'>From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -77,11 +77,13 @@
 </div>
 <div class="paragraph">
 <p>Groovy starts by inheriting Java&#8217;s answer in full. <code>Optional</code>, <code>Stream</code>,
-<code>CompletableFuture</code>, <code>Function</code>, records, immutable collections,
+<code>CompletableFuture</code>, <code>Function</code>, records, immutable collections, sealed types,
 virtual threads — every JDK carrier and combinator is available, with
 the usual Groovy sugar on top (closures, GINQ, parallel collections,
-<code>Awaitable</code>, async/await). For a lot of workaday code, that is already
-enough.</p>
+<code>Awaitable</code>, async/await). Groovy brings along most of Java&#8217;s
+pattern/decomposition story with some enhancements and minor gaps
+being addressed in GEP-20 targeted for Groovy 7.
+For a lot of workaday code, that is already enough.</p>
 </div>
 <div class="paragraph">
 <p>When you want more discipline than the JDK ships with — applicative
@@ -135,7 +137,7 @@ and any user type that opts in.</p>
 </li>
 <li>
 <p><code>NullChecker</code> — including a flow-sensitive <code>strict</code> mode requiring
-no annotations — for compile-time <code>Maybe</code> without the wrapper.</p>
+no annotations — for Maybe-style null-safety without the wrapper.</p>
 </li>
 <li>
 <p><code>val</code>, nested <code>copyWith</code> and richer destructuring on top of records
@@ -162,6 +164,17 @@ first-class.</p>
 <p>A companion project at
 <a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>
 holds runnable versions of every example in this post.</p>
+</div>
+<div class="paragraph">
+<p>One framing note before we start. Most of what
+follows is <strong>core Groovy 6</strong> — shipped or stabilising features like
+<code>NullChecker</code>, <code>DO</code>, <code>val</code> and the contract annotations. A few pieces
+are <strong>incubating</strong> and may still shift before release. And the final two
+sections — the <code>WIRE</code> DSL and the SMT-backed checker — are <strong>companion
+prototypes</strong>: spikes built on the same public extension SPI the Groovy
+team uses for the in-tree checkers, included here to show how far that
+SPI reaches, not as Groovy 6 features. Each is flagged again where it
+appears.</p>
 </div>
 </div>
 </div>
@@ -194,8 +207,9 @@ assert composed(' foo bar ') == 49</code></pre>
 turn naive recursive definitions into something fit for production.</p>
 </li>
 <li>
-<p><strong>Records, <code>@Immutable</code>, deep-immutable lists/maps via <code>.asImmutable()</code>.</strong>
-Value semantics without ceremony.</p>
+<p><strong>Records, sealed types, <code>@Immutable</code>, deep-immutable lists/maps via <code>.asImmutable()</code>.</strong>
+Value semantics without ceremony. The JVM-side
+building blocks for algebraic data types.</p>
 </li>
 <li>
 <p><strong>Tail-recursive methods</strong> via <code>@TailRecursive</code> — the
@@ -208,6 +222,12 @@ transform rewrites the body to a loop. No stack growth for <code>factorial</code
 lazy/declarative end of the lane.</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>Alongside these, the GDK keeps accreting FP-friendly collection
+operators — <code>groupByMany</code>, <code>zipWithNext</code>,
+<code>collectMany</code>, <code>inject</code> and friends — the practical-FP-on-the-JVM
+vocabulary that lets workaday collection code read declaratively.</p>
 </div>
 <div class="paragraph">
 <p>That toolkit was good for the workaday side of FP. It said little about
@@ -302,9 +322,9 @@ encoding the structure as a <code>Monoid&lt;A&gt;</code> value. A non-associativ
 combiner like the subtraction example is a <em>semantic</em> error: it
 compiles cleanly in Java and in Groovy without the checker, and
 surfaces as a non-deterministic wrong answer at runtime. The checker
-gives you the same guarantee a typeclass constraint gives Scala or
-Haskell, but without lifting <code>add</code> into a wrapper and unlifting the
-result.</p>
+catches the same class of misuse a typeclass constraint rules out in
+Scala or Haskell — occupying a similar ergonomic role — but without
+lifting <code>add</code> into a wrapper and unlifting the result.</p>
 </div>
 <div class="paragraph">
 <p>The <code>Monoid</code>/<code>Semigroup</code> types from FunctionalJava and HighJ are also
@@ -446,6 +466,13 @@ by <code>DO</code> can be one element of an upstream publisher consumed by
 <code>for await</code> — but neither replaces the other.</p>
 </div>
 <div class="paragraph">
+<p>That stream-shaped source is often a <strong>generator</strong>. A Groovy 6 generator
+method <code>yield`s values lazily and is pulled on demand, giving the
+pull-based lazy-sequence end of the FP toolbox without an explicitly
+built `Stream</code> — naturally consumed by <code>for await</code>, or mapped and
+filtered downstream like any lazy pipeline.</p>
+</div>
+<div class="paragraph">
 <p><code>DO</code> also composes over FunctionalJava&#8217;s <code>Validation</code> — no annotation,
 no wrapper, no Groovy dependency on FunctionalJava, because
 <code>fj.data.Validation</code> is recognised by name in the standard allow-list:</p>
@@ -547,7 +574,7 @@ is the <code>flatMap</code>/<code>map</code> mix-up the checker catches for ever
 </div>
 </div>
 <div class="sect1">
-<h2 id="_compile_time_maybe_without_the_wrapper">Compile-time <code>Maybe</code> without the wrapper</h2>
+<h2 id="_maybe_style_null_safety_without_the_wrapper">Maybe-style null-safety without the wrapper</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In Haskell, <code>Maybe a</code> is a discipline you adopt: every value that
@@ -556,7 +583,9 @@ might be absent is wrapped, the compiler tracks it, you handle the
 </div>
 <div class="paragraph">
 <p>In Groovy 6, <code>NullChecker</code> is the equivalent discipline <em>without</em> the
-wrapper. You can drive it with <code>@Nullable</code>/<code>@NonNull</code> if you like:</p>
+wrapper. To be precise, this is flow analysis over nullable references,
+not an algebraic sum type — the discipline of <code>Maybe</code>, not its
+representation. You can drive it with <code>@Nullable</code>/<code>@NonNull</code> if you like:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -659,8 +688,8 @@ def (h, *t) = [1, 2, 3, 4]</code></pre>
 <p><code>val</code> is the immutable-binding companion to <code>var</code>. Nested <code>copyWith</code>
 gives you lens-style updates without a lens library — structural
 sharing is preserved transitively, so <code>is</code>-identity holds on untouched
-branches. The destructuring extension reaches the "match the parts you
-care about" cases pattern matching is normally used for.</p>
+branches. The destructuring extension covers the lightweight
+data-extraction cases that often motivate pattern matching.</p>
 </div>
 </div>
 </div>
@@ -1072,32 +1101,13 @@ Strictly smaller than a GEP, narrower than a language change.</p>
 <div class="sect2">
 <h3 id="_where_the_code_lives">Where the code lives</h3>
 <div class="paragraph">
-<p>Six small subprojects under
-<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire"><code>wire/</code></a>
-— annotations (<code>@Wirable</code>, <code>@WireSource</code>, <code>@WireDiagram</code>), builder DSL,
-dataflow runtime, PlantUML renderer.</p>
-</li>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-checker"><code>wire-checker/</code></a>
-— the <code>WireChecker</code> type-checking extension.</p>
-</li>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-macro"><code>wire-macro/</code></a>
-— the <code>WIRE</code> <code>@Macro</code> method plus its DGM extension descriptor.</p>
-</li>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo"><code>wire-demo/</code></a>,
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo-checked"><code>wire-demo-checked/</code></a>,
-<a href="https://github.com/paulk-asert/groovy6-functional/tree/main/wire-demo-macro"><code>wire-demo-macro/</code></a>
-— consumer demos for the builder, builder-with-checker, and macro
-forms respectively.</p>
-</li>
-</ul>
+<p>The code lives in six small subprojects under
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:
+<code>wire/</code> (annotations, builder DSL, dataflow runtime, PlantUML renderer),
+<code>wire-checker/</code> (the <code>WireChecker</code> extension), <code>wire-macro/</code> (the <code>WIRE</code>
+<code>@Macro</code> method), and three consumer demos for the builder,
+builder-with-checker and macro forms. See the repo for the full
+breakdown.</p>
 </div>
 <div class="paragraph">
 <p>No compiler change, no GEP. The pattern this post has been describing
@@ -1209,8 +1219,9 @@ obligation discharges; the same code now compiles clean:</p>
 </div>
 <div class="paragraph">
 <p>The almost-correct version, the message that names the bad value, the
-one-character fix, the green build — that loop is the experience a
-proof assistant gives you, running inside <code>groovyc</code>.</p>
+one-character fix, the green build — for the linear-integer fragment it
+covers, that loop is the experience a proof assistant gives you,
+running inside <code>groovyc</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1376,29 +1387,15 @@ and none needs a compiler change.</p>
 <div class="sect2">
 <h3 id="_where_the_code_lives_2">Where the code lives</h3>
 <div class="paragraph">
-<p>Two subprojects under
-<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/verification"><code>verification/</code></a>
-— a <code>CONVERSION</code>-phase transform that captures each stock
-<code>@groovy.contracts</code> contract&#8217;s source text into a <code>@ContractSource</code> the
-checker can read back (the built-in annotation keeps only a generated
-closure class, so the text would otherwise be gone), the path-condition
-collector, the body-path walker and loop verifier, the Groovy-to-SMT
-encoder, the <code>VerifyChecker</code> type-checking extension, and the Z3 backend.</p>
-</li>
-<li>
-<p><a href="https://github.com/paulk-asert/groovy6-functional/tree/main/verification-demo"><code>verification-demo/</code></a>
-— the <code>ISqrt</code> producer, a <code>GoodCalls</code> consumer that compiles only
-because every call is proven safe, a <code>BadCalls</code> runner that prints the
-diagnostics for the wrong calls, <code>MinMax</code>/<code>BadEnsures</code> doing the same
-for <code>@Ensures</code> postconditions, and <code>Loops</code>/<code>BadLoops</code> for
-<code>@Invariant</code>/<code>@Decreases</code> loop proofs.</p>
-</li>
-</ul>
+<p>The code lives in two subprojects under
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:
+<code>verification/</code> (the Groovy-to-SMT encoder, the <code>VerifyChecker</code>
+extension, the Z3 backend, and a <code>CONVERSION</code>-phase transform that
+captures each stock <code>@groovy.contracts</code> contract&#8217;s source text — the
+built-in annotation keeps only a generated closure class, so the text
+would otherwise be gone) and <code>verification-demo/</code> (the <code>ISqrt</code>,
+<code>MinMax</code>/<code>BadEnsures</code> and <code>Loops</code>/<code>BadLoops</code> worked examples). See the
+repo for the full breakdown.</p>
 </div>
 <div class="paragraph">
 <p>This is a spike, not a product — in the same spirit as WireCat, it
@@ -1417,17 +1414,21 @@ OpenJML for the loud-unknown discipline this spike borrows wholesale.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>For a JVM-resident FP audience, the comparison set is FunctionalJava,
-Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
+Vavr, HighJ, and the language alternatives Scala and Kotlin, with
+Haskell kept as the reference point. The Scala column is really
+Scala+Cats where it names <code>cats.*</code> types; Kotlin&#8217;s FP rows lean on
+the Arrow library similarly.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 25%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
-<col style="width: 12.5%;">
+<col style="width: 22.2222%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1112%;">
 </colgroup>
 <thead>
 <tr>
@@ -1437,6 +1438,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <th class="tableblock halign-left valign-top">Vavr</th>
 <th class="tableblock halign-left valign-top">HighJ</th>
 <th class="tableblock halign-left valign-top">Scala</th>
+<th class="tableblock halign-left valign-top">Kotlin</th>
 <th class="tableblock halign-left valign-top">Haskell</th>
 </tr>
 </thead>
@@ -1448,6 +1450,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Function0..Function8</code>, <code>andThen</code>/<code>compose</code>/<code>curried</code>/<code>memoized</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Functions</code> combinators</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native (<code>andThen</code>, <code>compose</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native (lambdas, <code>::</code>, <code>andThen</code>/<code>compose</code> in stdlib)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
 </tr>
 <tr>
@@ -1457,6 +1460,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (uses <code>Foldable.reduce</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid&lt;µ&gt;</code> typeclass instance</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.Monoid</code> typeclass</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow.typeclasses.Monoid</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Monoid</code> class</p></td>
 </tr>
 <tr>
@@ -1466,6 +1470,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try</code> lifts effects to a value</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO&lt;µ&gt;</code> simulation</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>cats.effect.IO</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>suspend</code> + <code>arrow</code> effects</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>IO</code>, <code>State</code>, etc.</p></td>
 </tr>
 <tr>
@@ -1476,6 +1481,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Monadic comprehension</p></td>
@@ -1484,6 +1490,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>For(&#8230;&#8203;).yield(fn)</code> ("For-Comprehension")</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulated, with µ tags</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>for { &#8230;&#8203; } yield</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow</code> <code>either { }</code>/<code>nullable { }</code> bind blocks</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>do { &#8230;&#8203; }</code></p></td>
 </tr>
 <tr>
@@ -1493,6 +1500,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Option</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe&lt;µ&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Option</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native nullable types (<code>T?</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Maybe</code></p></td>
 </tr>
 <tr>
@@ -1502,6 +1510,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try</code>, <code>Either</code>, <code>Validation</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either&lt;µ, µ&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validated</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>arrow.core.{Either, Validated}</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Either</code>, <code>Validation</code></p></td>
 </tr>
 <tr>
@@ -1511,6 +1520,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>io.vavr.collection.{List, Vector, HashMap, &#8230;&#8203;}</code> (HAMT-based, structural sharing)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>scala.collection.immutable.*</code> (persistent)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>kotlinx.collections.immutable</code> (persistent)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native (persistent everywhere)</p></td>
 </tr>
 <tr>
@@ -1520,6 +1530,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">n/a (libraries)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">totality checker (extensions)</p></td>
 </tr>
 <tr>
@@ -1529,6 +1540,7 @@ Vavr, HighJ, and the language alternatives Scala and Kotlin.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">no (encoded by hand)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">simulated HKT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no (Arrow dropped HKT encoding)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
 </tr>
 </tbody>
@@ -1582,8 +1594,8 @@ WireCat cartesian-categories idea on the same SPI surface. The
 same surface reaches further still — a type-checking extension
 that runs an SMT solver during compilation turns a contract-grade
 <code>@Requires</code> proof-grade for a linear-integer fragment, emitting
-Dafny-style counterexamples: a theorem prover hosted in <code>groovyc</code>,
-no compiler change required.</p>
+Dafny-style counterexamples: a theorem prover, albeit for a targeted fragment,
+hosted in <code>groovyc</code>, no compiler change required.</p>
 </li>
 </ul>
 </div>
@@ -1594,7 +1606,7 @@ FunctionalJava and HighJ for — and they do it on your own types,
 without inheritance and without lift/unlift. FunctionalJava, HighJ, and
 Vavr remain useful when you want the libraries' richer value-level
 combinators: FunctionalJava and Vavr for applicative-style error
-accumulation via <code>Validation</code> (which Groovy 6 happily embeds in <code>DO</code>);
+accumulation via <code>Validation</code>;
 Vavr additionally for <code>Try</code>/<code>Either</code> as runtime-composable carriers
 where <em>failure-as-a-value</em> is the requirement, and for persistent
 collections with structural sharing — both gaps not yet filled in
