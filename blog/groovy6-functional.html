@@ -808,6 +808,16 @@ enough to treat as a specification.</p>
 compile-time guarantee makes them safe for an agent to read as a
 spec, not as a comment.</p>
 </div>
+<div class="paragraph">
+<p><strong>Update</strong>: The companion repo locks the jqwik version at 1.9.3.
+Read about the
+<a href="https://arstechnica.com/security/2026/05/fed-up-with-vibe-coders-dev-sneaks-data-nuking-prompt-injection-into-their-code/">recent</a>
+<a href="https://kenkousen.substack.com/p/tales-from-the-jar-side-jqwik-prompt">controversy</a>
+around 1.10.x before upgrading to that version (or NOT).
+You might like to also check out the <code>pbt-fj</code> and <code>pbt-vavr</code> subprojects
+in the companion repo which do the same generated property-based
+tests using the <code>functionaljava-quickcheck</code> and <code>vavr-test</code> libraries.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1679,7 +1689,8 @@ builder and builder-with-checker variants, and the <code>verification</code>
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>30/May/2026</strong>: Added "From contract-grade to proof-grade" section — a
+<p><strong>01/Jun/2026</strong>: Added <code>pbt-fj</code> and <code>pbt-vavr</code> subprojects to the companion repo, which generate the same property-based tests as the main <code>pbt</code> subproject but using the <code>functionaljava-quickcheck</code> and <code>vavr-test</code> libraries respectively.
+<strong>30/May/2026</strong>: Added "From contract-grade to proof-grade" section — a
 spike that puts a Z3 solver behind a <code>@TypeChecked</code> extension to
 discharge <code>@Requires</code> preconditions, <code>@Ensures</code> postconditions, and
 <code>@Invariant</code>/<code>@Decreases</code> loops at compile time, with Dafny-style
