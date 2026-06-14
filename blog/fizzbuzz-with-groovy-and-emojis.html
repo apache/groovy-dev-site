@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>FizzBuzz with Groovy and Emojis</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_idiomatic_switch' class='anchor-link'>The idiomatic switch</a></li><li><a href='#_the_nested_ternary' class='anchor-link'>The nested ternary</a></li><li><a href='#_building_the_string' class='anchor-link'>Building the string</a></li><li><a href='#_the_most_elegant_fizzbuzz_cycles' class='anchor-link'>The most elegant FizzBuzz: cycles</a></li><li><a href='#_fizzbuzz_as_data_a_predicate_list' class='anchor-link'>FizzBuzz as data: a predicate list</a></li><li><a href='#_a_query_ginq' class='anchor-link'>A query: GINQ</a></li><li><a href='#_fizzbuzz_in_parallel' class='anchor-link'>FizzBuzz in parallel</a></li><li><a href='#_proving_fizzbuzz' class='anchor-link'>Proving FizzBuzz</a></li><li><a href='#_parallel_checked_and_proven' class='anchor-link'>Parallel, checked and proven</a></li><li><a href='#_a_speculative_groovy_7_version' class='anchor-link'>A speculative Groovy 7 version</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li><li><a href='./groovy-pekko-gpars'>Using Apache Pekko actors and GPars actors with Groovy&trade;</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&trade;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy&trade;</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./calculating-fibonacci-with-groovy-revisited'>Calculating Fibonacci with Groovy&trade; revisited</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>FizzBuzz with Groovy and Emojis</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>FizzBuzz with Groovy and Emojis</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_idiomatic_switch' class='anchor-link'>The idiomatic switch</a></li><li><a href='#_the_nested_ternary' class='anchor-link'>The nested ternary</a></li><li><a href='#_building_the_string' class='anchor-link'>Building the string</a></li><li><a href='#_the_most_elegant_fizzbuzz_cycles' class='anchor-link'>The most elegant FizzBuzz: cycles</a></li><li><a href='#_fizzbuzz_as_a_truth_table' class='anchor-link'>FizzBuzz as a truth table</a></li><li><a href='#_fizzbuzz_as_data_a_predicate_list' class='anchor-link'>FizzBuzz as data: a predicate list</a></li><li><a href='#_a_query_ginq' class='anchor-link'>A query: GINQ</a></li><li><a href='#_fizzbuzz_in_parallel' class='anchor-link'>FizzBuzz in parallel</a></li><li><a href='#_proving_fizzbuzz' class='anchor-link'>Proving FizzBuzz</a></li><li><a href='#_parallel_checked_and_proven' class='anchor-link'>Parallel, checked and proven</a></li><li><a href='#_a_speculative_groovy_7_version' class='anchor-link'>A speculative Groovy 7 version</a></li><li><a href='#_metaprogramming_handle_with_care' class='anchor-link'>Metaprogramming, handle with care</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li><li><a href='./groovy-pekko-gpars'>Using Apache Pekko actors and GPars actors with Groovy&trade;</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&trade;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy&trade;</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./calculating-fibonacci-with-groovy-revisited'>Calculating Fibonacci with Groovy&trade; revisited</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>FizzBuzz with Groovy and Emojis</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -251,8 +251,21 @@ glue them. The classic Haskell rendition zips two infinite lazy cycles:</p>
 </div>
 </div>
 <div class="paragraph">
+<p>That yields the fizz/buzz fragments, but a blank wherever a plain number belongs.
+The full FizzBuzz zips those against the naturals <code>[1..]</code>, keeping the number
+whenever the glued string is empty:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="haskell">zipWith (\n s -&gt; if null s then show n else s)
+        [1..]
+        (zipWith (++) (cycle ["","","🥤"]) (cycle ["","","","","🐝"]))</code></pre>
+</div>
+</div>
+<div class="paragraph">
 <p>Indexing two short period arrays by <code>(n - 1) % period</code> is the same idea without
-the laziness, and Elvis again fills in the number:</p>
+the laziness, and it is this second form that Groovy matches — the Elvis
+<code>?: n.toString()</code> does the job of <code>if null s then show n</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -267,6 +280,75 @@ def fizzbuzz = { int n -&gt;
 <div class="paragraph">
 <p>Arithmetic has moved out of the conditionals and into the indexing — the
 divisibility is encoded in the <em>lengths</em> of the two patterns.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 can also do the <em>actually</em> lazy version, and now the match with that
+second Haskell form is almost line for line: <code>repeat()</code> is <code>cycle</code>, <code>zip</code> is the
+inner <code>zipWith (++)</code>, <code>indexed(1)</code> supplies the <code>[1..]</code>, <code>collecting</code> is the
+outer <code>zipWith</code>, and <code>s[0] + s[1] ?: n</code> is the combine that keeps the number
+when the glue is empty. Nothing is computed until <code>take(20)</code> pulls a prefix:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fizz = ['', '', '🥤'].iterator().repeat()
+def buzz = ['', '', '', '', '🐝'].iterator().repeat()
+
+def result = fizz.zip(buzz)
+        .indexed(1)
+        .collecting { n, s -&gt; s[0] + s[1] ?: n }   // glue the fragments; Elvis → the number
+        .take(20)
+        .toList()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Same trick, now genuinely infinite — the two streams cycle without end and we
+simply stop pulling after twenty.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fizzbuzz_as_a_truth_table">FizzBuzz as a truth table</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Step back and FizzBuzz is just a function of two yes/no questions — "divisible
+by three?" and "divisible by five?" — which makes it a function of two bits, and
+a function of two bits fits in a 2&times;2 table. The most literal encoding of
+the problem there is: index the table by those two answers.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fb = [['',   '🥤'],     //  not ÷5:  [number,  🥤  ]
+          ['🐝', '🥤🐝']]    //      ÷5:  [🐝,      🥤🐝]
+
+def fizzbuzz = { int n -&gt;
+    fb[n % 5 == 0 ? 1 : 0][n % 3 == 0 ? 1 : 0] ?: n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Where <code>cycles</code> indexed by <em>position in a period</em>, this indexes by the two
+<em>conditions</em> — the same data laid out along different axes. The top-left cell is
+empty, so Elvis supplies the number, exactly as before.</p>
+</div>
+<div class="paragraph">
+<p>The same table reads naturally as a <code>switch</code>, too. Groovy matches a <code>String</code>
+case label by equality, so stringifying the pair of bits gives the four rows
+something concrete to match:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch ([n % 3 == 0, n % 5 == 0].toString()) {
+    case '[true, true]'  -&gt; '🥤🐝'
+    case '[true, false]' -&gt; '🥤'
+    case '[false, true]' -&gt; '🐝'
+    default              -&gt; n
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>.toString()</code> is the tell: <code>switch</code> wants a value to compare, so we hand it
+a string key. Groovy 7 will let us match the structure itself — we come back to
+that at the end.</p>
 </div>
 </div>
 </div>
@@ -590,11 +672,98 @@ pattern-matching trajectory:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>To be clear, this last form is <strong>speculative</strong> — GEP-19 is a draft targeting
-Groovy 7 and is not implemented today, so it does not compile on Groovy 6; it
-lives in the companion repo (kept out of the build) only to show where the
+<p>GEP-19 also brings <em>list patterns</em> — and here is the promised payoff for that
+stringified-key switch in the truth-table section. Instead of comparing
+<code>[true, true]</code> as <em>text</em>, you destructure the two remainders and match on the
+<em>structure</em> directly; the <code>.toString()</code> disappears:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch ([n % 3, n % 5]) {
+    case [var a, var b] when a == 0 &amp;&amp; b == 0 -&gt; '🥤🐝'
+    case [0, var _]                           -&gt; '🥤'
+    case [var _, 0]                           -&gt; '🐝'
+    default                                   -&gt; n
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two details follow from GEP-19&#8217;s own disambiguation rule: the wildcard is
+<code>var <em></code> (a bare <code></em></code> stays an ordinary identifier), and an all-constant label like
+<code>[0, 0]</code> keeps its legacy <code>isCase</code> meaning — so the both-zero row earns its
+binding-and-guard rather than matching a constant pair directly.</p>
+</div>
+<div class="paragraph">
+<p>To be clear, both speculative forms are just that — GEP-19 is a draft targeting
+Groovy 7 and is not implemented today, so neither compiles on Groovy 6; they
+live in the companion repo (kept out of the build) only to show where the
 alignment leads. The point is the contrast: the <em>capability</em> has been there for
 years and on every JDK; GEP-19 brings the matching <em>syntax</em>, not the power.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metaprogramming_handle_with_care">Metaprogramming, handle with care</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One Groovy capability hasn&#8217;t appeared yet: runtime metaprogramming — reshaping a
+type through its metaclass, and overloading operators by name. It&#8217;s a real power
+tool, and the engine behind much of Groovy&#8217;s DSL and builder support. FizzBuzz is
+far too small to need any of it, which makes it a fun way to see how far the
+language will bend — with the usual caveat that these are tools to reach for
+deliberately, where they earn their keep.</p>
+</div>
+<div class="paragraph">
+<p><code>ExpandoMetaClass</code> can add a property to a type, so every <code>Integer</code> answers for
+itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Integer.metaClass.getFizzBuzz = { -&gt;
+    (delegate % 15 == 0) ? '🥤🐝' :
+    (delegate % 3  == 0) ? '🥤'   :
+    (delegate % 5  == 0) ? '🐝'   : delegate
+}
+
+(1..20).each { println it.fizzBuzz }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now <code>7.fizzBuzz == 7</code> and <code>15.fizzBuzz == '🥤🐝'</code> — the numbers answer for
+themselves. Tidy, bearing in mind it mutates a JDK type&#8217;s metaclass for the whole
+runtime, which is the kind of reach worth weighing first.</p>
+</div>
+<div class="paragraph">
+<p>Operators are methods too, so <code>multiply</code> can take a new argument type. Teach
+<code>Integer</code> a <code>multiply(String)</code> and <code>(it % 3) * '🥤'</code> becomes meaningful — it
+yields the emoji exactly when the remainder is zero:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Integer.metaClass.multiply = { String s -&gt; delegate == 0 ? s : '' }
+
+(1..20).each { println(((it % 3) * '🥤' + (it % 5) * '🐝') ?: it) }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And if you would rather not metaprogram at all, the same idea sits in plain
+arithmetic: <code>'🥤' * n</code> repeats the string <code>n</code> times, so a 0/1 multiplier does the
+selecting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">(1..20).each {
+    println(('🥤' * ((it % 3 + 2) / 3 as int % 2 ^ 1) +
+             '🐝' * ((it % 5 + 4) / 5 as int % 2 ^ 1)) ?: it)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>All three live in the companion repo&#8217;s <code>diabolical/</code> module. They are a romp at
+the expressive end of Groovy; in real code the metaclass techniques earn their
+place in DSLs and frameworks rather than a five-line kata. Powerful when you need
+them — reach for them when they pull their weight, and leave them be when a plain
+function will do.</p>
 </div>
 </div>
 </div>
@@ -605,9 +774,11 @@ years and on every JDK; GEP-19 brings the matching <em>syntax</em>, not the powe
 <p>None of these is <em>the</em> way to write FizzBuzz, and that was never the goal. The
 fun is in how many shapes the same three rules can take: a switch of
 predicates, a nested ternary, a string you build and let collapse, two periodic
-patterns you index, a list of cases as data, a SQL-shaped query, the same
-mapping fanned across virtual threads, and a version a solver proves correct
-before it ever runs. Pick the one that makes you smile — and add emoji.</p>
+patterns you index — or lazily zip forever — a 2&times;2 truth table you index or
+switch on, a list of cases as data, a
+SQL-shaped query, the same mapping fanned across virtual threads, a version
+a solver proves correct before it ever runs, and a few that bend Groovy&#8217;s
+metaprogramming to the task. Pick the one that makes you smile — and add emoji.</p>
 </div>
 </div>
 </div>
