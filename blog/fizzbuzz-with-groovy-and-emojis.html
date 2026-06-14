@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, fizzbuzz, emoji, switch, pattern matching, ginq, streams, virtual threads, concurrency, verification, gep-19'/><meta name='description' content='A fun tour of many ways to write FizzBuzz in Groovy 6 — switches, ternaries, cycles, GINQ, parallel collections and a verified version — all in emoji.'/><title>The Apache Groovy programming language - Blogs - FizzBuzz with Groovy and Emojis</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>FizzBuzz with Groovy and Emojis</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_idiomatic_switch' class='anchor-link'>The idiomatic switch</a></li><li><a href='#_the_nested_ternary' class='anchor-link'>The nested ternary</a></li><li><a href='#_building_the_string' class='anchor-link'>Building the string</a></li><li><a href='#_the_most_elegant_fizzbuzz_cycles' class='anchor-link'>The most elegant FizzBuzz: cycles</a></li><li><a href='#_fizzbuzz_as_data_a_predicate_list' class='anchor-link'>FizzBuzz as data: a predicate list</a></li><li><a href='#_a_query_ginq' class='anchor-link'>A query: GINQ</a></li><li><a href='#_fizzbuzz_in_parallel' class='anchor-link'>FizzBuzz in parallel</a></li><li><a href='#_proving_fizzbuzz' class='anchor-link'>Proving FizzBuzz</a></li><li><a href='#_parallel_checked_and_proven' class='anchor-link'>Parallel, checked and proven</a></li><li><a href='#_a_speculative_groovy_7_version' class='anchor-link'>A speculative Groovy 7 version</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&trade;</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li><li><a href='./groovy-pekko-gpars'>Using Apache Pekko actors and GPars actors with Groovy&trade;</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&trade;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy&trade;</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li><li><a href='./calculating-fibonacci-with-groovy-revisited'>Calculating Fibonacci with Groovy&trade; revisited</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>FizzBuzz with Groovy and Emojis</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-06-14 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://en.wikipedia.org/wiki/Fizz_buzz">FizzBuzz</a> is the little interview
+chestnut: print the numbers <code>1</code> to <code>n</code>, but say <em>Fizz</em> for multiples of
+three, <em>Buzz</em> for multiples of five, and <em>FizzBuzz</em> for multiples of both.
+It is small enough to fit in a tweet and yet — as a decade of blog posts
+attests — roomy enough to show off whatever language feature you happen to
+be fond of this week.</p>
+</div>
+<div class="paragraph">
+<p>This post is unapologetically in that spirit. It is <strong>not</strong> a hunt for the one
+true FizzBuzz; it is a tour of several genuinely different ways to write it in
+Groovy 6, each with its own flavour. To keep them comparable we render them
+all with the same emoji instead of words:</p>
+</div>
+<table class="tableblock frame-all grid-all fit-content">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Rule</th>
+<th class="tableblock halign-left valign-top">Word</th>
+<th class="tableblock halign-left valign-top">Emoji</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n % 3 == 0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fizz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">🥤</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n % 5 == 0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Buzz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">🐝</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>n % 15 == 0</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FizzBuzz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">🥤🐝</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The emoji idea is borrowed, with thanks, from Don Raab&#8217;s
+<a href="https://donraab.medium.com/ternary-predicate-and-pattern-matching-for-fizzbuzz-with-java-26-646c812a137b"><em>Ternary,
+Predicate, and Pattern Matching for FizzBuzz with Java 26</em></a>, which dresses up
+its Java variants the same way. It is also where the emoji appear in the
+<a href="https://github.com/paulk-asert/groovy-verify#fizzbuzz&#8212;&#8203;element-wise-array-correctness"><code>groovy-verify</code></a>
+project, one of whose examples we revisit below.</p>
+</div>
+<div class="paragraph">
+<p>The starting point for this post was a reader&#8217;s first attempt, which already
+shows how compact Groovy can be:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">val result = (1..20).collect { each -&gt;
+    switch (each) {
+        case { each % 15 == 0 } -&gt; "🥤🐝"
+        case { each % 3 == 0 }  -&gt; "🥤"
+        case { each % 5 == 0 }  -&gt; "🐝"
+        default -&gt; each
+    }
+}
+println result.join(' ')
+// 1 2 🥤 4 🐝 🥤 7 8 🥤 🐝 11 🥤 13 14 🥤🐝 16 17 🥤 19 🐝</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every runnable example maps the same range <code>(1..20)</code> and asserts the same
+canonical output, so the shapes are directly comparable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>1 2 🥤 4 🐝 🥤 7 8 🥤 🐝 11 🥤 13 14 🥤🐝 16 17 🥤 19 🐝</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A companion project at
+<a href="https://github.com/paulk-asert/groovy-fizzbuzz"><code>groovy-fizzbuzz</code></a> holds
+runnable versions of every example, resolving Groovy <code>6.0.0-SNAPSHOT</code> from the
+ASF snapshot repository.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_idiomatic_switch">The idiomatic switch</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s <code>switch</code> is an <em>expression</em>, and its case labels can be closures used
+as predicates — applied to the switch subject, first match wins. This is the
+cleaned-up form of the opening attempt, and the same shape the
+<a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">GPars meets Virtual
+Threads</a> post used for the word version:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fizzbuzz = { int n -&gt;
+    switch (n) {
+        case { it % 15 == 0 } -&gt; '🥤🐝'
+        case { it % 3 == 0 }  -&gt; '🥤'
+        case { it % 5 == 0 }  -&gt; '🐝'
+        default               -&gt; n.toString()
+    }
+}
+
+assert (1..20).collect { fizzbuzz(it) }.join(' ') ==
+    '1 2 🥤 4 🐝 🥤 7 8 🥤 🐝 11 🥤 13 14 🥤🐝 16 17 🥤 19 🐝'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_nested_ternary">The nested ternary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The most concise of Don Raab&#8217;s Java variants is a nested ternary, and it
+translates to Groovy almost character for character. It reads top to bottom —
+15, then 3, then 5 — as one expression with no statements:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fizzbuzz = { int n -&gt;
+    n % 15 == 0 ? '🥤🐝'
+        : n % 3 == 0 ? '🥤'
+        : n % 5 == 0 ? '🐝'
+        : n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This particular spelling earns its keep later: it is exactly the <code>spec(n)</code> the
+verified version proves correct.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_building_the_string">Building the string</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is a trick that drops the <code>% 15</code> special case entirely. Glue the 🥤 and 🐝
+fragments together; when a fragment doesn&#8217;t apply it contributes the empty
+string and simply vanishes. The <em>FizzBuzz</em> case falls out for free when both
+are present. Groovy&#8217;s Elvis operator (<code>?:</code>) then supplies the number whenever
+the glued string is empty (and therefore falsy):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fizzbuzz = { int n -&gt;
+    def s = (n % 3 == 0 ? '🥤' : '') + (n % 5 == 0 ? '🐝' : '')
+    s ?: n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three rules expressed with two tests — the third emerges from the other two.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_most_elegant_fizzbuzz_cycles">The most elegant FizzBuzz: cycles</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The well-travelled Reddit thread on
+<a href="https://www.reddit.com/r/coding/comments/59iijd/the_most_elegant_implementation_of_fizzbuzz/">the
+most elegant implementation of FizzBuzz</a> makes a lovely observation: you don&#8217;t
+need a divisibility test in the mapping <em>at all</em>. The 🥤 pattern repeats with
+period three and the 🐝 pattern with period five; lay them down by position and
+glue them. The classic Haskell rendition zips two infinite lazy cycles:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="haskell">zipWith (++) (cycle ["","","🥤"]) (cycle ["","","","","🐝"])</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Indexing two short period arrays by <code>(n - 1) % period</code> is the same idea without
+the laziness, and Elvis again fills in the number:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def fizz = ['', '', '🥤']         // period 3
+def buzz = ['', '', '', '', '🐝'] // period 5
+
+def fizzbuzz = { int n -&gt;
+    (fizz[(n - 1) % 3] + buzz[(n - 1) % 5]) ?: n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Arithmetic has moved out of the conditionals and into the indexing — the
+divisibility is encoded in the <em>lengths</em> of the two patterns.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fizzbuzz_as_data_a_predicate_list">FizzBuzz as data: a predicate list</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Don Raab&#8217;s most readable variant uses Eclipse Collections'
+<a href="https://www.eclipse.org/collections/"><code>CaseFunction</code></a>: an ordered list of
+<code>(predicate, result)</code> cases, first match wins, with a default. The same idea
+in plain Groovy is a list of pairs — the cases become <em>data</em> you can build,
+pass around and extend by appending rather than by editing a <code>switch</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def cases = [
+    [{ int n -&gt; n % 15 == 0 }, '🥤🐝'],
+    [{ int n -&gt; n % 3 == 0 },  '🥤'],
+    [{ int n -&gt; n % 5 == 0 },  '🐝'],
+]
+
+def fizzbuzz = { int n -&gt;
+    cases.find { pred, _ -&gt; pred(n) }?.last() ?: n.toString()
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_query_ginq">A query: GINQ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://groovy-lang.org/using-ginq.html">GINQ</a> (Groovy-Integrated
+Query) gives FizzBuzz a SQL-shaped spelling with <code>from … select …</code>. It is
+gloriously over-engineered for a problem this small, but it is a genuinely
+different paradigm — and it would scale to filtering, grouping and joins if the
+query grew:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def result = GQ {
+    from n in (1..20)
+    select n % 15 == 0 ? '🥤🐝'
+        : n % 3 == 0 ? '🥤'
+        : n % 5 == 0 ? '🐝'
+        : n.toString()
+}.toList()</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_fizzbuzz_in_parallel">FizzBuzz in parallel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>FizzBuzz is <em>embarrassingly parallel</em>: each element depends only on its own
+number, so the work splits cleanly. The earlier GPars post ran the parallel
+version on the <a href="https://gpars.org/">GPars</a> library; in Groovy 6 those patterns
+are integrated into the core (<a href="../wiki/GEP-18.html">GEP-18</a>).
+<code>ParallelScope.withPool(Pool.virtual())</code> binds a virtual-thread pool for the
+scope, and <code>collectParallel</code> is the parallel <code>collect</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.concurrent.Pool
+import groovy.concurrent.ParallelScope
+
+def result = ParallelScope.withPool(Pool.virtual()) { scope -&gt;
+    (1..20).collectParallel { fizzbuzz(it) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This borrows the framing from the <em>Concurrency "lite"</em> section of
+<code>groovy-verify</code>: factor a concurrent computation into a <strong>structural guarantee</strong>
+the runtime provides and a <strong>local obligation</strong> you must get right. Here the
+structural half is "an order-preserving parallel map gives the same result as
+the sequential one" — <code>collectParallel</code> keeps encounter order — so all that is
+left is the per-element mapping. The mapping is unchanged from the sequential
+versions, which is the whole point: the <code>fizzbuzz</code> closure drops straight in.</p>
+</div>
+<div class="paragraph">
+<p>That same mapping drops just as easily into ordinary Java Streams — the form
+Don Raab uses — where switching to parallel is a one-word change:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import java.util.stream.IntStream
+
+def result = IntStream.rangeClosed(1, 20)
+        .mapToObj { fizzbuzz(it) }   // .parallel() before this to fan out
+        .toList()</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proving_fizzbuzz">Proving FizzBuzz</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If parallel FizzBuzz is "get the per-element mapping right and the structure
+takes care of the rest", it is fair to ask: can we <em>prove</em> we got that element
+right? The
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a> project — an
+SMT-backed <code>@TypeChecked</code> extension that discharges
+<a href="https://groovy-lang.org/contracts.html"><code>groovy.contracts</code></a> annotations at
+compile time — does exactly that, in the Dafny style of element-wise array
+verification. A pure <code>spec(n)</code> (the nested ternary from earlier), a loop that
+fills <code>r[i] = spec(i + 1)</code>, and a postcondition saying <strong>every</strong> slot matches it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
+static String[] build(int upTo) {
+    String[] r = new String[upTo]
+    int i = 0
+    @Invariant({ 0 &lt;= i &amp;&amp; i &lt;= upTo &amp;&amp; r.length == upTo &amp;&amp;
+                 (0..&lt;i).every { int k -&gt; r[k] == FizzBuzz.spec(k + 1) } })
+    @Decreases({ upTo - i })
+    while (i &lt; upTo) {
+        r[i] = FizzBuzz.spec(i + 1)
+        i = i + 1
+    }
+    return r
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>FizzBuzz counts from <code>1</code>, so the 0-based slot <code>i</code> holds the value for number
+<code>i + 1</code> — that <code>+ 1</code> is the bridge between the array index and the FizzBuzz
+number. The module compiles only because the solver can prove no slot holds the
+wrong emoji. Introduce the classic off-by-one — <code>r[i] = spec(i)</code> — and the loop
+invariant is no longer preserved; compilation fails with a concrete
+counterexample naming the offending slot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove loop invariant is preserved by the loop body in build
+    counterexample: i = 0, r.length = 1, upTo = 1
+    r[0] = "🥤🐝" — the spec requires "1"
+    fails on: build(1)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Slot 0 would hold <code>spec(0) == "🥤🐝"</code> (zero divides everything, so it&#8217;s
+FizzBuzz) where number 1 requires <code>"1"</code>. "Correct" here means <em>faithful to `spec`</em>: the loop provably realises it
+at every index, with no gap, overwrite or off-by-one. It doesn&#8217;t claim the spec
+itself is the One True FizzBuzz.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_parallel_checked_and_proven">Parallel, checked and proven</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The last two sections each told half a story. The parallel version leaned on a
+<strong>structural guarantee</strong> (an order-preserving parallel map) so it only had to get
+the per-element mapping right; the verified version <strong>proved</strong> a per-element
+mapping right. What happens when we put them together — and need to <em>combine</em>
+the parallel results rather than just collect them?</p>
+</div>
+<div class="paragraph">
+<p>When the parallel version assembles its per-number tokens, the <em>combine</em> step
+is the most natural operation in FizzBuzz: gluing the rendered emoji strings
+together. String concatenation is a <strong>monoid</strong> — associative, with the empty
+string as identity — and that associativity is exactly what a parallel
+reduction relies on: partition the range, render each chunk, recombine, and the
+result must not depend on where the splits fell. Groovy 6 ships
+<code>CombinerChecker</code> (from the
+<a href="https://groovy.apache.org/blog/groovy6-functional">functional-programming post</a>)
+to check that algebraic <em>shape</em>; <code>groovy-verify</code> proves the <em>semantics</em>.
+Turning on <strong>both</strong> checkers over one class is a genuine two-checker compile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.CombinerChecker', 'verification.VerifyChecker'])
+class Join {
+
+    @Reducer(zero = '""')             // string concat is a monoid; CombinerChecker trusts this &amp; checks the seed
+    @Ensures({ result == a + b })     // the combiner's defining equation, proven
+    static String glue(String a, String b) { a + b }
+
+    @Ensures({ (a + b) + c == a + (b + c) })   // associativity — proven for ALL strings (the law sumParallel needs)
+    static void associative(String a, String b, String c) { }
+
+    @Ensures({ a + '' == a &amp;&amp; '' + a == a })   // identity — '' is a true zero, proven
+    static void identity(String a) { }
+
+    @Ensures({ '🥤' + '🐝' == '🥤🐝' })          // not just abstract strings — the actual emoji, proven
+    static void emojiGlue() { }
+
+    static void parallelGlue() {
+        (1..20).collect { token(it) + ' ' }.sumParallel(Join::glue)   // certified site
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The two checkers keep their error channels separate but reinforce each other —
+shape beside semantics:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>CombinerChecker</code> validates the <code>sumParallel(Join::glue)</code> call site: <code>glue</code>
+carries <code>@Reducer</code>, so the combiner is <em>declared</em> associative and the seedless
+parallel reduction is safe. It trusts the annotation.</p>
+</li>
+<li>
+<p><code>VerifyChecker</code> (the Z3 backend) discharges what the annotation <em>claims</em>.
+Groovy&#8217;s <code>+</code> on <code>String</code> lowers to Z3&#8217;s theory of sequences, so the monoid laws
+prove over <em>arbitrary</em> strings — and the solver reasons about the literal emoji
+too: <code>'🥤' + '🐝' == '🥤🐝'</code> is a proof, not an assertion.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The synergy cuts both ways. A non-associative <em>inline</em> combiner like
+<code>injectParallel(0) { a, b &#8594; a - b }</code> is a <code>CombinerChecker</code> error from static
+shape analysis alone. A method <em>falsely</em> annotated <code>@Associative</code> is trusted by
+<code>CombinerChecker</code> — but refuted by the verifier, which cannot prove the law
+holds. And the proof is genuine, not skipped: concatenation is associative but
+<em>not</em> commutative, and claiming otherwise is rejected with a minimal emoji
+witness:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove postcondition of claim holds on this return path
+    ensured: ((🥤 + a) == (a + 🥤))
+    fails on: claim("A")</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is, <code>"🥤" + "A"</code> ≠ <code>"A" + "🥤"</code>. One checker reasons about the syntactic
+shape, the other about the values; the combiner has to satisfy both.</p>
+</div>
+<div class="paragraph">
+<p>Stand the two verified sections side by side and the parallel FizzBuzz is
+correct end to end: every <em>element</em> is proven faithful to <code>spec</code> (the array
+build), and the <em>combine</em> step is a proven monoid (this <code>Join</code>), so the parallel
+join is guaranteed to equal the sequential one for any split. The runtime
+supplies the parallelism; the compiler supplies the proof that using it changes
+nothing.</p>
+</div>
+<div class="paragraph">
+<p>And the proof isn&#8217;t tied to Groovy&#8217;s parallel collections. The JDK&#8217;s own
+<code>Stream.reduce(identity, accumulator)</code> <em>documents</em> that, for correct parallel
+results, the identity must be a genuine identity and the accumulator must be
+associative — exactly the monoid contract we just proved. So the same <code>glue</code>
+drops straight into the ordinary-streams form from earlier, fanned out:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">tokens.parallelStream().reduce('', Join::glue)   // == the sequential join</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Proving the monoid <em>laws</em> is not a detour around the parallel claim — it
+<em>is</em> the claim: associativity and identity are exactly what make `sumParallel&#8217;s
+partition-and-recombine agree with any sequential fold, so the algebra is the
+right thing to prove.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_speculative_groovy_7_version">A speculative Groovy 7 version</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Don Raab&#8217;s Java 26 version finally gets <em>primitive patterns</em> — the payoff of a
+ten-year wait:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">each -&gt; switch (each) {
+    case int i when i % 15 == 0 -&gt; "🥤🐝";
+    case int i when i % 3 == 0  -&gt; "🥤";
+    case int i when i % 5 == 0  -&gt; "🐝";
+    default -&gt; Integer.toString(each);
+};</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy didn&#8217;t have to wait. Its standard answer is the closure-case switch from
+the very first example — available since long before that ten-year clock started
+ticking, and running unchanged on every currently supported JDK:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (n) {
+    case { it % 15 == 0 } -&gt; '🥤🐝'
+    case { it % 3 == 0 }  -&gt; '🥤'
+    case { it % 5 == 0 }  -&gt; '🐝'
+    default               -&gt; n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>What <em>does</em> wait on Groovy 7 is the exact match of Java&#8217;s spelling — a primitive
+type pattern <code>int i</code> that binds and narrows within the case body and its <code>when</code>
+guard. <a href="../wiki/GEP-19.html">GEP-19</a> (<em>Structural Pattern Matching in
+switch</em>) sketches it, aligning Groovy&#8217;s surface syntax with Java&#8217;s
+pattern-matching trajectory:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">switch (n) {
+    case int i when i % 15 == 0 -&gt; '🥤🐝'
+    case int i when i % 3 == 0  -&gt; '🥤'
+    case int i when i % 5 == 0  -&gt; '🐝'
+    default                     -&gt; n.toString()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To be clear, this last form is <strong>speculative</strong> — GEP-19 is a draft targeting
+Groovy 7 and is not implemented today, so it does not compile on Groovy 6; it
+lives in the companion repo (kept out of the build) only to show where the
+alignment leads. The point is the contrast: the <em>capability</em> has been there for
+years and on every JDK; GEP-19 brings the matching <em>syntax</em>, not the power.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>None of these is <em>the</em> way to write FizzBuzz, and that was never the goal. The
+fun is in how many shapes the same three rules can take: a switch of
+predicates, a nested ternary, a string you build and let collapse, two periodic
+patterns you index, a list of cases as data, a SQL-shaped query, the same
+mapping fanned across virtual threads, and a version a solver proves correct
+before it ever runs. Pick the one that makes you smile — and add emoji.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Companion code for this post: <a href="https://github.com/paulk-asert/groovy-fizzbuzz" class="bare">https://github.com/paulk-asert/groovy-fizzbuzz</a></p>
+</li>
+<li>
+<p>Don Raab&#8217;s <a href="https://donraab.medium.com/ternary-predicate-and-pattern-matching-for-fizzbuzz-with-java-26-646c812a137b">Ternary, Predicate, and Pattern Matching for FizzBuzz with Java 26</a> — the source of the emoji idea</p>
+</li>
+<li>
+<p>The <a href="https://github.com/paulk-asert/groovy-verify#fizzbuzz&#8212;&#8203;element-wise-array-correctness"><code>groovy-verify</code></a> FizzBuzz example and its Concurrency "lite" section</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">GPars meets Virtual Threads</a></p>
+</li>
+<li>
+<p><a href="https://www.reddit.com/r/coding/comments/59iijd/the_most_elegant_implementation_of_fizzbuzz/">The most elegant implementation of FizzBuzz</a> (Reddit)</p>
+</li>
+<li>
+<p><a href="../wiki/GEP-18.html">GEP-18 — Integrated Concurrency and Parallel Processing</a></p>
+</li>
+<li>
+<p><a href="../wiki/GEP-19.html">GEP-19 — Structural Pattern Matching in switch</a> (Groovy 7 candidate)</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
