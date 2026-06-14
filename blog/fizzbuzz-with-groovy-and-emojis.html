@@ -572,7 +572,7 @@ itself, so the combiner alone carries the proof —</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@Reducer(zero = '""')             // associativity + identity proven implicitly, from @Reducer
+<pre class="prettyprint highlight"><code data-lang="groovy">@Reducer(zero = '""')           // associativity + identity proven implicitly, from @Reducer
 @Ensures({ result == a + b })
 static String glue(String a, String b) { a + b }</code></pre>
 </div>
