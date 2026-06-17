@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-25</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-25</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_the_annotations' class='anchor-link'>The annotations</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_a_worked_example_composing_with_another_checker' class='anchor-link'>A worked example — composing with another checker</a></li><li><a href='#_implementation' class='anchor-link'>Implementation</a></li><li><a href='#_prior_art' class='anchor-link'>Prior art</a></li><li><a href='#_forward_compatibility' class='anchor-link'>Forward compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_risks_maintenance_and_status' class='anchor-link'>Risks, maintenance, and status</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-25</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-25</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Compile-time Taint Tracking (<code>@Tainted</code> / <code>@Untainted</code>)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft (placeholder)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-06-17</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-06-17</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+This proposal is an early <strong>placeholder</strong>. It stakes out a design and, more importantly, an
+annotation vocabulary, so that the syntax can be aligned in Groovy 6.x ahead of any implementation
+and so the community can gauge appetite. We are currently working on Groovy 6.0 and this proposal
+targets Groovy 7.0. A taint checker is only worth shipping if the project is comfortable with the
+ongoing maintenance it implies (see <em>Risks, maintenance, and status</em>); this draft is deliberately
+honest about that. We welcome feedback and discussion, but the details are not finalized and the
+feature may not proceed at all without committed maintainers.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP proposes an optional, opt-in <code>@TypeChecked</code> extension — <code>TaintChecker</code> — that performs
+<strong>compile-time taint tracking</strong> over Groovy code, together with two type-qualifier annotations,
+<code>@Tainted</code> and <code>@Untainted</code>. It joins the existing family of pluggable checkers in the
+<code>groovy-typecheckers</code> module (<code>NullChecker</code>, <code>RegexChecker</code>, <code>FormatStringChecker</code>, <code>PurityChecker</code>,
+and the shape checkers <code>CombinerChecker</code> / <code>MonadicChecker</code>).</p>
+</div>
+<div class="paragraph">
+<p>Taint tracking is the classic security dataflow analysis: data originating from an <strong>untrusted source</strong>
+(request parameters, environment, files, deserialized input) is flagged as <code>@Tainted</code>, and the checker
+reports a compile error when tainted data reaches a <strong>sink</strong> that requires <code>@Untainted</code> data (a SQL
+query, a shell command, an HTML response, a file path) without first passing through a <strong>sanitizer</strong>.
+The whole analysis is a two-point lattice — <code>@Untainted &lt;: @Tainted</code> — which keeps it a fast, sound,
+solver-free dataflow pass rather than a heavyweight verification engine.</p>
+</div>
+<div class="paragraph">
+<p>Two design choices distinguish this from a straight port of existing Java taint checkers. First, the
+analysis is <strong>aware of Groovy&#8217;s own structural mechanisms</strong> — most notably <code>GString</code>, which already
+gives <code>groovy.sql.Sql</code> safe-by-construction, parameterized queries; the checker can recognize and
+reward that existing idiom rather than ignore it. Second, the <code>@Tainted</code> / <code>@Untainted</code> vocabulary is
+deliberately the <strong>two extremes of a security lattice</strong>, so it remains forward-compatible with richer,
+external information-flow tools without those tools needing their own annotations.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Injection flaws (CWE-89 SQL injection, CWE-79 cross-site scripting, CWE-78 OS command injection,
+CWE-22 path traversal) remain perennially at the top of the OWASP Top Ten. They share one structure:
+untrusted data flows into a trusting operation without sanitization. That structure is exactly what
+taint analysis catches, and catching it <strong>at compile time</strong> — in the same pass as type checking, with
+the developer&#8217;s IDE underlining the offending flow — is materially cheaper than catching it in a
+separate SAST tool, a code review, or production.</p>
+</div>
+<div class="paragraph">
+<p>Groovy is a frequent host for precisely the code where this matters: build scripts, server-side web
+handlers (Grails, Micronaut, Ratpack, raw servlets), SQL via <code>groovy.sql.Sql</code>, markup via
+<code>MarkupBuilder</code> and template engines, and shell-outs via <code>"cmd".execute()</code>. A Groovy-native taint
+checker meets that code where it lives.</p>
+</div>
+<div class="paragraph">
+<p>The broader trajectory matters too. As AI-assisted security tooling — vulnerability detection,
+suggested fixes, automated pull requests — continues to gain momentum, a language that exposes a
+<strong>typed, machine-checkable</strong> taint substrate is far better positioned than one that offers only freeform
+source to reason about. An AI can propose <code>@Tainted</code> / <code>@Untainted</code> / sanitizer annotations; the
+compiler then <strong>verifies the resulting flow soundly</strong>. The model proposes, the checker disposes. That
+turns a probabilistic suggestion into a checked guarantee, and it gives AI-generated Groovy code a
+compile-time backstop against the injection bugs such code is prone to. Putting the substrate in place
+now is what lets Groovy ride those advances rather than retrofit them later.</p>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Opt-in and composable</strong> — like every other checker in the family, <code>TaintChecker</code> is enabled per
+class or per method via
+<code>@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])</code>, and composes with the other
+extensions on the same compile. Code that does not opt in is completely unaffected.</p>
+</li>
+<li>
+<p><strong>Low-noise by default</strong> — a taint checker that cries wolf is uninstalled. The default qualifier is
+<code>@Untainted</code>; only <strong>known</strong> sources are <code>@Tainted</code> (via the shipped model library or user
+annotation), so a diagnostic fires only when data the checker <strong>knows</strong> is tainted reaches a sink.
+This trades a measure of soundness (an un-modeled source is missed) for trust, with a stricter,
+sound-by-default mode available behind a flag.</p>
+</li>
+<li>
+<p><strong>Two annotations, role by position</strong> — <code>@Tainted</code> and <code>@Untainted</code> are the entire surface. A source
+is a <code>@Tainted</code> return; a sink is an <code>@Untainted</code> parameter; a sanitizer is an <code>@Untainted</code> return
+that accepts <code>@Tainted</code> input. There is no separate <code>@Source</code> / <code>@Sink</code> / <code>@Sanitizer</code> vocabulary
+and no lattice-configuration machinery — a two-point order needs none.</p>
+</li>
+<li>
+<p><strong>Reward existing Groovy safety</strong> — Groovy already has safe-by-construction idioms (GString-based
+parameterized SQL, escaping builders). The checker recognizes these as built-in sanitizing sinks
+rather than forcing developers to annotate around them.</p>
+</li>
+<li>
+<p><strong>Honest scope, loud where it must skip</strong> — Groovy&#8217;s dynamic dispatch cannot always be tracked
+statically. Where the checker cannot follow a flow it says so (a "flow not tracked" note) rather
+than silently passing or silently failing, mirroring the honesty of the sibling checkers.</p>
+</li>
+<li>
+<p><strong>Forward-compatible vocabulary</strong> — <code>@Tainted</code> / <code>@Untainted</code> are the top and bottom of a security
+lattice. Richer external analyses can consume the same annotations as the extremes of a finer
+ordering, so annotating for <code>TaintChecker</code> is never wasted effort.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_annotations">The annotations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Two annotations, usable in <code>TYPE_USE</code> position (and on methods, parameters, and fields):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package groovy.transform        // package tentative
+
+@Documented @Retention(RUNTIME) @Target([TYPE_USE, METHOD, PARAMETER, FIELD, LOCAL_VARIABLE])
+@interface Tainted {}
+
+@Documented @Retention(RUNTIME) @Target([TYPE_USE, METHOD, PARAMETER, FIELD, LOCAL_VARIABLE])
+@interface Untainted {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The qualifier lattice is two points with <code>@Untainted &lt;: @Tainted</code>: an untainted value may be used
+wherever a tainted value is accepted, but not the reverse. The role an annotation plays is determined
+entirely by where it appears:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Position</th>
+<th class="tableblock halign-left valign-top">Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tainted</code> return type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Source</strong> — the method yields untrusted data (<code>request.getParameter(&#8230;&#8203;)</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Untainted</code> parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Sink</strong> — the method requires trusted data (<code>Statement.executeQuery(String)</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Untainted</code> return, <code>@Tainted</code> (or any) input</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Sanitizer</strong> — the method launders taint (<code>escapeHtml(String)</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tainted</code> / <code>@Untainted</code> on a field, local, or value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A tracked value of that qualifier</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>This is the whole model. There is no separate declassifier annotation: an <code>@Untainted</code> return <strong>is</strong> the
+declassification, because in a two-point world there is only one direction worth naming
+(tainted → untainted).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_sources_sinks_and_the_basic_flow">Sources, sinks, and the basic flow</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])
+class Handler {
+    @Tainted String userName(HttpServletRequest req) {
+        req.getParameter('name')              // request params are modeled @Tainted
+    }
+
+    void run(Sql sql, HttpServletRequest req) {
+        @Tainted String name = userName(req)
+
+        // ERROR: a @Tainted String reaches a query sink built by concatenation
+        sql.execute('SELECT * FROM users WHERE name = \'' + name + '\'')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The diagnostic names the flow, in the style of the other checkers:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Tainted value 'name' reaches the untainted parameter of Sql.execute;
+data from Handler.userName (a @Tainted source) flows here without sanitization</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_sanitizers_the_only_declassification_needed">Sanitizers (the only declassification needed)</h3>
+<div class="paragraph">
+<p>A method whose return is <code>@Untainted</code> launders taint — the checker trusts the annotation and treats
+the result as untainted regardless of input:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Untainted String escapeHtml(@Tainted String s) { /* ... escaping ... */ }
+
+void render(Writer out, @Tainted String comment) {
+    out.write(escapeHtml(comment))            // OK: the sink receives untainted data
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the rare audited-inline case — "I have validated this value by other means" — an explicit,
+greppable suppression is provided rather than a silent cast:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@SuppressWarnings('groovy.taint')
+@Untainted String trusted = afterMyOwnValidation(raw)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Suppressions are the audit trail: a security reviewer greps <code>groovy.taint</code> to find every point where
+a human overrode the analysis, exactly as <code>Declassify</code>-style markers serve in richer tools.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_propagation_and_flow_sensitivity">Propagation and flow sensitivity</h3>
+<div class="paragraph">
+<p>Taint propagates through the expression grammar: assignment, string concatenation and <code>GString</code>
+interpolation (see below), arithmetic, and method calls (a value derived from tainted arguments is
+tainted unless the callee declares an <code>@Untainted</code> return). The analysis is <strong>flow-sensitive</strong>: a
+variable may be tainted at one program point and untainted at a later one after sanitization —</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Tainted String x = source()
+sink(x)                 // ERROR
+x = escapeHtml(x)       // x is @Untainted from here on
+sink(x)                 // OK</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>— but it is not <strong>value-dependent</strong>: a value&#8217;s qualifier never depends on the runtime value of <strong>other</strong>
+state. That is the property that keeps the analysis a boolean dataflow pass with no solver. (It is
+also the natural boundary at which a deeper, external tool would take over; see <em>Forward
+compatibility</em>.)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pass_through_methods_and_polymorphism">Pass-through methods and polymorphism</h3>
+<div class="paragraph">
+<p>Many methods neither taint nor sanitize — <code>String.trim()</code>, <code>.toLowerCase()</code>, <code>.substring(int)</code> — they
+pass taint through. Annotating these <code>@Untainted</code> would leak; annotating them <code>@Tainted</code> would over-
+report. A third, <strong>polymorphic</strong> qualifier, <code>@PolyTainted</code>, expresses "the result&#8217;s taint matches the
+receiver/argument&#8217;s taint":</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@PolyTainted String trim(@PolyTainted String self) { ... }   // trim(tainted) is tainted; trim(untainted) is untainted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@PolyTainted</code> is what makes the model library for the JDK&#8217;s string API usable. It is part of the
+design but is presented as a refinement: a first cut can model pass-through methods conservatively
+(propagate taint) and add <code>@PolyTainted</code> where over-reporting proves painful.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_leveraging_existing_groovy_mechanisms">Leveraging existing Groovy mechanisms</h3>
+<div class="paragraph">
+<p>Groovy already encodes injection safety <strong>structurally</strong>, before any annotation exists, and the checker
+should reward that rather than ignore it. The headline case is <code>GString</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>groovy.sql.Sql</code> special-cases <code>GString</code> arguments: a query written as an interpolated string is
+compiled to a parameterized <code>PreparedStatement</code>, with the interpolated values bound as parameters
+rather than concatenated into SQL. The <strong>type</strong> of the argument — <code>GString</code> versus <code>String</code> — already
+distinguishes the safe path from the dangerous one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sql.execute("SELECT * FROM users WHERE name = ${name}")   // GString  -&gt; parameterized -&gt; SAFE even if name is @Tainted
+sql.execute('SELECT * FROM users WHERE name = ' + name)   // String   -&gt; concatenated  -&gt; ERROR if name is @Tainted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>TaintChecker</code> recognizes the GString-accepting <code>Sql</code> methods as <strong>built-in sanitizing sinks</strong>: the
+interpolated holes become bound parameters, so tainted values inside a GString destined for such a
+sink are safe, while the same data <strong>flattened</strong> into a <code>String</code> (via concatenation or <code>.toString()</code>)
+and passed to the raw-<code>String</code> overload is reported. This generalizes: a <code>GString</code> carries its
+structure (fixed fragments versus interpolated values), and APIs that consume that structure
+(parameterized queries, attribute-escaping builders) are inherently safer than their flat-<code>String</code>
+equivalents. The checker can be taught these GString-aware APIs out of the box, retrofitting taint
+semantics onto idioms Groovy developers already use — no new annotations on user code required.</p>
+</div>
+<div class="paragraph">
+<p>This is a distinctively Groovy advantage: the language&#8217;s structured-string type gives the checker a
+ready-made, zero-annotation safety boundary that a <code>String</code>-only language does not have.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_defaulting_and_the_soundness_noise_trade_off">Defaulting and the soundness / noise trade-off</h3>
+<div class="paragraph">
+<p>The default qualifier is <code>@Untainted</code>. String and character literals are untainted; unannotated
+locals, parameters, fields, and returns default untainted; the shipped <strong>model library</strong> marks known
+external-input APIs <code>@Tainted</code> and known dangerous APIs as <code>@Untainted</code>-requiring sinks. The
+consequence is explicit and worth stating plainly:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Optimistic default (proposed)</strong> — low false-positive rate; a diagnostic fires only for flows the
+checker has been told about. The cost is potential <strong>false negatives</strong>: an un-modeled source is
+treated as untainted and its flows are missed.</p>
+</li>
+<li>
+<p><strong>Strict mode (flag)</strong> — external inputs (and, optionally, all unannotated boundaries) default
+<code>@Tainted</code>. Sound, but noisier; appropriate for security-critical code that accepts the annotation
+burden.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The optimistic default is proposed as the out-of-the-box behavior precisely to protect the checker&#8217;s
+reputation for trustworthiness (see <em>Risks</em>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scope_and_limitations">Scope and limitations</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Intraprocedural plus same-unit interprocedural</strong> — flows are tracked within a method and across
+calls whose callee is resolvable at compile time (same compilation unit, or modeled in the
+library). Whole-program, cross-jar taint is out of scope for a type-checker extension.</p>
+</li>
+<li>
+<p><strong>Dynamic dispatch</strong> — a call whose target cannot be resolved statically yields a loud "flow not
+tracked" note rather than a silent verdict.</p>
+</li>
+<li>
+<p><strong>Explicit flows only (initially)</strong> — implicit flows (taint induced by branching on tainted data) are
+not tracked in the first version; they are a well-known source of noise and are deferred to an
+opt-in mode. Most real injection bugs are explicit flows.</p>
+</li>
+<li>
+<p><strong>Collections are coarse</strong> — a container is tracked with a single taint bit rather than per-element;
+per-element precision is value-dependent and is exactly the boundary handed off to richer tools.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_worked_example_composing_with_another_checker">A worked example — composing with another checker</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The value of the checker family is that several run on one compile, each on its own concern:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.NullChecker',
+                           'groovy.typecheckers.TaintChecker'])
+class Comments {
+    @Tainted String body(HttpServletRequest req) { req.getParameter('body') }
+
+    void post(Sql sql, Writer page, @NonNull HttpServletRequest req) {
+        @Tainted String raw = body(req)
+        @Untainted String safe = escapeHtml(raw)
+
+        sql.execute("INSERT INTO comments(text) VALUES (${safe})")  // GString sink: parameterized, OK
+        page.write(safe)                                            // untainted to an HTML sink: OK
+    }
+
+    @Untainted String escapeHtml(@Tainted String s) { /* ... */ }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>NullChecker</strong> verifies the request is non-null; <strong>TaintChecker</strong> verifies no tainted comment reaches
+the database or the page. Distinct concerns, distinct error channels, one compile.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_implementation">Implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>TaintChecker</code> is a <code>org.codehaus.groovy.transform.stc.TypeCheckingExtension</code> (the same SPI as the
+other checkers). During type checking it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>assigns each expression a taint qualifier, propagating along the dataflow rules above;</p>
+</li>
+<li>
+<p>reads <code>@Tainted</code> / <code>@Untainted</code> / <code>@PolyTainted</code> on declarations, and the shipped model library, to
+fix qualifiers at boundaries;</p>
+</li>
+<li>
+<p>checks assignments to <code>@Untainted</code> targets and arguments at <code>@Untainted</code> parameters, reporting a
+flow that delivers tainted data;</p>
+</li>
+<li>
+<p>recognizes the GString-aware safe sinks (e.g. <code>groovy.sql.Sql</code>) as built-in sanitizers.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The non-trivial deliverable is the <strong>model library</strong>: a curated set of qualifier annotations (or external
+stub files) for the JDK and common Groovy/Java libraries — sources (<code>HttpServletRequest</code>,
+<code>System.getenv</code>, <code>Files.readString</code>, <code>Scanner</code>, deserialization), sinks (<code>Statement</code>,
+<code>Runtime.exec</code>/<code>ProcessBuilder</code>, <code>Files</code>/<code>Path</code> constructors, response writers, <code>MarkupBuilder</code> raw
+sinks), sanitizers, and <code>@PolyTainted</code> pass-through string methods. The accuracy and currency of this
+library, not the propagation engine, is the bulk of the work — and the bulk of the ongoing
+maintenance.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prior_art">Prior art</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tool</th>
+<th class="tableblock halign-left valign-top">Approach</th>
+<th class="tableblock halign-left valign-top">Relationship to this proposal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Checker Framework — Tainting Checker (Java)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pluggable type qualifiers <code>@Tainted</code>/<code>@Untainted</code>/<code>@PolyTainted</code>, compile-time, sound</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closest analogue; this proposal adapts the same two-point model to a Groovy <code>@TypeChecked</code> extension
+ and adds GString-awareness</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ballerina taint analysis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Built-in <code>tainted</code>/<code>untainted</code> with compiler-enforced flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Demonstrates a mainstream language shipping taint checking as a first-class, low-ceremony feature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FindSecBugs / SpotBugs, SonarQube</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bytecode/AST heuristics, separate tool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Post-hoc and tool-external; this proposal is in-compiler and annotation-directed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CodeQL, Semgrep</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whole-program / query-based dataflow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deeper and cross-jar, but heavyweight and out-of-band; complementary, not a substitute</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">OWASP ESAPI, encoder libraries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime sanitizers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sanitizers this checker&#8217;s annotations would mark; the checker enforces that they are <strong>called</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_forward_compatibility">Forward compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <code>@Tainted</code> / <code>@Untainted</code> qualifiers are the bottom and top of a security lattice. This keeps the
+vocabulary deliberately open-ended:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Richer information-flow tools</strong> — an external analysis offering multi-level lattices, value-dependent
+labels, or proof-backed declassification (for example an SMT-backed verifier such as <code>groovy-verify</code>)
+can consume the <strong>same</strong> <code>@Tainted</code> / <code>@Untainted</code> annotations as the extremes of a finer ordering.
+Code annotated for <code>TaintChecker</code> therefore remains meaningful to a deeper analysis with no
+re-annotation, and the two compose cleanly — the cheap checker covers all opted-in code, the deeper
+tool adds precision and proof where it reaches. This GEP does not depend on any such tool and does
+not specify their internals; it simply avoids closing the door on them.</p>
+</li>
+<li>
+<p><strong>AI-assisted security</strong> — as automated vulnerability detection and repair mature, the annotation layer
+is the natural integration point: a tool (or model) proposes source/sink/sanitizer annotations, and
+the compiler turns those proposals into <strong>checked</strong> guarantees rather than unverified suggestions.
+Shipping the substrate positions Groovy to gain security posture from that ecosystem as it develops,
+and to give AI-generated Groovy a compile-time injection backstop.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit (control-flow) taint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred (opt-in)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A known source of false positives; most injection bugs are explicit flows</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-element collection taint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value-dependent; the boundary at which a richer external tool takes over</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whole-program / cross-jar tracking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Out of scope for a type-checker extension; CodeQL/Semgrep territory</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Configurable multi-level lattices</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned (here)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A two-point checker needs none; multi-level is left to external tools sharing the vocabulary</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@PolyTainted</code> polymorphism</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refinement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Part of the design; a first cut may model pass-through methods conservatively and add it incrementally</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strict (sound-by-default) mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Behind a flag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Available for security-critical code that accepts the annotation burden</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>The feature is entirely opt-in and additive. No existing program changes behavior:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The checker runs only where <code>@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])</code> is
+applied; absent that, nothing changes.</p>
+</li>
+<li>
+<p><code>@Tainted</code> / <code>@Untainted</code> are <code>RUNTIME</code>-retained marker annotations with no effect on code that does
+not enable the checker; they are ignored like any unrecognized annotation.</p>
+</li>
+<li>
+<p>The annotations and the checker ship in the existing <code>groovy-typecheckers</code> module; core Groovy
+semantics are untouched.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_with_other_checkers">Interaction with other checkers</h3>
+<div class="paragraph">
+<p><code>TaintChecker</code> composes with the other extensions on a single <code>@TypeChecked</code> declaration, each
+reporting on its own concern through its own diagnostics, as in the worked example above.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_risks_maintenance_and_status">Risks, maintenance, and status</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP is deliberately frank about why it is a <strong>placeholder</strong> rather than a committed deliverable.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Taint checkers carry a false-positive / maintenance reputation.</strong> Tools in this space are routinely
+uninstalled because they are too noisy, or quietly distrusted because they are too lax. The proposal
+leans hard on the low-noise default, GString-awareness, explicit greppable suppression, and loud
+skips precisely to earn and keep developer trust — but the reputational risk is real and must be
+managed by conservative defaults and good diagnostics, not wished away.</p>
+</li>
+<li>
+<p><strong>The model library is an ongoing commitment.</strong> The propagation engine is modest; the durable cost is
+curating and <strong>keeping current</strong> the source/sink/sanitizer annotations for the JDK and the common
+Groovy/Java ecosystem. This is the part the Groovy team would need to be comfortable owning (or
+governing as a community-maintained, versioned artifact) before the feature should ship. An
+out-of-date or incomplete model library is itself a source of both false negatives and false
+positives.</p>
+</li>
+<li>
+<p><strong>Soundness is a chosen posture, not a guarantee.</strong> The optimistic default is explicitly <strong>unsound</strong> (it
+can miss un-modeled sources) in exchange for trustworthiness. Users who need soundness opt into
+strict mode and its noise. The GEP does not claim to prove the absence of injection — only to catch
+the flows it has been told to look for.</p>
+</li>
+<li>
+<p><strong>Scope is bounded and honest.</strong> Dynamic dispatch, cross-jar flows, implicit flows, and per-element
+precision are out of scope or deferred; the checker says so rather than pretending otherwise.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Accordingly the status is <strong>Draft (placeholder)</strong>. The near-term purpose is to fix the annotation
+vocabulary (<code>@Tainted</code> / <code>@Untainted</code>, and the role-by-position convention) so Groovy 6.x can align to
+it, to gather feedback, and to find out whether there is both community appetite and committed
+maintenance for the model library. Implementation in Groovy 7.0 is conditional on that.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://checkerframework.org/manual/#tainting-checker">The Checker Framework — Tainting Checker</a></p>
+</li>
+<li>
+<p><a href="https://owasp.org/www-project-top-ten/">OWASP Top Ten</a></p>
+</li>
+<li>
+<p><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a>, <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Cross-site Scripting</a>, <a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: OS Command Injection</a></p>
+</li>
+<li>
+<p><a href="https://ballerina.io/">Ballerina language — taint analysis</a></p>
+</li>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/documentation/sql-userguide.html">Groovy <code>Sql</code> — GString-based parameterized queries</a></p>
+</li>
+<li>
+<p><a href="https://find-sec-bugs.github.io/">FindSecBugs</a></p>
+</li>
+<li>
+<p><a href="GEP-19.html">GEP-19: Structural Pattern Matching in switch</a></p>
+</li>
+<li>
+<p><a href="GEP-20.html">GEP-20: Multi-assignment Destructuring</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
