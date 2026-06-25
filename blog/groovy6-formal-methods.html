@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='formal methods, design by contract, verification, SMT, Z3, contracts, type checker, invariants, concurrency, rely-guarantee, information flow'/><meta name='description' content='Groovy 6 ships design-by-contract &amp; type-checking extensions. The groovy-verify project turns those contracts into Dafny-style proofs with counterexamples.'/><title>The Apache Groovy programming language - Blogs - Groovy 6 features for formal method advocates</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for formal method advocates</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_a_quick_vocabulary' class='anchor-link'>A quick vocabulary</a></li><li><a href='#_what_groovy_6_gives_you_today' class='anchor-link'>What Groovy 6 gives you today</a></li><li><a href='#_from_contracts_to_proofs_groovy_verify' class='anchor-link'>From contracts to proofs: groovy-verify</a></li><li><a href='#_bugs_the_compiler_now_catches' class='anchor-link'>Bugs the compiler now catches</a></li><li><a href='#_properties_you_actually_care_about' class='anchor-link'>Properties you actually care about</a></li><li><a href='#_loops_termination_and_a_real_algorithm' class='anchor-link'>Loops, termination, and a real algorithm</a></li><li><a href='#_composing_with_groovys_other_checkers' class='anchor-link'>Composing with Groovy&#8217;s other checkers</a></li><li><a href='#_concurrency_in_three_rungs' class='anchor-link'>Concurrency, in three rungs</a></li><li><a href='#and-theres-more' class='anchor-link'>And there&#8217;s more</a></li><li><a href='#designed-for-agents' class='anchor-link'>Designed for humans and agents</a></li><li><a href='#_where_this_sits' class='anchor-link'>Where this sits</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy6-functional'>Groovy 6 features for Functional Programmers</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for formal method advocates</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-06-25 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>How much confidence can you have that your code is <em>correct</em> — not "passes
+the tests we thought to write", but correct for <strong>every</strong> input?</p>
+</div>
+<div class="paragraph">
+<p>On the JVM the usual answers are types, tests, and code review. Each
+helps; none of them proves a postcondition holds for all inputs, that an
+index can never go out of bounds, that a class invariant survives every
+mutator, or that a lock-free buffer stays in bounds under every thread
+interleaving. The discipline that <em>does</em> make those claims — <strong>formal
+methods</strong> — has long felt like a separate world: a different language
+(Dafny), a comment dialect bolted onto Java (JML), or a proof assistant
+you drive by hand (Isabelle, Lean).</p>
+</div>
+<div class="paragraph">
+<p>This post is about how much of that world is reachable from ordinary
+Groovy 6 — and it is more than you might expect. Two things matter, and
+it is worth being precise about which is which:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Shipping in Groovy 6 today</strong> are two complementary, production-ready
+features: the <code>groovy-contracts</code> module (Design by Contract —
+<code>@Requires</code>, <code>@Ensures</code>, <code>@Invariant</code>, <code>@Decreases</code>, <code>@Modifies</code>), and a
+family of <em>type-checking extensions</em> (<code>NullChecker</code>, <code>PurityChecker</code>,
+<code>CombinerChecker</code>, <code>MonadicChecker</code>, <code>RegexChecker</code>, and more) plugged in
+through one public SPI. You can adopt both immediately, and they pay their
+way on their own.</p>
+</li>
+<li>
+<p><strong>Not part of Groovy</strong> — not yet, and honesty here is the whole point — is
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a>, an external
+project that takes the very same two hooks and pushes them to their
+logical conclusion: it puts the <a href="https://github.com/Z3Prover/z3">Z3</a>
+automated theorem prover behind a type-checking extension and <em>proves</em>
+your stock <code>groovy.contracts</code> annotations hold for every possible input,
+or fails the build with the exact arguments that break them.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The relationship between the two is the thread running through this post.
+<code>groovy-verify</code> is not a fork, not a new language, and not a re-spelling of
+your specs. It reads the <strong>same</strong> <code>@Requires</code>/<code>@Ensures</code>/<code>@Invariant</code> you&#8217;d
+write for runtime checking, and it activates the <strong>same</strong> way every Groovy 6
+type checker does:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So there is a genuine on-ramp here, not a cliff. Start today with
+<code>groovy-contracts</code> and the in-tree checkers — runtime-checked contracts and
+flow-sensitive null analysis cost you nothing and read like documentation
+that can&#8217;t drift. When you want a particular method or class to carry a
+stronger guarantee, <em>add the verification extension</em> over the contracts you
+already wrote — or, increasingly, ask your AI coding agent to do it for you.
+<code>groovy-verify</code> was deliberately built to be <strong>discoverable by agents</strong>: its
+diagnostics are machine-readable, its capability surface is documented for
+tools to consume, and a refuted proof can print itself back as a runnable
+failing test. We come back to that in <a href="#designed-for-agents">Designed for
+humans and agents</a>.</p>
+</div>
+<div class="paragraph">
+<p>A note on versions before we start: <code>groovy-verify</code> tracks Groovy 6
+closely, and the recommended pairing right now is <strong>Groovy 6.0.0-alpha-2</strong>,
+currently out for an Apache release vote with staged artifacts in the
+<a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">ASF
+staging repository</a>. Everything below was written against that pairing.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_quick_vocabulary">A quick vocabulary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The audience for this post is Groovy and JVM developers who want more
+confidence in their code — not people who already speak the language of
+verification. So a short glossary, which the rest of the post leans on:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Design by Contract (DbC).</strong> The idea, from Eiffel, that a method states
+its obligations as data. A <strong>precondition</strong> (<code>@Requires</code>) is what the caller
+must guarantee on entry; a <strong>postcondition</strong> (<code>@Ensures</code>) is what the method
+guarantees on exit; a <strong>class invariant</strong> (<code>@Invariant</code>) is a property every
+instance must always satisfy between calls. In <code>groovy-contracts</code> these are
+closures, so they are real, executable booleans — and <code>result</code> and
+<code>old.field</code> are available inside <code>@Ensures</code> to talk about the returned
+value and the pre-call state.</p>
+</li>
+<li>
+<p><strong>Loop invariant and termination measure.</strong> A loop <code>@Invariant</code> is a fact
+true before the loop and preserved by each iteration; a <code>@Decreases</code>
+measure is an expression that strictly drops every iteration toward a floor,
+which is how you prove the loop <em>ends</em>.</p>
+</li>
+<li>
+<p><strong>SMT solver.</strong> A "Satisfiability Modulo Theories" engine (here, Z3) that
+decides whether a logical formula over integers, arrays, strings, and the
+like can be satisfied. Verification reduces to asking the solver "could this
+contract <em>fail</em>?" — if it can&#8217;t, the contract is proven; if it can, the
+solver hands back the satisfying assignment.</p>
+</li>
+<li>
+<p><strong>Counterexample.</strong> That satisfying assignment, rendered as concrete inputs.
+"Cannot prove" is a weak diagnostic; "fails on `mid(1, 2147483647)`" is an
+actionable one.</p>
+</li>
+<li>
+<p><strong>Auto-active verifier.</strong> The family <code>groovy-verify</code> belongs to: you supply
+the specs and any loop invariants, and the solver discharges the proof
+obligations automatically in the background — no interactive proof script.
+Dafny, <a href="https://github.com/verus-lang/verus">Verus</a>, SPARK, and OpenJML are
+the other members.</p>
+</li>
+<li>
+<p><strong>Sound, and "loudly partial".</strong> A verifier is <em>sound</em> if a proof it accepts
+is really true. <code>groovy-verify</code> is sound within a deliberately modest slice
+of Groovy and <strong>loudly unsound outside it</strong> — anything it can&#8217;t model is
+reported as "skipped", never waved through silently. That honesty is a
+feature; the failure the whole family fears is a proof that passes only
+because its assumptions can never hold.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One Groovy nicety worth flagging: specs often want logical <em>implication</em>,
+and Groovy 5+ has the <code>==&gt;</code> operator for exactly that (<code>a ==&gt; b</code> is <code>!a ||
+b</code>), with <code>a.implies(b)</code> as the method twin. It reads naturally inside a
+contract closure — <code>result &gt;= 0 ==&gt; a[result] == value</code> — and you&#8217;ll see it
+throughout below.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_groovy_6_gives_you_today">What Groovy 6 gives you today</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Before any prover enters the picture, Groovy 6 already moves the needle.</p>
+</div>
+<div class="paragraph">
+<p>The <code>groovy-contracts</code> module — long available, and
+<a href="https://groovy.apache.org/blog/groovy-null-checker">enhanced</a> in Groovy 6 to
+work in scripts and on loop statements — lets you attach executable
+contracts to methods and classes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.contracts.*
+
+class Stack {
+    private List items = []
+
+    @Requires({ item != null })
+    @Ensures({ items.size() == old.items.size() + 1 })
+    void push(item) { items &lt;&lt; item }
+
+    @Requires({ !items.isEmpty() })
+    @Ensures({ items.size() == old.items.size() - 1 })
+    def pop() { items.removeLast() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>These are checked <strong>at runtime</strong>: violate a precondition and you get a precise
+assertion error at the boundary, not a mysterious failure three frames
+deeper. Crucially, they are also <em>documentation that cannot drift</em>, because
+the compiler weaves them into the bytecode — the contract and the code can
+never disagree without the assertion firing.</p>
+</div>
+<div class="paragraph">
+<p>Alongside the contracts, Groovy 6 ships a family of <strong>type-checking
+extensions</strong> — opt-in static analyses activated per class or method, each
+owning one narrow property:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>NullChecker</code> — flow-sensitive null safety, with a <code>strict</code> mode that
+needs no annotations at all.</p>
+</li>
+<li>
+<p><code>PurityChecker</code> / <code>ModifiesChecker</code> — verify <code>@Pure</code> and <code>@Modifies</code> frame
+conditions (which methods may touch which state).</p>
+</li>
+<li>
+<p><code>CombinerChecker</code> — verify that a <code>@Reducer</code>/<code>@Associative</code> combiner used
+in a parallel reduction really is associative.</p>
+</li>
+<li>
+<p><code>MonadicChecker</code>, <code>RegexChecker</code>, <code>FormatStringChecker</code> — shape and syntax
+checks for monadic comprehensions, regular expressions, and format strings.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>They share one activation mechanism and compose freely:
+<code>@TypeChecked(extensions = ['groovy.typecheckers.NullChecker', &#8230;&#8203;])</code>. The
+companion post
+<a href="https://groovy.apache.org/blog/groovy6-functional"><em>Groovy 6 features for
+Functional Programmers</em></a> covers these in depth.</p>
+</div>
+<div class="paragraph">
+<p>The reason this matters for a formal-methods audience: <strong>the contracts and
+the SPI are the foundation everything below builds on.</strong> <code>groovy-verify</code> adds
+no new annotations of its own for the core work — it reads these — and it
+registers as just another extension on the same SPI. So the step from
+"runtime-checked contracts" to "machine-proven contracts" is genuinely
+additive.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_from_contracts_to_proofs_groovy_verify">From contracts to proofs: groovy-verify</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the move. Take a contract you might already have written, and turn
+on the verification extension. Now Z3 checks the body satisfies the
+postcondition for <em>every</em> input — and when it doesn&#8217;t, the build fails with
+the exact arguments that break it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ result &gt;= a &amp;&amp; result &gt;= b })
+static int max(int a, int b) { a &gt;= b ? a : b }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That one verifies. Flip the body to return the wrong branch and the compile
+fails:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove postcondition of max holds on this return path
+    ensured: ((result &gt;= a) &amp;&amp; (result &gt;= b))
+    counterexample: a = -1, b = 0
+    fails on: max(-1, 0)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No test wrote <code>max(-1, 0)</code>; the solver found it. This is the whole pitch in
+miniature — a proof <em>is</em> the spec, the spec is an ordinary <code>groovy.contracts</code>
+annotation, and a failed proof is a concrete failing input, not a shrug.</p>
+</div>
+<div class="paragraph">
+<p>The informal one-liner the project uses is <strong>"Dafny for Groovy"</strong>, but the
+closer structural analogue is Verus: rather than being a new language with
+its own compiler (Dafny), it verifies an existing mainstream language by
+embedding in that language&#8217;s native extension mechanism — Rust&#8217;s attribute
+macros for Verus, Groovy&#8217;s <code>@TypeChecked</code> extension SPI here.</p>
+</div>
+<div class="sect2">
+<h3 id="_one_spec_two_payoffs">One spec, two payoffs</h3>
+<div class="paragraph">
+<p>The detail that makes this practical on a real codebase: because the
+contracts are stock <code>groovy.contracts</code> annotations, they <em>still execute as
+ordinary runtime checks</em> when verification is off. You write the spec once.
+What Z3 can discharge is <strong>proven</strong>; anything it can&#8217;t reach degrades to a
+<strong>runtime assertion</strong> — not to nothing. That graceful-degradation story is
+unusual in the auto-active verifier family, and it is what lets you sprinkle
+verification onto the high-value parts of a system and leave the rest as
+ordinary, still-runtime-checked Groovy.</p>
+</div>
+<div class="paragraph">
+<p>It also means the soundness claim is <em>cross-checkable</em>. Because every proved
+contract is also a runtime assertion, the project ships a differential
+"runtime rung": it recompiles each proved contract with the verifier off,
+runs it across an input grid, and confirms the proof agrees with what the
+code actually does. A proof that quietly disagreed with reality would be
+caught, not assumed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_bugs_the_compiler_now_catches">Bugs the compiler now catches</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Postconditions are the headline, but a lot of everyday value is in the
+<em>implicit</em> obligations — the ones you never wrote down because they&#8217;re
+"obvious". An index must be in bounds; a divisor must be non-zero; a
+reference must be non-null. <code>groovy-verify</code> discharges these from the
+contracts in scope, and refutes them with a counterexample when it can&#8217;t.</p>
+</div>
+<div class="paragraph">
+<p>An unguarded array access:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static int g(int[] a, int i) { a[i] }   // index never checked</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Possible IndexOutOfBoundsException: index may be out of bounds
+    obligation: 0 &lt;= i &amp;&amp; i &lt; a.size()
+    counterexample: a.size() = 0, i = -1
+    fails on: g(new int[0], -1)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The canonical example is
+<a href="https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/">Joshua
+Bloch&#8217;s binary-search bug</a> — the midpoint <code>(low + high) / 2</code> overflows once
+the array is large enough and returns a negative index. It lurked in
+<code>java.util.Arrays</code> for nine years. With overflow checking opted in
+(<code>@CheckOverflow</code>, off by default since Groovy integers are mathematical by
+default), it is a compile error:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CheckOverflow
+@Requires({ 0 &lt;= low &amp;&amp; low &lt;= high })          // a valid index window
+@Ensures({ low &lt;= result &amp;&amp; result &lt;= high })   // the midpoint lies within it
+static int mid(int low, int high) { (low + high).intdiv(2) }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible ArithmeticException: addition overflows 32-bit signed range
+    obligation: Integer.MIN_VALUE &lt;= (low + high) &amp;&amp; (low + high) &lt;= Integer.MAX_VALUE
+    counterexample: high = 2147483647, low = 1
+    fails on: mid(1, 2147483647)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The one-character family of fixes — compute the midpoint without overflowing
+— verifies clean:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CheckOverflow
+@Requires({ 0 &lt;= low &amp;&amp; low &lt;= high })
+@Ensures({ low &lt;= result &amp;&amp; result &lt;= high })
+static int mid(int low, int high) { low + (high - low).intdiv(2) }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same overflow trap bites the textbook one-liner everyone "knows" is
+fine — absolute value is non-negative, except at <code>Integer.MIN_VALUE</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CheckOverflow
+@Ensures({ result &gt;= 0 })          // "the absolute value is non-negative" — false at MIN_VALUE
+static int abs(int n) { n &lt; 0 ? -n : n }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Possible ArithmeticException: negation overflows 32-bit signed range
+    obligation: Integer.MIN_VALUE &lt;= -n &amp;&amp; -n &lt;= Integer.MAX_VALUE
+    counterexample: n = -2147483648
+    fails on: abs(-2147483648)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Null safety falls out of the same machinery. Groovy idioms participate —
+here the safe-navigation operator narrows nullity, so no null obligation is
+left open:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ name?.startsWith("Dr. ") })          // ?. ==&gt; name != null
+@Ensures({ result &gt;= 4 })
+static int titleLen(String name) { name.length() }   // no NPE obligation remains</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_properties_you_actually_care_about">Properties you actually care about</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Toy <code>int</code> functions are where verification <em>demos</em> start; real adoption
+needs it to speak the language of your domain. A representative sweep.</p>
+</div>
+<div class="paragraph">
+<p><strong>Money that is conserved.</strong> The property that matters in a transfer isn&#8217;t
+"the arithmetic ran" — it&#8217;s that no value was created or destroyed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Bank {
+    BigDecimal alice, bob
+    @Requires({ amt &gt;= 0.0 &amp;&amp; amt &lt;= alice })
+    @Ensures({ alice + bob == old.alice + old.bob })          // no money is lost in the transfer
+    void transfer(BigDecimal amt) { alice = alice - amt; bob = bob + amt }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Change the body to <code>bob = bob + amt - 0.01</code> — the "salami slice" fraud — and
+the <code>@Ensures</code> refutes. And because the numbers are <code>BigDecimal</code>, the proof
+is over <em>exact</em> decimal arithmetic. <code>groovy-verify</code> models each numeric type
+faithfully, which lets it prove the famous discrepancy outright:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ result == 0.3 })   static BigDecimal exact() { 0.1 + 0.2 }    // verified — 0.1 + 0.2 IS 0.3
+@Ensures({ result != 0.3d })  static double    ieee()  { 0.1d + 0.2d }  // verified — 0.1d + 0.2d is NOT 0.3d</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Stateful objects that obey their own rules.</strong> A class invariant is
+established by every constructor and preserved by every mutator, so the whole
+object verifies as a unit:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Invariant({ count &gt;= 0 &amp;&amp; count &lt;= max })
+class Counter {
+    int count, max
+    @Requires({ m &gt; 0 })
+    Counter(int m) { max = m }                  // establishes the invariant
+    @Requires({ count &lt; max })
+    void increment() { count = count + 1 }      // maintains it
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Drop the constructor&#8217;s <code>@Requires({ m &gt; 0 })</code> and even construction is
+refuted — the solver finds the instance that violates the invariant before
+any method runs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove class invariant of &lt;init&gt; holds at method exit
+    invariant: ((count &gt;= 0) &amp;&amp; (count &lt;= max))
+    counterexample: count = 0, m = -1, max = 0
+    fails on: &lt;init&gt;(-1)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Aliasing — the bug value-semantics tools miss.</strong> Two parameters can be the
+<em>same</em> object, and a postcondition that forgets it is wrong:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ a.balance == 100 &amp;&amp; b.balance == 200 })
+static void setBoth(Account a, Account b) { a.balance = 100; b.balance = 200 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove postcondition of setBoth holds on this return path
+    ensured: ((a.balance == 100) &amp;&amp; (b.balance == 200))
+    counterexample: a$id = 3, b$id = 3      // same identity ==&gt; a and b are the same object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fix is to require distinctness — <code>@Requires({ a !== b })</code> — and the
+proof goes through. <code>groovy-verify</code> models flat object fields with identity
+keys, so a write through one reference is seen through another exactly when
+they are the same object.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_loops_termination_and_a_real_algorithm">Loops, termination, and a real algorithm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Loops are where verification earns its keep, because they&#8217;re where tests are
+least exhaustive. The contract is a loop <code>@Invariant</code> plus a <code>@Decreases</code>
+measure. The simplest shape:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ n &gt;= 0 })
+@Ensures({ result == n })
+static int countUp(int n) {
+    int i = 0
+    @Invariant({ 0 &lt;= i &amp;&amp; i &lt;= n })
+    @Decreases({ n - i })
+    while (i &lt; n) { i++ }
+    return i
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The invariant pins <code>i</code> to its range across every iteration; the measure <code>n -
+i</code> strictly drops, proving the loop terminates; together they discharge the
+postcondition that the loop runs exactly <code>n</code> times.</p>
+</div>
+<div class="paragraph">
+<p>That scales — all the way to a real, in-place sorting algorithm proven
+<strong>sorted</strong> <em>and</em> a <strong>permutation</strong> of its input (no elements invented or lost),
+under a sound <code>@Modifies</code> frame. The <code>every</code>, <code>count</code>, and <code>old</code> are all
+plain GDK Groovy; the <code>@Decreases</code> turns each recursive call into a proof by
+induction:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ 0 &lt;= m &amp;&amp; m &lt; a.length &amp;&amp;
+            (0..&lt;m - 1).every { a[it] &lt;= a[it + 1] } &amp;&amp;   // prefix sorted
+            (0..&lt;m + 1).every { a[it] &lt;= hi } })           // active region bounded by hi
+@Modifies({ this.a })
+@Ensures({ (0..&lt;m).every { a[it] &lt;= a[it + 1] } &amp;&amp;         // a[0..m] now sorted
+           (0..&lt;m + 1).every { a[it] &lt;= hi } &amp;&amp;            // bound preserved
+           (m + 1..&lt;a.length).every { a[it] == old.a[it] } &amp;&amp; // suffix framed (untouched)
+           a.count(v) == old.a.count(v) })                 // permutation
+@Decreases({ m })
+void insert(int m, int hi, int v) {
+    if (m &gt; 0 &amp;&amp; a[m] &lt; a[m - 1]) {
+        int t = a[m]; a[m] = a[m - 1]; a[m - 1] = t
+        insert(m - 1, a[m], v)                              // recurse with the pivot as the bound
+    }
+}
+
+@Requires({ 0 &lt;= n &amp;&amp; n &lt;= a.length &amp;&amp; (0..&lt;n).every { a[it] &lt;= hi } })
+@Modifies({ this.a })
+@Ensures({ (0..&lt;n - 1).every { a[it] &lt;= a[it + 1] } &amp;&amp;
+           (0..&lt;n).every { a[it] &lt;= hi } &amp;&amp;
+           (n..&lt;a.length).every { a[it] == old.a[it] } &amp;&amp;
+           a.count(v) == old.a.count(v) })
+@Decreases({ n })
+void sort(int n, int hi, int v) {
+    if (n &gt; 1) { sort(n - 1, hi, v); insert(n - 1, hi, v) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That <code>a.count(v) == old.a.count(v)</code> is the multiset-conservation property no
+test could exhaustively check. The same depth reaches Dijkstra&#8217;s Dutch
+National Flag (a three-way partition proven sorted-and-permutation from a
+four-region loop invariant) and a depth-first search proven for termination,
+soundness, coverage, <strong>and</strong> completeness — the benchmark proofs the Dafny
+community uses as credentials, here as worked examples in the repo&#8217;s
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/tour.md">five-act
+tour</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="_debugging_run_backwards">Debugging, run backwards</h3>
+<div class="paragraph">
+<p>A nice consequence of "the solver finds the failing input" is that you can
+point it at a bug you&#8217;ve already seen in production but can&#8217;t reproduce.
+State the <strong>negation</strong> of the bad state — as an inline <code>assert</code>, an <code>@Ensures</code>,
+or the class <code>@Invariant</code> — and let the refutation hand you the exact input
+that reaches it. The <code>fails on:</code> line is your missing repro. You don&#8217;t trace
+forward from input to symptom; you state the symptom and the engine produces
+the cause.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_composing_with_groovys_other_checkers">Composing with Groovy&#8217;s other checkers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>groovy-verify</code> owns a narrow, deep slice — SMT-backed <em>functional</em>
+verification — and it deliberately composes with the in-tree checkers rather
+than duplicating them. The clean division of labour: <strong>the siblings own shape
+and syntax; <code>groovy-verify</code> owns the laws and semantics.</strong> All on one class,
+under one <code>@TypeChecked</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Monadic(bind = 'flatMap', map = 'map')
+@TypeChecked(extensions = ['groovy.typecheckers.NullChecker', 'groovy.typecheckers.MonadicChecker',
+                           'groovy.typecheckers.PurityChecker', 'verification.VerifyChecker'])
+class Maybe {                                              // a hand-rolled Some(value) | None
+    final boolean present
+    final Object value
+    private Maybe(boolean present, Object value) { this.present = present; this.value = value }
+    @Pure static Maybe some(Object v) { new Maybe(true, v) }   // unit
+    @Pure static Maybe none()         { new Maybe(false, null) }
+
+    @Requires({ f != null }) Maybe flatMap(Function f) { present ? (Maybe) f.apply(value) : this }
+    @Requires({ g != null }) Maybe map(Function g)     { present ? some(g.apply(value)) : this }   // Vavr-style
+
+    static Maybe addPair() { DO(a in some(2), b in some(3)) { some(((Integer) a) + ((Integer) b)) } }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Four extensions, four distinct jobs: <code>MonadicChecker</code> shape-checks the <code>DO</code>
+comprehension, <code>PurityChecker</code> checks the side-effect freedom of the <code>@Pure</code>
+<code>some</code>/<code>none</code>, <code>NullChecker</code> checks nullness, and <code>groovy-verify</code> <strong>proves the
+five monad/functor laws</strong> from the <code>@Monadic</code> annotation alone. All four
+compile quietly because this <code>Maybe</code> really is lawful.</p>
+</div>
+<div class="paragraph">
+<p>That last gap is where even strong type systems stop. Haskell&#8217;s <code>Monad</code> and
+Scala&#8217;s <code>cats.Monad</code> enforce the <em>shape</em> of <code>flatMap</code>/<code>pure</code> but not the
+<em>laws</em> — a lawless instance type-checks in both, the laws left as a
+documented obligation. Proving them at compile time is something a type
+system structurally <em>can&#8217;t</em> do. The same split shows up with the combiner
+checker, where <code>groovy-verify</code> proves the monoid laws Z3-side from a
+<code>@Reducer</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = ['groovy.typecheckers.CombinerChecker', 'verification.VerifyChecker'])
+class Sum {
+    @Reducer(zero = '0')                              // asserts a monoid — and groovy-verify *proves* it:
+    @Ensures({ result == a + b })                     // associativity AND identity discharged from the annotation
+    static int add(int a, int b) { a + b }
+
+    static void parallelReduce() { [1, 2, 3, 4].sumParallel(Sum::add) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A bad annotation fails loudly: <code>@Reducer</code> on subtraction refutes with
+<code>Cannot prove @Reducer associativity for combiner sub</code> — because <code>(a-b)-c ≠
+a-(b-c)</code>. The regex checker pairs the same way: <code>RegexChecker</code> validates that
+a pattern is well-formed <em>syntax</em>, <code>groovy-verify</code> proves what the match
+<em>means</em>, both reporting only their own kind of error in one compile.</p>
+</div>
+<div class="sect2">
+<h3 id="_specs_you_already_wrote_bean_validation">Specs you already wrote: Bean Validation</h3>
+<div class="paragraph">
+<p>There&#8217;s a "free lunch" worth calling out. A <code>jakarta.validation</code> (or legacy
+<code>javax.validation</code>) constraint on a parameter is read as a method-entry
+precondition — the same posture as <code>@Requires</code>. So an annotation you added
+for <em>runtime</em> validation also discharges a <em>compile-time</em> obligation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class C { static int f(@Positive int x) { 100 % x } }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@Positive</code> gives <code>x &gt; 0</code>, so the divisor is non-zero and the implicit
+divide-by-zero obligation discharges. Drop the <code>@Positive</code> and the same body
+refutes with <code>fails on: f(0)</code>. <code>@Min</code>/<code>@Max</code>/<code>@Size</code>/<code>@NotEmpty</code> map the same
+way — a <code>@NotEmpty List</code> discharges an <code>xs[0]</code> access, a <code>@Size(min = 1)
+int[]</code> its <code>a[0]</code>, and so on. Code already annotated for validation verifies
+as-is.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_concurrency_in_three_rungs">Concurrency, in three rungs</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Concurrency is the domain where "it passed the tests" inspires the least
+confidence, because the bug you fear appears once in billions of runs. This
+is where verification has the most to offer — and where it is most important
+to be honest about what a <em>single</em> technique can and can&#8217;t see.</p>
+</div>
+<div class="paragraph">
+<p>`groovy-verify&#8217;s position is that a compile-time proof is <strong>one rung</strong> of a
+concurrency argument, not the whole of it. The proof is local and
+sequential; trusting it against a real running system means climbing two
+more rungs. Each trades coverage for fidelity, and none subsumes the others:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>The proof</strong> (<code>groovy-verify</code>/Z3) — the local, sequential verification
+condition, discharged at compile time. Decidable and compositional, but it
+<em>assumes</em> an interleaving model: that whatever tames interference (a
+rely/guarantee discipline, a lock, an await) actually holds, and that the
+steps it treats as atomic really are.</p>
+</li>
+<li>
+<p><strong>The exhaustive model</strong> (<a href="https://lamport.azurewebsites.net/tla/tla.html">TLA+</a>
+/ TLC) — every interleaving of an <em>abstract</em> state machine, confirming the
+interference assumptions compose and the system makes progress.</p>
+</li>
+<li>
+<p><strong>The tested real bytecode</strong> (<a href="https://github.com/JetBrains/lincheck">Lincheck</a>,
+<a href="https://github.com/cmu-pasta/fray">Fray</a>,
+<a href="https://github.com/openjdk/jcstress">jcstress</a>) — bounded or empirical search
+over schedules of the <em>real</em> compiled code, down to the Java Memory Model
+publication grain.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>How the local proof works is <strong>rely/guarantee</strong> reasoning: each thread&#8217;s steps
+must uphold its <code>@Guarantee</code> (what this thread promises to do to shared
+state) while tolerating peer interference described by <code>@Rely</code> (what other
+threads may do). If every thread&#8217;s guarantee is also a peer&#8217;s rely, the
+conjunction holds globally under <em>any</em> interleaving — so you get
+two-threaded reasoning from a sequential proof, without modelling the
+scheduler.</p>
+</div>
+<div class="paragraph">
+<p>A monitor-style account shows the proof&#8217;s transparency to Groovy&#8217;s lock AST
+transforms — the verifier sees the clean body before <code>@WithWriteLock</code> weaves
+in locking, and proves the invariant is preserved across the critical
+section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Invariant({ balance &gt;= 0 })                       // the monitor invariant the lock protects
+class Account {
+    int balance
+
+    @Requires({ amount &gt;= 0 })
+    @Ensures({ balance == old.balance + amount })
+    @WithWriteLock
+    void deposit(int amount) { balance = balance + amount }
+
+    @Requires({ 0 &lt;= amount &amp;&amp; amount &lt;= balance }) // the guard that keeps the invariant
+    @Ensures({ balance == old.balance - amount })
+    @WithWriteLock
+    void withdraw(int amount) { balance = balance - amount }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the sharp edge — and the reason rungs 2 and 3 exist. Consider a counter
+meant to never exceed 1:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Invariant({ count &lt;= 1 })
+class C {
+    int count = 0
+    void tryIncrement() { if (count &lt; 1) count = count + 1 }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rung 1 <em>proves</em> the invariant: sequentially, the guard keeps <code>count</code> in
+<code>{0, 1}</code>. But it is not thread-safe — two threads can both read <code>0</code>, both
+pass the guard, and leave <code>count == 2</code>. The verifier proves the <strong>identical
+invariant</strong> for this broken version and for a <code>@WithWriteLock</code> version; the
+lock is transparent to a sequential proof, so it cannot tell them apart.
+Rung 3 (jcstress) separates them empirically: the unlocked counter reaches 2
+about <strong>5 times in 7 billion runs</strong>; the locked one never does. That 5-in-7-
+billion gap is precisely the kind of bug testing almost never surfaces — and
+exactly the gap the upper rungs close.</p>
+</div>
+<div class="paragraph">
+<p>The bug becomes visible the moment you move to the real bytecode. A
+single-producer/single-consumer buffer that publishes <em>before</em> writing —</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">boolean offer(int x) {
+    int t = tail
+    if (t - head == capacity) return false
+    tail = t + 1                                // WRONG: publish before writing
+    items[t % capacity] = x                     // value arrives too late
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>— proves the same bounds invariant as the correct "write first, publish
+second" version (rung 1 can&#8217;t see the race), but Lincheck (rung 3) catches it
+as a linearizability violation with a minimal trace:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>| Thread 1  |                 Thread 2                  |
+|           | offer(1): true                            |
+|           |     tail = 1            ← publish the slot |
+|           |     switch                                |
+| poll(): 0 |                        ← reads stale slot  |
+|           |     IntArray[0] = 1    ← write arrives too late |</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>poll()</code> returns <code>0</code> — a value never offered. The lesson is the framing:
+verification raises the floor (the local invariant really is proven), and the
+model checker and bytecode tools cover what a sequential proof structurally
+cannot. The repo&#8217;s
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/CONCURRENCY.md">three-rungs
+write-up</a> and
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/concurrency.md">concurrency
+examples</a> carry the full set, including seqlocks and a lock-free bounded
+counter.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="and-theres-more">And there&#8217;s more</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The breadth here is well past what one post should reproduce in full, so a
+tour of the rest — each with a one-line pitch and a worked example in the
+repo for when you want it.</p>
+</div>
+<div class="paragraph">
+<p><strong>Information-flow security (noninterference).</strong> You can label data <code>High</code> or
+<code>Low</code> and prove that a secret never reaches a public sink — directly or via
+control flow. Noninterference means a secret never <em>influences</em> anything an
+observer can see; the verifier tracks labels through assignments and branches
+and refuses the leak:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static void handle(@Label('High') int secret) {
+    Audit.log(secret)                                       // REFUTED — a secret reaches a public sink
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Possible information leak: 'secret' may carry data above the 'Low' classification of parameter 'x' of log
+    obligation: leq(level(secret), Low)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>Declassify.to(&#8230;&#8203;)</code> construct marks the deliberate, greppable points where
+a controlled release is allowed.</p>
+</div>
+<div class="paragraph">
+<p><strong>Dimensional analysis (the Mars Climate Orbiter bug).</strong> Physical units checked
+at compile time — you can&#8217;t add kilograms to metres, and <code>length / time</code> must
+be a speed, not an area. One layer deeper, it catches the <em>scale</em> bug that
+sank the Mars orbiter: two quantities of the same dimension at different
+scales. Built on JSR 385, it recovers the SI magnitude and proves the exact
+read:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ result == 2609.344 })
+static BigDecimal total() {
+    Quantities.getQuantity(1, KILO(METRE)).add(Quantities.getQuantity(1, USCustomary.MILE)).to(METRE).getValue() as BigDecimal
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Liskov behavioural subtyping.</strong> An override may only <em>weaken</em> a precondition
+and <em>strengthen</em> a postcondition — never the reverse. A <code>GoldAccount</code> that
+accepts a larger overdraft verifies as substitutable; a <code>RestrictedAccount</code>
+that demands a minimum balance is refuted, with the input that breaks
+substitutability.</p>
+</div>
+<div class="paragraph">
+<p>And, more briefly, the repo also demonstrates:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Verified <code>String</code> reasoning</strong> over Z3&#8217;s native string theory —
+<code>startsWith</code>/<code>contains</code>/<code>substring</code>/<code>matches</code> and concatenation, with the
+concat-associativity law proven for arbitrary strings.</p>
+</li>
+<li>
+<p><strong>Set algebra and finite-state completeness</strong> — union/intersection/difference
+membership proven for an arbitrary element, and FSM "every state is handled"
+proven via the pigeonhole property of a finite enum domain.</p>
+</li>
+<li>
+<p><strong>Monad and reducer laws</strong> proven from an annotation alone (above).</p>
+</li>
+<li>
+<p><strong>An external benchmark</strong> — 23 problems ported from Verus' HumanEval suite
+("problems we didn&#8217;t pick"), proven <em>correct</em>, not merely overflow-safe.</p>
+</li>
+<li>
+<p><strong>Dafny and OpenJML ports</strong> — <code>SumMax</code> (VSComp'10), binary search,
+max-by-elimination — the cross-tool credentials, reproduced in Groovy.</p>
+</li>
+<li>
+<p><strong>Verifying Java fragments</strong> — since Java is largely a syntactic subset of
+Groovy, many integer/array algorithms verify by reading the Java source <em>as
+Groovy</em> (with the honest caveat that the proof is over Groovy semantics).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The full, honest inventory — every capability with its phase tag and its
+"deferred" edge — is in the repo&#8217;s
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/CAPABILITIES.md">CAPABILITIES.md</a>,
+and the modelled-fragment boundary in
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/FRAGMENT.md">FRAGMENT.md</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="designed-for-agents">Designed for humans and agents</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The throughline of Groovy 6&#8217;s "designed for human and AI reasoning" story is
+that <strong>a machine-readable, compiler-enforced contract is a specification a
+reader can trust without opening the body</strong> — and that "reader" is a human and
+an agent on the same footing. For the human, a method&#8217;s contract is
+documentation that can&#8217;t drift and a stronger claim than a comment: a
+postcondition <code>groovy-verify</code> has <em>discharged</em> is <strong>proven</strong>, so a teammate
+reviewing the signature, or you returning to it months later, can reason from
+it without re-deriving the body. For an agent, that same proof is a fact it
+can build on rather than a hint it has to second-guess. The
+functional-programming post showed agents mechanically deriving
+property-based tests from annotations; verification sharpens the same idea for
+both audiences.</p>
+</div>
+<div class="paragraph">
+<p><code>groovy-verify</code> leans into this deliberately. It was built so its
+capabilities are <strong>discoverable</strong> — the diagnostics are structured, the
+capability surface is documented so a person browsing the repo or a tool
+parsing it find the same answers, and a set of environment-variable knobs turn
+the checker into something you can hold a conversation with, whether you&#8217;re at
+the keyboard or an agent is. None of them change what is proven; they change
+what is <em>reported</em>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>VERIFY_REFUTATION=junit|spock|assert</code> renders a refutation&#8217;s
+counterexample as a runnable repro test. The bounds failure above becomes:</p>
+<div class="listingblock">
+<div class="content">
+<pre>repro (JUnit):
+    @Test void gFails() { assertThrows(IndexOutOfBoundsException.class, () -&gt; C.g(new int[0], -1)); }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The test is green <em>while the bug is live</em> (the call really throws), so it
+confirms the compile-time counterexample is a genuine runtime failure; fix
+the code and flip it into a regression.</p>
+</div>
+</li>
+<li>
+<p><code>VERIFY_SUGGEST=contract</code> abduces the missing precondition — for the
+unguarded <code>g</code>, it suggests <code>@Requires({ 0 &lt;= i &amp;&amp; i &lt; a.size() })</code>, in your
+own spelling, ready to paste.</p>
+</li>
+<li>
+<p><code>VERIFY_EXPLAIN</code>, on a <em>verified</em> obligation, reports which authored
+<code>@Requires</code> clauses the proof actually used (<code>load-bearing</code>) and which it
+didn&#8217;t — and surfaces the structural facts a proof leaned on that you never
+wrote (a class invariant, a JVM integer bound) as <code>also leaned on</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is the practical shape of the on-ramp from the introduction. A developer
+adopts <code>groovy-contracts</code> and the in-tree checkers today. When a method
+deserves a stronger guarantee, <em>adding</em> the verification extension is a local,
+additive change over contracts that already exist. "Add <code>@Ensures</code> here and
+prove it; if it&#8217;s refuted, paste the suggested <code>@Requires</code> and add the repro
+test to the suite" is a tight loop you can run yourself at the keyboard — and,
+increasingly, one you can hand to an agent, with `groovy-verify&#8217;s
+machine-readable output as the feedback the agent closes the loop against.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_where_this_sits">Where this sits</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To keep the honesty front and centre:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>groovy-verify</code> is an external, experimental project</strong> —
+<a href="https://github.com/paulk-asert/groovy-verify">github.com/paulk-asert/groovy-verify</a>
+— <strong>not part of Apache Groovy.</strong> What it depends on <em>is</em> part of Groovy 6: the
+<code>groovy-contracts</code> annotations it reads, and the type-checking extension SPI
+it plugs into. Nothing in it requires a compiler change.</p>
+</li>
+<li>
+<p>It is an <strong>auto-active verifier</strong> in the family of Dafny, Verus, SPARK, Why3,
+and OpenJML — <em>not</em> an interactive proof assistant (Isabelle/Lean/Rocq) and
+<em>not</em> a dependently-typed language (Idris/Agda). You write specs and loop
+invariants; the solver does the rest.</p>
+</li>
+<li>
+<p>It is <strong>sound within a modest fragment and loudly unsound outside it.</strong> Three
+boundaries worth stating: integer overflow is <strong>opt-in</strong> (<code>@CheckOverflow</code>);
+floating point is a straight-line IEEE-754 sub-fragment (no FP loops or
+transcendentals); and heap reasoning models flat object fields but draws the
+line at the <em>shape</em> of object graphs (reachability, linked structures,
+separation logic). Anything outside the fragment is reported as "skipped",
+never silently passed.</p>
+</li>
+<li>
+<p>The recommended pairing today is <strong>Groovy 6.0.0-alpha-2</strong>, currently out for
+an Apache release vote (staged artifacts
+<a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">here</a>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The honest summary the project itself uses: <em>experimental Verus for the JVM,
+with Dafny-style specifications</em> — distinctive in that its specs are ordinary
+executable <code>groovy.contracts</code>, so unproven obligations degrade to runtime
+checks rather than vanishing, and that its verifier composes with the other
+type-checking extensions.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_it_stacks_up">How it stacks up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For a formal-methods audience, the comparison set is the auto-active
+verifiers, with the Groovy column being <code>groovy-contracts</code> + <code>groovy-verify</code>
+together.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Aspect</th>
+<th class="tableblock halign-left valign-top">Groovy 6 + groovy-verify</th>
+<th class="tableblock halign-left valign-top">Dafny</th>
+<th class="tableblock halign-left valign-top">Verus</th>
+<th class="tableblock halign-left valign-top">SPARK</th>
+<th class="tableblock halign-left valign-top">OpenJML</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy (mainstream JVM)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">new language</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Rust</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ada subset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">How specs are written</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">executable <code>groovy.contracts</code> annotations</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">built-in keywords</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">attribute macros</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ada aspects/pragmas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JML comment dialect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMT (Z3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMT (Z3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMT (Z3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMT (multiple)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SMT (Z3 et al.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Counterexamples</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes — concrete <code>fails on:</code> inputs</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes (<code>--counterexample</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">partial</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Specs also run at runtime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>yes — graceful degradation to assertions</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtime checks optional</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtime checks (RAC)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Composes with other checkers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>yes — same <code>@TypeChecked</code> SPI</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delivery</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a type-checking extension; no compiler change</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">separate compiler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compiler plugin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">separate toolset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">separate tool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maturity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">experimental</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mature</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maturing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mature/industrial</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mature</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The point of the table isn&#8217;t that <code>groovy-verify</code> outranks Dafny or SPARK on
+maturity — it plainly doesn&#8217;t, and it is honest about being a fragment. It is
+that the JVM has lacked a <em>modern, ergonomic, auto-active</em> option — native
+annotation syntax, executable specs, counterexamples-as-compile-errors,
+delivered through the standard extension SPI rather than a separate build
+tool — and that gap is now, experimentally, filled.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The formal-methods world is closer to everyday Groovy than its reputation
+suggests, and the path in is gradual rather than all-or-nothing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Today, in Groovy 6:</strong> <code>groovy-contracts</code> gives you executable Design by
+Contract, and the type-checking extensions give you flow-sensitive null
+safety, purity, frame conditions, and combiner/monadic shape checks. Adopt
+them now; they cost little and read like documentation that can&#8217;t drift.</p>
+</li>
+<li>
+<p><strong>When you want a stronger guarantee on a high-value method or class:</strong> the
+external <code>groovy-verify</code> project reads the <strong>same</strong> contracts and, behind the
+<strong>same</strong> <code>@TypeChecked</code> extension SPI, proves them with Z3 — or refutes them
+with the exact input that breaks them. Postconditions, bounds, null,
+overflow, class invariants, loop termination, the multiset-conservation of a
+real sort, information flow, dimensional analysis, Liskov subtyping, and
+algebraic laws are all in reach for the fragment it models.</p>
+</li>
+<li>
+<p><strong>Honestly:</strong> <code>groovy-verify</code> is experimental and not part of Groovy; it is
+loudly partial, sound within its fragment and explicit about its edges; and
+the recommended pairing is the in-vote 6.0.0-alpha-2.</p>
+</li>
+<li>
+<p><strong>And increasingly:</strong> because the contracts are machine-readable, the proofs
+are real, and the diagnostics are built to be consumed by tooling, "make this
+correct and prove it" is becoming a task you can delegate to an AI agent —
+with the verifier&#8217;s output as the loop it closes against.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You don&#8217;t have to think about weakest preconditions or proof obligations to
+start. Write down what your method promises, let the compiler check it, and
+let the solver find the input you didn&#8217;t.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-verify">groovy-verify</a> — the project,
+with its
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/README.md">README</a>,
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/tour.md">five-act
+tour</a>,
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/CAPABILITIES.md">capability
+table</a>,
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/FRAGMENT.md">fragment
+definition</a>,
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/CONCURRENCY.md">concurrency
+write-up</a>, and
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/TOOLING.md">tooling
+knobs</a></p>
+</li>
+<li>
+<p><a href="https://github.com/spockframework/groovy-contracts">groovy-contracts</a> — the
+Design-by-Contract module shipped with Groovy</p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#groovy-contracts">Groovy 6 release notes — Groovy-Contracts enhancements</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type-checking extensions</a></p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html#human-ai-reasoning">Groovy 6 release notes — Designed for Human and AI Reasoning</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy6-functional">Groovy 6 features for Functional Programmers</a> — the companion post on the same SPI</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-null-checker">Compile-time null safety for Groovy</a> — the <code>NullChecker</code> walkthrough</p>
+</li>
+<li>
+<p><a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">Groovy 6.0.0-alpha-2 staged artifacts</a> (currently in the release vote)</p>
+</li>
+<li>
+<p><a href="https://dafny.org">Dafny</a> and <a href="https://github.com/verus-lang/verus">Verus</a> — the auto-active verifiers whose specification style and counterexample UX this echoes</p>
+</li>
+<li>
+<p><a href="https://www.openjml.org">OpenJML</a> and <a href="https://www.adacore.com/about-spark">SPARK</a> — JVM and Ada prior art</p>
+</li>
+<li>
+<p><a href="https://github.com/Z3Prover/z3">Z3</a> — the SMT solver behind the proofs</p>
+</li>
+<li>
+<p><a href="https://lamport.azurewebsites.net/tla/tla.html">TLA+</a>/TLC, <a href="https://github.com/JetBrains/lincheck">Lincheck</a>, <a href="https://github.com/cmu-pasta/fray">Fray</a>, <a href="https://github.com/openjdk/jcstress">jcstress</a> — the upper concurrency rungs</p>
+</li>
+<li>
+<p><a href="https://research.google/blog/extra-extra-read-all-about-it-nearly-all-binary-searches-and-mergesorts-are-broken/">Nearly all binary searches are broken</a> — Joshua Bloch on the midpoint-overflow bug</p>
+</li>
+<li>
+<p><a href="https://unitsofmeasurement.github.io/">JSR 385</a> units of measurement, and the <a href="https://en.wikipedia.org/wiki/Mars_Climate_Orbiter">Mars Climate Orbiter</a> unit-mismatch loss</p>
+</li>
+</ul>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>25/Jun/2026</strong>: Initial version.</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
