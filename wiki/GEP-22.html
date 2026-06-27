@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>4</p>
+<p>5</p>
 </td>
 </tr>
 <tr>
@@ -115,7 +115,7 @@
 <strong>Comment</strong>
 </td>
 <td class="hdlist2">
-<p>Reflects trait semantics as of Groovy 4.0.32, plus the <code>@Anchored</code> opt-in declarer-bound dispatch marker introduced by GROOVY-12093</p>
+<p>Reflects trait semantics as of Groovy 4.0.32, plus the <code>@Anchored</code> opt-in declarer-bound dispatch marker (GROOVY-12093) and the trait-body qualifier-syntax tightening rejecting <code>T.this.*</code> (GROOVY-12104) and unqualified static <code>super.m(&#8230;&#8203;)</code> (GROOVY-12105)</p>
 </td>
 </tr>
 <tr>
@@ -139,7 +139,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-06-22</p>
+<p>2026-06-25</p>
 </td>
 </tr>
 </table>
@@ -352,12 +352,31 @@ the runtime hierarchy.</p>
 implementation chain</strong> (in the order produced by the <code>implements</code> clause
 of the implementing class, walked right-to-left). When the chain is
 exhausted, <code>super</code> resolves to the actual superclass of the implementing
-class.</p>
+class. (See item 4 for the static-method restriction.)</p>
 </li>
 <li>
 <p>A qualified <code>T.super.m(&#8230;&#8203;)</code> call resolves to trait <code>T&#8217;s implementation
 of `m</code>, regardless of position in the chain. This is the explicit
 override form.</p>
+</li>
+<li>
+<p><code>T.this.*</code> qualifier syntax is not supported inside trait code and is
+rejected at compile time (GROOVY-12104). <code>T.this</code> is Java&#8217;s
+enclosing-instance access for inner classes, and a trait is not an
+enclosing scope of its implementer (per item 1, <code>this</code> is the
+implementing instance directly), so <code>T.this</code> has no coherent meaning
+here. The rejection covers both method calls (<code>T.this.m(&#8230;&#8203;)</code>) and
+field/property access (<code>T.this.x</code>). For normal dispatch use
+<code>this.m(&#8230;&#8203;)</code> (item 1); for explicit trait-anchored dispatch use
+<code>T.super.m(&#8230;&#8203;)</code> (item 3). Separately, the unqualified <code>super.m(&#8230;&#8203;)</code>
+form of item 2 is supported for instance methods only; from a
+<code>static</code> trait method the trait chain is not walked and the form is
+rejected at compile time (GROOVY-12105). Use <code>T.super.m(&#8230;&#8203;)</code> for the
+trait&#8217;s own static <code>m</code>, or call the implementer-side method by name
+without a qualifier. (Note: this restriction is specific to traits.
+Groovy permits unqualified <code>super.m(&#8230;&#8203;)</code> in <code>static</code> methods of
+plain classes, where it dispatches to the actual superclass&#8217;s static
+method.)</p>
 </li>
 </ol>
 </div>
@@ -1008,7 +1027,15 @@ marker (on instance, private, or abstract methods) is a compile-time
 error. The closure call-site asymmetry, the static-field non-goal,
 and the trait-shadows-superclass quadrant are all documented in
 <a href="#_static_members">Static members</a>; no separate fork remains open at
-the time of writing.</p></td>
+the time of writing.
+Trait-body qualifier syntax is tightened: <code>T.this.*</code> is rejected at
+compile time (GROOVY-12104; previously produced a VerifyError on 4.x
+and a ClassCastException at runtime on 5.x/6.x), and unqualified
+<code>super.m(&#8230;&#8203;)</code> from a <code>static</code> trait method is rejected at compile
+time (GROOVY-12105; previously threw <code>MissingMethodException</code>
+because the trait chain is not walked for statics). See item 4 of
+<a href="#__this_super_and_stackable_traits">this, super, and stackable
+traits</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1237,6 +1264,18 @@ tracked is now closed). The closure call-site asymmetry, the
 static-field non-goal, and the trait-shadows-superclass quadrant
 remain as they were after v3 — documented, with workarounds where
 applicable.</p>
+</div>
+<div class="paragraph">
+<p>5 (2026-06-25) Tightened trait-body qualifier syntax. Added item 4
+to <em>this, super, and stackable traits</em> rejecting <code>T.this.*</code>
+(GROOVY-12104; previously produced a VerifyError on 4.x and a
+ClassCastException on 5.x/6.x) and rejecting unqualified
+<code>super.m(&#8230;&#8203;)</code> from a <code>static</code> trait method (GROOVY-12105; previously
+threw <code>MissingMethodException</code> because the trait chain is not walked
+for statics). Item 2 of the same section now cross-references item 4
+for the static-method restriction. The recommended alternatives are
+existing documented features: <code>this.m(&#8230;&#8203;)</code> for normal dispatch and
+<code>T.super.m(&#8230;&#8203;)</code> for explicit trait-anchored dispatch.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
