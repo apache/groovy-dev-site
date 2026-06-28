@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-26</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-26</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_ginq_executes_today' class='anchor-link'>Background: how GINQ executes today</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_sql_and_linq_alignment' class='anchor-link'>SQL and LINQ alignment</a></li><li><a href='#_feature_coverage_by_provider' class='anchor-link'>Feature coverage by provider</a></li><li><a href='#_module_structure_and_packaging' class='anchor-link'>Module structure and packaging</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-26</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-26</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>GINQ SQL Backend (Native and JOOQ Providers)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Builds on the existing GINQ collection provider and the <code>groupby&#8230;&#8203;into</code> group model; strictly additive and opt-in</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-06-28</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-06-28</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+We are currently working on Groovy 6.0 and this proposal targets Groovy 7.0.
+The final version of this proposal may differ significantly from the current draft,
+but having this draft available allows us to gather early feedback, align design
+decisions in Groovy 6 as best we can, and iterate on the design.
+We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy-Integrated Query (GINQ) lets developers express SQL-like queries directly
+in Groovy and, today, executes them entirely <em>in memory</em> over <code>Iterable</code>, <code>Stream</code>,
+and array data sources via its <em>collection provider</em>. Because GINQ&#8217;s surface syntax
+was deliberately modelled on SQL, the same query text maps almost one-to-one onto a
+relational <code>SELECT</code> statement.</p>
+</div>
+<div class="paragraph">
+<p>This GEP proposes a <strong>SQL execution backend for GINQ</strong>: the ability to run an
+<em>unchanged</em> GINQ query against a relational database, pushing filtering, joining,
+grouping, and aggregation down to the database engine instead of materialising tables
+into memory. The backend is delivered as <strong>two providers that share a common front-end</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Native SQL provider</strong> — dependency-free, ships in the module, generates ANSI SQL and
+executes it through <code>groovy.sql.Sql</code>. Fully available under the Apache License 2.0.</p>
+</li>
+<li>
+<p><strong>JOOQ provider</strong> — optional, user-supplied JOOQ dependency, adds dialect-aware
+rendering, window functions, and comprehensive function mapping by delegating to
+JOOQ&#8217;s plain-SQL DSL.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both providers consume the same provider-independent intermediate representation
+produced once from the GINQ AST, so the difficult work — understanding GINQ semantics —
+is done a single time, and each provider only renders the "last mile." The feature is
+strictly additive and opt-in: the collection provider remains the default and is unchanged.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GINQ users routinely query data that originates in a database. Today they have two
+awkward choices: materialise rows into collections (for example with
+<code>groovy.sql.Sql.rows()</code>) and then query the collections with GINQ — which pulls entire
+tables across the wire and discards the database&#8217;s indexes and query planner — or
+abandon GINQ and hand-write SQL, losing GINQ&#8217;s compile-time checked, uniform, and
+composable syntax. Neither is satisfying.</p>
+</div>
+<div class="paragraph">
+<p>The relational backend closes this gap. The motivating insight is the same one behind
+C#'s LINQ: <em>a query language should be independent of its execution engine.</em>
+LINQ-to-Objects and LINQ-to-SQL share one surface syntax and differ only in the provider
+that executes it. GINQ already has the architectural seam for this — a pluggable code
+generator selected per query — but ships only the in-memory generator. This GEP fills in
+the relational half.</p>
+</div>
+<div class="paragraph">
+<p>The concrete benefits:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Push-down.</strong> <code>where</code>, <code>join</code>, <code>groupby</code>, aggregation, and <code>limit</code> execute inside the
+database, using its indexes and optimiser, returning only the rows the query actually needs.</p>
+</li>
+<li>
+<p><strong>One syntax, two worlds.</strong> The same query can target a collection during testing and a
+database in production, with the provider as the only difference.</p>
+</li>
+<li>
+<p><strong>Composability preserved.</strong> Results come back as a <code>Queryable</code>, so further GINQ
+operations and ordinary Groovy collection methods continue to work on the result.</p>
+</li>
+<li>
+<p><strong>Zero-dependency floor, optional ceiling.</strong> The native provider guarantees a fully ASL2,
+dependency-free baseline; JOOQ is an opt-in upgrade for teams that need broad dialect coverage.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Same syntax, different execution.</strong> The GINQ surface language does not change. A query
+becomes a database query purely by selecting a provider. No new query keywords are
+introduced by this GEP.</p>
+</li>
+<li>
+<p><strong>Zero-dependency core.</strong> The native provider depends only on <code>groovy-sql</code>. Every feature
+it offers is available under ASL2 with no third-party runtime dependency. JOOQ is
+strictly optional.</p>
+</li>
+<li>
+<p><strong>Translate cleanly, or refuse clearly.</strong> Expressions that have a faithful SQL meaning are
+translated; expressions that do not are either pushed to an in-memory fallback (mixed
+mode) or rejected at compile time with a precise, actionable error — never silently
+mis-executed.</p>
+</li>
+<li>
+<p><strong>Safe by construction.</strong> Literals and captured variables always become bound statement
+parameters. SQL text is never assembled by string concatenation of user values. SQL
+injection is structurally impossible.</p>
+</li>
+<li>
+<p><strong>Render once, reuse everywhere.</strong> The GINQ AST is walked into a provider-independent
+intermediate model exactly once; providers differ only in how they render that model.</p>
+</li>
+<li>
+<p><strong>Additive and opt-in.</strong> The collection provider remains the default. Existing GINQ code,
+semantics, and performance are untouched.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_background_how_ginq_executes_today">Background: how GINQ executes today</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section is self-contained so the proposal can be read without external references. A
+GINQ query is written as a closure passed to the <code>GQ</code>/<code>GQL</code> macros or attached to a method
+via the <code>@GQ</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def result = GQ {
+    from p in persons
+    join c in cities on p.cityId == c.id
+    where p.age &gt;= 18
+    groupby c.name into g
+    having g.count() &gt; 1
+    orderby c.name
+    select c.name, g.count() as people, g.avg(p -&gt; p.age) as avgAge
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Compilation proceeds through three stages, the first two of which are <em>provider-independent</em>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Parsing.</strong> A builder walks the closure&#8217;s AST and produces a structured <code>GinqExpression</code>
+tree — a faithful, typed model of the clauses (<code>from</code>, <code>join</code>/<code>on</code>, <code>where</code>, <code>groupby</code>,
+<code>having</code>, <code>orderby</code>, <code>limit</code>, <code>select</code>, and the set-operation keywords <code>union</code>,
+<code>unionall</code>, <code>intersect</code>, <code>minus</code>).</p>
+</li>
+<li>
+<p><strong>Optimisation.</strong> An optional optimiser rewrites the <code>GinqExpression</code> for efficiency (for
+example predicate push-down between joins). Still provider-independent.</p>
+</li>
+<li>
+<p><strong>Code generation.</strong> A <em>visitor</em> walks the optimised <code>GinqExpression</code> and emits executable
+Groovy AST. <strong>This is the pluggable step.</strong> The shipped collection visitor generates a
+fluent chain of <code>Queryable</code> calls
+(<code>from(&#8230;&#8203;).where(&#8230;&#8203;).groupByInto(&#8230;&#8203;).select(&#8230;&#8203;)</code>) that execute in memory.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Two existing facts make a relational backend natural:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>The visitor is already selectable per query.</strong> The <code>astWalker</code> configuration key names
+the visitor class, so alternative code generators are a supported extension point rather
+than a new concept.</p>
+</li>
+<li>
+<p><strong>Grouping already has a clean model.</strong> The <code>groupby &#8230;&#8203; into g</code> form binds a first-class
+group object (a <code>GroupResult</code>) supporting <code>g.count()</code>, <code>g.sum(&#8230;&#8203;)</code>, <code>g.avg(&#8230;&#8203;)</code>, key
+access via <code>g.key</code>/<code>g["name"]</code>, and so on. This maps directly onto SQL <code>GROUP BY</code> with
+aggregate functions, with none of the implicit-variable rewriting the classic <code>groupby</code>
+form requires.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architecture">Architecture</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_dual_provider">Dual provider</h3>
+<div class="paragraph">
+<p>The backend is a <strong>dual offering</strong>: a built-in native provider with no external dependencies
+and an optional JOOQ-backed provider, both sitting behind one user-facing configuration
+surface and sharing one intermediate model.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>groovy-ginq         core: parser, GinqExpression AST, optimiser, collection provider
+groovy-ginq-sql     shared: GINQ AST -&gt; SqlQuery model, expression translator, result wrapping
+                    +-- NativeSqlProvider   built-in, ANSI SQL via groovy.sql.Sql
+                    +-- JooqSqlProvider     optional, delegates to the JOOQ DSL</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_front_end">Shared front-end</h3>
+<div class="paragraph">
+<p>Both providers reuse stages 1 and 2 of the existing pipeline unchanged. The SQL-specific
+work begins at the visitor: instead of emitting <code>Queryable</code> call chains, the SQL visitor
+walks the <code>GinqExpression</code> into a provider-independent <code>SqlQuery</code> model (an intermediate
+representation, or IR). A <em>renderer</em> then turns that IR into something executable. There
+are two renderers, one per provider, and they are the only provider-specific code of any size.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>GinqExpression --(shared SQL visitor)--&gt; SqlQuery (IR)
+                                             |
+                          +------------------+------------------+
+                          v                                     v
+                NativeSqlRenderer                       JooqSqlRenderer
+            IR -&gt; ANSI SQL text + params             IR -&gt; JOOQ DSL calls
+            executed via groovy.sql.Sql              executed via DSLContext
+                          |                                     |
+                          v                                     v
+            Queryable&lt;GroovyRowResult&gt;                  Queryable&lt;Record&gt;</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_sqlquery_intermediate_model">The SqlQuery intermediate model</h3>
+<div class="paragraph">
+<p>The IR is the central design asset. By understanding GINQ semantics once and recording the
+result in a neutral shape, each renderer is reduced to a mechanical tree-to-text (native)
+or tree-to-tree (JOOQ) mapping. A sketch:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class SqlQuery {
+    boolean distinct
+    List&lt;TableRef&gt;   sources      // from + joined tables
+    List&lt;JoinClause&gt; joins        // type (inner/left/right/full/cross) + on-predicate
+    SqlExpr          where        // where predicate (nullable)
+    List&lt;SqlExpr&gt;    groupBy       // group-by keys
+    SqlExpr          having        // having predicate (nullable)
+    List&lt;OrderSpec&gt;  orderBy       // column + asc/desc + nulls-first/last
+    LimitOffset      limit         // limit + optional offset (nullable)
+    List&lt;Projection&gt; select        // output columns + aliases
+    List&lt;SetOp&gt;      setOps        // union / unionall / intersect / minus chain
+}
+
+// SqlExpr is a small closed hierarchy:
+//   Column, BoundParam, BinaryOp, UnaryOp, FunctionCall,
+//   Aggregate, InList, Between, SubQuery, CaseWhen, RawFragment</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A <code>BoundParam</code> never carries a literal value into rendered SQL; it carries a positional
+index into a runtime parameter list (see <em>Parameter binding and SQL injection safety</em>).
+This is what makes both renderers injection-safe for free.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_features">Features</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_provider_selection_and_configuration">Provider selection and configuration</h3>
+<div class="paragraph">
+<p>A new high-level <code>provider</code> configuration key selects the backend. It is sugar over the
+existing low-level <code>astWalker</code> key, which remains available as an escape hatch for custom
+visitors.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>provider</code> value</th>
+<th class="tableblock halign-left valign-top">Backend</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'collection'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">In-memory (current behaviour)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default; nothing changes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'native-sql'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native SQL provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ANSI SQL, no extra dependency</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'jooq-sql'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Requires JOOQ on the classpath</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'sql'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Auto-detect</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ if present on the classpath, otherwise native</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Both the macro and annotation forms accept the new keys:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// Macro form
+def highEarners = GQL(provider: 'native-sql', dataSource: sql) {
+    from e in 'employees'
+    where e.salary &gt; 100000
+    orderby e.salary in desc
+    select e.name, e.salary
+}
+
+// Annotation form
+@GQ(provider = "sql")
+List&lt;GroovyRowResult&gt; highEarners(Sql dataSource) {
+    from e in 'employees'
+    where e.salary &gt; 100000
+    select e.name, e.salary
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The annotation gains one new optional member, <code>provider</code>, alongside the existing <code>value</code>,
+<code>optimize</code>, <code>parallel</code>, and <code>astWalker</code> members. Adding an annotation member with a default
+is binary compatible (see <em>Compatibility and impact</em>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data_sources_and_table_references">Data sources and table references</h3>
+<div class="paragraph">
+<p>A <code>dataSource</code> configuration key supplies the connection. The accepted types depend on the
+provider:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Provider</th>
+<th class="tableblock halign-left valign-top">Accepted <code>dataSource</code> types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.sql.Sql</code>, <code>javax.sql.DataSource</code>, <code>java.sql.Connection</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.jooq.DSLContext</code>, or any of the native types (a <code>DSLContext</code> is derived)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In the collection provider, <code>from e in employees</code> binds <code>employees</code> to a runtime collection
+variable. In the SQL providers, the data source of a <code>from</code>/<code>join</code> is a <strong>table name</strong>,
+written as a string literal:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">from e in 'employees'                       // table name
+join d in 'departments' on e.deptId == d.id // joined table name
+from e in table('hr.employees')             // schema-qualified (helper form)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>String literals are the initial, simplest form and match how dynamic SQL builders work. A
+<code>table(&#8230;&#8203;)</code> helper accommodates schema qualification and quoting. Type-driven table
+inference (<code>from e in Employee</code>) is explicitly deferred (see <em>Excluded and deferred features</em>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_clause_mapping">Clause mapping</h3>
+<div class="paragraph">
+<p>Each GINQ clause maps to its SQL counterpart:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">GINQ</th>
+<th class="tableblock halign-left valign-top">SQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>from e in 'employees'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FROM employees e</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>join d in 'departments' on e.deptId == d.id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>INNER JOIN departments d ON e.dept_id = d.id</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>leftjoin</code> / <code>rightjoin</code> / <code>fulljoin</code> / <code>crossjoin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LEFT</code> / <code>RIGHT</code> / <code>FULL</code> / <code>CROSS JOIN</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>where e.salary &gt; 50000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>WHERE e.salary &gt; ?</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groupby d.name into g</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GROUP BY d.name</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>having g.count() &gt; 5</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>HAVING COUNT(*) &gt; ?</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby e.salary in desc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ORDER BY e.salary DESC</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit 10, 20</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIMIT 20 OFFSET 10</code> (ANSI; dialect-rendered under JOOQ)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>select d.name, g.count(), g.avg(e &#8594; e.salary)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SELECT d.name, COUNT(*), AVG(e.salary)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>union</code> / <code>unionall</code> / <code>intersect</code> / <code>minus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UNION</code> / <code>UNION ALL</code> / <code>INTERSECT</code> / <code>EXCEPT</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_expression_translation">Expression translation</h3>
+<div class="paragraph">
+<p>The core of the work is translating Groovy expressions used in <code>where</code>, <code>on</code>, <code>having</code>, and
+<code>select</code> into <code>SqlExpr</code> nodes. The translator handles a defined vocabulary and rejects the rest:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 40%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Groovy expression</th>
+<th class="tableblock halign-left valign-top">SQL output</th>
+<th class="tableblock halign-left valign-top">Difficulty</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.salary &gt; 50000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.salary &gt; ?</code> + param <code>50000</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name == 'Alice'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name = ?</code> + param <code>'Alice'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy (<code>==</code> &#8594; <code>=</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name != null</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name IS NOT NULL</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Null special-case</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.dept in ['A','B']</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.dept IN (?, ?)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a &amp;&amp; b</code>, <code>a || b</code>, <code>!a</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AND</code> / <code>OR</code> / <code>NOT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>g.count()</code> / <code>count()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>COUNT(*)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>g.avg(e &#8594; e.salary)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AVG(e.salary)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name.toUpperCase()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UPPER(e.name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Function mapping</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name ==~ /^A.*/</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name LIKE 'A%'</code> (restricted patterns)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hard</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arbitrary Groovy code</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reject, or in-memory fallback</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The translator starts with comparisons, boolean logic, null checks, <code>in</code> lists, arithmetic,
+and the standard aggregate functions. Method-call mapping (such as <code>toUpperCase()</code> to
+<code>UPPER</code>) is a lookup table extended incrementally. Anything outside the recognised
+vocabulary triggers a compile-time error in the default strict mode, or is deferred to
+in-memory evaluation in mixed mode (see <em>Mixed-mode execution</em>).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_parameter_binding_and_sql_injection_safety">Parameter binding and SQL injection safety</h3>
+<div class="paragraph">
+<p>Every literal and every captured (enclosing-scope) variable becomes a positional bound
+parameter; only column/table identifiers and structural keywords are ever emitted into the
+SQL text. Property access on an alias variable (<code>e.salary</code>) renders as a column reference; a
+literal or free variable (<code>50000</code>, <code>threshold</code>) renders as <code>?</code> with the value collected into
+a runtime parameter list.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def threshold = 50000
+GQL(provider: 'native-sql', dataSource: sql) {
+    from e in 'employees'
+    where e.salary &gt; threshold &amp;&amp; e.active == true
+    select e.name
+}
+// Renders:  SELECT e.name FROM employees e WHERE e.salary &gt; ? AND e.active = ?
+// Params:   [50000, true]   (bound via PreparedStatement)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because user values never enter the SQL text, SQL injection is not merely discouraged but
+structurally prevented — the same guarantee <code>groovy.sql.Sql</code> provides for parameterised queries.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aggregation_and_groupbyinto">Aggregation and <code>groupby&#8230;&#8203;into</code></h3>
+<div class="paragraph">
+<p>The SQL providers support the <code>groupby &#8230;&#8203; into g</code> form, which maps directly to <code>GROUP BY</code>
+plus aggregate functions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// GINQ with into
+from e in 'employees'
+groupby e.dept into g
+select g.dept, g.count(), g.avg(e -&gt; e.salary)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="sql">-- Generated SQL
+SELECT e.dept, COUNT(*), AVG(e.salary)
+FROM employees e
+GROUP BY e.dept</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The translation is direct pattern matching: <code>g.key</code> or <code>g.dept</code> becomes the <code>GROUP BY</code>
+column; <code>g.count()</code> becomes <code>COUNT(*)</code>; <code>g.sum(e &#8594; e.amount)</code> becomes <code>SUM(e.amount)</code>; and
+so on. The standard aggregates (<code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code>) are supported by both
+providers. The classic <code>groupby</code> form (without <code>into</code>) relies on implicit-variable rewriting
+that does not translate cleanly; supporting only the <code>into</code> form in the SQL providers
+initially is a deliberate, reasonable simplification.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_operations_and_subqueries">Set operations and subqueries</h3>
+<div class="paragraph">
+<p>The DSL set operations combine complete <code>from&#8230;&#8203;select</code> queries and map to their SQL
+equivalents, including left-associative chaining (<code>Q1 union Q2 minus Q3</code>): <code>union</code> to
+<code>UNION</code>, <code>unionall</code> to <code>UNION ALL</code>, <code>intersect</code> to <code>INTERSECT</code>, <code>minus</code> to <code>EXCEPT</code>. Nested
+GINQ queries used as subqueries (including <code>in</code>-subquery and <code>exists</code>-style patterns) render
+as SQL subqueries; basic subqueries are in scope for the native provider, with the full
+range available under JOOQ.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_native_sql_provider">Native SQL provider</h3>
+<div class="paragraph">
+<p>Ships inside <code>groovy-ginq-sql</code> with no external dependencies and is licensed under ASL2. It
+renders the IR to an ANSI SQL string with positional parameters and executes via
+<code>groovy.sql.Sql</code>, wrapping the resulting <code>GroovyRowResult</code> rows as a <code>Queryable</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Scope:</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>SELECT</code> / <code>FROM</code> / <code>WHERE</code> with comparisons, boolean logic, null checks, <code>IN</code> lists, arithmetic;</p>
+</li>
+<li>
+<p><code>JOIN</code> — inner, left, right, full, cross;</p>
+</li>
+<li>
+<p><code>GROUP BY</code> / <code>HAVING</code> / standard aggregates;</p>
+</li>
+<li>
+<p><code>ORDER BY</code>, <code>LIMIT</code>/<code>OFFSET</code> (ANSI form);</p>
+</li>
+<li>
+<p>set operations and basic subqueries;</p>
+</li>
+<li>
+<p>common function mapping (for example <code>toUpperCase()</code> to <code>UPPER</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Limitations (by design):</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ANSI SQL by default. A small <strong>Dialect SPI</strong> covers the handful of high-variance points
+(<code>LIMIT</code>/<code>OFFSET</code> syntax, identifier quoting, a few function names) so the common
+open-source databases work out of the box; comprehensive dialect coverage is JOOQ&#8217;s role.</p>
+</li>
+<li>
+<p>No window functions.</p>
+</li>
+<li>
+<p>Limited function mapping — common cases only.</p>
+</li>
+<li>
+<p>Untranslatable expressions are rejected with a clear error (or deferred to in-memory in mixed mode).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jooq_provider">JOOQ provider</h3>
+<div class="paragraph">
+<p>An optional provider that delegates to <a href="https://www.jooq.org">JOOQ</a>'s plain-SQL DSL. Users
+supply their own JOOQ dependency. The provider maps the <code>SqlQuery</code> IR to JOOQ DSL calls — a
+tree-to-tree mapping that is simpler than native string rendering because JOOQ owns parameter
+binding, quoting, escaping, and dialect rendering.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// The IR for a grouped query maps to JOOQ's plain-SQL DSL (no code generation required):
+dsl.select(field("dept"), count(), avg(field("salary")))
+   .from(table("employees"))
+   .where(field("salary").gt(val(50000)))
+   .groupBy(field("dept"))
+   .fetch()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>What JOOQ adds over native:</strong> dialect support for 30+ databases; full window-function
+support; comprehensive function mapping; and dialect-aware <code>LIMIT</code>/<code>OFFSET</code>. Crucially,
+JOOQ&#8217;s plain-SQL API works <em>without</em> code generation, which suits GINQ&#8217;s dynamic,
+string-named tables and columns.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Licensing.</strong> The JOOQ Open Source Edition is ASL2 and supports the open-source databases
+(PostgreSQL, MySQL, MariaDB, H2, SQLite, Derby, Firebird, &#8230;&#8203;). Commercial databases (Oracle,
+SQL Server, DB2) require a JOOQ commercial licence. This is precisely why the native provider
+exists: it guarantees GINQ&#8217;s SQL support is fully usable under ASL2 with zero external
+dependencies. JOOQ is always optional.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mixed_mode_execution">Mixed-mode execution</h3>
+<div class="paragraph">
+<p>Some GINQ constructs have no portable SQL equivalent (for example list-collecting aggregates
+on many databases, window functions on the native provider, or an arbitrary Groovy expression
+in a <code>select</code>). Mixed mode provides a graceful boundary, modelled on LINQ-to-SQL&#8217;s
+<code>AsEnumerable()</code>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>push the translatable prefix of the query down to the database;</p>
+</li>
+<li>
+<p>bring the partial result back as a <code>Queryable&lt;GroovyRowResult&gt;</code>;</p>
+</li>
+<li>
+<p>finish the remaining operations in memory using the collection provider.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Mixed mode is opt-in. The default for the SQL providers is <strong>strict</strong>: an untranslatable
+construct is a compile-time error, so users never get a silent, surprising performance cliff.
+Enabling mixed mode trades that strictness for completeness.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compilation">Compilation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GINQ is a compile-time transformation, and the SQL backend preserves that. Because table
+names are string literals and the clause structure is fixed in source, <strong>the SQL skeleton is a
+compile-time constant</strong>; only parameter <em>values</em> are runtime. Concretely, the SQL visitor:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>walks the optimised <code>GinqExpression</code> into a <code>SqlQuery</code> IR at compile time;</p>
+</li>
+<li>
+<p>has the active renderer produce (a) a constant SQL template string containing <code>?</code>
+placeholders and (b) a parameter-extraction plan describing which source expressions supply
+each placeholder;</p>
+</li>
+<li>
+<p>emits Groovy AST that, at runtime, evaluates the parameter expressions (literals and
+captured variables), invokes the data source with the template and parameter list, and
+wraps the rows as a <code>Queryable</code>;</p>
+</li>
+<li>
+<p>detects any untranslatable expression during step 1 and either raises a precise compile
+error (strict mode) or marks that fragment for in-memory evaluation (mixed mode).</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The upshot is that query <em>shape</em> errors and untranslatable-expression errors surface at
+compile time, while the generated runtime code is a thin, predictable wrapper around
+<code>groovy.sql.Sql</code> or a JOOQ <code>DSLContext</code>. The result type is <code>Queryable&lt;GroovyRowResult&gt;</code>
+(native) or <code>Queryable&lt;org.jooq.Record&gt;</code> (JOOQ), each adaptable to GINQ&#8217;s <code>NamedRecord</code> so
+that downstream GINQ and ordinary collection operations compose seamlessly.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sql_and_linq_alignment">SQL and LINQ alignment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The design follows the provider model proven by C#'s LINQ. LINQ-to-Objects and LINQ-to-SQL
+present one query syntax over two execution engines; switching providers switches engines
+without rewriting queries. GINQ&#8217;s collection provider is the analogue of LINQ-to-Objects, and
+this GEP supplies the analogue of LINQ-to-SQL. Where LINQ-to-SQL uses an expression-tree
+visitor to emit SQL, GINQ uses its <code>GinqExpression</code> visitor to populate the <code>SqlQuery</code> IR;
+where LINQ offers <code>AsEnumerable()</code> to drop back to in-memory evaluation, GINQ offers mixed
+mode. The dual native/JOOQ split has no direct LINQ counterpart and exists to honour the
+zero-dependency, fully-ASL2 design principle while still offering broad dialect coverage to
+those who want it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_feature_coverage_by_provider">Feature coverage by provider</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Native</th>
+<th class="tableblock halign-left valign-top">JOOQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SELECT / FROM / WHERE</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOIN (inner, left, right, full, cross)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GROUP BY / HAVING / standard aggregates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ORDER BY, LIMIT / OFFSET</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ANSI + small Dialect SPI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dialect-aware</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parameter binding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PreparedStatement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ-managed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set operations (UNION / INTERSECT / EXCEPT)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subqueries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Basic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Window functions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dialect differences</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ANSI only (+ SPI)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30+ databases</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Function mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common cases</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Comprehensive</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mixed-mode fallback</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">External dependency</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ (user-supplied)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_module_structure_and_packaging">Module structure and packaging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The backend ships as a new optional module, <code>groovy-ginq-sql</code>, keeping the relational
+dependency surface out of core GINQ:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>groovy-ginq        core: parser, GinqExpression AST, optimiser, collection provider
+groovy-ginq-sql    SQL backend: shared visitor, SqlQuery IR, expression translator,
+                   NativeSqlProvider, Dialect SPI, JooqSqlProvider, result wrapping
+    depends on:  groovy-ginq   (AST types and Queryable)
+    depends on:  groovy-sql    (Sql, GroovyRowResult)
+    compileOnly: jooq          (only the JooqSqlProvider; user supplies it at runtime)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Providers register through a small provider registry resolved via <code>ServiceLoader</code>, so adding
+<code>groovy-ginq-sql</code> to the classpath makes <code>provider: 'native-sql'</code> and <code>provider: 'sql'</code>
+available, and adding JOOQ additionally enables <code>provider: 'jooq-sql'</code>. The proposed
+implementation packages mirror existing GINQ conventions, for example
+<code>org.apache.groovy.ginq.provider.sql</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reference_implementation">Reference implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As a Feature GEP, this proposal will be accompanied by a reference implementation covered by
+unit tests and documented in the GINQ user guide. The H2 in-memory database is proposed for
+tests of both providers (test-only dependency; the dialect-specific JOOQ tests can target
+additional open-source databases as available).</p>
+</div>
+<div class="sect2">
+<h3 id="_effort_estimates">Effort estimates</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 12.5%;">
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Component</th>
+<th class="tableblock halign-left valign-top">Lines (est.)</th>
+<th class="tableblock halign-left valign-top">Effort</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shared visitor: <code>GinqExpression</code> &#8594; <code>SqlQuery</code> IR</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">400–600</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium-High</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Written once, used by both providers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SqlQuery</code> IR model + <code>SqlExpr</code> hierarchy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">150–250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low-Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tables, predicates, projections, joins, ordering</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expression translator (Groovy AST &#8594; <code>SqlExpr</code> + params)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">300–500</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operator/null/<code>in</code> mapping, parameter extraction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native renderer (IR &#8594; ANSI SQL + params)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">300–400</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String building, parameter collection</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Native Dialect SPI + a couple of dialects</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">150–250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LIMIT/OFFSET, quoting, function names</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ renderer (IR &#8594; JOOQ DSL)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">200–300</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tree-to-tree; JOOQ handles binding/dialect</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Provider registry, config keys, connection lifecycle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">150–250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Resolves <code>provider</code>/<code>dataSource</code>; leverages <code>groovy.sql.Sql</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Result wrapping (<code>GroovyRowResult</code> / <code>Record</code> &#8594; <code>Queryable</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50–100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adapter to <code>NamedRecord</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Tests (both providers, H2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">700–1000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Per-clause, edge cases, injection prevention, dialects</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Total</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>~2,400–3,650</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Medium-High</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delivers two providers from one front-end</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For reference, the existing collection visitor is on the order of 1,600 lines; the shared
+visitor is the hardest part here, and each individual renderer is comparatively modest.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_phased_delivery">Phased delivery</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What ships</th>
+<th class="tableblock halign-left valign-top">What works</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shared visitor + <code>SqlQuery</code> IR + native provider (basic)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Single-table <code>SELECT</code>/<code>FROM</code>/<code>WHERE</code>/<code>ORDER BY</code>/<code>LIMIT</code> with simple expressions and parameters</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Joins + <code>GROUP BY</code>/aggregates + set operations (native)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-table queries, aggregation via <code>groupby&#8230;&#8203;into</code>, <code>UNION</code>/<code>INTERSECT</code>/<code>EXCEPT</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ provider (reuses the shared IR)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phases 1–2 for free, plus dialect support and window functions</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subqueries, <code>in</code>-subquery, <code>exists</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nested queries in both providers</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mixed-mode fallback, function mapping, polish</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Graceful degradation for untranslatable expressions</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Phase 1 already delivers something useful with zero external dependencies. Phases 2 and 3
+both depend only on Phase 1 (the shared IR) and not on each other, so they can proceed in
+parallel. Phase 3 adds JOOQ as an optional upgrade path.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object-relational mapping</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is not an ORM. No entity mapping, identity map, change tracking, dirty-checking, or DDL/schema migration.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type-driven table inference (<code>from e in Employee</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String-literal table names are the initial form; deriving table/column names from a class can come later.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Window functions in the native provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Available through JOOQ; out of scope for the ANSI native renderer initially.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full dialect breadth in the native provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The native Dialect SPI covers common high-variance points only; comprehensive coverage is JOOQ&#8217;s role.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Asynchronous and streaming data sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A separate concern and a natural fit for integration with the concurrency primitives of GEP-18; not part of this GEP.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Transaction and connection-pool management</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection lifecycle is delegated to the supplied <code>Sql</code>/<code>DataSource</code>/<code>DSLContext</code>; GINQ adds no transaction abstraction.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classic <code>groupby</code> (without <code>into</code>) in the SQL providers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>into</code> form is supported first; the classic form would require replicating implicit-variable rewriting.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_and_impact">Compatibility and impact</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>The feature is purely additive and opt-in:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The <code>collection</code> provider remains the default. Existing GINQ queries compile and execute
+exactly as before, with unchanged semantics and performance.</p>
+</li>
+<li>
+<p>The relational code lives in a new optional module (<code>groovy-ginq-sql</code>); the core
+<code>groovy-ginq</code> module gains no new dependency.</p>
+</li>
+<li>
+<p>The new <code>@GQ(provider = &#8230;&#8203;)</code> annotation member has a default value, so adding it is
+source- and binary-compatible. The existing <code>astWalker</code> member is unchanged and continues
+to work as the low-level escape hatch.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_interaction_with_ginq_stabilisation">Interaction with GINQ stabilisation</h3>
+<div class="paragraph">
+<p>GINQ&#8217;s <code>provider</code>/<code>astWalker</code> selection and the result <code>Queryable</code> surface are the
+forward-evolution points exercised by this proposal. Any effort to mark GINQ stable should
+keep these configuration keys explicitly open to additive growth, so that this backend (and
+any future provider) can be introduced compatibly. Introducing the SQL providers requires no
+breaking change to the GINQ surface language.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security">Security</h3>
+<div class="paragraph">
+<p>All literals and captured variables are bound as statement parameters; user values never
+enter SQL text. SQL injection is structurally prevented for both providers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance">Performance</h3>
+<div class="paragraph">
+<p>Push-down moves filtering, joining, grouping, and limiting into the database, typically
+reducing both data transfer and client memory versus materialising tables and querying them
+in memory. Mixed mode, when enabled, can reintroduce in-memory work for the untranslatable
+tail of a query; strict mode (the default) makes that trade-off explicit by refusing to
+compile such queries.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Native provider only.</strong> Rejected as the sole offering: it would leave dialect breadth and
+window functions permanently out of reach. Because the shared IR makes a second renderer
+cheap, offering JOOQ alongside native is high value for modest extra cost.</p>
+</li>
+<li>
+<p><strong>JOOQ provider only.</strong> Rejected: it would impose a third-party dependency on all relational
+use and would not be fully usable under ASL2 for commercial databases. A zero-dependency
+native floor is a design principle.</p>
+</li>
+<li>
+<p><strong>Direct AST-to-SQL with no intermediate model.</strong> Rejected: it would duplicate the semantic
+understanding of GINQ across each renderer, making the providers diverge and the JOOQ
+renderer far harder. The <code>SqlQuery</code> IR localises that work.</p>
+</li>
+<li>
+<p><strong>A new query syntax for relational queries.</strong> Rejected: the whole point is that GINQ syntax
+already <em>is</em> SQL-shaped. Reusing it unchanged is the feature.</p>
+</li>
+<li>
+<p><strong>Expose only the low-level <code>astWalker</code> key (no <code>provider</code> key).</strong> Rejected for usability:
+requiring users to name visitor classes is poor ergonomics. <code>provider</code> is a clear, stable
+sugar over <code>astWalker</code>, which remains for advanced cases.</p>
+</li>
+<li>
+<p><strong>Type-driven (ORM-style) tables from the outset.</strong> Deferred: string-literal table names are
+simpler, match dynamic SQL builders, and avoid committing to mapping semantics before the
+core backend is proven.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="GEP-18.html">GEP-18: Integrated Concurrency and Parallel Processing</a> — home for the deferred asynchronous/streaming data sources</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8258">GROOVY-8258: original GINQ proposal and implementation</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11915">GROOVY-11915: groupby&#8230;&#8203;into redesign and first-class group results</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/documentation.html">GINQ user guide — Querying collections in SQL-like style</a></p>
+</li>
+<li>
+<p><a href="https://www.jooq.org">JOOQ — plain-SQL DSL and dialect support</a></p>
+</li>
+<li>
+<p><a href="https://www.jooq.org/legal/licensing">JOOQ licensing</a></p>
+</li>
+<li>
+<p><a href="https://learn.microsoft.com/en-us/dotnet/csharp/linq/">Microsoft LINQ — prior art for one syntax over multiple execution engines</a></p>
+</li>
+<li>
+<p><a href="https://www.h2database.com">H2 Database Engine — proposed test database</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>

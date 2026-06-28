@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>6</p>
+<p>7</p>
 </td>
 </tr>
 <tr>
@@ -352,31 +352,13 @@ the runtime hierarchy.</p>
 implementation chain</strong> (in the order produced by the <code>implements</code> clause
 of the implementing class, walked right-to-left). When the chain is
 exhausted, <code>super</code> resolves to the actual superclass of the implementing
-class. (See item 4 for the static-method restriction.)</p>
+class. (This applies to instance methods only; from a <code>static</code> trait
+method it is rejected — see the unsupported-syntax list below.)</p>
 </li>
 <li>
 <p>A qualified <code>T.super.m(&#8230;&#8203;)</code> call resolves to trait <code>T&#8217;s implementation
 of `m</code>, regardless of position in the chain. This is the explicit
 override form.</p>
-</li>
-<li>
-<p><code>T.this.*</code> qualifier syntax is not supported inside trait code and is
-rejected at compile time (GROOVY-12104). <code>T.this</code> is Java&#8217;s
-enclosing-instance access for inner classes, and a trait is not an
-enclosing scope of its implementer (per item 1, <code>this</code> is the
-implementing instance directly), so <code>T.this</code> has no coherent meaning
-here. The rejection covers both method calls (<code>T.this.m(&#8230;&#8203;)</code>) and
-field/property access (<code>T.this.x</code>). For normal dispatch use
-<code>this.m(&#8230;&#8203;)</code> (item 1); for explicit trait-anchored dispatch use
-<code>T.super.m(&#8230;&#8203;)</code> (item 3). Separately, the unqualified <code>super.m(&#8230;&#8203;)</code>
-form of item 2 is supported for instance methods only; from a
-<code>static</code> trait method the trait chain is not walked and the form is
-rejected at compile time (GROOVY-12105). Use <code>T.super.m(&#8230;&#8203;)</code> for the
-trait&#8217;s own static <code>m</code>, or call the implementer-side method by name
-without a qualifier. (Note: this restriction is specific to traits.
-Groovy permits unqualified <code>super.m(&#8230;&#8203;)</code> in <code>static</code> methods of
-plain classes, where it dispatches to the actual superclass&#8217;s static
-method.)</p>
 </li>
 </ol>
 </div>
@@ -385,6 +367,33 @@ method.)</p>
 next trait via unqualified <code>super</code> can be composed in different orders
 to produce different overall behaviours, without those traits needing to
 know about each other.</p>
+</div>
+<div class="paragraph">
+<p>The following qualifier syntax is <strong>not</strong> supported inside trait code and
+is rejected at compile time:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>T.this.*</code> (GROOVY-12104). <code>T.this</code> is Java&#8217;s enclosing-instance access
+for inner classes, and a trait is not an enclosing scope of its
+implementer (per item 1, <code>this</code> is the implementing instance directly),
+so it has no coherent meaning here. The rejection covers both method
+calls (<code>T.this.m(&#8230;&#8203;)</code>) and field/property access (<code>T.this.x</code>). For normal
+dispatch use <code>this.m(&#8230;&#8203;)</code> (item 1); for explicit trait-anchored dispatch
+use <code>T.super.m(&#8230;&#8203;)</code> (item 3).</p>
+</li>
+<li>
+<p>unqualified <code>super.m(&#8230;&#8203;)</code> from a <code>static</code> trait method (GROOVY-12105).
+The unqualified <code>super</code> form of item 2 is supported for instance methods
+only; from a <code>static</code> trait method the trait chain is not walked. Use
+<code>T.super.m(&#8230;&#8203;)</code> for the trait&#8217;s own static <code>m</code>, or call the
+implementer-side method by name without a qualifier. (This restriction is
+specific to traits: Groovy permits unqualified <code>super.m(&#8230;&#8203;)</code> in <code>static</code>
+methods of plain classes, where it dispatches to the actual superclass&#8217;s
+static method.)</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -469,8 +478,35 @@ that restores per-implementer override dispatch for callees that need
 it (e.g. Grails' <code>Validateable.defaultNullable()</code> and similar
 framework hooks).</p>
 </div>
+<div class="paragraph">
+<p>Trait rules apply in three distinct phases; it helps to keep them apart
+when reading the rules that follow:</p>
+</div>
 <div class="ulist">
 <ul>
+<li>
+<p><strong>Defining</strong> a trait — checks that run when the trait itself is
+<strong>compiled</strong>, independent of <code>@CompileStatic</code>. Malformed trait code is
+rejected outright (for example a misapplied <code>@Virtual</code>, a <code>T.this.*</code>
+qualifier, or unqualified <code>super</code> from a static trait method — see
+<a href="#__this_super_and_stackable_traits">this, super, and stackable traits</a>).
+These rejections always apply, in dynamic and statically-checked code
+alike, because you cannot even define such a trait.</p>
+</li>
+<li>
+<p><strong>Weaving</strong> a trait — what happens when a class names the trait in its
+<code>implements</code> clause: per-direct-implementer composition, the bridge
+forwarders, and the static-helper plumbing (see
+<a href="#_bytecode_and_stub_model">Bytecode and stub model</a>).</p>
+</li>
+<li>
+<p><strong>Using</strong> a trait — resolving a call at its call site, which follows the
+<strong>compilation mode</strong>. Under <code>@CompileStatic</code>/<code>@TypeChecked</code> an unresolvable
+call is a <strong>compile-time error</strong>; in dynamic code the same call instead
+fails at <strong>runtime</strong> with <code>MissingMethodException</code>. So the resolvability
+rules below describe the same outcome reported at two different times
+depending on how the calling code is compiled.</p>
+</li>
 <li>
 <p>Each implementing class receives its <strong>own copy</strong> of static state. A
 static field declared in a trait is conceptually a template,
@@ -508,8 +544,13 @@ runtime, so a same-signature static declared on the implementer
 shadows the trait&#8217;s default from inside trait code. A <code>@Virtual</code>
 method is <strong>not</strong> promoted onto the trait interface (interface statics
 are declarer-bound by JVM rule, which is incompatible with virtual
-dispatch); external <code>Trait.m()</code> for a <code>@Virtual</code> callee is therefore
-routed via the implementer rather than resolved at the JVM level.</p>
+dispatch). It therefore has <strong>no qualified <code>Trait.m(&#8230;&#8203;)</code> form</strong>: a bare
+<code>Trait.m(&#8230;&#8203;)</code> names the trait with no implementing class to dispatch
+through, so it is rejected — a <strong>compile-time error</strong> under
+<code>@CompileStatic</code>/<code>@TypeChecked</code> (GROOVY-12112), and a runtime
+<code>MissingMethodException</code> in dynamic code. Read a concrete class&#8217;s value
+with <code>Impl.m(&#8230;&#8203;)</code>, or use <code>T.super.m(&#8230;&#8203;)</code> from within trait code for
+the trait&#8217;s own definition.</p>
 </li>
 <li>
 <p><code>@Virtual</code> is valid only on public static (non-abstract) trait
@@ -566,9 +607,11 @@ through the direct implementer.</p>
 through the trait interface&#8217;s JVM-native static (the promotion
 described above), and so reaches the trait&#8217;s own copy — the same
 trait-anchored dispatch that any `Trait.m()</code> caller sees from outside
-the trait. For a <code>@Virtual</code> callee, which is not promoted onto the
-interface, <code>T.m()</code> from trait code reaches the trait&#8217;s default via
-the implementer-routing path.</p>
+the trait. This applies to plain (non-<code>@Virtual</code>) statics only; a
+<code>@Virtual</code> callee has no qualified form, so <code>T.m()</code> from trait code is
+rejected the same way as any other <code>Trait.m(&#8230;&#8203;)</code> call (GROOVY-12112) —
+use unqualified <code>m(&#8230;&#8203;)</code>/<code>this.m(&#8230;&#8203;)</code> for override-visible dispatch, or
+<code>T.super.m(&#8230;&#8203;)</code> for the trait&#8217;s own default.</p>
 </li>
 <li>
 <p>Static methods declared in a super-trait are inherited by a
@@ -657,7 +700,7 @@ canonical escape for any trait-vs-superclass collision.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Virtual public static m()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dispatches through the implementing class</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Impl.m()</code> works; <code>Trait.m()</code> resolves through implementer routing (the method is not promoted onto the interface)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Impl.m()</code> works; <code>Trait.m()</code> is rejected (not on the interface) — compile error under <code>@CompileStatic</code> (GROOVY-12112), runtime <code>MissingMethodException</code> dynamically</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>T.super.m()</code> from an override on the implementer reaches the trait&#8217;s copy</p></td>
 </tr>
@@ -691,6 +734,110 @@ canonical escape for any trait-vs-superclass collision.</p>
 </tr>
 </tbody>
 </table>
+<div class="sect3">
+<h4 id="_when_to_use_virtual">When to use <code>@Virtual</code></h4>
+<div class="paragraph">
+<p>A plain trait <code>static</code> is a fixed part of the trait: trait code that
+calls it always reaches the trait&#8217;s own copy, and an implementing class
+cannot change what the trait sees. That is the right default for an
+internal helper or a constant — something the trait owns outright.</p>
+</div>
+<div class="paragraph">
+<p><code>@Virtual</code> is for the opposite case: a <code>static</code> method that the trait
+wants implementing classes to be able to <strong>override</strong>, and whose override
+the trait&#8217;s own logic must <strong>honour</strong>. It is the template-method pattern —
+a default plus a per-class override — applied to a static member,
+mirroring the override-visibility that trait <strong>instance</strong> methods already
+have.</p>
+</div>
+<div class="paragraph">
+<p>Reach for it when the overridable thing is genuinely a property of the
+<strong>type</strong> rather than of an instance — a policy or configuration default
+that:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>answers a question about the class as a whole ("are properties nullable
+by default for this entity?", "what is the default page size?");</p>
+</li>
+<li>
+<p>may be consulted where no instance exists yet — during class
+initialisation, in static factory methods, or while building metadata;</p>
+</li>
+<li>
+<p>external callers should be able to read statically as <code>Impl.setting()</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is the pattern Grails uses for hooks such as
+<code>Validateable.defaultNullable()</code>: the framework ships a default, a domain
+class may override it with its own <code>static</code>, and the framework&#8217;s own
+(static) logic must see the per-class value. For overridable static
+<strong>data</strong> rather than behaviour, expose it through a <code>@Virtual</code> accessor
+(<code>@Virtual static getSetting()</code>) rather than a <code>static</code> field, since a
+bare static-field read from trait code is not override-visible (see the
+worked example above).</p>
+</div>
+<div class="paragraph">
+<p>If the member is instead an internal helper, a constant, or anything the
+trait should keep authority over, leave it a plain <code>static</code>:
+declarer-bound is the safer default, and an implementer&#8217;s same-named
+static then stays an independent method rather than silently changing the
+trait&#8217;s behaviour.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Why the obvious alternatives do not fit a class-level overridable default:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An <strong>instance method</strong> would give override-visibility for free, but it is
+the wrong shape — the value answers a question about the <strong>type</strong>, and it is
+often needed where no instance exists yet (class initialisation, static
+factories, metadata building). You should not have to instantiate a class
+to ask a question about the class.</p>
+</li>
+<li>
+<p>A plain <strong><code>static</code> field</strong> is per-implementer, but a bare static-field read
+from trait code reads the trait&#8217;s own template field, <strong>not</strong> the
+implementer&#8217;s override (the documented non-goal above), so it cannot carry
+an overridable default that the trait honours.</p>
+</li>
+<li>
+<p>An <strong>abstract / required</strong> contract removes the default entirely — every
+implementer is then forced to supply the value, losing the "sensible
+default, occasionally overridden" ergonomics.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>@Virtual</code> is the only construct that provides all three at once: a
+default, a per-class override, and trait-code visibility of that override,
+in a static context.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The call forms follow the use case: the trait consults the setting with
+<code>setting()</code> or <code>this.setting()</code>; an implementing class overrides it with a
+plain <code>static setting()</code>; external code reads a concrete class&#8217;s value
+with <code>Impl.setting()</code>; and <code>T.super.setting()</code> reaches the trait&#8217;s own
+default explicitly. A bare <code>Trait.setting()</code> is <strong>not</strong> part of the pattern
+— it has no implementing class to dispatch through and is rejected
+(GROOVY-12112; see the <code>@Virtual</code> rule above).</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_selftype"><code>@SelfType</code></h3>
@@ -845,7 +992,7 @@ traits against the closest analogue in each language.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Static methods</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (incubating). Each implementing class receives its own copy; public statics are also promoted onto the generated trait interface as JVM-native interface statics. Declarer-bound by default; per-implementer override dispatch is opt-in via <code>@groovy.transform.Virtual</code>. See <a href="#_static_members">Static members</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (incubating). Each implementing class receives its own copy. Public statics are declarer-bound by default and promoted onto the generated trait interface as JVM-native interface statics; <code>@groovy.transform.Virtual</code> opts a static into per-implementer override dispatch and is then <strong>not</strong> promoted to the interface (so it has no qualified <code>Trait.m(&#8230;&#8203;)</code> form). See <a href="#_static_members">Static members</a>.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indirect, via a companion <code>object</code>. Static-like state lives on a singleton, not per implementer.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Indirect, via a <code>companion object</code> declared inside the interface. Members are instance members of the companion; <code>@JvmStatic</code> promotes them to true JVM statics.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes (since Java 8). Resolved against the declaring interface; <strong>not</strong> inherited by sub-interfaces or implementing classes.</p></td>
@@ -1068,7 +1215,7 @@ compile time (GROOVY-12104; previously produced a VerifyError on 4.x
 and a ClassCastException at runtime on 5.x/6.x), and unqualified
 <code>super.m(&#8230;&#8203;)</code> from a <code>static</code> trait method is rejected at compile
 time (GROOVY-12105; previously threw <code>MissingMethodException</code>
-because the trait chain is not walked for statics). See item 4 of
+because the trait chain is not walked for statics). See
 <a href="#__this_super_and_stackable_traits">this, super, and stackable
 traits</a>.
 A sub-trait can again resolve a <code>static</code> method inherited from a
@@ -1076,7 +1223,12 @@ super-trait from its own body, including when an argument&#8217;s static type
 is a subtype of the declared parameter type (GROOVY-12106; this had
 regressed in the 5.0.x line, where static type checking matched the
 inherited helper static by exact parameter type only). The fix is
-targeted for backport to the <code>GROOVY_5_0_X</code> line.</p></td>
+targeted for backport to the <code>GROOVY_5_0_X</code> line.
+A qualified <code>Trait.m(&#8230;&#8203;)</code> call to a <code>@Virtual</code> trait static — which has
+no implementing class to dispatch through — is now rejected with a clear,
+actionable message under <code>@CompileStatic</code>/<code>@TypeChecked</code> (GROOVY-12112)
+rather than the generic "cannot find matching method"; in dynamic code it
+remains a runtime <code>MissingMethodException</code>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1281,6 +1433,13 @@ super-trait from its own body, including with a subtype argument
 (static type checking had matched the inherited helper static by exact
 parameter type only, regressing this in the 5.0.x line).</p>
 </li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12112">GROOVY-12112</a>:
+rejects a qualified <code>Trait.m(&#8230;&#8203;)</code> call to a <code>@Virtual</code> trait static with
+a clear compile-time error (under <code>@CompileStatic</code>/<code>@TypeChecked</code>) instead
+of the generic "cannot find matching method"; dynamic code still reports a
+runtime <code>MissingMethodException</code>.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1338,8 +1497,8 @@ and a ClassCastException on 5.x/6.x) and unqualified <code>super.m(&#8230;&#8203
 from a <code>static</code> trait method is rejected at compile time
 (GROOVY-12105; previously threw <code>MissingMethodException</code> because the
 trait chain is not walked for statics). Item 2 of <em>this, super, and
-stackable traits</em> now cross-references item 4 for the static-method
-restriction; the recommended alternatives are existing documented
+stackable traits</em> now cross-references the static-method restriction;
+the recommended alternatives are existing documented
 features (<code>this.m(&#8230;&#8203;)</code> for normal dispatch and <code>T.super.m(&#8230;&#8203;)</code> for
 explicit trait-anchored dispatch).</p>
 </div>
@@ -1352,6 +1511,13 @@ unqualified/<code>this.</code> (declarer-bound, or override-visible under
 <code>Parent.super.m(&#8230;&#8203;)</code> — with subtype-aware argument resolution, matching
 plain-class static inheritance (GROOVY-12106; this had regressed in the
 5.0.x line). Added the corresponding cross-version and JIRA-issue entries.</p>
+</div>
+<div class="paragraph">
+<p>7 (2026-06-28) Added a "<em>When to use <code>@Virtual`</em>" rationale to <em>Static
+members</em> (template-method-like overridable static defaults, with a NOTE
+on why an instance method, a `static</code> field, or an abstract contract do
+not fit), and a phase framing (defining vs weaving vs using a trait, and
+the <code>@CompileStatic</code> compile-error vs dynamic runtime-error split).</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
