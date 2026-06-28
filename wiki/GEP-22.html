@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>5</p>
+<p>6</p>
 </td>
 </tr>
 <tr>
@@ -571,6 +571,35 @@ interface, <code>T.m()</code> from trait code reaches the trait&#8217;s default 
 the implementer-routing path.</p>
 </li>
 <li>
+<p>Static methods declared in a super-trait are inherited by a
+sub-trait and may be called from the sub-trait&#8217;s own body, resolved by
+the same rules as a static declared in the trait itself: an unqualified
+<code>m(&#8230;&#8203;)</code> or <code>this.m(&#8230;&#8203;)</code> call is declarer-bound (or, for a <code>@Virtual</code>
+callee, dispatches through the implementing class so an implementer&#8217;s
+override is visible); a <code>Parent.m(&#8230;&#8203;)</code> call resolves through the
+super-trait&#8217;s promoted interface static (for the non-<code>@Virtual</code> statics
+that are promoted there); and <code>Parent.super.m(&#8230;&#8203;)</code> reaches the
+super-trait&#8217;s own copy. Argument resolution is subtype-aware — an
+argument whose static type is a subtype of the declared parameter type
+resolves just as it does for plain-class static inheritance
+(GROOVY-12106). For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
+trait ExecutesClosures {
+    static String withDelegate(Closure callable, Object delegate) { /* ... */ "for ${delegate.class.simpleName}" }
+}
+final class Argument { }
+@CompileStatic
+trait Arguable extends ExecutesClosures {
+    String handle(Argument arg) { withDelegate({ -&gt; }, arg) }   // inherited static; arg is a subtype of Object
+}
+class C implements Arguable { }
+assert new C().handle(new Argument()) == 'for Argument'</code></pre>
+</div>
+</div>
+</li>
+<li>
 <p>Mixing static and instance methods of the same signature across
 multiple traits is undefined behaviour and should be avoided. If
 selection chooses a static variant where an instance variant is
@@ -1041,7 +1070,13 @@ and a ClassCastException at runtime on 5.x/6.x), and unqualified
 time (GROOVY-12105; previously threw <code>MissingMethodException</code>
 because the trait chain is not walked for statics). See item 4 of
 <a href="#__this_super_and_stackable_traits">this, super, and stackable
-traits</a>.</p></td>
+traits</a>.
+A sub-trait can again resolve a <code>static</code> method inherited from a
+super-trait from its own body, including when an argument&#8217;s static type
+is a subtype of the declared parameter type (GROOVY-12106; this had
+regressed in the 5.0.x line, where static type checking matched the
+inherited helper static by exact parameter type only). The fix is
+targeted for backport to the <code>GROOVY_5_0_X</code> line.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1239,6 +1274,13 @@ rejects unqualified <code>super.m(&#8230;&#8203;)</code> from a <code>static</co
 compile time (previously threw <code>MissingMethodException</code> because the
 trait chain is not walked for statics).</p>
 </li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12106">GROOVY-12106</a>:
+a sub-trait again resolves a <code>static</code> method inherited from a
+super-trait from its own body, including with a subtype argument
+(static type checking had matched the inherited helper static by exact
+parameter type only, regressing this in the 5.0.x line).</p>
+</li>
 </ul>
 </div>
 </div>
@@ -1300,6 +1342,16 @@ stackable traits</em> now cross-references item 4 for the static-method
 restriction; the recommended alternatives are existing documented
 features (<code>this.m(&#8230;&#8203;)</code> for normal dispatch and <code>T.super.m(&#8230;&#8203;)</code> for
 explicit trait-anchored dispatch).</p>
+</div>
+<div class="paragraph">
+<p>6 (2026-06-28) From 6.0.0. Documented in <em>Static members</em> that a
+sub-trait resolves a <code>static</code> method inherited from a super-trait from
+its own body by the same rules as a static it declares itself —
+unqualified/<code>this.</code> (declarer-bound, or override-visible under
+<code>@Virtual</code>), <code>Parent.m(&#8230;&#8203;)</code> (via the promoted interface static), and
+<code>Parent.super.m(&#8230;&#8203;)</code> — with subtype-aware argument resolution, matching
+plain-class static inheritance (GROOVY-12106; this had regressed in the
+5.0.x line). Added the corresponding cross-version and JIRA-issue entries.</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
