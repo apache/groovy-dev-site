@@ -356,7 +356,7 @@ might be worth considering.</p>
 </div>
 <div class="paragraph">
 <p>If you want a smaller dependency than the Scala runtime jar, you could use
-the <a href="https://guava.dev/releases/31.0-jre/api/docs/src-html/com/google/common/hash/Hashing.html#line.158">32-bit Murmur3</a> algorithm from <a href="https://github.com/google/guava">Guava</a>
+the <a href="https://guava.dev/releases/31.0-jre/api/docs/com/google/common/hash/Hashing.html">32-bit Murmur3</a> algorithm from <a href="https://github.com/google/guava">Guava</a>
 or write your own combiner to combine hashes produced by Apache Commons Codec&#8217;s
 <a href="https://commons.apache.org/proper/commons-codec/apidocs/org/apache/commons/codec/digest/MurmurHash3.html#hash32x86-byte:A-">Murmur3 algorithm</a> on the bytes of each String component.
 In my tests, both of these alternatives ended up being slower than borrowing Scala&#8217;s algorithm,
