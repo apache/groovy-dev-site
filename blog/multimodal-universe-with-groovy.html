@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, groovysh, huggingface, astronomy, astrophysics, data science, sixel, java2d, spectrum'/><meta name='description' content='Reproduce a viral astronomy demo in groovysh: load galaxy images and spectra from Hugging Face&apos;s Multimodal Universe and render them inline with /img.'/><title>The Apache Groovy programming language - Blogs - Exploring the Multimodal Universe with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='#_what_is_the_multimodal_universe' class='anchor-link'>What is the Multimodal Universe?</a></li><li><a href='#_rendering_images_in_groovysh' class='anchor-link'>Rendering images in groovysh</a></li><li><a href='#_the_script' class='anchor-link'>The script</a></li><li><a href='#_running_it' class='anchor-link'>Running it</a></li><li><a href='#_what_are_we_looking_at' class='anchor-link'>What are we looking at?</a></li><li><a href='#_what_we_didnt_reproduce' class='anchor-link'>What we didn&#8217;t reproduce</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring the Multimodal Universe with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-07-01 11:00AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>A recent <a href="https://x.com/cgeorgiaw">post on X by Georgia Channing</a> (@cgeorgiaw) caught our eye:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Seems like no one&#8217;s noticed the 80TB of astrophysics data from 30+ sources that just dropped on
+@huggingface &#8230;&#8203; and you only need ~4GB of RAM to load it.
+We&#8217;re talking over 80TB of galaxy imagery taken across the spectrum, spectra of galaxies and stars,
+time series of variable stars, and a whole zoo of assorted measurements and physical data.
+And all of it can now be wrangled on your laptop, thanks to Multimodal Universe&#8217;s just released
+cross-matching.</p>
+</div>
+</blockquote>
+<div class="attribution">
+&#8212; Georgia Channing
+</div>
+</div>
+<div class="paragraph">
+<p>The accompanying video is a lovely little terminal session: open a couple of enormous astronomical
+catalogs straight from <a href="https://huggingface.co/">Hugging Face</a>, cross-match them, pull out one galaxy,
+and <em>draw the galaxy and its spectrum right there in the terminal</em>.
+That last part — rendering scientific images inline in a REPL — is something Groovy 6 <code>groovysh</code> can do too,
+via its <code>/img</code> command, so let&#8217;s reproduce the demo.</p>
+</div>
+<div class="paragraph">
+<p>Full credit to Georgia Channing for the original post, and to
+<a href="https://x.com/smith42mike">Mike Smith</a> (@smith42mike) who led the cross-matching work that makes
+the <a href="https://multimodaluniverse.org/">Multimodal Universe</a> accessible on a laptop.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_is_the_multimodal_universe">What is the Multimodal Universe?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="https://github.com/MultimodalUniverse/MultimodalUniverse">Multimodal Universe</a> is a large,
+community effort (presented at NeurIPS 2024) that gathers around 100TB of astronomical data from
+more than 30 surveys into a single, machine-learning-friendly collection: galaxy images across
+multiple wavelength bands, optical spectra of galaxies and stars, time series of variable stars, and
+assorted catalog measurements. It is published as a family of datasets on the Hugging Face Hub.</p>
+</div>
+<div class="paragraph">
+<p>The magic trick behind "wrangle 80TB on a 4GB laptop" is <em>cross-matching</em> with
+<a href="https://lsdb.readthedocs.io/">LSDB</a> on top of the <a href="https://hats.readthedocs.io/">HATS</a> format:
+the catalogs are spatially partitioned (by position on the sky using HEALPix), so joining
+800k objects from SDSS against 122M objects from Gaia only ever needs to hold a few partitions in
+memory at a time. You never download the whole thing.</p>
+</div>
+<div class="paragraph">
+<p>We are going to focus on the visualization half of the demo, using two of the datasets:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>UniverseTBD/mmu_gz10</code></strong> — galaxy imagery derived from the
+<a href="https://astronn.readthedocs.io/en/latest/galaxy10.html">Galaxy10 DECaLS</a> set, which pairs
+citizen-science <a href="https://www.zooniverse.org/projects/zookeeper/galaxy-zoo/">Galaxy Zoo</a> morphology
+labels with 256&times;256 colour cutouts from the DESI Legacy Imaging Surveys. Each row conveniently
+carries a ready-made RGB PNG.</p>
+</li>
+<li>
+<p><strong><code>UniverseTBD/mmu_sdss_sdss</code></strong> — optical spectra from the
+<a href="https://www.sdss.org/">Sloan Digital Sky Survey</a>, i.e. flux measured across wavelengths from roughly
+3800 to 9200 &#8491;ngstr&ouml;ms, plus a per-pixel <code>mask</code> marking bad samples.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>We don&#8217;t even need a Python environment or the datasets locally. Hugging Face exposes a
+<a href="https://huggingface.co/docs/dataset-viewer">dataset viewer REST API</a> that streams rows as JSON
+straight out of the underlying Parquet — so we can grab a single galaxy with an ordinary HTTP call.
+Requesting one row looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>https://datasets-server.huggingface.co/rows?dataset=UniverseTBD/mmu_gz10&amp;config=default&amp;split=train&amp;offset=0&amp;length=1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In that JSON, the galaxy image comes back as base64-encoded PNG bytes, and the spectrum comes back as
+plain arrays of <code>lambda</code> (wavelength), <code>flux</code>, and <code>mask</code> values. Perfect for Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rendering_images_in_groovysh">Rendering images in groovysh</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy&#8217;s interactive shell, <code>groovysh</code>, has been reworked on top of
+<a href="https://github.com/jline/jline3">JLine 3</a> and gains a set of <code>/</code>-prefixed commands. One of them is
+<code>/img</code>, which displays an image inline using the terminal&#8217;s graphics protocol (Sixel, Kitty, or
+iTerm2 — terminals like <a href="https://iterm2.com/">iTerm2</a>, <a href="https://wezterm.org/">WezTerm</a>, or
+<a href="https://sw.kovidgoyal.net/kitty/">Kitty</a> all qualify). On a terminal without graphics support it
+prints a summary line, and you can add <code>--gui</code> to pop up a Swing window instead.</p>
+</div>
+<div class="paragraph">
+<p><code>/img</code> accepts a file path, an HTTP URL, or a shell variable holding a <code>java.awt.image.BufferedImage</code>
+(among other things), which is exactly what we need: one command for the galaxy PNG and one for a
+chart we build ourselves.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_script">The script</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here is the complete <code>mmu.groovy</code> script. It reads one cross-matched-style row from each dataset,
+decodes the galaxy PNG, filters the masked points out of the spectrum (mirroring the video&#8217;s
+<code>s = s[~s["mask"]]</code>), and hand-draws the spectrum as a Java2D line plot returned as a
+<code>BufferedImage</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.json.JsonSlurper
+import javax.imageio.ImageIO
+import module java.desktop
+
+rows = { String ds -&gt; new JsonSlurper().parse(
+    new URL("https://datasets-server.huggingface.co/rows?dataset=$ds&amp;config=default&amp;split=train&amp;offset=0&amp;length=1")).rows[0].row }
+
+// --- the galaxy: gz10 stores a ready-made RGB PNG as base64 bytes ---
+galaxy = ImageIO.read(new ByteArrayInputStream(rows('UniverseTBD/mmu_gz10').rgb_image.bytes.decodeBase64()))
+
+// --- the spectrum: drop masked points, like s[~s["mask"]] in the video ---
+spec = rows('UniverseTBD/mmu_sdss_sdss').spectrum
+pts = [spec.'lambda', spec.flux, spec.mask].transpose().findAll { !it[2] }.collect { [it[0] as double, it[1] as double] }
+
+// --- a tiny Java2D line plot -&gt; a BufferedImage that /img renders ---
+spectrumPlot = { data -&gt;
+    int w = 820, h = 520
+    def img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
+    def g = img.createGraphics()
+    g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g.color = Color.WHITE; g.fillRect(0, 0, w, h)
+    int ml = 70, mr = 20, mt = 20, mb = 44, pw = w - ml - mr, ph = h - mt - mb
+    def xs = data*.get(0), ys = data*.get(1)
+    double xmin = xs.min(), xmax = xs.max(), ymin = ys.min(), ymax = ys.max()
+    def sx = { double x -&gt; ml + (x - xmin) / (xmax - xmin) * pw }
+    def sy = { double y -&gt; mt + (1 - (y - ymin) / (ymax - ymin)) * ph }
+    g.color = Color.BLACK
+    g.drawLine(ml, mt, ml, mt + ph); g.drawLine(ml, mt + ph, ml + pw, mt + ph)
+    g.font = g.font.deriveFont(11f)
+    (0..4).each { i -&gt;
+        double xv = xmin + (xmax - xmin) * i / 4; int px = sx(xv) as int
+        g.drawLine(px, mt + ph, px, mt + ph + 4); g.drawString(sprintf('%.1f', xv), px - 20, mt + ph + 20)
+        double yv = ymin + (ymax - ymin) * i / 4; int py = sy(yv) as int
+        g.drawLine(ml - 4, py, ml, py); g.drawString(sprintf('%.1f', yv), 8, py + 4)
+    }
+    g.color = Color.MAGENTA; g.stroke = new BasicStroke(1.1f)
+    def path = new Path2D.Double()
+    data.eachWithIndex { p, i -&gt; i == 0 ? path.moveTo(sx(p[0]), sy(p[1])) : path.lineTo(sx(p[0]), sy(p[1])) }
+    g.draw(path); g.dispose(); img
+}
+chart = spectrumPlot(pts)
+println "galaxy ${galaxy.width}x${galaxy.height}, spectrum ${pts.size()} pts -&gt; chart ${chart.width}x${chart.height}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A few things worth pointing out:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The whole data-access layer is a one-line closure. <code>JsonSlurper</code> parses the HTTP response, and
+Groovy&#8217;s GDK gives us <code>decodeBase64()</code> on the PNG string for free.</p>
+</li>
+<li>
+<p><code>transpose()</code> zips the three parallel arrays (<code>lambda</code>, <code>flux</code>, <code>mask</code>) together so we can
+<code>findAll</code> the unmasked samples in one readable expression.</p>
+</li>
+<li>
+<p>Note the <code>import module java.desktop</code> on line 3. This is a
+<a href="https://openjdk.org/jeps/494">JDK module import</a> (JEP 494), supported in Groovy 6, that pulls in every
+package the <code>java.desktop</code> module exports (<code>java.awt</code>, <code>java.awt.geom</code>, <code>java.awt.image</code>, and more) in
+a single line — handy for a script that reaches into a few AWT corners.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_it">Running it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start <code>groovysh</code>, load the script, and view each result with <code>/img</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>groovy> /load mmu.groovy
+galaxy 256x256, spectrum 3713 pts -> chart 820x520
+Loaded: mmu.groovy
+groovy> /img $galaxy
+groovy> /img $chart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here is the script itself, viewed through the shell&#8217;s built-in <code>/less</code> pager (which syntax-highlights
+Groovy):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/mmu-groovysh-source.png" alt="The mmu.groovy script in the groovysh pager" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>And here is the payoff — a galaxy and its spectrum, drawn directly in the terminal:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/mmu-groovysh-output.png" alt="groovysh rendering a galaxy image and its spectrum inline" width="600"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_are_we_looking_at">What are we looking at?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The top image is a single galaxy from the Galaxy Zoo / DECaLS set: a bright central bulge with
+fainter spiral structure around it, sitting in a field speckled with foreground stars and other
+faint sources (the little coloured dots). It is a true-colour composite assembled from the survey&#8217;s
+imaging bands.</p>
+</div>
+<div class="paragraph">
+<p>The lower plot is that same class of object&#8217;s SDSS optical spectrum: <strong>flux on the vertical axis
+against wavelength (in &#8491;ngstr&ouml;ms) on the horizontal axis</strong>, from about 3800&#8491; on the
+left to 9200&#8491; on the right. The characteristic shape — low and noisy in the blue, rising to a
+broad, fairly flat continuum toward the red — is the combined light of the galaxy&#8217;s stellar
+populations, with narrow spikes where emission lines and residual sky features poke through. We drew
+it in magenta to match the original demo; the thin black vertical hairs you can see are simply the
+plot connecting rapidly varying adjacent samples. We removed the flagged (`mask`ed) pixels first, so
+3713 good samples remain out of the original ~3850.</p>
+</div>
+<div class="paragraph">
+<p>The point isn&#8217;t the plot&#8217;s polish — it&#8217;s that a few lines of Groovy pulled a real galaxy and a real
+spectrum out of an 80TB, 30-survey collection, over plain HTTP, and painted them in a terminal, with
+no local data download and no heavyweight plotting dependency.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_we_didnt_reproduce">What we didn&#8217;t reproduce</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The original video&#8217;s headline feat is the <strong>cross-match</strong> itself — joining <code>gz10</code> (imagery) against
+<code>sdss</code> (spectra), or SDSS against Gaia, using LSDB&#8217;s HATS-partitioned catalogs. That machinery is
+Python-native and has no direct JVM equivalent, so here we simply grabbed a representative row from
+each dataset rather than computing the spatial join. Everything downstream of the match — decoding
+the image, cleaning the spectrum, and rendering both — is pure Groovy and the JDK.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_more_information">More information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The original post: <a href="https://x.com/cgeorgiaw">Georgia Channing on X</a></p>
+</li>
+<li>
+<p><a href="https://multimodaluniverse.org/">The Multimodal Universe</a> project and its
+<a href="https://github.com/MultimodalUniverse/MultimodalUniverse">GitHub repository</a></p>
+</li>
+<li>
+<p>Datasets on Hugging Face:
+<a href="https://huggingface.co/datasets/UniverseTBD/mmu_gz10">mmu_gz10</a> and
+<a href="https://huggingface.co/datasets/UniverseTBD/mmu_sdss_sdss">mmu_sdss_sdss</a></p>
+</li>
+<li>
+<p><a href="https://huggingface.co/docs/dataset-viewer">The Hugging Face dataset viewer REST API</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We used a viral astronomy demo as an excuse to show off <code>groovysh&#8217;s `/img</code> command, JDK module
+imports in Groovy 6, and just how little code it takes to reach into a massive scientific dataset and
+visualize it. Go discover some galaxies!</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
