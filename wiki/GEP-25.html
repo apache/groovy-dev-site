@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-25</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_the_annotations' class='anchor-link'>The annotations</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_a_worked_example_composing_with_another_checker' class='anchor-link'>A worked example — composing with another checker</a></li><li><a href='#_implementation' class='anchor-link'>Implementation</a></li><li><a href='#_prior_art' class='anchor-link'>Prior art</a></li><li><a href='#_forward_compatibility' class='anchor-link'>Forward compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_risks_maintenance_and_status' class='anchor-link'>Risks, maintenance, and status</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-25</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-25</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_shared_design' class='anchor-link'>Shared design</a></li><li><a href='#_deliverable_a_compile_time_taint_tracking_ingress' class='anchor-link'>Deliverable A — Compile-time taint tracking (ingress)</a></li><li><a href='#_deliverable_b_sensitive_data_redaction_egress' class='anchor-link'>Deliverable B — Sensitive-data redaction (egress)</a></li><li><a href='#_prior_art' class='anchor-link'>Prior art</a></li><li><a href='#_forward_compatibility' class='anchor-link'>Forward compatibility</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_risks_maintenance_and_status' class='anchor-link'>Risks, maintenance, and status</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-25</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -83,7 +83,7 @@
 <strong>Title</strong>
 </td>
 <td class="hdlist2">
-<p>Compile-time Taint Tracking (<code>@Tainted</code> / <code>@Untainted</code>)</p>
+<p>Data-flow Security — Taint Tracking and Sensitive-data Redaction</p>
 </td>
 </tr>
 <tr>
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-06-17</p>
+<p>2026-07-01</p>
 </td>
 </tr>
 </table>
@@ -152,13 +152,17 @@
 </td>
 <td class="content">
 <em>WARNING:</em>
-This proposal is an early <strong>placeholder</strong>. It stakes out a design and, more importantly, an
-annotation vocabulary, so that the syntax can be aligned in Groovy 6.x ahead of any implementation
-and so the community can gauge appetite. We are currently working on Groovy 6.0 and this proposal
-targets Groovy 7.0. A taint checker is only worth shipping if the project is comfortable with the
-ongoing maintenance it implies (see <em>Risks, maintenance, and status</em>); this draft is deliberately
-honest about that. We welcome feedback and discussion, but the details are not finalized and the
-feature may not proceed at all without committed maintainers.
+This proposal is an early <strong>placeholder</strong>. It stakes out a shared design and, more importantly, an
+annotation vocabulary, so that the syntax can be aligned in Groovy 6.x ahead of any implementation and
+so the community can gauge appetite. GEP-25 is an <strong>umbrella</strong>: it defines one data-flow security model
+and then specifies <strong>two independent deliverables</strong> that share that model — a compile-time <strong>taint checker</strong>
+(ingress) and a <strong>sensitive-data redaction</strong> transform (egress). The two are deliberately decoupled: they
+have opposite risk and maturity profiles and can ship on their own timelines. We are currently working
+on Groovy 6.0. The redaction deliverable is small and could land in a Groovy 6.x point release; the taint
+checker targets Groovy 7.0 and is only worth shipping if the project is comfortable with the ongoing
+maintenance it implies (see <em>Risks, maintenance, and status</em>). This draft is deliberately honest about
+that. We welcome feedback and discussion, but the details are not finalized and either deliverable may
+not proceed at all without committed maintainers.
 </td>
 </tr>
 </table>
@@ -172,27 +176,38 @@ feature may not proceed at all without committed maintainers.
 <h2 id="_abstract">Abstract</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This GEP proposes an optional, opt-in <code>@TypeChecked</code> extension — <code>TaintChecker</code> — that performs
-<strong>compile-time taint tracking</strong> over Groovy code, together with two type-qualifier annotations,
-<code>@Tainted</code> and <code>@Untainted</code>. It joins the existing family of pluggable checkers in the
-<code>groovy-typecheckers</code> module (<code>NullChecker</code>, <code>RegexChecker</code>, <code>FormatStringChecker</code>, <code>PurityChecker</code>,
-and the shape checkers <code>CombinerChecker</code> / <code>MonadicChecker</code>).</p>
+<p>This GEP proposes a single, coherent <strong>data-flow security</strong> model for Groovy — a small vocabulary of
+type-qualifier annotations attached to values, a shared registry of <strong>sinks</strong> (operations that are
+sensitive endpoints for a qualified value), and a shared set of design principles (opt-in, low-noise,
+honest about Groovy&#8217;s dynamism). On top of that shared model it specifies <strong>two deliverables that are
+designed together but shipped separately</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Deliverable A — Compile-time taint tracking (ingress).</strong> An opt-in <code>@TypeChecked</code> extension,
+<code>TaintChecker</code>, with the <code>@Tainted</code> / <code>@Untainted</code> qualifiers, that reports at compile time when
+<strong>untrusted</strong> data reaches a dangerous operation (SQL, shell, HTML, file path) without sanitization.
+This is the classic injection-prevention dataflow analysis. It joins the pluggable checker family in
+<code>groovy-typecheckers</code> (<code>NullChecker</code>, <code>RegexChecker</code>, <code>FormatStringChecker</code>, <code>PurityChecker</code>, and the
+shape checkers <code>CombinerChecker</code> / <code>MonadicChecker</code>). Targets Groovy 7.0.</p>
+</li>
+<li>
+<p><strong>Deliverable B — Sensitive-data redaction (egress).</strong> A small AST transform, driven by <code>@Redacted</code>
+(and the <code>@Sensitive</code> value qualifier), that masks <strong>sensitive</strong> fields (credentials, tokens, PII) when
+Groovy generates a value&#8217;s string form — <code>@ToString</code>, <code>@Canonical</code>, <code>@Immutable</code>, records — so secrets
+do not leak into logs and diagnostics. This is the <strong>dual</strong> of taint: instead of untrusted data flowing
+<strong>in</strong> to a dangerous operation, sensitive data flows <strong>out</strong> to an observation point. It is declarative,
+near-complete, and essentially free of false positives; it can land ahead of the taint checker.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Taint tracking is the classic security dataflow analysis: data originating from an <strong>untrusted source</strong>
-(request parameters, environment, files, deserialized input) is flagged as <code>@Tainted</code>, and the checker
-reports a compile error when tainted data reaches a <strong>sink</strong> that requires <code>@Untainted</code> data (a SQL
-query, a shell command, an HTML response, a file path) without first passing through a <strong>sanitizer</strong>.
-The whole analysis is a two-point lattice — <code>@Untainted &lt;: @Tainted</code> — which keeps it a fast, sound,
-solver-free dataflow pass rather than a heavyweight verification engine.</p>
-</div>
-<div class="paragraph">
-<p>Two design choices distinguish this from a straight port of existing Java taint checkers. First, the
-analysis is <strong>aware of Groovy&#8217;s own structural mechanisms</strong> — most notably <code>GString</code>, which already
-gives <code>groovy.sql.Sql</code> safe-by-construction, parameterized queries; the checker can recognize and
-reward that existing idiom rather than ignore it. Second, the <code>@Tainted</code> / <code>@Untainted</code> vocabulary is
-deliberately the <strong>two extremes of a security lattice</strong>, so it remains forward-compatible with richer,
-external information-flow tools without those tools needing their own annotations.</p>
+<p>The two directions are two halves of one picture: a <strong>security label on a value</strong>, a <strong>sink</strong> it must not
+reach unguarded, and a <strong>boundary</strong> (a sanitizer for taint, a mask for redaction) that makes it safe.
+Designing them under one vocabulary avoids two overlapping annotation systems that would later have to
+be reconciled, while shipping them separately keeps the cheap, low-risk win from being held hostage to
+the hard one.</p>
 </div>
 </div>
 </div>
@@ -200,66 +215,207 @@ external information-flow tools without those tools needing their own annotation
 <h2 id="_motivation">Motivation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Injection flaws (CWE-89 SQL injection, CWE-79 cross-site scripting, CWE-78 OS command injection,
-CWE-22 path traversal) remain perennially at the top of the OWASP Top Ten. They share one structure:
-untrusted data flows into a trusting operation without sanitization. That structure is exactly what
-taint analysis catches, and catching it <strong>at compile time</strong> — in the same pass as type checking, with
-the developer&#8217;s IDE underlining the offending flow — is materially cheaper than catching it in a
-separate SAST tool, a code review, or production.</p>
+<p>Two of the most common ways application code mishandles data are mirror images of each other, and both
+are dataflow problems:</p>
 </div>
-<div class="paragraph">
-<p>Groovy is a frequent host for precisely the code where this matters: build scripts, server-side web
-handlers (Grails, Micronaut, Ratpack, raw servlets), SQL via <code>groovy.sql.Sql</code>, markup via
-<code>MarkupBuilder</code> and template engines, and shell-outs via <code>"cmd".execute()</code>. A Groovy-native taint
-checker meets that code where it lives.</p>
-</div>
-<div class="paragraph">
-<p>The broader trajectory matters too. As AI-assisted security tooling — vulnerability detection,
-suggested fixes, automated pull requests — continues to gain momentum, a language that exposes a
-<strong>typed, machine-checkable</strong> taint substrate is far better positioned than one that offers only freeform
-source to reason about. An AI can propose <code>@Tainted</code> / <code>@Untainted</code> / sanitizer annotations; the
-compiler then <strong>verifies the resulting flow soundly</strong>. The model proposes, the checker disposes. That
-turns a probabilistic suggestion into a checked guarantee, and it gives AI-generated Groovy code a
-compile-time backstop against the injection bugs such code is prone to. Putting the substrate in place
-now is what lets Groovy ride those advances rather than retrofit them later.</p>
-</div>
-<div class="sect2">
-<h3 id="_design_principles">Design principles</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Opt-in and composable</strong> — like every other checker in the family, <code>TaintChecker</code> is enabled per
-class or per method via
-<code>@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])</code>, and composes with the other
-extensions on the same compile. Code that does not opt in is completely unaffected.</p>
+<p><strong>Injection (ingress).</strong> Untrusted data flows <strong>into</strong> a trusting operation without sanitization —
+CWE-89 SQL injection, CWE-79 cross-site scripting, CWE-78 OS command injection, CWE-22 path traversal.
+These sit perennially at the top of the OWASP Top Ten. Catching them <strong>at compile time</strong> — in the same
+pass as type checking, with the developer&#8217;s IDE underlining the offending flow — is materially cheaper
+than catching them in a separate SAST tool, a code review, or production.</p>
 </li>
 <li>
-<p><strong>Low-noise by default</strong> — a taint checker that cries wolf is uninstalled. The default qualifier is
-<code>@Untainted</code>; only <strong>known</strong> sources are <code>@Tainted</code> (via the shipped model library or user
-annotation), so a diagnostic fires only when data the checker <strong>knows</strong> is tainted reaches a sink.
-This trades a measure of soundness (an un-modeled source is missed) for trust, with a stricter,
-sound-by-default mode available behind a flag.</p>
+<p><strong>Secret leakage (egress).</strong> Sensitive data — passwords, API keys, tokens, PII — flows <strong>out</strong> into logs,
+stack traces, crash reports, and diagnostics, most often through an object&#8217;s auto-generated string
+form. A single <code>log.info("created $user")</code> or an exception carrying a populated DTO is enough to spill
+a credential into a log aggregator, in violation of the most basic secret-hygiene and privacy
+expectations. The fix is cheap and declarative — mask the sensitive fields at the point strings are
+generated — but only if the language makes it a one-annotation affair.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Groovy is a frequent host for precisely the code where both matter: build scripts, server-side web
+handlers (Grails, Micronaut, Ratpack, raw servlets), SQL via <code>groovy.sql.Sql</code>, markup via
+<code>MarkupBuilder</code> and template engines, shell-outs via <code>"cmd".execute()</code>, and the data-carrying classes
+(<code>@Canonical</code> / <code>@Immutable</code> DTOs, records) whose <code>toString()</code> Groovy itself generates. A Groovy-native
+data-flow security model meets that code where it lives.</p>
+</div>
+<div class="paragraph">
+<p>The broader trajectory matters too. As AI-assisted security tooling — vulnerability detection, suggested
+fixes, automated pull requests — continues to gain momentum, a language that exposes a <strong>typed,
+machine-checkable</strong> substrate for both taint and sensitivity is far better positioned than one that
+offers only freeform source to reason about. A model can propose <code>@Tainted</code> / <code>@Untainted</code> / <code>@Redacted</code>
+annotations; the compiler then <strong>verifies the resulting flow soundly</strong> or <strong>enforces the masking
+mechanically</strong>. The model proposes, the compiler disposes. Putting the substrate in place now is what
+lets Groovy ride those advances rather than retrofit them later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_shared_design">Shared design</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both deliverables rest on the same three ideas and the same principles. Fixing them once, here, is the
+reason GEP-25 is a single proposal rather than two.</p>
+</div>
+<div class="sect2">
+<h3 id="_one_model_two_directions">One model, two directions</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top"><strong>Ingress — taint (Deliverable A)</strong></th>
+<th class="tableblock halign-left valign-top"><strong>Egress — redaction (Deliverable B)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What the label means</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Provenance</strong>: is this value&#8217;s origin trusted? (<code>@Untainted</code>) or untrusted (<code>@Tainted</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Sensitivity</strong>: does this value&#8217;s content need protecting? (<code>@Sensitive</code> / <code>@Redacted</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direction of flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Untrusted data flows <strong>inward</strong> to a dangerous operation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sensitive data flows <strong>outward</strong> to an observation point</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">What a <strong>sink</strong> is</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A dangerous operation: <code>Sql.execute</code>, <code>Runtime.exec</code>, response writer, <code>Path</code> constructor</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An observation point: <code>toString</code>, <code>dump</code>, <code>inspect</code>, GString interpolation, JSON output, a logger</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The <strong>boundary</strong> that makes it safe</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <strong>sanitizer</strong> (<code>escapeHtml</code>) that returns <code>@Untainted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A <strong>mask</strong> (<code><strong>*</strong></code>) substituted at the egress sink</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enforcement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Verify</strong> — report a compile error; the developer must fix the flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Transform</strong> — rewrite the generated string form so the value is masked at runtime</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Completeness</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Best-effort (Groovy is dynamic); loud where it cannot follow a flow</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Near-complete for the string-generation sinks it owns; declarative, no inference</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The one structural difference worth stating up front: <strong>taint is a verification pass</strong> (it changes no
+runtime behavior; it either compiles or reports), whereas <strong>redaction is a code-generation transform</strong>
+(it changes the string a value produces at runtime). That is why they are different mechanisms in
+different modules — <code>TaintChecker</code> is a type-checking extension, redaction is an AST transform in the
+<code>@ToString</code> family — even though they share vocabulary and a sink registry. It is also why redaction can
+be near-complete while taint cannot: a local transform owns all the string-generation sinks it targets,
+whereas whole-program taint tracking runs into Groovy&#8217;s dynamic dispatch.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_vocabulary">Shared vocabulary</h3>
+<div class="paragraph">
+<p>The labels are the <strong>extremes of security lattices</strong>, kept deliberately minimal so richer external tools
+can reuse them without their own annotations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Annotation</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Tainted</code> / <code>@Untainted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trust lattice, <code>@Untainted &lt;: @Tainted</code>. Used by Deliverable A. (<code>@PolyTainted</code> expresses
+ pass-through; see Deliverable A.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sensitive</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sensitivity qualifier: this value carries data that must not appear unmasked at an egress sink. The
+ dual of <code>@Tainted</code>. Default is non-sensitive.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Redacted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The field/property-level form used by Deliverable B: it marks the property&#8217;s value <code>@Sensitive</code> <strong>and</strong>
+ instructs the string-generation transforms to mask it. In the common case this is the only annotation a
+ user writes for redaction.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Role is determined by position, not by a separate <code>@Source</code> / <code>@Sink</code> / <code>@Sanitizer</code> vocabulary: a
+<code>@Tainted</code> return is a source, an <code>@Untainted</code> parameter is a sink, an <code>@Untainted</code> return that accepts
+<code>@Tainted</code> input is a sanitizer. See Deliverable A for the full table.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_sink_registry_and_model_library">Shared sink registry and model library</h3>
+<div class="paragraph">
+<p>Both deliverables draw on one curated <strong>model library</strong>: qualifier annotations (or external stub files)
+for the JDK and common Groovy/Java libraries. The registry has two kinds of entry, and some entries
+serve both deliverables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Dangerous-operation sinks</strong> (<code>Statement</code>, <code>Runtime.exec</code> / <code>ProcessBuilder</code>, <code>Files</code> / <code>Path</code>
+constructors, response writers, <code>MarkupBuilder</code> raw sinks) — consumed by the taint checker.</p>
 </li>
 <li>
-<p><strong>Two annotations, role by position</strong> — <code>@Tainted</code> and <code>@Untainted</code> are the entire surface. A source
-is a <code>@Tainted</code> return; a sink is an <code>@Untainted</code> parameter; a sanitizer is an <code>@Untainted</code> return
-that accepts <code>@Tainted</code> input. There is no separate <code>@Source</code> / <code>@Sink</code> / <code>@Sanitizer</code> vocabulary
-and no lattice-configuration machinery — a two-point order needs none.</p>
+<p><strong>Egress / observation sinks</strong> (<code>toString</code>, <code>Object.dump</code>, <code>inspect</code>, <code>InvokerHelper.toString</code>,
+<code>JsonOutput</code> / <code>JsonBuilder</code>, GString interpolation, common logging facades) — the points at which a
+<code>@Sensitive</code> value leaks. Deliverable B owns the <strong>string-generation</strong> subset and masks there; the same
+set lets a strict-mode taint pass <strong>warn</strong> when a <code>@Sensitive</code> value reaches an egress sink that does not
+mask (for example a raw <code>log.info("$user")</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The accuracy and currency of this library, not the propagation engine, is the bulk of the work and the
+bulk of the ongoing maintenance. Sharing it across both deliverables is a further argument for one GEP.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_shared_principles">Shared principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Opt-in and composable</strong> — nothing here changes the behavior of code that does not ask for it. The
+taint checker runs only where its extension is enabled; redaction runs only on classes carrying
+<code>@Redacted</code>. Both compose with the rest of Groovy&#8217;s checker and transform machinery.</p>
 </li>
 <li>
-<p><strong>Reward existing Groovy safety</strong> — Groovy already has safe-by-construction idioms (GString-based
-parameterized SQL, escaping builders). The checker recognizes these as built-in sanitizing sinks
-rather than forcing developers to annotate around them.</p>
+<p><strong>Low-noise / near-zero false positives</strong> — a security tool that cries wolf is uninstalled. Deliverable
+A leans on an optimistic default and GString-awareness to stay quiet (see there); Deliverable B is
+<strong>declarative</strong> — you annotate a field, that field is masked, done — so it has essentially no false
+positives at all.</p>
 </li>
 <li>
 <p><strong>Honest scope, loud where it must skip</strong> — Groovy&#8217;s dynamic dispatch cannot always be tracked
-statically. Where the checker cannot follow a flow it says so (a "flow not tracked" note) rather
-than silently passing or silently failing, mirroring the honesty of the sibling checkers.</p>
+statically. Where a flow cannot be followed, the tooling says so rather than silently passing or
+failing. Annotations remain meaningful <strong>as executable contracts</strong> even where static flow is not tracked,
+which is what lets a <strong>runtime fallback</strong> (a checked-at-runtime enforcement mode) cover the dynamic gaps
+that a Scala-style pure-compile-time model would simply miss.</p>
 </li>
 <li>
-<p><strong>Forward-compatible vocabulary</strong> — <code>@Tainted</code> / <code>@Untainted</code> are the top and bottom of a security
-lattice. Richer external analyses can consume the same annotations as the extremes of a finer
-ordering, so annotating for <code>TaintChecker</code> is never wasted effort.</p>
+<p><strong>Forward-compatible vocabulary</strong> — <code>@Tainted</code> / <code>@Untainted</code> / <code>@Sensitive</code> are lattice extremes.
+Richer external analyses (multi-level lattices, value-dependent labels, SMT-backed declassification)
+can consume the same annotations as the extremes of a finer ordering, so annotating for GEP-25 is never
+wasted effort, and AI-assisted tooling has a single, stable substrate to target.</p>
 </li>
 </ul>
 </div>
@@ -267,8 +423,25 @@ ordering, so annotating for <code>TaintChecker</code> is never wasted effort.</p
 </div>
 </div>
 <div class="sect1">
-<h2 id="_the_annotations">The annotations</h2>
+<h2 id="_deliverable_a_compile_time_taint_tracking_ingress">Deliverable A — Compile-time taint tracking (ingress)</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>An optional, opt-in <code>@TypeChecked</code> extension, <code>TaintChecker</code>, with the <code>@Tainted</code> and <code>@Untainted</code>
+type-qualifier annotations. Data originating from an <strong>untrusted source</strong> is flagged <code>@Tainted</code>; the
+checker reports a compile error when tainted data reaches a <strong>sink</strong> that requires <code>@Untainted</code> data without
+first passing through a <strong>sanitizer</strong>. The analysis is a two-point lattice — <code>@Untainted &lt;: @Tainted</code> —
+which keeps it a fast, sound, solver-free dataflow pass rather than a heavyweight verification engine.</p>
+</div>
+<div class="paragraph">
+<p>Two design choices distinguish this from a straight port of existing Java taint checkers. First, the
+analysis is <strong>aware of Groovy&#8217;s own structural mechanisms</strong> — most notably <code>GString</code>, which already gives
+<code>groovy.sql.Sql</code> safe-by-construction, parameterized queries; the checker recognizes and rewards that
+idiom rather than ignoring it. Second, the <code>@Tainted</code> / <code>@Untainted</code> vocabulary is deliberately the two
+extremes of a security lattice (see <em>Shared design</em>), so it remains forward-compatible with richer,
+external information-flow tools.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_annotations">The annotations</h3>
 <div class="paragraph">
 <p>Two annotations, usable in <code>TYPE_USE</code> position (and on methods, parameters, and fields):</p>
 </div>
@@ -319,15 +492,10 @@ entirely by where it appears:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>This is the whole model. There is no separate declassifier annotation: an <code>@Untainted</code> return <strong>is</strong> the
-declassification, because in a two-point world there is only one direction worth naming
-(tainted → untainted).</p>
+<p>There is no separate declassifier annotation: an <code>@Untainted</code> return <strong>is</strong> the declassification, because
+in a two-point world there is only one direction worth naming (tainted → untainted).</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_features">Features</h2>
-<div class="sectionbody">
 <div class="sect2">
 <h3 id="_sources_sinks_and_the_basic_flow">Sources, sinks, and the basic flow</h3>
 <div class="listingblock">
@@ -360,8 +528,8 @@ data from Handler.userName (a @Tainted source) flows here without sanitization</
 <div class="sect2">
 <h3 id="_sanitizers_the_only_declassification_needed">Sanitizers (the only declassification needed)</h3>
 <div class="paragraph">
-<p>A method whose return is <code>@Untainted</code> launders taint — the checker trusts the annotation and treats
-the result as untainted regardless of input:</p>
+<p>A method whose return is <code>@Untainted</code> launders taint — the checker trusts the annotation and treats the
+result as untainted regardless of input:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -373,8 +541,8 @@ void render(Writer out, @Tainted String comment) {
 </div>
 </div>
 <div class="paragraph">
-<p>For the rare audited-inline case — "I have validated this value by other means" — an explicit,
-greppable suppression is provided rather than a silent cast:</p>
+<p>For the rare audited-inline case — "I have validated this value by other means" — an explicit, greppable
+suppression is provided rather than a silent cast:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -383,8 +551,8 @@ greppable suppression is provided rather than a silent cast:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>Suppressions are the audit trail: a security reviewer greps <code>groovy.taint</code> to find every point where
-a human overrode the analysis, exactly as <code>Declassify</code>-style markers serve in richer tools.</p>
+<p>Suppressions are the audit trail: a security reviewer greps <code>groovy.taint</code> to find every point where a
+human overrode the analysis.</p>
 </div>
 </div>
 <div class="sect2">
@@ -392,8 +560,8 @@ a human overrode the analysis, exactly as <code>Declassify</code>-style markers 
 <div class="paragraph">
 <p>Taint propagates through the expression grammar: assignment, string concatenation and <code>GString</code>
 interpolation (see below), arithmetic, and method calls (a value derived from tainted arguments is
-tainted unless the callee declares an <code>@Untainted</code> return). The analysis is <strong>flow-sensitive</strong>: a
-variable may be tainted at one program point and untainted at a later one after sanitization —</p>
+tainted unless the callee declares an <code>@Untainted</code> return). The analysis is <strong>flow-sensitive</strong>: a variable
+may be tainted at one program point and untainted at a later one after sanitization —</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -405,17 +573,16 @@ sink(x)                 // OK</code></pre>
 </div>
 <div class="paragraph">
 <p>— but it is not <strong>value-dependent</strong>: a value&#8217;s qualifier never depends on the runtime value of <strong>other</strong>
-state. That is the property that keeps the analysis a boolean dataflow pass with no solver. (It is
-also the natural boundary at which a deeper, external tool would take over; see <em>Forward
-compatibility</em>.)</p>
+state. That is the property that keeps the analysis a boolean dataflow pass with no solver, and it is the
+natural boundary at which a deeper external tool would take over (see <em>Shared design</em>).</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_pass_through_methods_and_polymorphism">Pass-through methods and polymorphism</h3>
 <div class="paragraph">
 <p>Many methods neither taint nor sanitize — <code>String.trim()</code>, <code>.toLowerCase()</code>, <code>.substring(int)</code> — they
-pass taint through. Annotating these <code>@Untainted</code> would leak; annotating them <code>@Tainted</code> would over-
-report. A third, <strong>polymorphic</strong> qualifier, <code>@PolyTainted</code>, expresses "the result&#8217;s taint matches the
+pass taint through. Annotating these <code>@Untainted</code> would leak; annotating them <code>@Tainted</code> would
+over-report. A third, <strong>polymorphic</strong> qualifier, <code>@PolyTainted</code>, expresses "the result&#8217;s taint matches the
 receiver/argument&#8217;s taint":</p>
 </div>
 <div class="listingblock">
@@ -424,9 +591,9 @@ receiver/argument&#8217;s taint":</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code>@PolyTainted</code> is what makes the model library for the JDK&#8217;s string API usable. It is part of the
-design but is presented as a refinement: a first cut can model pass-through methods conservatively
-(propagate taint) and add <code>@PolyTainted</code> where over-reporting proves painful.</p>
+<p><code>@PolyTainted</code> is what makes the model library for the JDK&#8217;s string API usable. It is part of the design
+but is presented as a refinement: a first cut can model pass-through methods conservatively (propagate
+taint) and add <code>@PolyTainted</code> where over-reporting proves painful.</p>
 </div>
 </div>
 <div class="sect2">
@@ -436,10 +603,10 @@ design but is presented as a refinement: a first cut can model pass-through meth
 should reward that rather than ignore it. The headline case is <code>GString</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>groovy.sql.Sql</code> special-cases <code>GString</code> arguments: a query written as an interpolated string is
-compiled to a parameterized <code>PreparedStatement</code>, with the interpolated values bound as parameters
-rather than concatenated into SQL. The <strong>type</strong> of the argument — <code>GString</code> versus <code>String</code> — already
-distinguishes the safe path from the dangerous one:</p>
+<p><code>groovy.sql.Sql</code> special-cases <code>GString</code> arguments: a query written as an interpolated string is compiled
+to a parameterized <code>PreparedStatement</code>, with the interpolated values bound as parameters rather than
+concatenated into SQL. The <strong>type</strong> of the argument — <code>GString</code> versus <code>String</code> — already distinguishes the
+safe path from the dangerous one:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -449,13 +616,12 @@ sql.execute('SELECT * FROM users WHERE name = ' + name)   // String   -&gt; conc
 </div>
 <div class="paragraph">
 <p><code>TaintChecker</code> recognizes the GString-accepting <code>Sql</code> methods as <strong>built-in sanitizing sinks</strong>: the
-interpolated holes become bound parameters, so tainted values inside a GString destined for such a
-sink are safe, while the same data <strong>flattened</strong> into a <code>String</code> (via concatenation or <code>.toString()</code>)
-and passed to the raw-<code>String</code> overload is reported. This generalizes: a <code>GString</code> carries its
-structure (fixed fragments versus interpolated values), and APIs that consume that structure
-(parameterized queries, attribute-escaping builders) are inherently safer than their flat-<code>String</code>
-equivalents. The checker can be taught these GString-aware APIs out of the box, retrofitting taint
-semantics onto idioms Groovy developers already use — no new annotations on user code required.</p>
+interpolated holes become bound parameters, so tainted values inside a GString destined for such a sink
+are safe, while the same data <strong>flattened</strong> into a <code>String</code> (via concatenation or <code>.toString()</code>) and passed
+to the raw-<code>String</code> overload is reported. This generalizes: a <code>GString</code> carries its structure (fixed
+fragments versus interpolated values), and APIs that consume that structure (parameterized queries,
+attribute-escaping builders) are inherently safer than their flat-<code>String</code> equivalents. The checker can
+be taught these GString-aware APIs out of the box — no new annotations on user code required.</p>
 </div>
 <div class="paragraph">
 <p>This is a distinctively Groovy advantage: the language&#8217;s structured-string type gives the checker a
@@ -465,22 +631,20 @@ ready-made, zero-annotation safety boundary that a <code>String</code>-only lang
 <div class="sect2">
 <h3 id="_defaulting_and_the_soundness_noise_trade_off">Defaulting and the soundness / noise trade-off</h3>
 <div class="paragraph">
-<p>The default qualifier is <code>@Untainted</code>. String and character literals are untainted; unannotated
-locals, parameters, fields, and returns default untainted; the shipped <strong>model library</strong> marks known
-external-input APIs <code>@Tainted</code> and known dangerous APIs as <code>@Untainted</code>-requiring sinks. The
-consequence is explicit and worth stating plainly:</p>
+<p>The default qualifier is <code>@Untainted</code>. String and character literals are untainted; unannotated locals,
+parameters, fields, and returns default untainted; the shipped model library marks known external-input
+APIs <code>@Tainted</code> and known dangerous APIs as <code>@Untainted</code>-requiring sinks. The consequence is explicit:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Optimistic default (proposed)</strong> — low false-positive rate; a diagnostic fires only for flows the
-checker has been told about. The cost is potential <strong>false negatives</strong>: an un-modeled source is
-treated as untainted and its flows are missed.</p>
+<p><strong>Optimistic default (proposed)</strong> — low false-positive rate; a diagnostic fires only for flows the checker
+has been told about. The cost is potential <strong>false negatives</strong>: an un-modeled source is treated as
+untainted and its flows are missed.</p>
 </li>
 <li>
-<p><strong>Strict mode (flag)</strong> — external inputs (and, optionally, all unannotated boundaries) default
-<code>@Tainted</code>. Sound, but noisier; appropriate for security-critical code that accepts the annotation
-burden.</p>
+<p><strong>Strict mode (flag)</strong> — external inputs (and, optionally, all unannotated boundaries) default <code>@Tainted</code>.
+Sound, but noisier; appropriate for security-critical code that accepts the annotation burden.</p>
 </li>
 </ul>
 </div>
@@ -490,22 +654,23 @@ reputation for trustworthiness (see <em>Risks</em>).</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_scope_and_limitations">Scope and limitations</h3>
+<h3 id="_scope_and_limitations_deliverable_a">Scope and limitations (Deliverable A)</h3>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Intraprocedural plus same-unit interprocedural</strong> — flows are tracked within a method and across
-calls whose callee is resolvable at compile time (same compilation unit, or modeled in the
-library). Whole-program, cross-jar taint is out of scope for a type-checker extension.</p>
+<p><strong>Intraprocedural plus same-unit interprocedural</strong> — flows are tracked within a method and across calls
+whose callee is resolvable at compile time (same compilation unit, or modeled in the library).
+Whole-program, cross-jar taint is out of scope for a type-checker extension.</p>
 </li>
 <li>
-<p><strong>Dynamic dispatch</strong> — a call whose target cannot be resolved statically yields a loud "flow not
-tracked" note rather than a silent verdict.</p>
+<p><strong>Dynamic dispatch</strong> — a call whose target cannot be resolved statically yields a loud "flow not tracked"
+note rather than a silent verdict. (This is also where the shared <strong>runtime-fallback</strong> stance matters:
+the annotations remain contracts a runtime check can enforce.)</p>
 </li>
 <li>
-<p><strong>Explicit flows only (initially)</strong> — implicit flows (taint induced by branching on tainted data) are
-not tracked in the first version; they are a well-known source of noise and are deferred to an
-opt-in mode. Most real injection bugs are explicit flows.</p>
+<p><strong>Explicit flows only (initially)</strong> — implicit flows (taint induced by branching on tainted data) are not
+tracked in the first version; they are a well-known source of noise and are deferred to an opt-in mode.
+Most real injection bugs are explicit flows.</p>
 </li>
 <li>
 <p><strong>Collections are coarse</strong> — a container is tracked with a single taint bit rather than per-element;
@@ -514,11 +679,8 @@ per-element precision is value-dependent and is exactly the boundary handed off 
 </ul>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_a_worked_example_composing_with_another_checker">A worked example — composing with another checker</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_a_worked_example_composing_with_another_checker">A worked example — composing with another checker</h3>
 <div class="paragraph">
 <p>The value of the checker family is that several run on one compile, each on its own concern:</p>
 </div>
@@ -542,17 +704,15 @@ class Comments {
 </div>
 </div>
 <div class="paragraph">
-<p><strong>NullChecker</strong> verifies the request is non-null; <strong>TaintChecker</strong> verifies no tainted comment reaches
-the database or the page. Distinct concerns, distinct error channels, one compile.</p>
+<p><strong>NullChecker</strong> verifies the request is non-null; <strong>TaintChecker</strong> verifies no tainted comment reaches the
+database or the page. Distinct concerns, distinct error channels, one compile.</p>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_implementation">Implementation</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_implementation_deliverable_a">Implementation (Deliverable A)</h3>
 <div class="paragraph">
-<p><code>TaintChecker</code> is a <code>org.codehaus.groovy.transform.stc.TypeCheckingExtension</code> (the same SPI as the
-other checkers). During type checking it:</p>
+<p><code>TaintChecker</code> is a <code>org.codehaus.groovy.transform.stc.TypeCheckingExtension</code> (the same SPI as the other
+checkers). During type checking it:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -560,12 +720,12 @@ other checkers). During type checking it:</p>
 <p>assigns each expression a taint qualifier, propagating along the dataflow rules above;</p>
 </li>
 <li>
-<p>reads <code>@Tainted</code> / <code>@Untainted</code> / <code>@PolyTainted</code> on declarations, and the shipped model library, to
-fix qualifiers at boundaries;</p>
+<p>reads <code>@Tainted</code> / <code>@Untainted</code> / <code>@PolyTainted</code> on declarations, and the shipped model library, to fix
+qualifiers at boundaries;</p>
 </li>
 <li>
-<p>checks assignments to <code>@Untainted</code> targets and arguments at <code>@Untainted</code> parameters, reporting a
-flow that delivers tainted data;</p>
+<p>checks assignments to <code>@Untainted</code> targets and arguments at <code>@Untainted</code> parameters, reporting a flow
+that delivers tainted data;</p>
 </li>
 <li>
 <p>recognizes the GString-aware safe sinks (e.g. <code>groovy.sql.Sql</code>) as built-in sanitizers.</p>
@@ -573,13 +733,178 @@ flow that delivers tainted data;</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>The non-trivial deliverable is the <strong>model library</strong>: a curated set of qualifier annotations (or external
-stub files) for the JDK and common Groovy/Java libraries — sources (<code>HttpServletRequest</code>,
-<code>System.getenv</code>, <code>Files.readString</code>, <code>Scanner</code>, deserialization), sinks (<code>Statement</code>,
-<code>Runtime.exec</code>/<code>ProcessBuilder</code>, <code>Files</code>/<code>Path</code> constructors, response writers, <code>MarkupBuilder</code> raw
-sinks), sanitizers, and <code>@PolyTainted</code> pass-through string methods. The accuracy and currency of this
-library, not the propagation engine, is the bulk of the work — and the bulk of the ongoing
-maintenance.</p>
+<p>The non-trivial deliverable is the shared <strong>model library</strong> (see <em>Shared design</em>): the dangerous-operation
+sinks, sources, sanitizers, and <code>@PolyTainted</code> pass-through string methods. Its accuracy and currency,
+not the propagation engine, is the bulk of the work and of the ongoing maintenance.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_deliverable_b_sensitive_data_redaction_egress">Deliverable B — Sensitive-data redaction (egress)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A small AST transform that masks <strong>sensitive</strong> fields when Groovy generates a value&#8217;s string form, so
+credentials, tokens, and PII do not leak into logs, stack traces, and diagnostics. Where Deliverable A
+<strong>verifies</strong> that untrusted data never reaches a dangerous operation, Deliverable B <strong>transforms</strong> the
+generated string form so sensitive data never appears unmasked at an observation point. It is
+declarative, has essentially no false positives, and — because Groovy already owns the machinery that
+generates string forms — is cheap enough to ship ahead of the taint checker.</p>
+</div>
+<div class="sect2">
+<h3 id="_why_groovy_is_well_placed_for_this">Why Groovy is well placed for this</h3>
+<div class="paragraph">
+<p>The Scala <code>redacted</code> library needs a whole compiler plugin to do this, because Scala does not expose
+<code>toString</code> generation as a user-facing annotation. Groovy already generates <code>toString()</code> (and friends)
+through the <code>@ToString</code>, <code>@Canonical</code>, <code>@Immutable</code>, and record machinery. Adding a per-field mask is a
+small, self-contained extension to transforms that already exist — no new compiler pass, no plugin.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_annotations_2">The annotations</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package groovy.transform        // package tentative
+
+// Field / property level: mark sensitive AND request masking in generated string forms.
+@Documented @Retention(RUNTIME) @Target([FIELD, METHOD /* property */])
+@interface Redacted {
+    String value() default '***'      // the mask; e.g. '***' or '&lt;redacted&gt;'
+}
+
+// Value qualifier (shared vocabulary): this value must not appear unmasked at an egress sink.
+@Documented @Retention(RUNTIME) @Target([TYPE_USE, METHOD, PARAMETER, FIELD, LOCAL_VARIABLE])
+@interface Sensitive {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the common case a user writes only <code>@Redacted</code> on the sensitive property. <code>@Sensitive</code> is the
+underlying value qualifier (the dual of <code>@Tainted</code>) that the shared sink registry understands; <code>@Redacted</code>
+implies it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_basic_behavior">The basic behavior</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Canonical
+class Credentials {
+    String username
+    @Redacted String password
+    @Redacted('&lt;hidden&gt;') String apiKey
+}
+
+new Credentials('alice', 's3cr3t', 'ak_live_123').toString()
+// =&gt; Credentials(alice, ***, &lt;hidden&gt;)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The transform substitutes the mask for the field&#8217;s value in the <strong>generated</strong> <code>toString()</code> only. It does
+<strong>not</strong> touch the field&#8217;s real value: direct property access, <code>equals</code> / <code>hashCode</code>, serialization, and all
+business logic see the true value. This mirrors the one principle that makes Scala <code>redacted</code> safe to
+adopt — redaction is about <strong>observation</strong>, never about the data itself — while keeping the escape hatch
+obvious: if you need the real value, you read the property.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_egress_sinks_covered">Egress sinks covered</h3>
+<div class="paragraph">
+<p>Scala <code>redacted</code> covers only case-class <code>toString()</code>. Real leaks in Groovy escape through more doors, and
+Deliverable B should cover the ones Groovy itself generates or controls:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Egress point</th>
+<th class="tableblock halign-left valign-top">First cut</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@ToString</code> / <code>@Canonical</code> / <code>@Immutable</code> / record <code>toString()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The transform owns this code; masking is a direct edit to the generated method</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Object.dump()</code>, <code>inspect()</code>, <code>InvokerHelper.toString</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (where Groovy generates the rendering)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The default renderers Groovy provides for objects and collections</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GString interpolation of a redacted-bearing object — <code>"$creds"</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes (via that object&#8217;s masked <code>toString</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interpolating the <strong>object</strong> uses its masked <code>toString</code>; interpolating the raw <code>password</code> property cannot
+ be masked and is a candidate for a strict-mode <strong>warning</strong> (see below)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>JsonOutput</code> / <code>JsonBuilder</code>, other serializers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred / opt-in</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serialization is sometimes legitimately meant to carry the value; masking here needs an explicit opt-in
+ to avoid surprising round-trips</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hand-written <code>toString()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not covered</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If a class writes its own <code>toString</code>, the transform does not rewrite it (same limitation as Scala
+ <code>redacted</code>); the class author is responsible. A lint note may flag a <code>@Redacted</code> field whose class has a
+ hand-written <code>toString</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The honest statement of that last row matters: like the taint checker, redaction is loud about what it
+does not cover rather than implying completeness.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_relationship_to_deliverable_a">Relationship to Deliverable A</h3>
+<div class="paragraph">
+<p>The two deliverables meet at the <strong>shared sink registry</strong>. A <code>@Redacted</code> field&#8217;s value is <code>@Sensitive</code>; the
+egress / observation sinks in the registry are the points where a <code>@Sensitive</code> value leaks. Redaction
+<strong>masks</strong> at the string-generation sinks it owns. A strict-mode taint-style pass can <strong>additionally</strong> use the
+same registry to <strong>warn</strong> when a <code>@Sensitive</code> value reaches an egress sink that does not mask — for example
+a raw <code>log.info("password=$password")</code> that interpolates the property directly rather than the object.
+That composition is available precisely because both deliverables share one vocabulary and one registry;
+neither requires the other to ship.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scope_and_limitations_deliverable_b">Scope and limitations (Deliverable B)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Groovy-generated string forms only</strong> — the transform edits code Groovy generates. Hand-written
+<code>toString</code> and third-party renderers are out of scope (a lint note is the most it offers there).</p>
+</li>
+<li>
+<p><strong>No dataflow required</strong> — redaction is purely declarative and local to the annotated class, which is why
+it has no false positives and can be near-complete for the sinks it owns. It does <strong>not</strong> attempt to track
+a sensitive value as it is copied into other objects; that is the (harder, deferred) <code>@Sensitive</code>
+<strong>flow</strong> problem, and is the boundary at which the shared registry and a future strict pass take over.</p>
+</li>
+<li>
+<p><strong>Masking is not encryption</strong> — the value still lives in memory and in any output the transform does not
+own. Redaction reduces accidental leakage; it is not a data-at-rest control.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementation_deliverable_b">Implementation (Deliverable B)</h3>
+<div class="paragraph">
+<p>An AST transform in the <code>@ToString</code> family. When a class carries a generated string form and one or more
+<code>@Redacted</code> properties, the transform emits the mask literal in place of the property&#8217;s value expression
+in the generated <code>toString()</code> (and the other Groovy-owned renderers it is taught). It leaves <code>equals</code>,
+<code>hashCode</code>, property accessors, and constructors untouched. Because the annotation is <code>RUNTIME</code>-retained,
+it is also available to any renderer that wishes to honor it reflectively (a hook for third-party
+libraries and for the strict-mode egress warning).</p>
+</div>
 </div>
 </div>
 </div>
@@ -603,13 +928,19 @@ maintenance.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Checker Framework — Tainting Checker (Java)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pluggable type qualifiers <code>@Tainted</code>/<code>@Untainted</code>/<code>@PolyTainted</code>, compile-time, sound</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closest analogue; this proposal adapts the same two-point model to a Groovy <code>@TypeChecked</code> extension
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closest analogue for Deliverable A; adapts the same two-point model to a Groovy <code>@TypeChecked</code> extension
  and adds GString-awareness</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Ballerina taint analysis</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Built-in <code>tainted</code>/<code>untainted</code> with compiler-enforced flow</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Demonstrates a mainstream language shipping taint checking as a first-class, low-ceremony feature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Scala <code>polentino/redacted</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compiler plugin rewriting case-class <code>toString()</code> to mask <code>@redacted</code> fields</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Direct analogue for Deliverable B. Groovy achieves the same via its existing <code>@ToString</code>-family
+ transforms (no plugin), and extends coverage beyond <code>toString</code> to Groovy&#8217;s other generated egress points</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FindSecBugs / SpotBugs, SonarQube</p></td>
@@ -624,7 +955,7 @@ maintenance.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OWASP ESAPI, encoder libraries</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Runtime sanitizers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The sanitizers this checker&#8217;s annotations would mark; the checker enforces that they are <strong>called</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The sanitizers Deliverable A&#8217;s annotations would mark; the checker enforces that they are <strong>called</strong></p></td>
 </tr>
 </tbody>
 </table>
@@ -634,26 +965,22 @@ maintenance.</p>
 <h2 id="_forward_compatibility">Forward compatibility</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The <code>@Tainted</code> / <code>@Untainted</code> qualifiers are the bottom and top of a security lattice. This keeps the
-vocabulary deliberately open-ended:</p>
+<p>The <code>@Tainted</code> / <code>@Untainted</code> / <code>@Sensitive</code> qualifiers are the extremes of security lattices. This keeps
+the vocabulary open-ended:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p><strong>Richer information-flow tools</strong> — an external analysis offering multi-level lattices, value-dependent
 labels, or proof-backed declassification (for example an SMT-backed verifier such as <code>groovy-verify</code>)
-can consume the <strong>same</strong> <code>@Tainted</code> / <code>@Untainted</code> annotations as the extremes of a finer ordering.
-Code annotated for <code>TaintChecker</code> therefore remains meaningful to a deeper analysis with no
-re-annotation, and the two compose cleanly — the cheap checker covers all opted-in code, the deeper
-tool adds precision and proof where it reaches. This GEP does not depend on any such tool and does
-not specify their internals; it simply avoids closing the door on them.</p>
+can consume the <strong>same</strong> annotations as the extremes of a finer ordering. Code annotated for GEP-25
+remains meaningful to a deeper analysis with no re-annotation, and the two compose cleanly.</p>
 </li>
 <li>
-<p><strong>AI-assisted security</strong> — as automated vulnerability detection and repair mature, the annotation layer
-is the natural integration point: a tool (or model) proposes source/sink/sanitizer annotations, and
-the compiler turns those proposals into <strong>checked</strong> guarantees rather than unverified suggestions.
-Shipping the substrate positions Groovy to gain security posture from that ecosystem as it develops,
-and to give AI-generated Groovy a compile-time injection backstop.</p>
+<p><strong>AI-assisted security</strong> — as automated vulnerability detection and repair mature, the annotation layer is
+the natural integration point: a tool (or model) proposes source / sink / sanitizer / redaction
+annotations, and the compiler turns those proposals into <strong>checked</strong> guarantees (Deliverable A) or
+<strong>enforced</strong> masking (Deliverable B) rather than unverified suggestions.</p>
 </li>
 </ul>
 </div>
@@ -692,17 +1019,28 @@ and to give AI-generated Groovy a compile-time injection backstop.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Out of scope for a type-checker extension; CodeQL/Semgrep territory</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Sensitive</code> <strong>flow</strong> tracking (sensitive value copied across objects)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The harder egress counterpart to taint flow; Deliverable B masks at generated sinks without it</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Redaction of serializers (JSON/XML) and hand-written <code>toString</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred / out of scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serialization may legitimately carry the value (needs opt-in); hand-written renderers are the author&#8217;s
+ responsibility (lint note only)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Configurable multi-level lattices</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned (here)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A two-point checker needs none; multi-level is left to external tools sharing the vocabulary</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Two-point checkers need none; multi-level is left to external tools sharing the vocabulary</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@PolyTainted</code> polymorphism</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Refinement</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Part of the design; a first cut may model pass-through methods conservatively and add it incrementally</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Part of Deliverable A; a first cut may model pass-through methods conservatively and add it incrementally</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Strict (sound-by-default) mode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Strict (sound-by-default) mode; strict egress warnings</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Behind a flag</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Available for security-critical code that accepts the annotation burden</p></td>
 </tr>
@@ -716,30 +1054,34 @@ and to give AI-generated Groovy a compile-time injection backstop.</p>
 <div class="sect2">
 <h3 id="_backwards_compatibility">Backwards compatibility</h3>
 <div class="paragraph">
-<p>The feature is entirely opt-in and additive. No existing program changes behavior:</p>
+<p>Both deliverables are entirely opt-in and additive. No existing program changes behavior:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The checker runs only where <code>@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])</code> is
-applied; absent that, nothing changes.</p>
+<p><strong>Deliverable A</strong> runs only where <code>@TypeChecked(extensions = ['groovy.typecheckers.TaintChecker'])</code> is
+applied; absent that, nothing changes. <code>@Tainted</code> / <code>@Untainted</code> are <code>RUNTIME</code>-retained markers ignored
+by code that does not enable the checker.</p>
 </li>
 <li>
-<p><code>@Tainted</code> / <code>@Untainted</code> are <code>RUNTIME</code>-retained marker annotations with no effect on code that does
-not enable the checker; they are ignored like any unrecognized annotation.</p>
+<p><strong>Deliverable B</strong> runs only on classes that carry <code>@Redacted</code>; a class without it generates exactly the
+string form it does today. <code>@Redacted</code> / <code>@Sensitive</code> are <code>RUNTIME</code>-retained markers with no effect
+elsewhere.</p>
 </li>
 <li>
-<p>The annotations and the checker ship in the existing <code>groovy-typecheckers</code> module; core Groovy
-semantics are untouched.</p>
+<p>The annotations ship in the existing modules (<code>groovy-typecheckers</code> for the checker; the core transform
+package for redaction); core Groovy semantics are untouched.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_interaction_with_other_checkers">Interaction with other checkers</h3>
+<h3 id="_interaction_with_other_checkers_and_transforms">Interaction with other checkers and transforms</h3>
 <div class="paragraph">
-<p><code>TaintChecker</code> composes with the other extensions on a single <code>@TypeChecked</code> declaration, each
-reporting on its own concern through its own diagnostics, as in the worked example above.</p>
+<p><code>TaintChecker</code> composes with the other extensions on a single <code>@TypeChecked</code> declaration, each reporting
+on its own concern. Redaction composes with the <code>@ToString</code> family it extends, honoring existing
+<code>@ToString</code> options (<code>includes</code>, <code>excludes</code>, <code>includeNames</code>, and so on) and simply substituting the mask
+for redacted properties.</p>
 </div>
 </div>
 </div>
@@ -748,42 +1090,53 @@ reporting on its own concern through its own diagnostics, as in the worked examp
 <h2 id="_risks_maintenance_and_status">Risks, maintenance, and status</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This GEP is deliberately frank about why it is a <strong>placeholder</strong> rather than a committed deliverable.</p>
+<p>This GEP is deliberately frank about why it is a <strong>placeholder</strong> rather than a committed deliverable, and
+the risk profiles of the two deliverables differ.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Taint checkers carry a false-positive / maintenance reputation.</strong> Tools in this space are routinely
-uninstalled because they are too noisy, or quietly distrusted because they are too lax. The proposal
-leans hard on the low-noise default, GString-awareness, explicit greppable suppression, and loud
-skips precisely to earn and keep developer trust — but the reputational risk is real and must be
-managed by conservative defaults and good diagnostics, not wished away.</p>
+<p><strong>Taint checkers carry a false-positive / maintenance reputation (Deliverable A).</strong> Tools in this space
+are routinely uninstalled because they are too noisy, or quietly distrusted because they are too lax.
+Deliverable A leans hard on the low-noise default, GString-awareness, explicit greppable suppression,
+and loud skips to earn and keep developer trust — but the reputational risk is real and must be managed
+by conservative defaults and good diagnostics, not wished away.</p>
 </li>
 <li>
-<p><strong>The model library is an ongoing commitment.</strong> The propagation engine is modest; the durable cost is
-curating and <strong>keeping current</strong> the source/sink/sanitizer annotations for the JDK and the common
-Groovy/Java ecosystem. This is the part the Groovy team would need to be comfortable owning (or
-governing as a community-maintained, versioned artifact) before the feature should ship. An
-out-of-date or incomplete model library is itself a source of both false negatives and false
-positives.</p>
+<p><strong>The model library is an ongoing commitment (shared).</strong> The propagation engine is modest; the durable
+cost is curating and <strong>keeping current</strong> the source / sink / sanitizer registry for the JDK and the common
+Groovy/Java ecosystem. Both deliverables draw on it. This is the part the Groovy team would need to be
+comfortable owning (or governing as a community-maintained, versioned artifact) before Deliverable A
+ships. An out-of-date library is itself a source of both false negatives and false positives.</p>
 </li>
 <li>
-<p><strong>Soundness is a chosen posture, not a guarantee.</strong> The optimistic default is explicitly <strong>unsound</strong> (it
-can miss un-modeled sources) in exchange for trustworthiness. Users who need soundness opt into
-strict mode and its noise. The GEP does not claim to prove the absence of injection — only to catch
-the flows it has been told to look for.</p>
+<p><strong>Redaction is low-risk but not a panacea (Deliverable B).</strong> Being declarative and local, it has
+essentially no false positives and modest maintenance. Its risk is the <strong>opposite</strong> — a false sense of
+completeness. It masks the string forms Groovy generates; it does not stop a value leaking through a
+hand-written <code>toString</code>, a serializer it was not told to cover, or code that reads the property directly.
+The documentation must be explicit that redaction reduces accidental leakage rather than guaranteeing
+secrecy.</p>
 </li>
 <li>
-<p><strong>Scope is bounded and honest.</strong> Dynamic dispatch, cross-jar flows, implicit flows, and per-element
-precision are out of scope or deferred; the checker says so rather than pretending otherwise.</p>
+<p><strong>Soundness is a chosen posture, not a guarantee (Deliverable A).</strong> The optimistic default is explicitly
+unsound (it can miss un-modeled sources) in exchange for trustworthiness. Users who need soundness opt
+into strict mode and its noise.</p>
+</li>
+<li>
+<p><strong>Scope is bounded and honest (both).</strong> Dynamic dispatch, cross-jar flows, implicit flows, per-element
+precision, hand-written renderers, and <code>@Sensitive</code> flow tracking are out of scope or deferred; the
+tooling says so rather than pretending otherwise.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Accordingly the status is <strong>Draft (placeholder)</strong>. The near-term purpose is to fix the annotation
-vocabulary (<code>@Tainted</code> / <code>@Untainted</code>, and the role-by-position convention) so Groovy 6.x can align to
-it, to gather feedback, and to find out whether there is both community appetite and committed
-maintenance for the model library. Implementation in Groovy 7.0 is conditional on that.</p>
+<p>Accordingly the status is <strong>Draft (placeholder)</strong>. The near-term purpose is to fix the shared annotation
+vocabulary (<code>@Tainted</code> / <code>@Untainted</code> / <code>@Sensitive</code> / <code>@Redacted</code>, and the role-by-position convention)
+so Groovy 6.x can align to it, and to gauge appetite and maintenance commitment. Because it is small,
+declarative, and low-risk, <strong>Deliverable B (redaction) is the candidate to land first</strong> — potentially in a
+Groovy 6.x point release — while <strong>Deliverable A (taint checking) targets Groovy 7.0</strong>, conditional on
+committed maintenance for the model library. The umbrella-plus-two-tracks split is <strong>proposed pending team
+review</strong>.</p>
 </div>
 </div>
 </div>
@@ -799,10 +1152,16 @@ maintenance for the model library. Implementation in Groovy 7.0 is conditional o
 <p><a href="https://owasp.org/www-project-top-ten/">OWASP Top Ten</a></p>
 </li>
 <li>
-<p><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a>, <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Cross-site Scripting</a>, <a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: OS Command Injection</a></p>
+<p><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: SQL Injection</a>, <a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Cross-site Scripting</a>, <a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: OS Command Injection</a>, <a href="https://cwe.mitre.org/data/definitions/532.html">CWE-532: Insertion of Sensitive Information into Log File</a></p>
 </li>
 <li>
 <p><a href="https://ballerina.io/">Ballerina language — taint analysis</a></p>
+</li>
+<li>
+<p><a href="https://github.com/polentino/redacted">polentino/redacted — Scala compile-time <code>@redacted</code> for case-class <code>toString</code></a></p>
+</li>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/gapi/groovy/transform/ToString.html">Groovy <code>@ToString</code> transform</a></p>
 </li>
 <li>
 <p><a href="https://docs.groovy-lang.org/latest/html/documentation/sql-userguide.html">Groovy <code>Sql</code> — GString-based parameterized queries</a></p>
