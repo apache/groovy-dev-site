@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, groovysh, huggingface, astronomy, astrophysics, data science, sixel, java2d, spectrum'/><meta name='description' content='Reproduce a viral astronomy demo in groovysh: load galaxy images and spectra from Hugging Face&apos;s Multimodal Universe and render them inline with /img.'/><title>The Apache Groovy programming language - Blogs - Exploring the Multimodal Universe with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, groovysh, huggingface, astronomy, astrophysics, data science, sixel, jfreechart, spectrum'/><meta name='description' content='Reproduce a viral astronomy demo in groovysh: load galaxy images and spectra from Hugging Face&apos;s Multimodal Universe and render them inline with /img.'/><title>The Apache Groovy programming language - Blogs - Exploring the Multimodal Universe with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='#_what_is_the_multimodal_universe' class='anchor-link'>What is the Multimodal Universe?</a></li><li><a href='#_rendering_images_in_groovysh' class='anchor-link'>Rendering images in groovysh</a></li><li><a href='#_the_script' class='anchor-link'>The script</a></li><li><a href='#_running_it' class='anchor-link'>Running it</a></li><li><a href='#_what_are_we_looking_at' class='anchor-link'>What are we looking at?</a></li><li><a href='#_what_we_didnt_reproduce' class='anchor-link'>What we didn&#8217;t reproduce</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring the Multimodal Universe with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='#_what_is_the_multimodal_universe' class='anchor-link'>What is the Multimodal Universe?</a></li><li><a href='#_rendering_images_in_groovysh' class='anchor-link'>Rendering images in groovysh</a></li><li><a href='#_the_script' class='anchor-link'>The script</a></li><li><a href='#_running_it' class='anchor-link'>Running it</a></li><li><a href='#_what_are_we_looking_at' class='anchor-link'>What are we looking at?</a></li><li><a href='#_what_we_didnt_reproduce' class='anchor-link'>What we didn&#8217;t reproduce</a></li><li><a href='#_a_dependency_free_variant' class='anchor-link'>A dependency-free variant</a></li><li><a href='#_more_information' class='anchor-link'>More information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring the Multimodal Universe with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -180,8 +180,147 @@ chart we build ourselves.</p>
 <div class="paragraph">
 <p>Here is the complete <code>mmu.groovy</code> script. It reads one cross-matched-style row from each dataset,
 decodes the galaxy PNG, filters the masked points out of the spectrum (mirroring the video&#8217;s
-<code>s = s[~s["mask"]]</code>), and hand-draws the spectrum as a Java2D line plot returned as a
+<code>s = s[~s["mask"]]</code>), and plots the spectrum with JFreeChart, handed to <code>/img</code> as a
 <code>BufferedImage</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.json.JsonSlurper
+import java.awt.Color
+import javax.imageio.ImageIO
+import org.jfree.chart.ChartFactory
+import org.jfree.data.xy.XYSeries
+import org.jfree.data.xy.XYSeriesCollection
+
+rows = { String ds -&gt; new JsonSlurper().parse(
+    new URL("https://datasets-server.huggingface.co/rows?dataset=$ds&amp;config=default&amp;split=train&amp;offset=0&amp;length=1")).rows[0].row }
+
+// --- the galaxy: gz10 stores a ready-made RGB PNG as base64 bytes ---
+galaxy = ImageIO.read(new ByteArrayInputStream(rows('UniverseTBD/mmu_gz10').rgb_image.bytes.decodeBase64()))
+
+// --- the spectrum: drop masked points, like s[~s["mask"]] in the video ---
+spec = rows('UniverseTBD/mmu_sdss_sdss').spectrum
+pts = [spec.'lambda', spec.flux, spec.mask].transpose().findAll { !it[2] }.collect { [it[0] as double, it[1] as double] }
+
+// --- a JFreeChart line plot -&gt; a BufferedImage that /img renders ---
+series = new XYSeries('flux')
+pts.each { series.add(it[0], it[1]) }
+plot = ChartFactory.createXYLineChart('SDSS spectrum', 'Wavelength (Å)', 'Flux', new XYSeriesCollection(series))
+plot.XYPlot.renderer.setSeriesPaint(0, Color.MAGENTA)  // magenta, to match the original demo
+plot.removeLegend()
+chart = plot.createBufferedImage(820, 520)
+println "galaxy ${galaxy.width}x${galaxy.height}, spectrum ${pts.size()} pts -&gt; chart ${chart.width}x${chart.height}"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A few things worth pointing out:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The whole data-access layer is a one-line closure. <code>JsonSlurper</code> parses the HTTP response, and
+Groovy&#8217;s GDK gives us <code>decodeBase64()</code> on the PNG string for free.</p>
+</li>
+<li>
+<p><code>transpose()</code> zips the three parallel arrays (<code>lambda</code>, <code>flux</code>, <code>mask</code>) together so we can
+<code>findAll</code> the unmasked samples in one readable expression.</p>
+</li>
+<li>
+<p>The spectrum is drawn with <a href="https://www.jfree.org/jfreechart/">JFreeChart</a>: <code>createXYLineChart</code>
+gives us axes, ticks and gridlines for free, and <code>createBufferedImage</code> hands <code>/img</code> exactly the
+<code>BufferedImage</code> it wants. That is the same trick the <code>groovysh</code> user guide uses to show off XChart,
+Smile and Orson Charts — <code>/img</code> speaks <code>BufferedImage</code>, so the whole JVM charting ecosystem is one
+<code>/grab</code> away.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_it">Running it</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Start <code>groovysh</code>, pull in the one charting dependency with the shell&#8217;s <code>/grab</code> command, load the
+script, and view each result with <code>/img</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>groovy> /grab org.jfree:jfreechart:1.5.6
+groovy> /load mmu.groovy
+galaxy 256x256, spectrum 3713 pts -> chart 820x520
+Loaded: mmu.groovy
+groovy> /img $galaxy
+groovy> /img $chart</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We use <code>groovysh&#8217;s `/grab</code> command rather than an <code>@Grab</code> annotation in the script itself: <code>/load</code>
+runs the file as a plain script, so grabbing the dependency in the shell first keeps that step
+explicit (and matches how the <code>groovysh</code> guide adds XChart, Smile and the other charting libraries).</p>
+</div>
+<div class="paragraph">
+<p>Here is the script itself, viewed through the shell&#8217;s built-in <code>/less</code> pager (which syntax-highlights
+Groovy):</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/mmu-groovysh-source.png" alt="The mmu.groovy script in the groovysh pager" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>And here is the payoff — a galaxy and its spectrum, drawn directly in the terminal:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/mmu-groovysh-output.png" alt="groovysh rendering a galaxy image and its spectrum inline" width="600"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_are_we_looking_at">What are we looking at?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The top image is a single galaxy from the Galaxy Zoo / DECaLS set: a bright central bulge with
+fainter spiral structure around it, sitting in a field speckled with foreground stars and other
+faint sources (the little coloured dots). It is a true-colour composite assembled from the survey&#8217;s
+imaging bands.</p>
+</div>
+<div class="paragraph">
+<p>The lower plot is that same class of object&#8217;s SDSS optical spectrum: <strong>flux on the vertical axis
+against wavelength (in &#8491;ngstr&ouml;ms) on the horizontal axis</strong>, from about 3800&#8491; on the
+left to 9200&#8491; on the right. The characteristic shape — low and noisy in the blue, rising to a
+broad, fairly flat continuum toward the red — is the combined light of the galaxy&#8217;s stellar
+populations, with narrow spikes where emission lines and residual sky features poke through. We drew
+the line in magenta to match the original demo, and let JFreeChart supply the axes, ticks and
+gridlines. We removed the flagged (`mask`ed) pixels first, so 3713 good samples remain out of the
+original ~3850.</p>
+</div>
+<div class="paragraph">
+<p>The real point: a few lines of Groovy pulled a real galaxy and a real spectrum out of an 80TB,
+30-survey collection, over plain HTTP, and painted them in a terminal — with no local data download.
+And because <code>groovysh&#8217;s `/img</code> speaks <code>BufferedImage</code>, reaching for a proper charting library like
+JFreeChart costs one <code>/grab</code> and a handful of lines. And if you would rather ship no dependency at
+all, the pure-JDK variant at the end of this post draws the same plot by hand.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_we_didnt_reproduce">What we didn&#8217;t reproduce</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The original video&#8217;s headline feat is the <strong>cross-match</strong> itself — joining <code>gz10</code> (imagery) against
+<code>sdss</code> (spectra), or SDSS against Gaia, using LSDB&#8217;s HATS-partitioned catalogs. That machinery is
+Python-native and has no direct JVM equivalent, so here we simply grabbed a representative row from
+each dataset rather than computing the spatial join. Everything downstream of the match — decoding
+the image, cleaning the spectrum, and rendering both — is pure Groovy and the JDK.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_dependency_free_variant">A dependency-free variant</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Reaching for JFreeChart is the pragmatic choice, but the demo also works with <strong>no external dependency
+at all</strong> — the JDK&#8217;s own Java2D can paint the line plot straight into a <code>BufferedImage</code>, which is
+exactly what <code>/img</code> consumes. It is more code, but it ships with the JVM, so there is no <code>/grab</code>: just
+<code>/load mmu_java2d.groovy</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -230,93 +369,23 @@ println "galaxy ${galaxy.width}x${galaxy.height}, spectrum ${pts.size()} pts -&g
 </div>
 </div>
 <div class="paragraph">
-<p>A few things worth pointing out:</p>
+<p>Two things worth noting:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>The whole data-access layer is a one-line closure. <code>JsonSlurper</code> parses the HTTP response, and
-Groovy&#8217;s GDK gives us <code>decodeBase64()</code> on the PNG string for free.</p>
+<p>No <code>/grab</code> this time — the plot is hand-drawn with Java2D in the <code>spectrumPlot</code> closure, so we scale
+the axes, draw the ticks, and stroke the line ourselves instead of getting them for free. That is the
+cost of dropping the dependency.</p>
 </li>
 <li>
-<p><code>transpose()</code> zips the three parallel arrays (<code>lambda</code>, <code>flux</code>, <code>mask</code>) together so we can
-<code>findAll</code> the unmasked samples in one readable expression.</p>
-</li>
-<li>
-<p>Note the <code>import module java.desktop</code> on line 3. This is a
-<a href="https://openjdk.org/jeps/494">JDK module import</a> (JEP 494), supported in Groovy 6, that pulls in every
-package the <code>java.desktop</code> module exports (<code>java.awt</code>, <code>java.awt.geom</code>, <code>java.awt.image</code>, and more) in
-a single line — handy for a script that reaches into a few AWT corners.</p>
+<p>The <code>import module java.desktop</code> on line 3 is a <a href="https://openjdk.org/jeps/494">JDK module import</a>
+(JEP 494), supported in Groovy 6: it pulls in every package the <code>java.desktop</code> module exports
+(<code>java.awt</code>, <code>java.awt.geom</code>, <code>java.awt.image</code>, and more) in a single line — handy here because the
+hand-rolled plot reaches into several AWT corners (<code>BufferedImage</code>, <code>Path2D</code>, <code>BasicStroke</code>,
+<code>RenderingHints</code>, <code>Color</code>).</p>
 </li>
 </ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_running_it">Running it</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Start <code>groovysh</code>, load the script, and view each result with <code>/img</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>groovy> /load mmu.groovy
-galaxy 256x256, spectrum 3713 pts -> chart 820x520
-Loaded: mmu.groovy
-groovy> /img $galaxy
-groovy> /img $chart</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Here is the script itself, viewed through the shell&#8217;s built-in <code>/less</code> pager (which syntax-highlights
-Groovy):</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./img/mmu-groovysh-source.png" alt="The mmu.groovy script in the groovysh pager" width="800"></span></p>
-</div>
-<div class="paragraph">
-<p>And here is the payoff — a galaxy and its spectrum, drawn directly in the terminal:</p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="./img/mmu-groovysh-output.png" alt="groovysh rendering a galaxy image and its spectrum inline" width="600"></span></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_what_are_we_looking_at">What are we looking at?</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The top image is a single galaxy from the Galaxy Zoo / DECaLS set: a bright central bulge with
-fainter spiral structure around it, sitting in a field speckled with foreground stars and other
-faint sources (the little coloured dots). It is a true-colour composite assembled from the survey&#8217;s
-imaging bands.</p>
-</div>
-<div class="paragraph">
-<p>The lower plot is that same class of object&#8217;s SDSS optical spectrum: <strong>flux on the vertical axis
-against wavelength (in &#8491;ngstr&ouml;ms) on the horizontal axis</strong>, from about 3800&#8491; on the
-left to 9200&#8491; on the right. The characteristic shape — low and noisy in the blue, rising to a
-broad, fairly flat continuum toward the red — is the combined light of the galaxy&#8217;s stellar
-populations, with narrow spikes where emission lines and residual sky features poke through. We drew
-it in magenta to match the original demo; the thin black vertical hairs you can see are simply the
-plot connecting rapidly varying adjacent samples. We removed the flagged (`mask`ed) pixels first, so
-3713 good samples remain out of the original ~3850.</p>
-</div>
-<div class="paragraph">
-<p>The point isn&#8217;t the plot&#8217;s polish — it&#8217;s that a few lines of Groovy pulled a real galaxy and a real
-spectrum out of an 80TB, 30-survey collection, over plain HTTP, and painted them in a terminal, with
-no local data download and no heavyweight plotting dependency.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_what_we_didnt_reproduce">What we didn&#8217;t reproduce</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>The original video&#8217;s headline feat is the <strong>cross-match</strong> itself — joining <code>gz10</code> (imagery) against
-<code>sdss</code> (spectra), or SDSS against Gaia, using LSDB&#8217;s HATS-partitioned catalogs. That machinery is
-Python-native and has no direct JVM equivalent, so here we simply grabbed a representative row from
-each dataset rather than computing the spatial join. Everything downstream of the match — decoding
-the image, cleaning the spectrum, and rendering both — is pure Groovy and the JDK.</p>
 </div>
 </div>
 </div>
