@@ -845,6 +845,26 @@ write-up</a> and
 examples</a> carry the full set, including seqlocks and a lock-free bounded
 counter.</p>
 </div>
+<div class="paragraph">
+<p><strong>Where rung 1 reaches further.</strong> The framing above — rung 1 proves the local
+half, the upper rungs the rest — has an instructive exception. Leino&#8217;s
+<em>Modeling Concurrency in Dafny</em> casts a ticket lock for mutual exclusion as
+atomic events over a system invariant; ported to <code>groovy-verify</code>
+(<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/dafny.md#ticket-lock&#8212;&#8203;mutual-exclusion-leino-krml260">walked
+through in full in the repo</a>), rung 1
+SMT-proves the <em>structural</em> properties directly — <strong>mutual exclusion</strong> (at most
+one process in the critical section) and, for two processes, the <strong>fair-schedule
+liveness</strong> that a hungry process eventually enters (the "eventually", not merely
+per-call termination). Here rung 2 changes role: a
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/src/tlc/Ticket.tla"><code>Ticket.tla</code></a>
+model has TLC enumerate every interleaving at three processes — which
+<em>validates the fairness and framing facts the proof assumes</em> (TLC derives them
+from the transition system rather than taking them as hypotheses), confirms the
+same invariant on every reachable state, and pushes past the proof&#8217;s two-process
+bound. Two independent methods on one artifact — with the honest edge that the
+symbolic liveness proof stops at two processes and leans on assumptions that TLC
+is what discharges.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -933,7 +953,8 @@ proven via the pigeonhole property of a finite enum domain.</p>
 </li>
 <li>
 <p><strong>Dafny and OpenJML ports</strong> — <code>SumMax</code> (VSComp'10), binary search,
-max-by-elimination — the cross-tool credentials, reproduced in Groovy.</p>
+max-by-elimination, and <em>Modeling Concurrency in Dafny</em>'s ticket lock (safety
+<em>and</em> liveness) — the cross-tool credentials, reproduced in Groovy.</p>
 </li>
 <li>
 <p><strong>Verifying Java fragments</strong> — since Java is largely a syntactic subset of
@@ -1257,6 +1278,9 @@ Design-by-Contract module shipped with Groovy</p>
 </li>
 <li>
 <p><a href="https://dafny.org">Dafny</a> and <a href="https://github.com/verus-lang/verus">Verus</a> — the auto-active verifiers whose specification style and counterexample UX this echoes</p>
+</li>
+<li>
+<p><a href="https://leino.science/papers/krml260.pdf">K. Rustan M. Leino, <em>Modeling Concurrency in Dafny</em> (KRML 260)</a> — the ticket-lock development (safety and liveness) reproduced above</p>
 </li>
 <li>
 <p><a href="https://www.openjml.org">OpenJML</a> and <a href="https://www.adacore.com/about-spark">SPARK</a> — JVM and Ada prior art</p>
