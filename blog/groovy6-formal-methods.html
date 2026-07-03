@@ -852,18 +852,29 @@ half, the upper rungs the rest — has an instructive exception. Leino&#8217;s
 atomic events over a system invariant; ported to <code>groovy-verify</code>
 (<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/dafny.md#ticket-lock&#8212;&#8203;mutual-exclusion-leino-krml260">walked
 through in full in the repo</a>), rung 1
-SMT-proves the <em>structural</em> properties directly — <strong>mutual exclusion</strong> (at most
-one process in the critical section) and, for two processes, the <strong>fair-schedule
-liveness</strong> that a hungry process eventually enters (the "eventually", not merely
-per-call termination). Here rung 2 changes role: a
+SMT-proves the <em>structural</em> properties directly. <strong>Mutual exclusion</strong> (at most
+one process in the critical section) verifies in both of the paper&#8217;s
+formulations — for the fixed two-process instance <em>and</em> for a <strong>symbolic
+process count</strong>, with Leino&#8217;s own quantified invariant (ticket uniqueness lands
+as a nested bounded quantifier). The <strong>fair-schedule liveness</strong> — a hungry
+process eventually enters: the "eventually", not merely per-call termination —
+runs Leino&#8217;s proof-loop at the same generality: the lock&#8217;s transition relation
+is spelled over a time-by-process state, and a recursive lemma walks a waiter
+at <em>any</em> ticket distance down to zero, each round&#8217;s progress <em>derived</em> from
+the relation (the served process&#8217;s scheduled <code>Leave</code> advances the display),
+not assumed. What stays hypothesized, by design, is the ∃-half of fairness —
+the witness <em>times</em> at which the scheduler runs each process, and the
+round-holders' identities — the same trade Leino&#8217;s <code>GetTicketHolder</code> lemma
+makes when it <em>returns</em> the holder rather than asserting one exists. Here
+rung 2 changes role: a
 <a href="https://github.com/paulk-asert/groovy-verify/blob/main/src/tlc/Ticket.tla"><code>Ticket.tla</code></a>
 model has TLC enumerate every interleaving at three processes — which
-<em>validates the fairness and framing facts the proof assumes</em> (TLC derives them
-from the transition system rather than taking them as hypotheses), confirms the
-same invariant on every reachable state, and pushes past the proof&#8217;s two-process
-bound. Two independent methods on one artifact — with the honest edge that the
-symbolic liveness proof stops at two processes and leans on assumptions that TLC
-is what discharges.</p>
+<em>discharges exactly those witnessed facts</em> (TLC derives scheduling and framing
+from the transition system, taking nothing as hypothesis) and confirms the
+same invariant on every reachable state. Two independent methods on one
+artifact, with a clean division of labour: the proof covers any process count
+symbolically; the model checker validates the witnesses exhaustively for a
+concrete one.</p>
 </div>
 </div>
 </div>
@@ -954,7 +965,8 @@ proven via the pigeonhole property of a finite enum domain.</p>
 <li>
 <p><strong>Dafny and OpenJML ports</strong> — <code>SumMax</code> (VSComp'10), binary search,
 max-by-elimination, and <em>Modeling Concurrency in Dafny</em>'s ticket lock (safety
-<em>and</em> liveness) — the cross-tool credentials, reproduced in Groovy.</p>
+<em>and</em> liveness, at any process count) — the cross-tool credentials, reproduced
+in Groovy.</p>
 </li>
 <li>
 <p><strong>Verifying Java fragments</strong> — since Java is largely a syntactic subset of
