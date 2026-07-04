@@ -140,10 +140,8 @@ humans and agents</a>.</p>
 </div>
 <div class="paragraph">
 <p>A note on versions before we start: <code>groovy-verify</code> tracks Groovy 6
-closely, and the recommended pairing right now is <strong>Groovy 6.0.0-alpha-2</strong>,
-currently out for an Apache release vote with staged artifacts in the
-<a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">ASF
-staging repository</a>. Everything below was written against that pairing.</p>
+closely, and the recommended pairing is <strong>Groovy 6.0.0-alpha-2</strong> or later.
+Everything below was written against that pairing.</p>
 </div>
 </div>
 </div>
@@ -941,6 +939,47 @@ that demands a minimum balance is refuted, with the input that breaks
 substitutability.</p>
 </div>
 <div class="paragraph">
+<p><strong>Even (some) dynamic Groovy.</strong> Everything above lives in Groovy&#8217;s statically
+checkable subset — <code>@TypeChecked</code> is the front door, so runtime
+metaprogramming has been out of scope by construction. But Groovy&#8217;s type
+checking is extensible in <em>two directions</em>: an extension can <strong>strengthen</strong>
+checking (groovy-verify itself is exactly that), and it can <strong>selectively
+relax</strong> it — type what looks like uncheckable dynamic code when there is
+evidence to type it from. The experimental metaprogramming pack does both at
+once: when an <code>ExpandoMetaClass</code> registration is spelled out in the same
+class, it types the registration and its use sites under <code>@TypeChecked</code>, then
+inlines the registered closure into the proof. The metaclass FizzBuzz examples
+from
+<a href="https://groovy.apache.org/blog/fizzbuzz-with-groovy-and-emojis">FizzBuzz with
+Groovy and emojis</a> verify against exact specifications this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static {
+    Integer.metaClass.multiply = { String s -&gt; delegate == 0 ? s : '' }
+}
+@Ensures({ result == (n % 3 == 0 &amp;&amp; n % 5 == 0 ? '🥤🐝' : n % 3 == 0 ? '🥤' : n % 5 == 0 ? '🐝' : '') })
+static String emoji(int n) { (n % 3) * '🥤' + (n % 5) * '🐝' }               // VERIFIED</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The gate is deliberately narrow and evidence-backed: no visible registration,
+no blessing — the code stays a compile error, exactly as <code>@TypeChecked</code>
+demands.</p>
+</div>
+<div class="paragraph">
+<p><strong>Functional proofs, Verus-style.</strong> Not everything needs a loop invariant: a
+method&#8217;s own <code>@Ensures</code> is assumed at its recursive call sites (sound because
+<code>@Decreases</code> proves termination) — which is proof by induction — and a <code>void</code>
+method whose only job is to carry an <code>@Ensures</code> acts as a lemma or theorem.
+The repo&#8217;s functional leftpad proves all three of the classic challenge
+properties this way, with a <em>structural</em> specification
+(<code>result == pads(pad, n - s.length()) + s</code> — the output <strong>is</strong> the padding
+block followed by the original string) and the length property derived from a
+padding-length lemma by a theorem method — the spec-function / proof-function
+structure of Verus, done with plain Groovy methods.</p>
+</div>
+<div class="paragraph">
 <p>And, more briefly, the repo also demonstrates:</p>
 </div>
 <div class="ulist">
@@ -967,6 +1006,22 @@ proven via the pigeonhole property of a finite enum domain.</p>
 max-by-elimination, and <em>Modeling Concurrency in Dafny</em>'s ticket lock (safety
 <em>and</em> liveness, at any process count) — the cross-tool credentials, reproduced
 in Groovy.</p>
+</li>
+<li>
+<p><strong>Hillel Wayne&#8217;s <a href="https://www.hillelwayne.com/post/theorem-prover-showdown/">Theorem
+Prover Showdown</a></strong> with full specifications — leftpad (imperative <em>and</em> the
+functional-by-induction form above), unique with a bidirectional spec, and
+fulcrum&#8217;s argmin — plus mergesort&#8217;s <code>merge</code> proved sorted <em>and</em> a permutation
+across three sequential annotated loops. Two Groovy entries (imperative and
+functional) have been submitted to the community&#8217;s
+<a href="https://github.com/hwayne/lets-prove-leftpad">lets-prove-leftpad</a> collection.</p>
+</li>
+<li>
+<p><strong>Encoding packs</strong> — domain vocabularies plug in as <code>ServiceLoader</code>-discovered
+modules (packs model <em>libraries</em>, the core models the <em>language</em>): number
+theory (Fibonacci/GCD recurrences, extended with Bézout coefficients through
+which Gauss&#8217;s lemma proves), the whole JSR 385 units domain, combinatorics
+(factorials and Pascal-rule binomials), and the metaprogramming pack above.</p>
 </li>
 <li>
 <p><strong>Verifying Java fragments</strong> — since Java is largely a syntactic subset of
@@ -1083,9 +1138,7 @@ separation logic). Anything outside the fragment is reported as "skipped",
 never silently passed.</p>
 </li>
 <li>
-<p>The recommended pairing today is <strong>Groovy 6.0.0-alpha-2</strong>, currently out for
-an Apache release vote (staged artifacts
-<a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">here</a>).</p>
+<p>The recommended pairing today is <strong>Groovy 6.0.0-alpha-2</strong> or later.</p>
 </li>
 </ul>
 </div>
@@ -1223,13 +1276,14 @@ external <code>groovy-verify</code> project reads the <strong>same</strong> cont
 <strong>same</strong> <code>@TypeChecked</code> extension SPI, proves them with Z3 — or refutes them
 with the exact input that breaks them. Postconditions, bounds, null,
 overflow, class invariants, loop termination, the multiset-conservation of a
-real sort, information flow, dimensional analysis, Liskov subtyping, and
-algebraic laws are all in reach for the fragment it models.</p>
+real sort, information flow, dimensional analysis, Liskov subtyping,
+algebraic laws, functional proofs by induction — and even statically-visible
+metaclass programming — are all in reach for the fragment it models.</p>
 </li>
 <li>
 <p><strong>Honestly:</strong> <code>groovy-verify</code> is experimental and not part of Groovy; it is
 loudly partial, sound within its fragment and explicit about its edges; and
-the recommended pairing is the in-vote 6.0.0-alpha-2.</p>
+the recommended pairing is 6.0.0-alpha-2 or later.</p>
 </li>
 <li>
 <p><strong>And increasingly:</strong> because the contracts are machine-readable, the proofs
@@ -1286,10 +1340,13 @@ Design-by-Contract module shipped with Groovy</p>
 <p><a href="https://groovy.apache.org/blog/groovy-null-checker">Compile-time null safety for Groovy</a> — the <code>NullChecker</code> walkthrough</p>
 </li>
 <li>
-<p><a href="https://repository.apache.org/content/repositories/orgapachegroovy-1109">Groovy 6.0.0-alpha-2 staged artifacts</a> (currently in the release vote)</p>
+<p><a href="https://groovy.apache.org/download.html">Groovy 6.0.0-alpha-2</a> (also on Maven Central)</p>
 </li>
 <li>
 <p><a href="https://dafny.org">Dafny</a> and <a href="https://github.com/verus-lang/verus">Verus</a> — the auto-active verifiers whose specification style and counterexample UX this echoes</p>
+</li>
+<li>
+<p><a href="https://www.hillelwayne.com/post/theorem-prover-showdown/">The Theorem Prover Showdown</a> and <a href="https://github.com/hwayne/lets-prove-leftpad">lets-prove-leftpad</a> — Hillel Wayne&#8217;s challenges, answered above</p>
 </li>
 <li>
 <p><a href="https://leino.science/papers/krml260.pdf">K. Rustan M. Leino, <em>Modeling Concurrency in Dafny</em> (KRML 260)</a> — the ticket-lock development (safety and liveness) reproduced above</p>
