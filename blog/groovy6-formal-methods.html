@@ -69,7 +69,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-06-25 08:00AM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-07-03 08:00PM</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -88,7 +88,13 @@ you drive by hand (Isabelle, Lean).</p>
 </div>
 <div class="paragraph">
 <p>This post is about how much of that world is reachable from ordinary
-Groovy 6 — and it is more than you might expect. Two things matter, and
+Groovy 6 — and it is more than you might expect as this image shows:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/fizzbuzz_verified.png" alt="can you verify dynamic groovy?"></span></p>
+</div>
+<div class="paragraph">
+<p>Two things matter, and
 it is worth being precise about which is which:</p>
 </div>
 <div class="ulist">
@@ -959,7 +965,7 @@ Groovy and emojis</a> verify against exact specifications this way:</p>
     Integer.metaClass.multiply = { String s -&gt; delegate == 0 ? s : '' }
 }
 @Ensures({ result == (n % 3 == 0 &amp;&amp; n % 5 == 0 ? '🥤🐝' : n % 3 == 0 ? '🥤' : n % 5 == 0 ? '🐝' : '') })
-static String emoji(int n) { (n % 3) * '🥤' + (n % 5) * '🐝' }               // VERIFIED</code></pre>
+static String fizzbuzz(int n) { (n % 3) * '🥤' + (n % 5) * '🐝' }               // VERIFIED</code></pre>
 </div>
 </div>
 <div class="paragraph">
