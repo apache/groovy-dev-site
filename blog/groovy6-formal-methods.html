@@ -88,10 +88,17 @@ you drive by hand (Isabelle, Lean).</p>
 </div>
 <div class="paragraph">
 <p>This post is about how much of that world is reachable from ordinary
-Groovy 6 — and it is more than you might expect as this image shows:</p>
+Groovy 6 — and it is more than you might expect. As a taste: that is
+runtime metaclass programming below, <strong>verified against an exact
+specification at compile time</strong> — and when the spec is wrong, the compiler
+answers with the input that breaks it:</p>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="./img/fizzbuzz_verified.png" alt="can you verify dynamic groovy?"></span></p>
+<p><span class="image"><img src="./img/fizzbuzz_verified.png" alt="metaclass FizzBuzz — verified, and refuted with a counterexample, at compile time" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>(How a metaclass method can be type-checked at all, let alone proved, is a
+story for <a href="#dynamic-groovy">later in the post</a>.)</p>
 </div>
 <div class="paragraph">
 <p>Two things matter, and
@@ -944,7 +951,7 @@ accepts a larger overdraft verifies as substitutable; a <code>RestrictedAccount<
 that demands a minimum balance is refuted, with the input that breaks
 substitutability.</p>
 </div>
-<div class="paragraph">
+<div id="dynamic-groovy" class="paragraph">
 <p><strong>Even (some) dynamic Groovy.</strong> Everything above lives in Groovy&#8217;s statically
 checkable subset — <code>@TypeChecked</code> is the front door, so runtime
 metaprogramming has been out of scope by construction. But Groovy&#8217;s type
@@ -961,12 +968,16 @@ Groovy and emojis</a> verify against exact specifications this way:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">static {
-    Integer.metaClass.multiply = { String s -&gt; delegate == 0 ? s : '' }
-}
-@Ensures({ result == (n % 3 == 0 &amp;&amp; n % 5 == 0 ? '🥤🐝' : n % 3 == 0 ? '🥤' : n % 5 == 0 ? '🐝' : '') })
+<pre class="prettyprint highlight"><code data-lang="groovy">Integer.metaClass.multiply = { String s -&gt; delegate == 0 ? s : '' }
+
+@Ensures({ result == (n % 15 == 0 ? '🥤🐝' : n % 3 == 0 ? '🥤' : n % 5 == 0 ? '🐝' : '') })
 static String fizzbuzz(int n) { (n % 3) * '🥤' + (n % 5) * '🐝' }               // VERIFIED</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>(That&#8217;s a script: the registration is a plain top-level statement — only the
+method is <code>@TypeChecked</code>, and the pack finds the registration in the script
+body.)</p>
 </div>
 <div class="paragraph">
 <p>The gate is deliberately narrow and evidence-backed: no visible registration,
@@ -1085,7 +1096,14 @@ counterexample as a runnable repro test. The bounds failure above becomes:</p>
 <div class="paragraph">
 <p>The test is green <em>while the bug is live</em> (the call really throws), so it
 confirms the compile-time counterexample is a genuine runtime failure; fix
-the code and flip it into a regression.</p>
+the code and flip it into a regression. On the metaclass FizzBuzz from the
+introduction, the same knob pairs the generated test with the other half of
+the graceful-degradation story — run <em>without</em> the verifier,
+<code>groovy-contracts</code> enforces the same broken spec and power-asserts the
+violation at the solver&#8217;s counterexample:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/fizzbuzz_junit.png" alt="the counterexample as a runnable JUnit test, plus the runtime power assert" width="800"></span></p>
 </div>
 </li>
 <li>
