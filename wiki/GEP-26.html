@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 <strong>Comment</strong>
 </td>
 <td class="hdlist2">
-<p>Builds on the existing GINQ collection provider and the <code>groupby&#8230;&#8203;into</code> group model; strictly additive and opt-in</p>
+<p>Builds on the existing GINQ collection provider and the <code>groupby&#8230;&#8203;into</code> group model; strictly additive and opt-in. Version 2 aligns the document with the reference implementation (see <em>Reference implementation</em>).</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-06-28</p>
+<p>2026-07-04</p>
 </td>
 </tr>
 </table>
@@ -206,9 +206,10 @@ into memory. The backend is delivered as <strong>two providers that share a comm
 executes it through <code>groovy.sql.Sql</code>. Fully available under the Apache License 2.0.</p>
 </li>
 <li>
-<p><strong>JOOQ provider</strong> — optional, user-supplied JOOQ dependency, adds dialect-aware
-rendering, window functions, and comprehensive function mapping by delegating to
-JOOQ&#8217;s plain-SQL DSL.</p>
+<p><strong>JOOQ provider</strong> — optional, uses JOOQ as a <em>compile-time, dialect-aware SQL renderer</em>
+over the same intermediate model. JOOQ is required on the compile classpath only;
+execution and results are identical to the native provider, and nothing extra ships
+at runtime.</p>
 </li>
 </ul>
 </div>
@@ -400,12 +401,41 @@ are two renderers, one per provider, and they are the only provider-specific cod
                           +------------------+------------------+
                           v                                     v
                 NativeSqlRenderer                       JooqSqlRenderer
-            IR -&gt; ANSI SQL text + params             IR -&gt; JOOQ DSL calls
-            executed via groovy.sql.Sql              executed via DSLContext
+            IR -&gt; ANSI SQL text + params        IR -&gt; JOOQ query model -&gt; dialect
+             (small Dialect SPI)                 SQL text + params (compile time)
                           |                                     |
-                          v                                     v
-            Queryable&lt;GroovyRowResult&gt;                  Queryable&lt;Record&gt;</pre>
+                          +------------------+------------------+
+                                             v
+                          constant SQL executed via groovy.sql.Sql
+                                             |
+                                             v
+                              Queryable&lt;GroovyRowResult&gt;</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Both renderers run at <strong>compile time</strong> and produce the same artefact: a constant SQL string
+plus an ordered list of parameter expressions. Execution is therefore identical for both
+providers — a thin runtime wrapper around <code>groovy.sql.Sql</code> returning
+<code>Queryable&lt;GroovyRowResult&gt;</code> — and JOOQ never needs to be on the runtime classpath.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Version 1 of this proposal executed the JOOQ provider at runtime through a <code>DSLContext</code>
+and returned <code>Queryable&lt;org.jooq.Record&gt;</code>. The reference implementation showed the
+compile-time-renderer approach to be strictly simpler: one runtime path, one result type
+across all providers (so switching providers never changes downstream code), and no
+runtime dependency. The cost is that jOOQ <code>Record</code>-based APIs are not exposed; that
+trade-off is open for review.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -417,28 +447,49 @@ or tree-to-tree (JOOQ) mapping. A sketch:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">class SqlQuery {
+<pre class="prettyprint highlight"><code data-lang="groovy">class SqlQuery implements SqlQueryNode {
     boolean distinct
-    List&lt;TableRef&gt;   sources      // from + joined tables
-    List&lt;JoinClause&gt; joins        // type (inner/left/right/full/cross) + on-predicate
-    SqlExpr          where        // where predicate (nullable)
-    List&lt;SqlExpr&gt;    groupBy       // group-by keys
-    SqlExpr          having        // having predicate (nullable)
-    List&lt;OrderSpec&gt;  orderBy       // column + asc/desc + nulls-first/last
-    LimitOffset      limit         // limit + optional offset (nullable)
-    List&lt;Projection&gt; select        // output columns + aliases
-    List&lt;SetOp&gt;      setOps        // union / unionall / intersect / minus chain
+    List&lt;SqlProjection&gt; projections  // output expressions + optional aliases
+    SqlTableSource      from         // table reference or derived table (subquery)
+    List&lt;SqlJoin&gt;       joins        // type (inner/left/right/full/cross) + table source + on-predicate
+    SqlExpr             where        // where predicate (nullable)
+    List&lt;SqlExpr&gt;       groupBy      // group-by keys
+    SqlExpr             having       // having predicate (nullable)
+    List&lt;SqlOrderSpec&gt;  orderBy      // expression + asc/desc + nulls-first/last
+    SqlExpr             offset       // bound parameters (nullable)
+    SqlExpr             fetch
+}
+
+class SqlSetQuery implements SqlQueryNode {  // union / unionall / intersect / minus
+    SqlQueryNode left                        // left-nested for chained set operations
+    SetOp op
+    SqlQuery right
+    List&lt;SqlOrderSpec&gt; orderBy               // ordering/limiting of the combined result
+    SqlExpr offset
+    SqlExpr fetch
 }
 
 // SqlExpr is a small closed hierarchy:
-//   Column, BoundParam, BinaryOp, UnaryOp, FunctionCall,
-//   Aggregate, InList, Between, SubQuery, CaseWhen, RawFragment</code></pre>
+//   SqlColumn, SqlParam, SqlLiteral, SqlBinary, SqlUnary, SqlIsNull,
+//   SqlIn, SqlInQuery, SqlLike, SqlFunction, SqlCountStar, SqlStar,
+//   SqlCaseWhen, SqlScalarQuery, SqlExists, SqlOrdinal</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>A <code>BoundParam</code> never carries a literal value into rendered SQL; it carries a positional
-index into a runtime parameter list (see <em>Parameter binding and SQL injection safety</em>).
-This is what makes both renderers injection-safe for free.</p>
+<p>A <code>SqlParam</code> never carries a literal value into rendered SQL; it carries the <em>source
+expression</em> (literal or captured variable) whose value is bound at runtime. Positional
+order is assigned by the renderer as it emits each <code>?</code> placeholder, guaranteeing the
+parameter list always matches the emitted text — essential because dialects may reorder
+placeholders (for example, one dialect&#8217;s <code>LIMIT ? OFFSET ?</code> versus ANSI
+<code>OFFSET ? ROWS FETCH NEXT ? ROWS ONLY</code> swap the two values). This is what makes both
+renderers injection-safe for free.</p>
+</div>
+<div class="paragraph">
+<p>The one deliberate exception is <code>SqlLiteral</code>, which inlines a value into the SQL text.
+It is only ever constructed from <em>compile-time constants in the query source</em> — never
+from runtime values — and exists because databases cannot infer a type for constructs
+such as <code>CASE WHEN &#8230;&#8203; THEN ? ELSE ? END</code> where every branch is a placeholder. The
+parameter-safety guarantee is unchanged.</p>
 </div>
 </div>
 </div>
@@ -490,7 +541,12 @@ visitors.</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Both the macro and annotation forms accept the new keys:</p>
+<p>The JOOQ provider additionally accepts a <code>dialect</code> key naming one of jOOQ&#8217;s <code>SQLDialect</code>
+values (for example <code>'POSTGRES'</code>, <code>'MYSQL'</code>, <code>'H2'</code>); with no <code>dialect</code>, jOOQ&#8217;s <code>DEFAULT</code>
+dialect is used. Rather than growing the core option list for every provider, the provider
+registry SPI lets each provider declare the extra option names it accepts
+(<code>GinqProvider.getAdditionalOptionNames()</code>); option validation consults registered
+providers, so provider-specific options remain out of core GINQ.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -502,9 +558,8 @@ def highEarners = GQL(provider: 'native-sql', dataSource: sql) {
     select e.name, e.salary
 }
 
-// Annotation form
-@GQ(provider = "sql")
-List&lt;GroovyRowResult&gt; highEarners(Sql dataSource) {
+// JOOQ provider with an explicit dialect
+def highEarners = GQL(provider: 'jooq-sql', dialect: 'POSTGRES', dataSource: sql) {
     from e in 'employees'
     where e.salary &gt; 100000
     select e.name, e.salary
@@ -514,37 +569,20 @@ List&lt;GroovyRowResult&gt; highEarners(Sql dataSource) {
 <div class="paragraph">
 <p>The annotation gains one new optional member, <code>provider</code>, alongside the existing <code>value</code>,
 <code>optimize</code>, <code>parallel</code>, and <code>astWalker</code> members. Adding an annotation member with a default
-is binary compatible (see <em>Compatibility and impact</em>).</p>
+is binary compatible (see <em>Compatibility and impact</em>). Because a <code>dataSource</code> is a runtime
+value, it cannot be expressed as an annotation member; database-backed queries therefore
+use the macro form. (Ergonomic <code>@GQ</code> support — for example an annotation member naming a
+field or getter in scope — is a possible future refinement.)</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_data_sources_and_table_references">Data sources and table references</h3>
 <div class="paragraph">
-<p>A <code>dataSource</code> configuration key supplies the connection. The accepted types depend on the
-provider:</p>
+<p>A <code>dataSource</code> configuration key supplies the connection. Because both providers execute
+through the same runtime, both accept the same types: <code>groovy.sql.Sql</code> (used as-is; the
+caller owns its lifecycle), <code>javax.sql.DataSource</code> (a connection is borrowed and released
+per query), or <code>java.sql.Connection</code> (used without closing).</p>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 25%;">
-<col style="width: 75%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Provider</th>
-<th class="tableblock halign-left valign-top">Accepted <code>dataSource</code> types</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Native</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.sql.Sql</code>, <code>javax.sql.DataSource</code>, <code>java.sql.Connection</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.jooq.DSLContext</code>, or any of the native types (a <code>DSLContext</code> is derived)</p></td>
-</tr>
-</tbody>
-</table>
 <div class="paragraph">
 <p>In the collection provider, <code>from e in employees</code> binds <code>employees</code> to a runtime collection
 variable. In the SQL providers, the data source of a <code>from</code>/<code>join</code> is a <strong>table name</strong>,
@@ -554,13 +592,16 @@ written as a string literal:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">from e in 'employees'                       // table name
 join d in 'departments' on e.deptId == d.id // joined table name
-from e in table('hr.employees')             // schema-qualified (helper form)</code></pre>
+from e in 'hr.employees'                    // schema-qualified (passes through unquoted)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>String literals are the initial, simplest form and match how dynamic SQL builders work. A
-<code>table(&#8230;&#8203;)</code> helper accommodates schema qualification and quoting. Type-driven table
-inference (<code>from e in Employee</code>) is explicitly deferred (see <em>Excluded and deferred features</em>).</p>
+<p>String literals are the initial, simplest form and match how dynamic SQL builders work.
+Schema-qualified names in dotted form pass through unquoted; a dedicated <code>table(&#8230;&#8203;)</code>
+helper for quoting-aware qualification is deferred. Type-driven table inference
+(<code>from e in Employee</code>) is explicitly deferred (see <em>Excluded and deferred features</em>).
+A nested GINQ query may also appear as a <code>from</code>/<code>join</code> source, becoming a SQL derived
+table (see <em>Set operations and subqueries</em>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -606,11 +647,11 @@ inference (<code>from e in Employee</code>) is explicitly deferred (see <em>Excl
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>orderby e.salary in desc</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ORDER BY e.salary DESC</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ORDER BY e.salary DESC NULLS LAST</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>limit 10, 20</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LIMIT 20 OFFSET 10</code> (ANSI; dialect-rendered under JOOQ)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OFFSET ? ROWS FETCH NEXT ? ROWS ONLY</code> (ANSI; dialect-rendered under JOOQ)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>select d.name, g.count(), g.avg(e &#8594; e.salary)</code></p></td>
@@ -684,9 +725,14 @@ inference (<code>from e in Employee</code>) is explicitly deferred (see <em>Excl
 <td class="tableblock halign-left valign-top"><p class="tableblock">Function mapping</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name ==~ /^A.*/</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name LIKE 'A%'</code> (restricted patterns)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name.startsWith('A')</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.name LIKE ? ESCAPE '!'</code> + escaped param <code>'A%'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard escaping</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>e.salary &gt; 4000 ? 'high' : 'low'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CASE WHEN e.salary &gt; ? THEN 'high' ELSE 'low' END</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Type inference</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Arbitrary Groovy code</p></td>
@@ -697,10 +743,16 @@ inference (<code>from e in Employee</code>) is explicitly deferred (see <em>Excl
 </table>
 <div class="paragraph">
 <p>The translator starts with comparisons, boolean logic, null checks, <code>in</code> lists, arithmetic,
-and the standard aggregate functions. Method-call mapping (such as <code>toUpperCase()</code> to
-<code>UPPER</code>) is a lookup table extended incrementally. Anything outside the recognised
-vocabulary triggers a compile-time error in the default strict mode, or is deferred to
-in-memory evaluation in mixed mode (see <em>Mixed-mode execution</em>).</p>
+and the standard aggregate functions. Method-call mapping is a lookup table extended
+incrementally; the initial vocabulary covers <code>toUpperCase</code>/<code>toLowerCase</code> (<code>UPPER</code>/<code>LOWER</code>),
+<code>trim</code> (<code>TRIM</code>), <code>length</code> (<code>CHAR_LENGTH</code>), <code>substring</code> (<code>SUBSTRING</code>, converting Groovy&#8217;s
+0-based/exclusive indices), <code>replace</code> (<code>REPLACE</code>), string concatenation with <code>+</code> (<code>||</code>),
+and <code>contains</code>/<code>startsWith</code>/<code>endsWith</code>, which map to <code>LIKE</code> with wildcard characters in the
+runtime value escaped so the match is always literal. Ternary expressions become searched
+<code>CASE WHEN</code> expressions (the Elvis operator is rejected: its truthiness semantics do not
+map to SQL null handling). Anything outside the recognised vocabulary triggers a
+compile-time error in the default strict mode, or is deferred to in-memory evaluation in
+mixed mode (see <em>Mixed-mode execution</em>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -755,9 +807,16 @@ GROUP BY e.dept</code></pre>
 <p>The translation is direct pattern matching: <code>g.key</code> or <code>g.dept</code> becomes the <code>GROUP BY</code>
 column; <code>g.count()</code> becomes <code>COUNT(*)</code>; <code>g.sum(e &#8594; e.amount)</code> becomes <code>SUM(e.amount)</code>; and
 so on. The standard aggregates (<code>count</code>, <code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code>) are supported by both
-providers. The classic <code>groupby</code> form (without <code>into</code>) relies on implicit-variable rewriting
-that does not translate cleanly; supporting only the <code>into</code> form in the SQL providers
-initially is a deliberate, reasonable simplification.</p>
+providers. Projected group keys automatically keep their GINQ name as the SQL column label
+(for example <code>groupby e.deptId as dept &#8230;&#8203; select dept</code> renders <code>e.deptId AS dept</code>), so
+result rows read the same as with the collection provider.</p>
+</div>
+<div class="paragraph">
+<p>The classic <code>groupby</code> form (without <code>into</code>) also translates — in SQL there is no
+implicit-variable rewriting to replicate, since grouped columns and implicit-<code>this</code>
+aggregates (<code>select e.dept, count(), sum(e.salary)</code>) map directly onto <code>GROUP BY</code> with
+aggregate functions. (Version 1 deferred the classic form; the reference implementation
+showed it to be a modest addition.)</p>
 </div>
 </div>
 <div class="sect2">
@@ -765,10 +824,42 @@ initially is a deliberate, reasonable simplification.</p>
 <div class="paragraph">
 <p>The DSL set operations combine complete <code>from&#8230;&#8203;select</code> queries and map to their SQL
 equivalents, including left-associative chaining (<code>Q1 union Q2 minus Q3</code>): <code>union</code> to
-<code>UNION</code>, <code>unionall</code> to <code>UNION ALL</code>, <code>intersect</code> to <code>INTERSECT</code>, <code>minus</code> to <code>EXCEPT</code>. Nested
-GINQ queries used as subqueries (including <code>in</code>-subquery and <code>exists</code>-style patterns) render
-as SQL subqueries; basic subqueries are in scope for the native provider, with the full
-range available under JOOQ.</p>
+<code>UNION</code>, <code>unionall</code> to <code>UNION ALL</code>, <code>intersect</code> to <code>INTERSECT</code>, <code>minus</code> to <code>EXCEPT</code>.</p>
+</div>
+<div class="paragraph">
+<p>A trailing <code>orderby</code>/<code>limit</code> on the <em>final</em> operand applies to the <strong>combined result</strong>,
+matching SQL&#8217;s reading of a trailing <code>ORDER BY</code>; the order keys must match columns of the
+final <code>select</code> clause and are rendered as select-list ordinals, since alias-qualified
+references are not visible after a set operation. <code>orderby</code>/<code>limit</code> within earlier
+operands are rejected. Note that the collection provider instead applies a trailing
+<code>orderby</code> to the final operand <em>before</em> combining; the SQL reading is proposed here as
+the more useful and less surprising semantics for database execution, but the divergence
+is called out for review.</p>
+</div>
+<div class="paragraph">
+<p>Nested GINQ queries render as SQL subqueries in both providers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a nested query as a <code>from</code>/<code>join</code> source becomes a <strong>derived table</strong>;</p>
+</li>
+<li>
+<p><code>(&#8230;&#8203;).exists()</code> becomes <code>EXISTS (subquery)</code>;</p>
+</li>
+<li>
+<p><code>in</code> against a nested query becomes <code>IN (subquery)</code> (and <code>!in</code> its negation);</p>
+</li>
+<li>
+<p>a nested query in an expression position becomes a <strong>scalar subquery</strong>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Subqueries in expression positions may be <em>correlated</em>, i.e. reference the aliases of
+enclosing queries — in SQL translation this is pure name resolution, requiring none of the
+execution machinery correlation demands of the collection provider. Derived tables cannot
+be correlated, matching standard SQL.</p>
 </div>
 </div>
 <div class="sect2">
@@ -828,26 +919,37 @@ open-source databases work out of the box; comprehensive dialect coverage is JOO
 <div class="sect2">
 <h3 id="_jooq_provider">JOOQ provider</h3>
 <div class="paragraph">
-<p>An optional provider that delegates to <a href="https://www.jooq.org">JOOQ</a>'s plain-SQL DSL. Users
-supply their own JOOQ dependency. The provider maps the <code>SqlQuery</code> IR to JOOQ DSL calls — a
-tree-to-tree mapping that is simpler than native string rendering because JOOQ owns parameter
-binding, quoting, escaping, and dialect rendering.</p>
+<p>An optional provider that uses <a href="https://www.jooq.org">JOOQ</a> as a <strong>compile-time, dialect-aware
+SQL renderer</strong>. Users supply their own JOOQ dependency <em>on the compile classpath</em>; it is not
+needed at runtime. The provider maps the <code>SqlQuery</code> IR onto JOOQ&#8217;s dynamic query model
+(the imperative <code>SelectQuery</code> API — no jOOQ code generation required, which suits GINQ&#8217;s
+string-named tables and columns), has JOOQ render SQL for the <code>dialect</code> option&#8217;s
+<code>SQLDialect</code> with named parameters, and converts those back to positional <code>?</code> placeholders
+paired with the parameter expressions in placeholder order. The result is the same
+artefact the native renderer produces — a constant SQL string plus ordered parameters —
+so execution, results, and downstream composition are identical across providers.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">// The IR for a grouped query maps to JOOQ's plain-SQL DSL (no code generation required):
-dsl.select(field("dept"), count(), avg(field("salary")))
-   .from(table("employees"))
-   .where(field("salary").gt(val(50000)))
-   .groupBy(field("dept"))
-   .fetch()</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">// Same query, dialect-specific SQL. For example, jOOQ's H2 dialect renders
+// aliases without AS and uses standard OFFSET/FETCH:
+//   select e.name from employees e where e.salary &gt; ?
+//   order by e.salary desc nulls last offset ? rows fetch next ? rows only
+GQL(provider: 'jooq-sql', dialect: 'H2', dataSource: db) {
+    from e in 'employees'
+    where e.salary &gt; threshold
+    orderby e.salary in desc
+    limit 10
+    select e.name, e.salary
+}</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>What JOOQ adds over native:</strong> dialect support for 30+ databases; full window-function
-support; comprehensive function mapping; and dialect-aware <code>LIMIT</code>/<code>OFFSET</code>. Crucially,
-JOOQ&#8217;s plain-SQL API works <em>without</em> code generation, which suits GINQ&#8217;s dynamic,
-string-named tables and columns.</p>
+<p><strong>What JOOQ adds over native:</strong> SQL rendering and function spellings for 30+ database
+dialects, including dialect-aware <code>LIMIT</code>/<code>OFFSET</code>, without growing the native Dialect
+SPI. It also provides the natural implementation path for window functions, which remain
+deferred (see <em>Excluded and deferred features</em>). If a query names the <code>jooq-sql</code> provider
+without JOOQ on the compile classpath, compilation fails with a precise error saying so.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -872,9 +974,8 @@ dependencies. JOOQ is always optional.</p>
 <h3 id="_mixed_mode_execution">Mixed-mode execution</h3>
 <div class="paragraph">
 <p>Some GINQ constructs have no portable SQL equivalent (for example list-collecting aggregates
-on many databases, window functions on the native provider, or an arbitrary Groovy expression
-in a <code>select</code>). Mixed mode provides a graceful boundary, modelled on LINQ-to-SQL&#8217;s
-<code>AsEnumerable()</code>:</p>
+on many databases, window functions, or an arbitrary Groovy expression in a <code>select</code>).
+Mixed mode provides a graceful boundary, modelled on LINQ-to-SQL&#8217;s <code>AsEnumerable()</code>:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -890,9 +991,10 @@ in a <code>select</code>). Mixed mode provides a graceful boundary, modelled on 
 </ol>
 </div>
 <div class="paragraph">
-<p>Mixed mode is opt-in. The default for the SQL providers is <strong>strict</strong>: an untranslatable
-construct is a compile-time error, so users never get a silent, surprising performance cliff.
-Enabling mixed mode trades that strictness for completeness.</p>
+<p>Mixed mode is opt-in and not yet part of the reference implementation. The default for the
+SQL providers is <strong>strict</strong>: an untranslatable construct is a compile-time error, so users
+never get a silent, surprising performance cliff. Enabling mixed mode trades that
+strictness for completeness.</p>
 </div>
 </div>
 </div>
@@ -929,9 +1031,9 @@ error (strict mode) or marks that fragment for in-memory evaluation (mixed mode)
 <div class="paragraph">
 <p>The upshot is that query <em>shape</em> errors and untranslatable-expression errors surface at
 compile time, while the generated runtime code is a thin, predictable wrapper around
-<code>groovy.sql.Sql</code> or a JOOQ <code>DSLContext</code>. The result type is <code>Queryable&lt;GroovyRowResult&gt;</code>
-(native) or <code>Queryable&lt;org.jooq.Record&gt;</code> (JOOQ), each adaptable to GINQ&#8217;s <code>NamedRecord</code> so
-that downstream GINQ and ordinary collection operations compose seamlessly.</p>
+<code>groovy.sql.Sql</code> — for both providers. The result type is uniformly
+<code>Queryable&lt;GroovyRowResult&gt;</code>, so downstream GINQ and ordinary collection operations
+compose seamlessly and switching providers never changes downstream code.</p>
 </div>
 </div>
 </div>
@@ -979,7 +1081,7 @@ those who want it.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GROUP BY / HAVING / standard aggregates</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GROUP BY / HAVING / standard aggregates (classic and <code>into</code> forms)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 </tr>
@@ -991,22 +1093,22 @@ those who want it.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Parameter binding</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PreparedStatement</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ-managed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PreparedStatement (positions from jOOQ&#8217;s rendering)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set operations (UNION / INTERSECT / EXCEPT)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set operations (UNION / INTERSECT / EXCEPT), incl. combined-result ORDER BY/LIMIT</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Subqueries</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Basic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Full</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Subqueries (derived tables, EXISTS, IN, scalar; correlated in expression positions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Window functions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dialect differences</p></td>
@@ -1016,17 +1118,22 @@ those who want it.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Function mapping</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Common cases</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Comprehensive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Common cases, dialect-spelled by JOOQ</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mixed-mode fallback</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Planned (phase 5)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Planned (phase 5)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Result type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Queryable&lt;GroovyRowResult&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Queryable&lt;GroovyRowResult&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">External dependency</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">None</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ (user-supplied)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ (compile classpath only)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1041,20 +1148,25 @@ dependency surface out of core GINQ:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>groovy-ginq        core: parser, GinqExpression AST, optimiser, collection provider
-groovy-ginq-sql    SQL backend: shared visitor, SqlQuery IR, expression translator,
-                   NativeSqlProvider, Dialect SPI, JooqSqlProvider, result wrapping
+<pre>groovy-ginq        core: parser, GinqExpression AST, optimiser, collection provider,
+                   GinqProvider registry SPI
+groovy-ginq-sql    SQL backend: shared translator, SqlQuery IR, native renderer,
+                   Dialect SPI, JOOQ renderer, runtime execution support
     depends on:  groovy-ginq   (AST types and Queryable)
     depends on:  groovy-sql    (Sql, GroovyRowResult)
-    compileOnly: jooq          (only the JooqSqlProvider; user supplies it at runtime)</pre>
+    compileOnly: jooq          (only the JOOQ renderer; user supplies it on the
+                                compile classpath — not needed at runtime)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Providers register through a small provider registry resolved via <code>ServiceLoader</code>, so adding
-<code>groovy-ginq-sql</code> to the classpath makes <code>provider: 'native-sql'</code> and <code>provider: 'sql'</code>
-available, and adding JOOQ additionally enables <code>provider: 'jooq-sql'</code>. The proposed
-implementation packages mirror existing GINQ conventions, for example
-<code>org.apache.groovy.ginq.provider.sql</code>.</p>
+<p>Providers register through a small <code>GinqProvider</code> registry resolved via <code>ServiceLoader</code>,
+so adding <code>groovy-ginq-sql</code> to the compile classpath makes <code>provider: 'native-sql'</code> and
+<code>provider: 'sql'</code> available, and adding JOOQ additionally enables <code>provider: 'jooq-sql'</code>.
+The implementation packages mirror existing GINQ conventions:
+<code>org.apache.groovy.ginq.provider.sql</code> for the native provider with <code>ir</code>, <code>render</code>, and
+<code>runtime</code> subpackages, and <code>org.apache.groovy.ginq.provider.sql.jooq</code> for the JOOQ
+renderer, keeping all jOOQ-referencing classes in one package that loads only when the
+provider is selected.</p>
 </div>
 </div>
 </div>
@@ -1062,13 +1174,23 @@ implementation packages mirror existing GINQ conventions, for example
 <h2 id="_reference_implementation">Reference implementation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>As a Feature GEP, this proposal will be accompanied by a reference implementation covered by
-unit tests and documented in the GINQ user guide. The H2 in-memory database is proposed for
-tests of both providers (test-only dependency; the dialect-specific JOOQ tests can target
-additional open-source databases as available).</p>
+<p>A reference implementation exists as
+<a href="https://github.com/apache/groovy/pull/2658">apache/groovy#2658</a>, covering phases 1–4 below
+plus the first tranche of phase 5&#8217;s function mapping (mixed-mode execution is the main
+remaining item). It is covered by unit, generated-SQL, and end-to-end tests against the H2
+in-memory database (test-only dependency; jOOQ dialect tests use jOOQ&#8217;s H2 dialect, and
+can target additional open-source databases as available), and is documented in an
+incubating section of the GINQ user guide. Version 2 of this document records the design
+decisions that were refined during that implementation — notably the compile-time JOOQ
+renderer, the uniform result type, renderer-assigned parameter positions, classic
+<code>groupby</code> support, and the set-operation ordering semantics.</p>
 </div>
 <div class="sect2">
 <h3 id="_effort_estimates">Effort estimates</h3>
+<div class="paragraph">
+<p>The original estimates are retained for the record; the delivered implementation landed
+within them.</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 37.5%;">
@@ -1156,15 +1278,17 @@ visitor is the hardest part here, and each individual renderer is comparatively 
 <h3 id="_phased_delivery">Phased delivery</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 12.5%;">
-<col style="width: 37.5%;">
-<col style="width: 50%;">
+<col style="width: 11.1111%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4444%;">
+<col style="width: 11.1112%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Phase</th>
 <th class="tableblock halign-left valign-top">What ships</th>
 <th class="tableblock halign-left valign-top">What works</th>
+<th class="tableblock halign-left valign-top">Status</th>
 </tr>
 </thead>
 <tbody>
@@ -1172,33 +1296,38 @@ visitor is the hardest part here, and each individual renderer is comparatively 
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shared visitor + <code>SqlQuery</code> IR + native provider (basic)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Single-table <code>SELECT</code>/<code>FROM</code>/<code>WHERE</code>/<code>ORDER BY</code>/<code>LIMIT</code> with simple expressions and parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Joins + <code>GROUP BY</code>/aggregates + set operations (native)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-table queries, aggregation via <code>groupby&#8230;&#8203;into</code>, <code>UNION</code>/<code>INTERSECT</code>/<code>EXCEPT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Multi-table queries, aggregation via classic <code>groupby</code> and <code>groupby&#8230;&#8203;into</code>, <code>UNION</code>/<code>INTERSECT</code>/<code>EXCEPT</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">JOOQ provider (reuses the shared IR)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Phases 1–2 for free, plus dialect support and window functions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Phases 1–2 for free, plus dialect-aware rendering</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Subqueries, <code>in</code>-subquery, <code>exists</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nested queries in both providers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nested queries in both providers, including correlated expression-position subqueries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Done</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mixed-mode fallback, function mapping, polish</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Graceful degradation for untranslatable expressions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Function mapping partly done; mixed mode not started</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
 <p>Phase 1 already delivers something useful with zero external dependencies. Phases 2 and 3
-both depend only on Phase 1 (the shared IR) and not on each other, so they can proceed in
-parallel. Phase 3 adds JOOQ as an optional upgrade path.</p>
+both depend only on Phase 1 (the shared IR) and not on each other. Window functions,
+originally listed under phase 3, are deferred (see below).</p>
 </div>
 </div>
 </div>
@@ -1231,14 +1360,24 @@ parallel. Phase 3 adds JOOQ as an optional upgrade path.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String-literal table names are the initial form; deriving table/column names from a class can come later.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Window functions in the native provider</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Window functions</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Available through JOOQ; out of scope for the ANSI native renderer initially.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not yet supported by either provider; the JOOQ renderer is the natural implementation path.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Full dialect breadth in the native provider</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The native Dialect SPI covers common high-variance points only; comprehensive coverage is JOOQ&#8217;s role.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>table(&#8230;&#8203;)</code> helper for quoting-aware schema qualification</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dotted table names pass through unquoted, which covers the common case.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jOOQ <code>Record</code>-based results / <code>DSLContext</code> data sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The uniform <code>Queryable&lt;GroovyRowResult&gt;</code> result type is preferred; direct jOOQ runtime integration could be revisited if demand emerges.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Asynchronous and streaming data sources</p></td>
@@ -1248,12 +1387,7 @@ parallel. Phase 3 adds JOOQ as an optional upgrade path.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Transaction and connection-pool management</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Connection lifecycle is delegated to the supplied <code>Sql</code>/<code>DataSource</code>/<code>DSLContext</code>; GINQ adds no transaction abstraction.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Classic <code>groupby</code> (without <code>into</code>) in the SQL providers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The <code>into</code> form is supported first; the classic form would require replicating implicit-variable rewriting.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Connection lifecycle is delegated to the supplied <code>Sql</code>/<code>DataSource</code>/<code>Connection</code>; GINQ adds no transaction abstraction.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1357,6 +1491,9 @@ core backend is proven.</p>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2658">apache/groovy#2658 — reference implementation</a></p>
+</li>
 <li>
 <p><a href="GEP-18.html">GEP-18: Integrated Concurrency and Parallel Processing</a> — home for the deferred asynchronous/streaming data sources</p>
 </li>
