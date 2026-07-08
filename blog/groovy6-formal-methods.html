@@ -69,7 +69,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-07-03 08:00PM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-07-03 08:00PM (Last updated: 2026-07-08 08:00PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -257,6 +257,32 @@ assertion error at the boundary, not a mysterious failure three frames
 deeper. Crucially, they are also <em>documentation that cannot drift</em>, because
 the compiler weaves them into the bytecode — the contract and the code can
 never disagree without the assertion firing.</p>
+</div>
+<div class="paragraph">
+<p>The newest member of the family closes the quadrant Design-by-Contract has
+historically left to javadoc prose: <strong>exceptional behaviour</strong>. <code>@ThrowsIf</code>
+(GROOVY-12135, landing in the next Groovy 6 pre-release, with <code>woven</code>/<code>direct</code>
+members on <code>@Requires</code> following as GROOVY-12136) states that a method throws
+a given exception <em>exactly when</em> a condition holds — and, by default,
+<strong>generates the guard for you</strong>, the general form of the pattern
+<code>@NullCheck</code> already provides for the null-check special case:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ThrowsIf(value = { b == 0 }, exception = ArithmeticException)
+int divide(int a, int b) { a.intdiv(b) }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>One line replaces the guard-clause boilerplate every service method opens
+with; <code>woven = false</code> documents a hand-written guard instead, and an optional
+<code>checked</code> mode verifies the iff at runtime in the same assertion style as
+<code>@Ensures</code>. The distinction it makes first-class is one the ecosystem has
+lacked: a <code>@Requires</code> violation is the <em>caller&#8217;s bug</em>; a <code>@ThrowsIf</code> throw is
+<em>defined behaviour</em> callers may rely on and catch. And its pedigree is this
+post&#8217;s story in miniature — the annotation was prototyped and battle-tested
+in <code>groovy-verify</code> (where the prover checks both directions of the iff), then
+contributed upstream, so the verification research fed the language itself.</p>
 </div>
 <div class="paragraph">
 <p>Alongside the contracts, Groovy 6 ships a family of <strong>type-checking
@@ -1034,11 +1060,45 @@ functional) have been submitted to the community&#8217;s
 <a href="https://github.com/hwayne/lets-prove-leftpad">lets-prove-leftpad</a> collection.</p>
 </li>
 <li>
+<p><strong>Exceptional contracts, proved.</strong> <code>GroovyAssert.shouldFail(E) { m(args) }</code>
+is a <em>provable</em> claim (the exceptional analogue of a unit test, discharged at
+compile time), and <code>@ThrowsIf</code> — the annotation above — is verified in both
+directions: a method that can return normally while the condition holds
+refutes, and so does a throw no arm justifies. The consumption goes further
+than the method itself: a call the program <em>moved past</em> didn&#8217;t throw, so its
+conditions were false (<code>Objects.checkIndex(i, n)</code> returning proves the index
+in range — the JDK&#8217;s own guard method becomes a proof device), and entering a
+<code>catch</code> means some source threw (<code>catch (ArithmeticException e)</code> after
+<code>Math.floorDiv(a, b)</code> <em>knows</em> <code>b == 0</code>).</p>
+</li>
+<li>
+<p><strong>Specs for code you don&#8217;t own.</strong> JML&#8217;s <code>.jml</code>-file idea in Groovy dialect: a
+library class re-declared as an ordinary Groovy <em>skeleton</em> — the same
+contract annotations, empty bodies — shipped for the everyday JDK surface
+(<code>Math</code>, <code>Integer</code>, <code>Long</code>, <code>Character</code>, <code>Objects</code>, <code>Arrays</code>, <code>Collections</code>,
+<code>List</code>, <code>String</code>, <code>java.time</code>). The most idiomatic string bug in the book
+becomes a compile-time story: <code>indexOf</code> without the found-check refutes with
+the <code>-1</code> sentinel, and <em>with</em> the check the bounds proof discharges from the
+spec. Every such spec is <strong>trusted by definition</strong> (nobody proves the JDK&#8217;s
+bodies), so every consumption is inventoried in a trusted-facts ledger, the
+runtime rung grid-checks the specs against the live JDK, and under
+<code>VERIFY_EXPLAIN</code> each proof names exactly which trusted facts carried it:</p>
+<div class="listingblock">
+<div class="content">
+<pre>explain ✓ xs[i] in bounds
+    not load-bearing: @Requires (xs != null)
+    also leaned on:   TRUSTED spec java.util.List#indexOf @Ensures</pre>
+</div>
+</div>
+</li>
+<li>
 <p><strong>Encoding packs</strong> — domain vocabularies plug in as <code>ServiceLoader</code>-discovered
 modules (packs model <em>libraries</em>, the core models the <em>language</em>): number
 theory (Fibonacci/GCD recurrences, extended with Bézout coefficients through
 which Gauss&#8217;s lemma proves), the whole JSR 385 units domain, combinatorics
-(factorials and Pascal-rule binomials), and the metaprogramming pack above.</p>
+(factorials and Pascal-rule binomials), and the metaprogramming pack above —
+and packs can now declare <em>spec skeletons</em> of their own, so a domain library
+arrives with both its theory and its contracts.</p>
 </li>
 <li>
 <p><strong>Verifying Java fragments</strong> — since Java is largely a syntactic subset of
@@ -1114,10 +1174,23 @@ own spelling, ready to paste.</p>
 <li>
 <p><code>VERIFY_EXPLAIN</code>, on a <em>verified</em> obligation, reports which authored
 <code>@Requires</code> clauses the proof actually used (<code>load-bearing</code>) and which it
-didn&#8217;t — and surfaces the structural facts a proof leaned on that you never
-wrote (a class invariant, a JVM integer bound) as <code>also leaned on</code>.</p>
+didn&#8217;t — and surfaces what you never wrote: structural facts (a class
+invariant, a JVM integer bound) and, crucially, <em>trusted heritage</em> — every
+registry spec, survival fact, or pack axiom a proof leaned on is named with
+its provenance (<code>TRUSTED spec java.util.List#indexOf @Ensures</code>,
+<code>pack number-theory axiom</code>). A proof that rests on trust says so, per proof.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>For an agent, <code>@ThrowsIf</code> deserves a special mention in this story: "when
+does this method throw?" is exactly the question an agent otherwise answers
+by parsing javadoc prose or traversing bodies — unreliable, and expensive in
+context. A <code>@ThrowsIf</code> arm is one structured, <em>enforced</em> line (condition,
+type, direction), and the shipped JDK specs mean the agent often doesn&#8217;t need
+to consume it at all: write <code>int i = s.indexOf(c); return s.charAt(i)</code> and
+the <strong>compiler</strong> refutes with the <code>-1</code> sentinel — JDK trivia an agent might
+hallucinate becomes an obligation the build enforces.</p>
 </div>
 <div class="paragraph">
 <p>This is the practical shape of the on-ramp from the introduction. A developer
@@ -1290,9 +1363,11 @@ suggests, and the path in is gradual rather than all-or-nothing:</p>
 <ul>
 <li>
 <p><strong>Today, in Groovy 6:</strong> <code>groovy-contracts</code> gives you executable Design by
-Contract, and the type-checking extensions give you flow-sensitive null
-safety, purity, frame conditions, and combiner/monadic shape checks. Adopt
-them now; they cost little and read like documentation that can&#8217;t drift.</p>
+Contract — now including the exceptional quadrant, with <code>@ThrowsIf</code> weaving
+your guard clauses from one declarative line — and the type-checking
+extensions give you flow-sensitive null safety, purity, frame conditions, and
+combiner/monadic shape checks. Adopt them now; they cost little and read like
+documentation that can&#8217;t drift.</p>
 </li>
 <li>
 <p><strong>When you want a stronger guarantee on a high-value method or class:</strong> the
@@ -1301,7 +1376,8 @@ external <code>groovy-verify</code> project reads the <strong>same</strong> cont
 with the exact input that breaks them. Postconditions, bounds, null,
 overflow, class invariants, loop termination, the multiset-conservation of a
 real sort, information flow, dimensional analysis, Liskov subtyping,
-algebraic laws, functional proofs by induction — and even statically-visible
+algebraic laws, functional proofs by induction, exceptional contracts in both
+directions, calls into a spec&#8217;d JDK — and even statically-visible
 metaclass programming — are all in reach for the fragment it models.</p>
 </li>
 <li>
@@ -1396,7 +1472,8 @@ Design-by-Contract module shipped with Groovy</p>
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>25/Jun/2026</strong>: Initial version.</p>
+<p><strong>03/Jul/2026</strong>: Initial version.
+<strong>08/Jul/2026</strong>: Added ThrowsIf and specs.</p>
 </div>
 </div>
 </div>
