@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-27</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-27</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_closures_and_lambdas_compile_today' class='anchor-link'>Background: how closures and lambdas compile today</a></li><li><a href='#_the_design_space' class='anchor-link'>The design space</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_the_soundness_boundary' class='anchor-link'>The soundness boundary</a></li><li><a href='#_groovy_6_0_deliverables_pending_discussion_and_findings' class='anchor-link'>Groovy 6.0 deliverables (pending discussion and findings)</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_configuration_and_flags' class='anchor-link'>Configuration and flags</a></li><li><a href='#_ide_and_tooling_considerations' class='anchor-link'>IDE and tooling considerations</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-27</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-27</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Compact Closure and Lambda Compilation</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 6.0 (potential first step) and Groovy 7.0 (remainder)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Reduces the per-closure/per-lambda generated-class explosion by hoisting bodies onto the enclosing class. A small, sound-by-construction slice potentially targets Groovy 6; the broader closure work targets Groovy 7. Strictly additive; gated by a flag for back-out.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-09</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-09</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+We are currently working on Groovy 6.0. A small, self-contained part of this proposal targets Groovy 6.0;
+the larger part targets Groovy 7.0.
+The final version of this proposal may differ significantly from the current draft,
+but having this draft available allows us to gather early feedback, align design
+decisions in Groovy 6 as best we can, and iterate on the design.
+We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Every closure literal and (statically compiled) lambda in Groovy is compiled to its own
+generated class. A method with a handful of closures produces a handful of extra <code>.class</code>
+files; deeply nested closures produce classes whose names concatenate without bound
+(<code>Outer$_method_closure1$_closure2$_closure3</code>). This is invisible at the source level but
+real at the bytecode level: more class files to load, verify, JIT, and hold in metaspace.</p>
+</div>
+<div class="paragraph">
+<p>This GEP proposes compiling eligible closures and lambdas <strong>more compactly</strong> by <strong>hoisting the
+body into a method on the enclosing class</strong> instead of generating a class per closure. This is
+exactly how the JVM compiles Java lambdas, and it unifies two today-separate code paths behind
+one primitive. The value expressed as an object is then chosen to fit what the callsite
+actually needs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a <strong>SAM-targeted lambda</strong> becomes a <code>LambdaMetafactory</code> functional-interface instance over the
+hoisted method — no generated class at all, and a zero-allocation singleton when
+non-capturing (Java parity);</p>
+</li>
+<li>
+<p>a <strong>closure</strong> becomes one shared <code>Closure</code> adapter that dispatches to the hoisted method — no
+per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <code>curry</code>, <code>memoize</code>,
+<code>trampoline</code>, and iteration continue to work);</p>
+</li>
+<li>
+<p>where a value neither escapes nor needs closure identity, the object can be elided entirely.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The proposal is deliberately phased. A <strong>small, sound-by-construction slice — eliminating the
+generated class for non-capturing SAM lambdas — targets Groovy 6.0</strong>. The <strong>broader closure work,
+which needs a soundness analysis and a performance path, targets Groovy 7.0</strong>. The change is
+strictly additive, defaults can be flipped via a flag for back-out, and it is gated so that any
+tooling that reflects on generated-class names has an escape hatch.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_class_explosion">The class explosion</h3>
+<div class="paragraph">
+<p>Groovy compiles each closure literal to a distinct generated inner class extending
+<code>groovy.lang.Closure</code>. That class carries a <code>doCall</code> method, a <code>serialVersionUID</code>, its own
+metaclass initialiser, a constructor taking <code>(owner, thisObject, &#8230;&#8203;captured)</code>, and one
+<code>Reference</code>-boxed field per captured mutable local. Nesting concatenates names:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Deep {
+    def render(Map m) {
+        m.each { k, v -&gt;
+            [1, 2].each { i -&gt;
+                [3, 4].each { j -&gt; "$k$v$i$j".toString() }
+            }
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>compiles to four classes — <code>Deep</code>, <code>Deep$_render_closure1</code>,
+<code>Deep$_render_closure1$_closure2</code>, and <code>Deep$_render_closure1$_closure2$_closure3</code> — one per
+nesting level, names growing with depth.</p>
+</div>
+<div class="paragraph">
+<p>The cost is not correctness but <strong>packaging</strong>: class-file bytes, classloading, bytecode
+verification, JIT profiling, and metaspace, all multiplied by the number of closures. For
+closure-heavy code — GSP page compilation, builders, DSL-shaped code — this is a measurable
+tax paid on code that reads as a one-liner.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_lambdas_are_heavier_than_javas">Lambdas are heavier than Java&#8217;s</h3>
+<div class="paragraph">
+<p>Even for a statically compiled lambda that targets a functional interface, Groovy generates a
+full <code>groovy.lang.Closure</code> subclass:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
+class L {
+    Function&lt;Integer,Integer&gt; nonCap()      { (Integer x) -&gt; x * 2 }        // -&gt; L$_nonCap_lambda1 (extends Closure)
+    Function&lt;Integer,Integer&gt; cap(int base) { (Integer x) -&gt; x + base }     // -&gt; L$_cap_lambda2   (extends Closure)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both generated classes extend <code>Closure</code> and implement <code>GeneratedLambda</code>, each with its own
+metaclass machinery. Groovy already uses <code>invokedynamic</code>/<code>LambdaMetafactory</code> (so the runtime
+<em>value</em> is a JDK metafactory <code>Function</code>, and the non-capturing case is already a zero-allocation
+singleton) — but it still drags along a per-lambda class whose only live part is a <code>static
+doCall</code>. The equivalent Java lambda emits <strong>no</strong> class per lambda: the body is a <code>private static
+synthetic</code> method on the enclosing class and the metafactory bootstraps directly against it.</p>
+</div>
+<div class="paragraph">
+<p>The primitive that closes this gap for lambdas — "put the body on the enclosing class" — is the
+<em>same</em> primitive that fixes the closure explosion. That shared primitive is the heart of this GEP.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_design_principles">Design principles</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Compile the body once, choose the wrapper to fit.</strong> A single backend hoists a closure/lambda
+body to a method on the enclosing class. The object exposed at the callsite (metafactory SAM,
+shared <code>Closure</code> adapter, or nothing at all) is chosen by what the value must actually satisfy.</p>
+</li>
+<li>
+<p><strong>Never change observable behaviour.</strong> An optimised closure/lambda computes the same result,
+keeps its per-instance identity where it has one, and preserves the <code>Closure</code> API where that
+API is reachable. Anything a compact representation cannot provide is a reason to <em>decline</em>
+the optimisation for that closure, not to change its meaning.</p>
+</li>
+<li>
+<p><strong>Sound by analysis under static, sound by declaration under dynamic.</strong> Static compilation
+supplies the types needed to prove an optimisation safe and to make the hoisted body fast;
+dynamic compilation cannot prove it, so there the optimisation is opt-in.</p>
+</li>
+<li>
+<p><strong>Ship the safe corner first.</strong> The functional-interface (SAM) case is sound by construction —
+a SAM target cannot express the dangerous closure behaviours. It lands first and proves the
+shared backend before the broader closure work builds on it.</p>
+</li>
+<li>
+<p><strong>Additive and reversible.</strong> Nothing changes for un-optimised code. Each landing is gated by a
+flag so it can be disabled without recompiling application code.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_background_how_closures_and_lambdas_compile_today">Background: how closures and lambdas compile today</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A closure <code>{ params &#8594; body }</code>:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>becomes a generated <code>InnerClassNode</code> (<code>ClosureWriter.getOrAddClosureClass</code>) — one per literal;</p>
+</li>
+<li>
+<p>that class extends <code>groovy.lang.Closure implements GeneratedClosure</code>, with a <code>doCall</code> holding
+the body, captured mutable locals threaded as <code>groovy.lang.Reference</code> constructor
+arguments/fields, and standard <code>Closure</code> state (<code>owner</code>, <code>thisObject</code>, <code>delegate</code>,
+<code>resolveStrategy</code>, &#8230;&#8203;);</p>
+</li>
+<li>
+<p>at the callsite, <code>new Outer$_m_closure1(this, this, ref&#8230;&#8203;)</code> is instantiated.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A statically compiled lambda <code>(params) &#8594; body</code> targeting a functional interface
+(<code>StaticTypesLambdaWriter</code>):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>still generates a lambda <code>InnerClassNode</code> extending <code>Closure</code> with a <code>doCall</code> (made <code>static</code>
+when non-capturing);</p>
+</li>
+<li>
+<p>emits <code>invokedynamic</code> bootstrapped through <code>LambdaMetafactory.metafactory</code>, whose
+implementation-method handle points at that <code>doCall</code>;</p>
+</li>
+<li>
+<p>so the runtime value is a JDK-generated functional-interface instance, and the generated
+lambda class exists only to <em>hold</em> the implementation method.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>A dynamically compiled lambda is compiled exactly like a closure (no metafactory).</p>
+</div>
+<div class="paragraph">
+<p>Two facts make hoisting natural. First, methods can already be added to the enclosing class
+<em>during</em> code generation and get compiled — Groovy&#8217;s own serializable-lambda deserialisation
+helpers do this. Second, for statically compiled code the type checker has already run, so
+the inferred types needed to type a hoisted method and to prove an optimisation safe are
+available on the AST.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_design_space">The design space</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The combinations one could enumerate — dynamic/static, closure/lambda, annotated/not,
+capturing/not, needs-identity/not, SAM/not — collapse to a small number of axes that actually
+drive the compilation strategy.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_one_that_matters_required_capability">The one that matters: required capability</h3>
+<div class="paragraph">
+<p>The question that selects the representation is <strong>what must this value be able to do at its use
+sites?</strong> Crucially, this is a <strong>short</strong> list. A shared <code>Closure</code> adapter that dispatches to a
+hoisted method is still a real <code>Closure</code>, so it preserves almost everything: it is callable, it
+has per-instance identity, and <code>curry</code>/<code>rcurry</code>/<code>ncurry</code>, <code>memoize*</code>, <code>trampoline</code>,
+<code>compose</code>, and iteration all continue to work (they operate through <code>call()</code>).</p>
+</div>
+<div class="paragraph">
+<p>A hoisted representation loses exactly two things relative to a normal generated closure:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Externally-set <code>delegate</code>/<code>resolveStrategy</code>.</strong> A hoisted body binds free names at compile
+time against the owner; a normal closure resolves free names against a <code>delegate</code> set at
+runtime. This is the one true soundness boundary (see <em>The soundness boundary</em>).</p>
+</li>
+<li>
+<p><strong>Serialization.</strong> A method-handle/dispatch-backed adapter is not portably serializable the way
+a generated closure class is.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>So "needs closure identity" is not a broad lattice; it is essentially the predicate <strong>"does
+externally-set delegate/resolveStrategy or serialization reach this value?"</strong></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_one_that_flips_the_difficulty_static_vs_dynamic">The one that flips the difficulty: static vs dynamic</h3>
+<div class="paragraph">
+<p>Compilation mode is not a strategy selector; it is an <strong>information and dispatch</strong> modifier that
+flips which half of the problem is hard:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">Dynamic</th>
+<th class="tableblock halign-left valign-top"><code>@CompileStatic</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Mechanism</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Trivial — uniform runtime dispatch, no type story</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Harder — the hoisted body must be typed and the adapter must present the right type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Soundness</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hard — no types, so the dangerous delegate case cannot be detected; must be trusted</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Feasible — types make escape analysis and <code>@DelegatesTo</code> detection possible</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance upside</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">~None beyond class count (dispatch was dynamic anyway)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Real — the hoisted body can be statically dispatched, and SAM targets reach <code>LambdaMetafactory</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The consequence is that the "easy" dynamic case is the <em>low-value</em> one (unsound without a
+declaration, no speed gain), and the "hard" static case is where the optimisation is both
+<em>provably safe</em> and <em>valuable</em>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_rest_are_inputs_and_cost_dials">The rest are inputs and cost dials</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Lambda vs closure syntax</strong> is a capability <em>declaration</em>, not a separate axis. Arrow syntax
+already routes a SAM-targeted expression to the lighter (metafactory) writer; it is the
+programmer saying "treat me as a function." A brace closure and an arrow lambda targeting the
+<em>same</em> functional interface compile differently today for exactly this reason.</p>
+</li>
+<li>
+<p><strong>An opt-in annotation</strong> (working name <code>@Packed</code>) is the same kind of thing: a programmer
+assertion that a closure needs no external delegate, supplied where the compiler cannot prove
+it (i.e. under dynamic compilation).</p>
+</li>
+<li>
+<p><strong>SAM vs not</strong> is the target-type <em>upper bound</em> on capability: a SAM target permits the
+object-free metafactory path; a <code>Closure</code>/<code>Object</code> target caps at the adapter.</p>
+</li>
+<li>
+<p><strong>Capturing vs not</strong> is a <em>cost dial</em> (allocation vs singleton) within whatever strategy is
+chosen, not a selector.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_strategy_lattice">The strategy lattice</h3>
+<div class="paragraph">
+<p>Given the required capability, the compiler picks the lightest representation that satisfies it:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Strategy</th>
+<th class="tableblock halign-left valign-top">When</th>
+<th class="tableblock halign-left valign-top">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S0</strong> full generated class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">needs external delegate / serialization, or capability unprovable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">today&#8217;s behaviour — one class per closure/lambda</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S1</strong> shared <code>Closure</code> adapter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure-shaped, no external delegate/serialization</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hoisted body + one shared adapter; no per-closure class; <code>curry</code>/<code>memoize</code> preserved</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S2</strong> metafactory SAM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">functional-interface target, no closure identity needed</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hoisted body + <code>LambdaMetafactory</code>; <strong>no class</strong>; zero-alloc singleton when non-capturing; static-only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S3</strong> elide / inline</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">value neither escapes nor needs an object (e.g. call-once)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">no object at all</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Capturing modulates each (non-capturing enables the singleton/static-method form); static mode
+enables typed dispatch of the hoisted body and the S2 path.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_architecture">Architecture</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>One backend, one capability front-end, a wrapper choice:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>closure / lambda body
+        |
+        v
+ hoist to a method on the enclosing class      &lt;-- shared backend
+        |
+   capability inference  (target type; arrow/@Packed declarations;
+        |                  static-only escape + @DelegatesTo + serialization analysis)
+        v
+   +----+----+----------------------+---------------------+
+   |         |                      |                     |
+  S3        S2                     S1                    S0
+ elide   metafactory SAM     PackedClosure adapter   generated class
+ (no obj) (no class)         (no per-closure class)   (unchanged)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The elegant consequence is that the closure writer and the lambda writer stop being two
+separate mechanisms. They share the hoist backend and differ only in which wrapper the
+capability front-end selects. The existing <code>StaticTypesLambdaWriter</code> becomes a special case
+of the general design.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_soundness_boundary">The soundness boundary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The single behaviour a hoisted representation cannot reproduce is <strong>delegate resolution set by
+the caller</strong>. This is not hypothetical:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Mk { Closure c() { return { -&gt; who() } }; def who() { 'OWNER' } }
+def c = new Mk().c()
+c.delegate = [who: { -&gt; 'DELEGATE' }]
+c.resolveStrategy = Closure.DELEGATE_FIRST
+c()    // a normal closure resolves who() against the delegate -&gt; 'DELEGATE'
+       // a hoisted body binds who() to the owner at compile time -&gt; 'OWNER'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An eligibility check that only looks <em>inside</em> a closure for <code>delegate</code>/<code>owner</code> references does
+not catch this, because the delegate is set by the <em>caller</em> after the closure escapes. Making
+S1 sound therefore requires an <strong>escape analysis</strong>: pack a closure only when it can be proven not
+to reach a delegate-setting context (and is not serialized). Under <code>@CompileStatic</code> this is
+tractable — closures handed to <code>@DelegatesTo</code>-annotated parameters are the detectable danger
+signal, and the target types are known. Under dynamic compilation it cannot be proven, which is
+why the closure optimisation is opt-in there.</p>
+</div>
+<div class="paragraph">
+<p>By contrast, everything else survives — verified: <code>curry</code>, <code>memoize</code>, and <code>trampoline</code> all
+continue to work on an adapter-backed closure, because the adapter <em>is</em> a real <code>Closure</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Why lambdas are the safe corner.</strong> A functional-interface target <em>cannot express</em> delegate
+resolution — a <code>Function</code> has no <code>delegate</code>. And a SAM-typed lambda is, by its type, used as
+that SAM. So the entire soundness cliff is defined away for the SAM case, which is precisely why
+it can land first.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_6_0_deliverables_pending_discussion_and_findings">Groovy 6.0 deliverables (pending discussion and findings)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Groovy 6 target is the sound-by-construction slice. One piece is proposed as the primary
+deliverable, with a second offered as an option.</p>
+</div>
+<div class="sect2">
+<h3 id="_piece_1_primary_eliminate_the_class_for_non_capturing_sam_lambdas">Piece 1 (primary): eliminate the class for non-capturing SAM lambdas</h3>
+<div class="paragraph">
+<p>For a statically compiled, <strong>non-capturing</strong>, non-serializable lambda targeting a functional
+interface, do what Java does: emit the body as a <code>private static</code> synthetic method on the
+enclosing class and bootstrap <code>LambdaMetafactory</code> directly against it — generating no lambda
+class.</p>
+</div>
+<div class="paragraph">
+<p>This is sound by construction: the target is a SAM (no delegate possible), the runtime value is
+already a metafactory instance (so the lambda class was never the value — it was a dead
+impl-holder), and non-capturing means no capture threading. Measured on a proof-of-concept:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Case</th>
+<th class="tableblock halign-left valign-top">Before</th>
+<th class="tableblock halign-left valign-top">After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>L</code> with <code>nonCap</code>, <code>cap</code>, <code>runnable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>L</code> + 3 lambda classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>L</code> + 1 (only the capturing one)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Handlers</code> with 5 non-capturing + 1 capturing lambda</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Handlers</code> + 6 lambda classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Handlers</code> + 1 — <strong>5 classes eliminated</strong>, 5 <code>$lambda$</code> static methods on <code>Handlers</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The metafactory singleton is preserved (<code>nonCap().is(nonCap()) == true</code>), stack traces name a
+<code>$lambda$&#8230;&#8203;</code> method on the enclosing class (Java-like), and behaviour is unchanged across
+<code>Predicate</code>/<code>BiFunction</code>, lambdas in <code>static</code> methods, lambdas calling static methods, and
+serializable non-capturing round-trips (which fall back to the class-based path). A lambda that
+reads an instance field (<code>() &#8594; count</code>) is correctly <em>not</em> hoisted and keeps working.</p>
+</div>
+<div class="paragraph">
+<p>The change is localised to <code>StaticTypesLambdaWriter</code> (the existing <code>doCall</code> construction already
+does the correct non-capturing/instance-member analysis; the hoist re-homes the resulting static
+method onto the enclosing class). It requires no change to the <code>invokedynamic</code>/metafactory
+bootstrap other than the implementation method&#8217;s owner class, and does not require the
+class-visitor changes the closure work needs.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_piece_2_option_capturing_sam_lambdas">Piece 2 (option): capturing SAM lambdas</h3>
+<div class="paragraph">
+<p>A capturing SAM lambda today instantiates its lambda class to hold the captured values (Groovy
+even <code>Reference</code>-wraps them). The Java-style form uses a <code>static</code> implementation method taking
+the captured values as leading arguments, with the metafactory capturing them directly — which
+<em>also</em> removes the <code>Closure</code> allocation and the <code>Reference</code> wrapping. This is a larger change
+than Piece 1 (the impl signature and bootstrap arguments change), so it is offered as a Groovy 6
+<strong>stretch</strong> or an early Groovy 7 item rather than a commitment.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_7_0_deliverables">Groovy 7.0 deliverables</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The broader, higher-value work — where the soundness analysis and the performance story live.</p>
+</div>
+<div class="sect2">
+<h3 id="_closure_packing_s1_with_a_soundness_analysis">Closure packing (S1) with a soundness analysis</h3>
+<div class="paragraph">
+<p>A shared <code>Closure</code> adapter (<code>PackedClosure</code>) that dispatches to a hoisted body, applied to
+closures rather than lambdas. A proof-of-concept in the code generator already demonstrates the
+mechanism across the hard cases: no-capture and captured closures (by value; written captures via
+shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested closures</strong>, implicit <code>it</code>, under
+both <code>@CompileStatic</code> and dynamic compilation, correctly declining closures that use
+<code>delegate</code>/<code>owner</code>/<code>super</code>. What remains for a real feature is the <strong>capability/escape analysis</strong>
+described above, so packing is chosen only when it is provably sound (automatic under
+<code>@CompileStatic</code>; opt-in via <code>@Packed</code> under dynamic), falling back to S0 otherwise.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_typed_static_dispatch_making_it_fast_not_just_small">Typed static dispatch (making it fast, not just small)</h3>
+<div class="paragraph">
+<p>In the proof-of-concept the hoisted body is compiled dynamically, so a packed <code>@CompileStatic</code>
+closure is smaller but dispatched dynamically. A production form must type the hoisted method
+from the inferred types the type checker already computed and dispatch the body statically (with
+an <code>invokedynamic</code>/<code>MethodHandle</code> callsite), so that packing under <code>@CompileStatic</code> is a speed
+win and not merely a class-count win.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_object_elision_s3">Object elision (S3)</h3>
+<div class="paragraph">
+<p>For closures/lambdas that neither escape nor need an object — for example immediately-invoked
+bodies — elide the object entirely. This is the most aggressive step and depends on escape
+proof and, for iteration intrinsics, knowledge of the callee.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unify_the_two_writers">Unify the two writers</h3>
+<div class="paragraph">
+<p>Fold the lambda and closure code paths behind the single hoist backend, so the SAM and
+<code>Closure</code> cases are one mechanism selecting different wrappers.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration_and_flags">Configuration and flags</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each landing is gated so it can be disabled without recompiling application code, following
+Groovy&#8217;s existing <code>SystemUtil.getBooleanSafe(&#8230;&#8203;)</code>/<code>static final</code> convention (as used for
+<code>groovy.target.indy</code> and similar). The gate wraps the single decision branch, so <strong>disabled</strong>
+means byte-for-byte today&#8217;s behaviour.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Concern</th>
+<th class="tableblock halign-left valign-top">Flag (proposed)</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-capturing SAM lambda hoisting (Groovy 6)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.lambda.hoist.disabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off (i.e. hoisting <strong>on</strong>), opt-out</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under <code>@CompileStatic</code> (Groovy 7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (+ per-scope <code>@Packed</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to be decided per release</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Packed</code> opt-in only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off unless annotated</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The default <strong>direction</strong> is a policy decision independent of the mechanism: a feature can ship
+<strong>on</strong> with an opt-out flag (deliver the win immediately, keep a back-out valve), or <strong>off</strong> with an
+opt-in flag and be flipped a release later (conservative). The same one-line gate serves either
+way; only the boolean&#8217;s default changes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The flag also eases test migration. Groovy&#8217;s current tests assert the <em>old</em> bytecode shape (a
+<code>doCall</code> on a lambda class); with hoisting disabled those assertions stay valid, while
+new-structure tests run with it enabled — so the codegen change and the test rewrite need not
+land in the same commit.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If per-compilation (rather than JVM-wide) control is wanted, the same toggle can be promoted to
+a <code>CompilerConfiguration</code> option, mirroring how <code>indy</code> is both a system property and a config
+option. The system property is proposed as the initial back-out mechanism.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ide_and_tooling_considerations">IDE and tooling considerations</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Because this is a <strong>bytecode-shape</strong> change, behaviour is preserved but the generated structure a
+tool might reflect on changes. This surface needs an explicit compatibility pass with IDEs,
+debuggers, and other tooling before the defaults are turned on broadly:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Generated class names.</strong> Tools that assume <code>Outer$_method_closure1</code> / <code>Outer$_m_lambda1</code>
+classes exist — by name, by <code>Class.forName</code>, by scanning class files, or by pattern — will not
+find them for hoisted closures/lambdas. This includes coverage tools, decompilers, bytecode
+viewers, and any reflection keyed on the generated naming scheme.</p>
+</li>
+<li>
+<p><strong>Marker types.</strong> <code>GeneratedClosure</code>/<code>GeneratedLambda</code> are not present on a metafactory SAM
+value (they were never on the runtime value for SAM lambdas, but tooling that inspects the
+<em>generated class</em> is affected).</p>
+</li>
+<li>
+<p><strong>Debuggers and stepping.</strong> The body now lives in a <code>$lambda$&#8230;&#8203;</code>/<code>$packed$&#8230;&#8203;</code> method on the
+enclosing class rather than a <code>doCall</code> on a nested class. Stack traces improve (they name the
+enclosing class), but "step into closure", breakpoints on a closure body, and lambda/closure
+display in variable views should be checked in IntelliJ IDEA and Eclipse, and against JDWP
+expectations.</p>
+</li>
+<li>
+<p><strong>Serialization.</strong> Serializable closures/lambdas continue on the class-based path in the first
+step; any future extension to hoist them must carry the <code>$deserializeLambda$</code> machinery to the
+enclosing class (as Java does) and be validated for round-trip and versioning.</p>
+</li>
+<li>
+<p><strong>Stub generation / joint compilation and Groovydoc.</strong> Synthetic hoisted methods must remain
+invisible to public API views (they are <code>private synthetic</code>), and stub generation must not
+surface them.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Concretely, before enabling by default we should: build the reference IDE integrations against a
+snapshot; run the debugger step/breakpoint scenarios for both closures and lambdas; check the
+common coverage and decompiler tools; and document the flag as the back-out for any tool not yet
+updated. This tooling verification is a first-class deliverable of the GEP, not an afterthought.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_reference_implementation">Reference implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A proof-of-concept exists as a spike in the code generator, exercised through this proposal&#8217;s
+development:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Lambda first step (Groovy 6 candidate).</strong> Implemented in <code>StaticTypesLambdaWriter</code>:
+non-capturing SAM lambda classes eliminated, impl hoisted to <code>private static</code> methods on the
+enclosing class, metafactory singleton and behaviour verified, class-count reductions measured
+as above. The existing lambda tests that assert the old bytecode shape need updating to the new
+structure (behaviour is unchanged); that test migration is the bulk of the remaining first-step
+work.</p>
+</li>
+<li>
+<p><strong>Closure packing (Groovy 7 direction).</strong> A <code>ClosureWriter</code>-based spike (with a <code>PackedClosure</code>
+runtime adapter) demonstrates hoisting closures — captures, arbitrary-depth nesting, written
+captures via <code>Reference</code>, implicit <code>it</code> — under both compilation modes, with correct declines
+for delegate/owner/super. It confirms the writer is the right home (no <code>@CompileStatic</code>
+boundary, unlike an AST-transform approach) and empirically establishes the soundness cliff and
+what is preserved. It does <strong>not</strong> yet include the capability/escape analysis or typed dispatch;
+those are the Groovy 7 work.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>One supporting change surfaced by the closure spike is worth noting: hoisting nested closures
+requires the class visitor to visit methods added <em>during</em> code generation to a fixpoint (the
+current two-round <code>visitMethods</code> misses methods added while compiling a method that was itself
+added during compilation). That change is general and low-risk but must be validated against the
+full suite before it lands.</p>
+</div>
+<div class="sect2">
+<h3 id="_phased_delivery">Phased delivery</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 11.1111%;">
+<col style="width: 33.3333%;">
+<col style="width: 44.4444%;">
+<col style="width: 11.1112%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What ships</th>
+<th class="tableblock halign-left valign-top">What works</th>
+<th class="tableblock halign-left valign-top">Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Non-capturing SAM lambda class elimination + flag + test migration + IDE/tooling check</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java-parity lambda codegen for the common SAM case; back-out flag</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Capturing SAM lambdas (metafactory-captured static impl)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removes the class, <code>Closure</code> alloc, and <code>Reference</code> wrapping for capturing SAM lambdas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 stretch / 7.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + <code>@Packed</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic under <code>@CompileStatic</code>, opt-in under dynamic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typed static dispatch of hoisted bodies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Packed <code>@CompileStatic</code> closures are faster, not just smaller</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object elision (S3) + unify the writers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No object for non-escaping call-once bodies; one backend for closures and lambdas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Phase 1 stands alone and delivers value with no dependency on the later phases. Phases 3–5 build
+on the shared backend proven in phases 1–2.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changing closure/lambda <em>semantics</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">This is a codegen/packaging optimisation only. Eligible closures compute identical results and keep their reachable <code>Closure</code> API; ineligible ones are compiled exactly as today.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Packing closures that use externally-set <code>delegate</code>/<code>resolveStrategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">These require a real per-closure representation; they are detected (statically) or declined and fall back to S0.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable closure/lambda hoisting</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kept on the class-based path initially; hoisting them requires carrying the deserialisation machinery to the enclosing class.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object elision (S3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred (Groovy 7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The most aggressive step; needs escape proof and, for iteration, callee knowledge.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode automatic packing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cannot be proven sound without types; dynamic packing is opt-in via <code>@Packed</code> only.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A user-visible switch between S1/S2/S3 per closure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The compiler picks the lightest sound representation; users influence it only via target type, arrow syntax, and <code>@Packed</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_and_impact">Compatibility and impact</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>The feature is additive and reversible:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Un-optimised code is unchanged. Ineligible closures/lambdas (and everything when the flag is
+off) compile byte-for-byte as today.</p>
+</li>
+<li>
+<p>Observable behaviour of optimised closures/lambdas is preserved, including per-instance
+identity and the reachable <code>Closure</code> API (<code>curry</code>/<code>memoize</code>/<code>trampoline</code>).</p>
+</li>
+<li>
+<p>The one behavioural difference a compact representation <em>cannot</em> provide — caller-set delegate
+resolution — is exactly the case the analysis declines to optimise, falling back to a normal
+generated closure.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_binary_compatibility">Binary compatibility</h3>
+<div class="paragraph">
+<p>Generated-class <em>names</em> and the presence of per-closure/per-lambda classes are not part of any
+public API, but tooling may depend on them (see <em>IDE and tooling considerations</em>). The flag is
+the compatibility valve while tools are updated.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance">Performance</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fewer generated classes: less classloading, verification, JIT profiling, and metaspace.</p>
+</li>
+<li>
+<p>Non-capturing SAM lambdas keep their zero-allocation metafactory singleton (the class removed
+is dead weight, not an allocation).</p>
+</li>
+<li>
+<p>Closure packing under <code>@CompileStatic</code> is a class-count win immediately and a dispatch-speed
+win once typed dispatch (phase 4) lands; without it, a packed <code>@CompileStatic</code> closure trades a
+class for dynamic dispatch, so typed dispatch is a prerequisite for turning it on for hot code.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_security">Security</h3>
+<div class="paragraph">
+<p>No new trust boundary. The optimisation is a local codegen transform; it introduces no new
+runtime input handling.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Do it as an AST transformation rather than in the code generator.</strong> Rejected for the closure
+case: a phase sweep shows there is no AST-transform window that both packs closures <em>and</em>
+survives <code>@CompileStatic</code> — early enough to control codegen means the type checker sees the
+rewritten (untyped) form and fails; late enough to be post-type-check means it is too late to
+suppress class emission. The code generator is the only place with both the inferred types and
+control over class emission.</p>
+</li>
+<li>
+<p><strong>Ship closure packing without the escape analysis.</strong> Rejected: without it, packing silently
+mis-resolves a closure whose delegate is set by the caller. Soundness is a prerequisite, not a
+follow-up.</p>
+</li>
+<li>
+<p><strong>One aggressive representation for everything.</strong> Rejected: no single representation satisfies the
+full <code>Closure</code> contract cheaply. The lattice picks the lightest <em>sound</em> option per closure.</p>
+</li>
+<li>
+<p><strong>Lambda-style (metafactory) for closures too.</strong> Rejected as the general answer:
+<code>LambdaMetafactory</code> targets interfaces, and <code>groovy.lang.Closure</code> is an abstract class with
+rich mutable state, so closures need the shared adapter (S1) rather than the metafactory (S2).
+S2 applies only where the target genuinely is a functional interface.</p>
+</li>
+<li>
+<p><strong>Leave lambdas as they are.</strong> Rejected: Groovy lambdas carry a per-lambda class that Java does
+not, and the fix is the same primitive the closure work needs. The SAM corner is the cheapest,
+safest place to introduce that primitive.</p>
+</li>
+<li>
+<p><strong>No flag.</strong> Rejected: a bytecode-shape change should carry a back-out for tooling that has not
+yet been updated. The optimisation&#8217;s all-or-nothing branch makes a single toggle clean.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="GEP-26.html">GEP-26: GINQ SQL Backend</a> — companion GEP in the same series</p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/invoke/LambdaMetafactory.html"><code>java.lang.invoke.LambdaMetafactory</code></a> — the JVM lambda bootstrap this design reuses for the SAM case</p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/126">JEP 126: Lambda Expressions</a> — Java&#8217;s "body as a method on the enclosing class + metafactory" model, the prior art for the shared primitive</p>
+</li>
+<li>
+<p><code>org.codehaus.groovy.classgen.asm.ClosureWriter</code>, <code>org.codehaus.groovy.classgen.asm.sc.StaticTypesLambdaWriter</code> — the code-generation writers this GEP targets</p>
+</li>
+<li>
+<p><code>groovy.lang.Closure</code> — the closure contract whose narrow, reachable subset (<code>curry</code>/<code>memoize</code>/<code>trampoline</code>) the shared adapter preserves</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
