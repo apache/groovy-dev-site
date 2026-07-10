@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-09</p>
+<p>2026-07-10</p>
 </td>
 </tr>
 </table>
@@ -220,8 +220,8 @@ per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <
 </div>
 <div class="paragraph">
 <p>The proposal is deliberately phased. A <strong>small, sound-by-construction slice — eliminating the
-generated class for non-capturing SAM lambdas — targets Groovy 6.0</strong>. The <strong>broader closure work,
-which needs a soundness analysis and a performance path, targets Groovy 7.0</strong>. The change is
+generated class for non-capturing and read-only-capturing SAM lambdas — targets Groovy 6.0</strong>. The
+<strong>broader closure work, which needs a soundness analysis and a performance path, targets Groovy 7.0</strong>. The change is
 strictly additive, defaults can be flipped via a flag for back-out, and it is gated so that any
 tooling that reflects on generated-class names has an escape hatch.</p>
 </div>
@@ -471,9 +471,10 @@ programmer saying "treat me as a function." A brace closure and an arrow lambda 
 <em>same</em> functional interface compile differently today for exactly this reason.</p>
 </li>
 <li>
-<p><strong>An opt-in annotation</strong> (working name <code>@Packed</code>) is the same kind of thing: a programmer
-assertion that a closure needs no external delegate, supplied where the compiler cannot prove
-it (i.e. under dynamic compilation).</p>
+<p><strong>The <code>@PackedClosures</code> annotation</strong> is the same kind of thing: a programmer assertion that a
+closure needs no external delegate, supplied where the compiler cannot prove it (i.e. under
+dynamic compilation). It is named for what it packs — closures; a dynamic arrow-lambda is itself
+a closure, and there is no separate dynamic-lambda packing, so the closures-specific name is exact.</p>
 </li>
 <li>
 <p><strong>SAM vs not</strong> is the target-type <em>upper bound</em> on capability: a SAM target permits the
@@ -547,7 +548,7 @@ enables typed dispatch of the hoisted body and the S2 path.</p>
         v
  hoist to a method on the enclosing class      &lt;-- shared backend
         |
-   capability inference  (target type; arrow/@Packed declarations;
+   capability inference  (target type; arrow/@PackedClosures declarations;
         |                  static-only escape + @DelegatesTo + serialization analysis)
         v
    +----+----+----------------------+---------------------+
@@ -601,14 +602,97 @@ resolution — a <code>Function</code> has no <code>delegate</code>. And a SAM-t
 that SAM. So the entire soundness cliff is defined away for the SAM case, which is precisely why
 it can land first.</p>
 </div>
+<div class="sect2">
+<h3 id="_guarding_the_dynamic_trust_assertion">Guarding the dynamic trust assertion</h3>
+<div class="paragraph">
+<p>Under <code>@CompileStatic</code> the escape analysis <em>proves</em> delegate-independence and declines the rest,
+so the boundary is enforced by construction. Under dynamic compilation <code>@PackedClosures</code> is a <strong>trust
+assertion</strong> the compiler cannot verify — so the design must protect a user who annotates in good
+faith and gets it wrong. Two mechanisms do this, and they deliberately cover <strong>different</strong> failure
+modes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Runtime guard (the safety net).</strong> A <code>PackedClosure</code> throws — with an actionable message naming
+the hoisted method — when asked for a configuration it cannot honour: <code>setDelegate(x)</code> to anything
+other than the owner, or <code>setResolveStrategy(&#8230;&#8203;)</code> to any non-owner mode (<code>DELEGATE_FIRST</code>,
+<code>DELEGATE_ONLY</code>, or <code>TO_SELF</code> — which would resolve against the memberless shared adapter). This
+is <strong>fail-fast at the exact point the wrong assumption is exercised</strong>,
+rather than the silent alternative (free names quietly resolve against the owner, surfacing as a
+confusing <code>MissingMethodException</code> frames away). Almost all delegate-dependent usage funnels
+through these setters — explicit assignment, <code>with</code>/<code>tap</code> (which set <code>delegate</code><br>
+<code>DELEGATE_FIRST</code> internally), and builder DSLs — so the guard catches the realistic paths.
+Setting <code>delegate</code> to the owner stays a no-op, so benign/defensive framework code is unaffected.
+There is no runtime de-opt option: the hoisted body is already compiled to owner-bound bytecode,
+so throwing is the only honest response. In the <code>@CompileStatic</code> case the guard should never fire
+(those closures are proven and declined), but keeping it is cheap defense-in-depth and documents
+the contract uniformly.</p>
+</li>
+<li>
+<p><strong><code>@PackedClosures(mode = &#8230;&#8203;)</code> (compile-time visibility, *not</strong> a safety net).* Packing declines
+are otherwise silent, so the annotation&#8217;s <code>mode</code> element surfaces them: <code>LENIENT</code> (the default)
+stays silent, <code>WARN</code> emits a compiler warning per unpacked closure naming the source position and
+the reason, and <code>STRICT</code> turns any decline in scope into a compile error. It surfaces the <strong>visible</strong>
+declines the compiler already knows about (a closure that resolves against a delegate, escapes its
+method, or needs a real <code>Closure</code>). It deliberately does <strong>not</strong> protect against the wrong-assumption
+case above — an externally-set delegate is invisible at the closure&#8217;s definition site (the very
+reason dynamic packing needs a trust assertion), so <code>WARN</code>/<code>STRICT</code> will report "packed" on exactly
+the closure the runtime guard later has to catch. Only the annotation opts in; the automatic
+<code>groovy.target.closure.pack</code> path is always lenient. A fourth value, <code>DISABLED</code>, is the opposite —
+a fine-grained <strong>opt-out</strong> that packs nothing in its scope; the most-specific declaration wins, so a
+<code>DISABLED</code> method opts out of a packed class (and <code>DISABLED</code> overrides the flag too).</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mechanism</th>
+<th class="tableblock halign-left valign-top">When</th>
+<th class="tableblock halign-left valign-top">Catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@PackedClosures(mode = WARN or STRICT)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>visible</em> declines — "did I pack what I intended?"</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PackedClosure</code> throws on <code>setDelegate</code>/<code>setResolveStrategy</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the <em>invisible</em> wrong assumption — "did anyone misuse what I packed?"</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A conservative <strong>escape gate</strong> shrinks the runtime surface further and is implemented in the spike: a
+closure literal that visibly escapes its method — stored into a field/property/index (the Grails
+<code>static constraints = { … }</code> shape), returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal
+— is declined at compile time and kept as a class. This moves the clearest delegate-risk cases from
+a runtime throw to a compile-time non-event; those declines are also what <code>WARN</code>/<code>STRICT</code> report.
+Because syntactic escape analysis cannot prove that, say, a custom <code>each</code> does not set a delegate,
+the runtime guard remains the essential backstop under dynamic compilation. (A closure that is
+fully self-contained — every free name binds to the owner or its own parameters — is
+delegate-independent and safe to pack even where it escapes; exploiting that for nested closures
+needs owner-correct retargeting, see <em>Reference implementation</em>.)</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_groovy_6_0_deliverables_pending_discussion_and_findings">Groovy 6.0 deliverables (pending discussion and findings)</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Groovy 6 target is the sound-by-construction slice. One piece is proposed as the primary
-deliverable, with a second offered as an option.</p>
+<p>The Groovy 6 target is the sound-by-construction slice: eliminating the generated class for SAM
+lambdas. Both pieces below are implemented on the first-step branch behind a single flag; the
+mutated-capture and serializable cases correctly stay on the class-based path.</p>
 </div>
 <div class="sect2">
 <h3 id="_piece_1_primary_eliminate_the_class_for_non_capturing_sam_lambdas">Piece 1 (primary): eliminate the class for non-capturing SAM lambdas</h3>
@@ -665,14 +749,16 @@ class-visitor changes the closure work needs.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_piece_2_option_capturing_sam_lambdas">Piece 2 (option): capturing SAM lambdas</h3>
+<h3 id="_piece_2_implemented_read_only_capturing_sam_lambdas">Piece 2 (implemented): read-only-capturing SAM lambdas</h3>
 <div class="paragraph">
 <p>A capturing SAM lambda today instantiates its lambda class to hold the captured values (Groovy
-even <code>Reference</code>-wraps them). The Java-style form uses a <code>static</code> implementation method taking
-the captured values as leading arguments, with the metafactory capturing them directly — which
-<em>also</em> removes the <code>Closure</code> allocation and the <code>Reference</code> wrapping. This is a larger change
-than Piece 1 (the impl signature and bootstrap arguments change), so it is offered as a Groovy 6
-<strong>stretch</strong> or an early Groovy 7 item rather than a commitment.</p>
+even <code>Reference</code>-wraps them). The Java-style form uses a <code>static</code> implementation method taking the
+captured values as leading arguments, with the metafactory capturing them directly — which <em>also</em>
+removes the <code>Closure</code> allocation and the <code>Reference</code> wrapping. This is implemented on the same
+first-step branch for the <strong>read-only</strong> capture case (the common one): captured values are passed as
+typed leading parameters. A lambda that <strong>mutates</strong> a capture still needs the shared <code>Reference</code>, so
+it correctly declines and keeps its class. This lands the bulk of the capturing benefit in Groovy 6
+behind the same flag; only mutated-capture lambdas remain on the class-based path.</p>
 </div>
 </div>
 </div>
@@ -691,9 +777,14 @@ closures rather than lambdas. A proof-of-concept in the code generator already d
 mechanism across the hard cases: no-capture and captured closures (by value; written captures via
 shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested closures</strong>, implicit <code>it</code>, under
 both <code>@CompileStatic</code> and dynamic compilation, correctly declining closures that use
-<code>delegate</code>/<code>owner</code>/<code>super</code>. What remains for a real feature is the <strong>capability/escape analysis</strong>
-described above, so packing is chosen only when it is provably sound (automatic under
-<code>@CompileStatic</code>; opt-in via <code>@Packed</code> under dynamic), falling back to S0 otherwise.</p>
+<code>delegate</code>/<code>owner</code>/<code>super</code>. The dynamic opt-in&#8217;s two runtime/compile safety mechanisms from
+<em>Guarding the dynamic trust assertion</em> are already implemented and validated in the spike: the
+mandatory <code>PackedClosure</code> runtime guard, the compile-time escape decline, and the
+<code>@PackedClosures(mode = WARN | STRICT)</code> decline diagnostics. What remains for a real feature
+is the <strong>capability/escape analysis</strong> that makes packing provably sound and therefore automatic under
+<code>@CompileStatic</code> (no annotation), falling back to S0 otherwise; and the owner-correct retargeting
+that lets self-contained nested closures (e.g. Grails <code>validator</code> blocks) be hoisted — see
+<em>Reference implementation</em>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -753,16 +844,26 @@ means byte-for-byte today&#8217;s behaviour.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under <code>@CompileStatic</code> (Groovy 7)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (+ per-scope <code>@Packed</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (+ per-scope <code>@PackedClosures</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">to be decided per release</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Packed</code> opt-in only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@PackedClosures</code> opt-in only</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">off unless annotated</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p><code>@PackedClosures</code> carries a <code>mode</code> element (<code>LENIENT</code> | <code>WARN</code> | <code>STRICT</code> | <code>DISABLED</code>, default
+<code>LENIENT</code>) that reports closures it could not pack — silently, as a compiler warning, or as a compile
+error — or, with <code>DISABLED</code>, opts the scope out of packing entirely. The most-specific declaration
+wins (a <code>DISABLED</code> method beats a packed class), and <code>DISABLED</code> also overrides the flag; the
+WARN/STRICT diagnostics apply only to the annotation, never to the automatic
+<code>groovy.target.closure.pack</code> path. Every packed closure is backed by the
+<code>PackedClosure</code> runtime guard; see <em>Guarding the dynamic trust assertion</em> for what each does and does
+not catch.</p>
+</div>
 <div class="paragraph">
 <p>The default <strong>direction</strong> is a policy decision independent of the mechanism: a feature can ship
 <strong>on</strong> with an opt-out flag (deliver the win immediately, keep a back-out valve), or <strong>off</strong> with an
@@ -839,6 +940,61 @@ snapshot; run the debugger step/breakpoint scenarios for both closures and lambd
 common coverage and decompiler tools; and document the flag as the back-out for any tool not yet
 updated. This tooling verification is a first-class deliverable of the GEP, not an afterthought.</p>
 </div>
+<div class="sect2">
+<h3 id="_codegen_level_verification_done_for_the_sam_lambda_first_step">Codegen-level verification (done for the SAM-lambda first step)</h3>
+<div class="paragraph">
+<p>The prototype hoisted method carries the debug metadata a debugger relies on, verified both by
+inspecting <code>javap -p -l</code> output and by an automated test (<code>LambdaHoistTest</code>) that reads the class
+bytes with ASM and asserts the following on every hoisted <code>$lambda$&#8230;&#8203;</code> method:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>LineNumberTable</code> with one entry per body line.</strong> A multi-line lambda body yields a line-number
+entry for each source statement, so line breakpoints, single-step, and "step into" land on the
+correct source lines — and stack frames report accurate line numbers.</p>
+</li>
+<li>
+<p><strong>Populated <code>LocalVariableTable</code> with the original names.</strong> The captured values (now leading
+parameters, e.g. <code>base</code>), the SAM parameters (e.g. <code>x</code>), and locals declared inside the body
+(e.g. <code>a</code>, <code>b</code>) all appear by name, so the debugger&#8217;s variables view is complete. This is on par
+with — arguably better than — the old <code>doCall</code> frame, because the frame now names the enclosing
+class.</p>
+</li>
+<li>
+<p><strong><code>ACC_SYNTHETIC</code> on the impl method.</strong> The hoisted method is <code>private static synthetic</code>, so it is
+correctly excluded from public-API views (Groovydoc, IDE member lists, stub generation).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Because the hoisted body reuses the original AST statements, source positions propagate
+unchanged; there is no separate line-mapping step that could drift.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_remaining_human_only_verification_cannot_be_scripted">Remaining human-only verification (cannot be scripted)</h3>
+<div class="paragraph">
+<p>The following must be exercised interactively in the reference IDEs and cannot be asserted from a
+build, so they remain open items before the flag defaults on:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>IntelliJ IDEA and Eclipse: set a breakpoint inside a hoisted lambda body, confirm it binds and
+stops; "step into" a call whose target is a hoisted lambda; inspect captured values, parameters,
+and body locals in the variables view; confirm the frame names the enclosing class sensibly.</p>
+</li>
+<li>
+<p>JDWP / remote-debug parity with the above against a stock JDK debugger.</p>
+</li>
+<li>
+<p>Coverage tools (JaCoCo) and popular decompilers/bytecode viewers: confirm they attribute the
+hoisted method to the enclosing class without error and do not rely on the old nested-class name.</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -851,30 +1007,94 @@ development:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Lambda first step (Groovy 6 candidate).</strong> Implemented in <code>StaticTypesLambdaWriter</code>:
-non-capturing SAM lambda classes eliminated, impl hoisted to <code>private static</code> methods on the
-enclosing class, metafactory singleton and behaviour verified, class-count reductions measured
-as above. The existing lambda tests that assert the old bytecode shape need updating to the new
-structure (behaviour is unchanged); that test migration is the bulk of the remaining first-step
-work.</p>
+<p><strong>Lambda first step (Groovy 6 candidate).</strong> Implemented in <code>StaticTypesLambdaWriter</code>: both
+non-capturing <strong>and</strong> read-only-capturing SAM lambda classes are eliminated, with the impl hoisted
+to <code>private static</code> methods on the enclosing class (captured values become leading parameters)
+and the metafactory bootstrapped directly against them — the non-capturing case yielding a
+zero-alloc singleton. Behaviour and class-count reductions are verified as above, and the hoisted
+methods are confirmed to carry full debug metadata (see <em>IDE and tooling considerations</em>). Cases
+that need the shared <code>Reference</code> or closure identity — mutated captures, instance access,
+serializable and nested-function lambdas — correctly decline and keep their class. The whole
+first step sits behind the <code>groovy.target.lambda.hoist</code> flag. The existing lambda tests that
+assert the old bytecode shape need updating to the new structure (behaviour is unchanged); that
+test migration is the bulk of the remaining first-step work.</p>
 </li>
 <li>
-<p><strong>Closure packing (Groovy 7 direction).</strong> A <code>ClosureWriter</code>-based spike (with a <code>PackedClosure</code>
-runtime adapter) demonstrates hoisting closures — captures, arbitrary-depth nesting, written
-captures via <code>Reference</code>, implicit <code>it</code> — under both compilation modes, with correct declines
-for delegate/owner/super. It confirms the writer is the right home (no <code>@CompileStatic</code>
-boundary, unlike an AST-transform approach) and empirically establishes the soundness cliff and
-what is preserved. It does <strong>not</strong> yet include the capability/escape analysis or typed dispatch;
-those are the Groovy 7 work.</p>
+<p><strong>Closure packing (Groovy 7 direction).</strong> A <code>ClosureWriter</code>-based spike (with a shared
+<code>PackedClosure</code> runtime adapter), opt-in via <code>@PackedClosures</code>, demonstrates hoisting closures — captures,
+arbitrary-depth nesting, written captures via <code>Reference</code>, implicit <code>it</code> — under both compilation
+modes. It confirms the writer is the right home (no <code>@CompileStatic</code> boundary, unlike an
+AST-transform approach), establishes the soundness cliff empirically, and confirms what is
+preserved (<code>curry</code>/<code>memoize</code>/<code>trampoline</code> all keep working on the adapter). Two of the three
+safety layers from <em>Guarding the dynamic trust assertion</em> are now implemented and validated:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>the <strong>runtime guard</strong> — <code>PackedClosure</code> rejects <code>setDelegate</code>/<code>setResolveStrategy</code> set to any
+non-owner configuration. Probing confirmed every delegate-redirect path (<code>with</code>/<code>tap</code>,
+<code>rehydrate</code>, builder DSLs, DGM) funnels through those two setters, so the guard turns what was a
+silent wrong answer (owner-resolved where a delegate was expected) into a fail-fast error at the
+point of misuse; owner-based <code>each</code>/<code>collect</code> closures stay byte-identical.</p>
+</li>
+<li>
+<p>the <strong>compile-time escape decline</strong> — a closure literal that visibly escapes its method (stored
+into a field/property/index, returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal) is
+kept as a class, moving the clearest delegate-risk cases from a runtime throw to a compile-time
+non-event.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>One supporting change surfaced by the closure spike is worth noting: hoisting nested closures
+<p>The remaining Groovy 7 work is the <strong>capability/escape analysis</strong> for the <code>@CompileStatic</code> automatic
+path (proving packing sound so no annotation is needed) and typed static dispatch.</p>
+</div>
+<div class="sect2">
+<h3 id="_measured_impact">Measured impact</h3>
+<div class="paragraph">
+<p>Closure classes are dominated by scaffolding, not logic. On a class reproducing seven real
+<code>FormTagLib</code> closure patterns, packing eliminated all seven closure classes (8 class files → 1;
+23.8 KB → 7.3 KB, ~69% fewer bytes); the hoisted method bodies added only 1.8 KB, so roughly <strong>90%
+of a closure class&#8217;s bytes were <code>Closure</code> scaffolding</strong> — constructor, metaclass init,
+<code>serialVersionUID</code>, <code>Reference</code> fields — rather than the closure&#8217;s own code. Grails domain classes
+are the extreme case: a representative <code>RemarkCriteria</code> domain generated <strong>24 closure classes
+totalling 80 KB</strong> — more bytecode than the entire rest of the class (1.19×).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grails_artefact_dsls_and_nested_closures">Grails artefact DSLs and nested closures</h3>
+<div class="paragraph">
+<p>The delegate DSLs Grails relies on — <code>static constraints = { … }</code>, <code>static mapping</code>,
+<code>namedQueries</code>, old-style <code>def action = { … }</code> — are field-assigned, which is exactly the escape
+gate&#8217;s decline signal, so they are kept as real closure classes and their delegate resolution is
+unchanged (verified end-to-end against a builder delegate). Because Grails <strong>discovers</strong> these blocks
+by their being fields, the whole family lands on the safe side by construction rather than by
+special-casing; and the Groovy 6 SAM-lambda work never touches them at all (they are `Closure`s, not
+lambdas).</p>
+</div>
+<div class="paragraph">
+<p>The value left on the table in a domain class is the many <strong>self-contained</strong> nested closures — the
+<code>validator: { val, obj &#8594; … }</code> blocks inside <code>constraints</code>, which reference only their own
+parameters and owner statics, not the constraints delegate. A spike that relaxed the nested-closure
+decline for these confirmed the class-count prize (the shown <code>RemarkCriteria</code> subset dropped
+6 → 2 closure classes) but proved the naive form <strong>unsound</strong>: the hoisted body was added to the
+enclosing closure class as an instance method, while a <code>static constraints</code> block&#8217;s owner resolves
+to the domain <strong>class</strong>, so dispatch attempted a non-existent static method (<code>MissingMethodException</code>),
+and where it did dispatch, owner-static references resolved against the wrong owner. Hoisting a
+nested closure therefore requires <strong>retargeting</strong> the method onto the correct outermost owner,
+rebinding its free names to that owner, and emitting static-vs-instance dispatch to match — the
+owner-correct capability work already scoped to Groovy 7. This makes domain classes the single
+highest-value target for that phase, and the reason it is Groovy 7 and not a cheap gate change.</p>
+</div>
+<div class="paragraph">
+<p>A supporting change surfaced by the closure spike is worth noting: hoisting nested closures also
 requires the class visitor to visit methods added <em>during</em> code generation to a fixpoint (the
-current two-round <code>visitMethods</code> misses methods added while compiling a method that was itself
-added during compilation). That change is general and low-risk but must be validated against the
-full suite before it lands.</p>
+current two-round <code>visitMethods</code> misses methods added while compiling a method that was itself added
+during compilation). That change is general and low-risk but must be validated against the full
+suite before it lands.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_phased_delivery">Phased delivery</h3>
@@ -902,14 +1122,14 @@ full suite before it lands.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Capturing SAM lambdas (metafactory-captured static impl)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Removes the class, <code>Closure</code> alloc, and <code>Reference</code> wrapping for capturing SAM lambdas</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 stretch / 7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Read-only-capturing SAM lambdas (metafactory-captured static impl)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removes the class, <code>Closure</code> alloc, and <code>Reference</code> wrapping for read-only capturing SAM lambdas (mutated captures decline)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + <code>@Packed</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic under <code>@CompileStatic</code>, opt-in under dynamic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + <code>@PackedClosures</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic under <code>@CompileStatic</code>, opt-in (with runtime guard + escape decline) under dynamic</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
 </tr>
 <tr>
@@ -973,12 +1193,12 @@ on the shared backend proven in phases 1–2.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode automatic packing</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cannot be proven sound without types; dynamic packing is opt-in via <code>@Packed</code> only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cannot be proven sound without types; dynamic packing is opt-in via <code>@PackedClosures</code> only.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A user-visible switch between S1/S2/S3 per closure</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The compiler picks the lightest sound representation; users influence it only via target type, arrow syntax, and <code>@Packed</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The compiler picks the lightest sound representation; users influence it only via target type, arrow syntax, and <code>@PackedClosures</code> — including opting a scope out entirely with <code>@PackedClosures(mode = DISABLED)</code>, but never selecting <strong>which</strong> packed representation is used.</p></td>
 </tr>
 </tbody>
 </table>
