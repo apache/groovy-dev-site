@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-27</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_closures_and_lambdas_compile_today' class='anchor-link'>Background: how closures and lambdas compile today</a></li><li><a href='#_the_design_space' class='anchor-link'>The design space</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_the_soundness_boundary' class='anchor-link'>The soundness boundary</a></li><li><a href='#_groovy_6_0_deliverables_pending_discussion_and_findings' class='anchor-link'>Groovy 6.0 deliverables (pending discussion and findings)</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_configuration_and_flags' class='anchor-link'>Configuration and flags</a></li><li><a href='#_ide_and_tooling_considerations' class='anchor-link'>IDE and tooling considerations</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-27</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-27</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_closures_and_lambdas_compile_today' class='anchor-link'>Background: how closures and lambdas compile today</a></li><li><a href='#_the_design_space' class='anchor-link'>The design space</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_the_soundness_boundary' class='anchor-link'>The soundness boundary</a></li><li><a href='#_groovy_6_0_deliverables_merged' class='anchor-link'>Groovy 6.0 deliverables (merged)</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_configuration_and_flags' class='anchor-link'>Configuration and flags</a></li><li><a href='#_ide_and_tooling_considerations' class='anchor-link'>IDE and tooling considerations</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-27</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-10</p>
+<p>2026-07-11</p>
 </td>
 </tr>
 </table>
@@ -687,15 +687,15 @@ needs owner-correct retargeting, see <em>Reference implementation</em>.)</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_groovy_6_0_deliverables_pending_discussion_and_findings">Groovy 6.0 deliverables (pending discussion and findings)</h2>
+<h2 id="_groovy_6_0_deliverables_merged">Groovy 6.0 deliverables (merged)</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The Groovy 6 target is the sound-by-construction slice: eliminating the generated class for SAM
-lambdas. Both pieces below are implemented on the first-step branch behind a single flag; the
-mutated-capture and serializable cases correctly stay on the class-based path.</p>
+lambdas. Both pieces below are merged (GROOVY-12143), behind the opt-in <code>groovy.target.lambda.hoist</code>
+flag; the mutated-capture and serializable cases correctly stay on the class-based path.</p>
 </div>
 <div class="sect2">
-<h3 id="_piece_1_primary_eliminate_the_class_for_non_capturing_sam_lambdas">Piece 1 (primary): eliminate the class for non-capturing SAM lambdas</h3>
+<h3 id="_piece_1_merged_eliminate_the_class_for_non_capturing_sam_lambdas">Piece 1 (merged): eliminate the class for non-capturing SAM lambdas</h3>
 <div class="paragraph">
 <p>For a statically compiled, <strong>non-capturing</strong>, non-serializable lambda targeting a functional
 interface, do what Java does: emit the body as a <code>private static</code> synthetic method on the
@@ -749,13 +749,13 @@ class-visitor changes the closure work needs.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_piece_2_implemented_read_only_capturing_sam_lambdas">Piece 2 (implemented): read-only-capturing SAM lambdas</h3>
+<h3 id="_piece_2_merged_read_only_capturing_sam_lambdas">Piece 2 (merged): read-only-capturing SAM lambdas</h3>
 <div class="paragraph">
 <p>A capturing SAM lambda today instantiates its lambda class to hold the captured values (Groovy
 even <code>Reference</code>-wraps them). The Java-style form uses a <code>static</code> implementation method taking the
 captured values as leading arguments, with the metafactory capturing them directly — which <em>also</em>
-removes the <code>Closure</code> allocation and the <code>Reference</code> wrapping. This is implemented on the same
-first-step branch for the <strong>read-only</strong> capture case (the common one): captured values are passed as
+removes the <code>Closure</code> allocation and the <code>Reference</code> wrapping. This is merged for the <strong>read-only</strong>
+capture case (the common one): captured values are passed as
 typed leading parameters. A lambda that <strong>mutates</strong> a capture still needs the shared <code>Reference</code>, so
 it correctly declines and keeps its class. This lands the bulk of the capturing benefit in Groovy 6
 behind the same flag; only mutated-capture lambdas remain on the class-based path.</p>
@@ -832,15 +832,15 @@ means byte-for-byte today&#8217;s behaviour.</p>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Concern</th>
-<th class="tableblock halign-left valign-top">Flag (proposed)</th>
+<th class="tableblock halign-left valign-top">Flag</th>
 <th class="tableblock halign-left valign-top">Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Non-capturing SAM lambda hoisting (Groovy 6)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.lambda.hoist.disabled</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">off (i.e. hoisting <strong>on</strong>), opt-out</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SAM lambda hoisting (Groovy 6, merged)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.lambda.hoist</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under <code>@CompileStatic</code> (Groovy 7)</p></td>
@@ -1007,7 +1007,7 @@ development:</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Lambda first step (Groovy 6 candidate).</strong> Implemented in <code>StaticTypesLambdaWriter</code>: both
+<p><strong>Lambda first step (Groovy 6, merged).</strong> Implemented in <code>StaticTypesLambdaWriter</code>: both
 non-capturing <strong>and</strong> read-only-capturing SAM lambda classes are eliminated, with the impl hoisted
 to <code>private static</code> methods on the enclosing class (captured values become leading parameters)
 and the metafactory bootstrapped directly against them — the non-capturing case yielding a
@@ -1015,9 +1015,9 @@ zero-alloc singleton. Behaviour and class-count reductions are verified as above
 methods are confirmed to carry full debug metadata (see <em>IDE and tooling considerations</em>). Cases
 that need the shared <code>Reference</code> or closure identity — mutated captures, instance access,
 serializable and nested-function lambdas — correctly decline and keep their class. The whole
-first step sits behind the <code>groovy.target.lambda.hoist</code> flag. The existing lambda tests that
-assert the old bytecode shape need updating to the new structure (behaviour is unchanged); that
-test migration is the bulk of the remaining first-step work.</p>
+first step is merged behind the opt-in <code>groovy.target.lambda.hoist</code> flag; the lambda tests that
+assert the old bytecode shape are skipped under the flag, with their migration to the new
+structure deferred to when the default flips.</p>
 </li>
 <li>
 <p><strong>Closure packing (Groovy 7 direction).</strong> A <code>ClosureWriter</code>-based spike (with a shared
@@ -1025,8 +1025,8 @@ test migration is the bulk of the remaining first-step work.</p>
 arbitrary-depth nesting, written captures via <code>Reference</code>, implicit <code>it</code> — under both compilation
 modes. It confirms the writer is the right home (no <code>@CompileStatic</code> boundary, unlike an
 AST-transform approach), establishes the soundness cliff empirically, and confirms what is
-preserved (<code>curry</code>/<code>memoize</code>/<code>trampoline</code> all keep working on the adapter). Two of the three
-safety layers from <em>Guarding the dynamic trust assertion</em> are now implemented and validated:</p>
+preserved (<code>curry</code>/<code>memoize</code>/<code>trampoline</code> all keep working on the adapter). All three safety layers
+from <em>Guarding the dynamic trust assertion</em> are now implemented and validated:</p>
 <div class="ulist">
 <ul>
 <li>
@@ -1042,14 +1042,24 @@ into a field/property/index, returned, appended with <code>&lt;&lt;</code>, or p
 kept as a class, moving the clearest delegate-risk cases from a runtime throw to a compile-time
 non-event.</p>
 </li>
+<li>
+<p>the <strong>decline diagnostics</strong> — <code>@PackedClosures(mode = WARN | STRICT)</code> surfaces closures that could
+not be packed (a compiler warning or error, with the reason and source position); <code>DISABLED</code> opts
+a scope out entirely. The automatic flag path stays lenient.</p>
+</li>
 </ul>
 </div>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The remaining Groovy 7 work is the <strong>capability/escape analysis</strong> for the <code>@CompileStatic</code> automatic
-path (proving packing sound so no annotation is needed) and typed static dispatch.</p>
+<p>Also implemented and validated: the <strong>capability analysis</strong> (STC&#8217;s delegate-independence proof driving
+automatic packing under <code>@CompileStatic</code>, no annotation needed) and <strong>typed static dispatch</strong>
+(statically-compiled hoisted bodies with typed captures/params/return — zero <code>invokedynamic</code>), with
+compile-time packing exercised across the core module and several others. The remaining Groovy 7
+work is S3 object elision, unifying the closure and lambda writers, owner-correct retargeting so
+nested closures can hoist, and hardening the automatic path from experimental (opt-in flag) to
+default-on.</p>
 </div>
 <div class="sect2">
 <h3 id="_measured_impact">Measured impact</h3>
