@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-27</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_closures_and_lambdas_compile_today' class='anchor-link'>Background: how closures and lambdas compile today</a></li><li><a href='#_the_design_space' class='anchor-link'>The design space</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_the_soundness_boundary' class='anchor-link'>The soundness boundary</a></li><li><a href='#_groovy_6_0_deliverables_merged' class='anchor-link'>Groovy 6.0 deliverables (merged)</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_configuration_and_flags' class='anchor-link'>Configuration and flags</a></li><li><a href='#_ide_and_tooling_considerations' class='anchor-link'>IDE and tooling considerations</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-27</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-27</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_background_how_closures_and_lambdas_compile_today' class='anchor-link'>Background: how closures and lambdas compile today</a></li><li><a href='#_the_design_space' class='anchor-link'>The design space</a></li><li><a href='#_architecture' class='anchor-link'>Architecture</a></li><li><a href='#_the_soundness_boundary' class='anchor-link'>The soundness boundary</a></li><li><a href='#_groovy_6_0_deliverables' class='anchor-link'>Groovy 6.0 deliverables</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_configuration_and_flags' class='anchor-link'>Configuration and flags</a></li><li><a href='#_ide_and_tooling_considerations' class='anchor-link'>IDE and tooling considerations</a></li><li><a href='#_reference_implementation' class='anchor-link'>Reference implementation</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-27</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -115,7 +115,7 @@
 <strong>Target</strong>
 </td>
 <td class="hdlist2">
-<p>Groovy 6.0 (potential first step) and Groovy 7.0 (remainder)</p>
+<p>Groovy 6.0 (SAM lambdas merged; closure packing a stretch goal) and Groovy 7.0 (object elision, writer unification)</p>
 </td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 <strong>Comment</strong>
 </td>
 <td class="hdlist2">
-<p>Reduces the per-closure/per-lambda generated-class explosion by hoisting bodies onto the enclosing class. A small, sound-by-construction slice potentially targets Groovy 6; the broader closure work targets Groovy 7. Strictly additive; gated by a flag for back-out.</p>
+<p>Reduces the per-closure/per-lambda generated-class explosion by hoisting bodies onto the enclosing class. The sound-by-construction SAM-lambda slice is merged for Groovy 6; closure packing (S1) is implemented and proposed as a Groovy 6 stretch goal (GROOVY-12151); object elision and writer unification remain for Groovy 7. Strictly additive; gated by a flag for back-out.</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-11</p>
+<p>2026-07-12</p>
 </td>
 </tr>
 </table>
@@ -169,8 +169,9 @@
 <td class="content">
 <em>WARNING:</em>
 Material on this page is still under development!
-We are currently working on Groovy 6.0. A small, self-contained part of this proposal targets Groovy 6.0;
-the larger part targets Groovy 7.0.
+We are currently working on Groovy 6.0. The sound-by-construction SAM-lambda part of this proposal is
+merged for Groovy 6.0, closure packing is implemented and proposed as a Groovy 6.0 stretch goal, and
+the remainder (object elision, writer unification) targets Groovy 7.0.
 The final version of this proposal may differ significantly from the current draft,
 but having this draft available allows us to gather early feedback, align design
 decisions in Groovy 6 as best we can, and iterate on the design.
@@ -220,8 +221,10 @@ per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <
 </div>
 <div class="paragraph">
 <p>The proposal is deliberately phased. A <strong>small, sound-by-construction slice — eliminating the
-generated class for non-capturing and read-only-capturing SAM lambdas — targets Groovy 6.0</strong>. The
-<strong>broader closure work, which needs a soundness analysis and a performance path, targets Groovy 7.0</strong>. The change is
+generated class for non-capturing and read-only-capturing SAM lambdas — is merged for Groovy 6.0</strong>.
+<strong>Closure packing (S1), including its soundness analysis and a typed-dispatch performance path, is
+now implemented and proposed as a Groovy 6.0 stretch goal (GROOVY-12151)</strong>; the remaining, more
+aggressive work — object elision and unifying the two writers — targets Groovy 7.0. The change is
 strictly additive, defaults can be flipped via a flag for back-out, and it is gated so that any
 tooling that reflects on generated-class names has an escape hatch.</p>
 </div>
@@ -672,7 +675,7 @@ a fine-grained <strong>opt-out</strong> that packs nothing in its scope; the mos
 </tbody>
 </table>
 <div class="paragraph">
-<p>A conservative <strong>escape gate</strong> shrinks the runtime surface further and is implemented in the spike: a
+<p>A conservative <strong>escape gate</strong> shrinks the runtime surface further and is implemented in the S1 slice: a
 closure literal that visibly escapes its method — stored into a field/property/index (the Grails
 <code>static constraints = { … }</code> shape), returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal
 — is declined at compile time and kept as a class. This moves the clearest delegate-risk cases from
@@ -687,12 +690,18 @@ needs owner-correct retargeting, see <em>Reference implementation</em>.)</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_groovy_6_0_deliverables_merged">Groovy 6.0 deliverables (merged)</h2>
+<h2 id="_groovy_6_0_deliverables">Groovy 6.0 deliverables</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The Groovy 6 target is the sound-by-construction slice: eliminating the generated class for SAM
-lambdas. Both pieces below are merged (GROOVY-12143), behind the opt-in <code>groovy.target.lambda.hoist</code>
+<p>Groovy 6 lands in two parts: the <strong>merged</strong> sound-by-construction SAM-lambda slice (pieces 1–2), and
+closure packing (S1), <strong>implemented and proposed as a stretch goal</strong> (GROOVY-12151).</p>
+</div>
+<div class="sect2">
+<h3 id="_merged_sam_lambda_class_elimination">Merged: SAM-lambda class elimination</h3>
+<div class="paragraph">
+<p>Both pieces below are merged (GROOVY-12143), behind the opt-in <code>groovy.target.lambda.hoist</code>
 flag; the mutated-capture and serializable cases correctly stay on the class-based path.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_piece_1_merged_eliminate_the_class_for_non_capturing_sam_lambdas">Piece 1 (merged): eliminate the class for non-capturing SAM lambdas</h3>
@@ -761,40 +770,60 @@ it correctly declines and keeps its class. This lands the bulk of the capturing 
 behind the same flag; only mutated-capture lambdas remain on the class-based path.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_stretch_goal_implemented_closure_packing_s1">Stretch goal (implemented): closure packing (S1)</h3>
+<div class="paragraph">
+<p>A shared <code>Closure</code> adapter (<code>PackedClosure</code>) that dispatches to a hoisted body, applied to
+closures rather than lambdas — now implemented in the code generator (GROOVY-12151) and proposed
+for Groovy 6.0 as a stretch goal. It covers the hard cases: no-capture and captured closures (by
+value; written captures via shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested
+closures</strong>, implicit <code>it</code>, under both <code>@CompileStatic</code> and dynamic compilation, correctly declining
+closures that use <code>delegate</code>/<code>owner</code>/<code>super</code>. All three safety mechanisms from <em>Guarding the
+dynamic trust assertion</em> are implemented and validated: the mandatory <code>PackedClosure</code> runtime
+guard, the compile-time escape decline, and the <code>@PackedClosures(mode = WARN | STRICT)</code> decline
+diagnostics. The two headline capabilities are done:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Capability/escape analysis</strong> — packing is provably sound and therefore <strong>automatic</strong> under
+<code>@CompileStatic</code> (no annotation) via the type checker&#8217;s delegate-independence proof, falling back
+to S0 (a normal closure class) otherwise; under dynamic compilation it is opt-in via
+<code>@PackedClosures</code>, backed by the runtime guard.</p>
+</li>
+<li>
+<p><strong>Typed static dispatch</strong> — the hoisted body is typed from the inferred types the type checker
+already computed and compiles statically (typed captures/params/return, zero <code>invokedynamic</code> in
+the body), so packing under <code>@CompileStatic</code> is a speed win and not merely a class-count win.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The API surface (<code>@PackedClosures</code>, <code>PackMode</code>) is marked <code>@Incubating</code>. What keeps this a stretch
+goal rather than a committed 6.0 deliverable is that it is opt-in only (the automatic path is not
+yet default-on) and the nested-closure, elision, and writer-unification work below is still open —
+all Groovy 7.0.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_groovy_7_0_deliverables">Groovy 7.0 deliverables</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The broader, higher-value work — where the soundness analysis and the performance story live.</p>
+<p>The remaining, higher-value work, plus the hardening that turns closure packing from an opt-in
+stretch goal into a default-on feature.</p>
 </div>
 <div class="sect2">
-<h3 id="_closure_packing_s1_with_a_soundness_analysis">Closure packing (S1) with a soundness analysis</h3>
+<h3 id="_owner_correct_retargeting_for_nested_closures">Owner-correct retargeting for nested closures</h3>
 <div class="paragraph">
-<p>A shared <code>Closure</code> adapter (<code>PackedClosure</code>) that dispatches to a hoisted body, applied to
-closures rather than lambdas. A proof-of-concept in the code generator already demonstrates the
-mechanism across the hard cases: no-capture and captured closures (by value; written captures via
-shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested closures</strong>, implicit <code>it</code>, under
-both <code>@CompileStatic</code> and dynamic compilation, correctly declining closures that use
-<code>delegate</code>/<code>owner</code>/<code>super</code>. The dynamic opt-in&#8217;s two runtime/compile safety mechanisms from
-<em>Guarding the dynamic trust assertion</em> are already implemented and validated in the spike: the
-mandatory <code>PackedClosure</code> runtime guard, the compile-time escape decline, and the
-<code>@PackedClosures(mode = WARN | STRICT)</code> decline diagnostics. What remains for a real feature
-is the <strong>capability/escape analysis</strong> that makes packing provably sound and therefore automatic under
-<code>@CompileStatic</code> (no annotation), falling back to S0 otherwise; and the owner-correct retargeting
-that lets self-contained nested closures (e.g. Grails <code>validator</code> blocks) be hoisted — see
-<em>Reference implementation</em>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_typed_static_dispatch_making_it_fast_not_just_small">Typed static dispatch (making it fast, not just small)</h3>
-<div class="paragraph">
-<p>In the proof-of-concept the hoisted body is compiled dynamically, so a packed <code>@CompileStatic</code>
-closure is smaller but dispatched dynamically. A production form must type the hoisted method
-from the inferred types the type checker already computed and dispatch the body statically (with
-an <code>invokedynamic</code>/<code>MethodHandle</code> callsite), so that packing under <code>@CompileStatic</code> is a speed
-win and not merely a class-count win.</p>
+<p>Today a self-contained <strong>nested</strong> closure (e.g. a Grails <code>validator: { … }</code> block inside
+<code>constraints</code>) is kept as a class, because hoisting it naively adds the body to the <strong>enclosing
+closure</strong> class with the wrong owner (see <em>Grails artefact DSLs and nested closures</em>). Hoisting it
+soundly requires retargeting the method onto the correct outermost owner, rebinding its free names
+to that owner, and emitting static-vs-instance dispatch to match. This is the single highest-value
+target — domain classes generate the most closure classes — and the reason it is a separate, later
+phase rather than a cheap gate change.</p>
 </div>
 </div>
 <div class="sect2">
@@ -810,6 +839,15 @@ proof and, for iteration intrinsics, knowledge of the callee.</p>
 <div class="paragraph">
 <p>Fold the lambda and closure code paths behind the single hoist backend, so the SAM and
 <code>Closure</code> cases are one mechanism selecting different wrappers.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_default_on_hardening">Default-on hardening</h3>
+<div class="paragraph">
+<p>Flip closure packing from experimental (opt-in <code>groovy.target.closure.pack</code>) to default-on. This is
+a policy decision gated on the remaining human-only tooling verification (see <em>IDE and tooling
+considerations</em>) and on migrating the tests that assert the old bytecode shape — not on further
+mechanism work.</p>
 </div>
 </div>
 </div>
@@ -843,9 +881,9 @@ means byte-for-byte today&#8217;s behaviour.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under <code>@CompileStatic</code> (Groovy 7)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under <code>@CompileStatic</code> (Groovy 6 stretch, GROOVY-12151)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (+ per-scope <code>@PackedClosures</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">to be decided per release</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in); default-on is Groovy 7</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation</p></td>
@@ -1001,8 +1039,9 @@ hoisted method to the enclosing class without error and do not rely on the old n
 <h2 id="_reference_implementation">Reference implementation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A proof-of-concept exists as a spike in the code generator, exercised through this proposal&#8217;s
-development:</p>
+<p>Both legs are implemented in the code generator and exercised through this proposal&#8217;s development —
+the SAM-lambda leg merged, the closure-packing leg on a PR (GROOVY-12151) proposed as a Groovy 6
+stretch goal:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1020,8 +1059,8 @@ assert the old bytecode shape are skipped under the flag, with their migration t
 structure deferred to when the default flips.</p>
 </li>
 <li>
-<p><strong>Closure packing (Groovy 7 direction).</strong> A <code>ClosureWriter</code>-based spike (with a shared
-<code>PackedClosure</code> runtime adapter), opt-in via <code>@PackedClosures</code>, demonstrates hoisting closures — captures,
+<p><strong>Closure packing (Groovy 6 stretch goal, GROOVY-12151).</strong> A <code>ClosureWriter</code>-based implementation
+(with a shared <code>PackedClosure</code> runtime adapter), opt-in via <code>@PackedClosures</code>, hoists closures — captures,
 arbitrary-depth nesting, written captures via <code>Reference</code>, implicit <code>it</code> — under both compilation
 modes. It confirms the writer is the right home (no <code>@CompileStatic</code> boundary, unlike an
 AST-transform approach), establishes the soundness cliff empirically, and confirms what is
@@ -1056,10 +1095,10 @@ a scope out entirely. The automatic flag path stays lenient.</p>
 <p>Also implemented and validated: the <strong>capability analysis</strong> (STC&#8217;s delegate-independence proof driving
 automatic packing under <code>@CompileStatic</code>, no annotation needed) and <strong>typed static dispatch</strong>
 (statically-compiled hoisted bodies with typed captures/params/return — zero <code>invokedynamic</code>), with
-compile-time packing exercised across the core module and several others. The remaining Groovy 7
-work is S3 object elision, unifying the closure and lambda writers, owner-correct retargeting so
-nested closures can hoist, and hardening the automatic path from experimental (opt-in flag) to
-default-on.</p>
+compile-time packing exercised across the core module and several others. This implemented slice is
+proposed as a Groovy 6.0 stretch goal (GROOVY-12151). The remaining Groovy 7 work is owner-correct
+retargeting so self-contained nested closures can hoist, S3 object elision, unifying the closure and
+lambda writers, and hardening the automatic path from experimental (opt-in flag) to default-on.</p>
 </div>
 <div class="sect2">
 <h3 id="_measured_impact">Measured impact</h3>
@@ -1128,37 +1167,37 @@ suite before it lands.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Non-capturing SAM lambda class elimination + flag + test migration + IDE/tooling check</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java-parity lambda codegen for the common SAM case; back-out flag</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 (merged)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Read-only-capturing SAM lambdas (metafactory-captured static impl)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Removes the class, <code>Closure</code> alloc, and <code>Reference</code> wrapping for read-only capturing SAM lambdas (mutated captures decline)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 (merged)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + <code>@PackedClosures</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic under <code>@CompileStatic</code>, opt-in (with runtime guard + escape decline) under dynamic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + typed static dispatch + <code>@PackedClosures</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic and statically dispatched under <code>@CompileStatic</code>, opt-in (with runtime guard + escape decline) under dynamic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 (stretch, GROOVY-12151)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Typed static dispatch of hoisted bodies</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Packed <code>@CompileStatic</code> closures are faster, not just smaller</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Owner-correct retargeting so self-contained nested closures hoist</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grails domain <code>validator</code> blocks and other nested closures pack</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Object elision (S3) + unify the writers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No object for non-escaping call-once bodies; one backend for closures and lambdas</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Object elision (S3) + unify the writers + default-on hardening</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No object for non-escaping call-once bodies; one backend for closures and lambdas; packing default-on</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 7.0</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Phase 1 stands alone and delivers value with no dependency on the later phases. Phases 3–5 build
-on the shared backend proven in phases 1–2.</p>
+<p>Phases 1–2 stand alone and deliver value with no dependency on the later phases. Phase 3 (the
+stretch goal) builds on the shared backend proven in phases 1–2; phases 4–5 build on phase 3.</p>
 </div>
 </div>
 </div>
@@ -1260,9 +1299,10 @@ the compatibility valve while tools are updated.</p>
 is dead weight, not an allocation).</p>
 </li>
 <li>
-<p>Closure packing under <code>@CompileStatic</code> is a class-count win immediately and a dispatch-speed
-win once typed dispatch (phase 4) lands; without it, a packed <code>@CompileStatic</code> closure trades a
-class for dynamic dispatch, so typed dispatch is a prerequisite for turning it on for hot code.</p>
+<p>Closure packing under <code>@CompileStatic</code> is both a class-count win and a speed win: the hoisted
+body is typed from the checker&#8217;s inferred types and compiles statically (zero <code>invokedynamic</code> in
+the body), implemented in the S1 slice — so a packed <code>@CompileStatic</code> closure is smaller without
+trading its body&#8217;s static compilation for dynamic dispatch.</p>
 </li>
 </ul>
 </div>
