@@ -222,8 +222,9 @@ per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <
 <div class="paragraph">
 <p>The proposal is deliberately phased. A <strong>small, sound-by-construction slice — eliminating the
 generated class for non-capturing and read-only-capturing SAM lambdas — is merged for Groovy 6.0</strong>.
-<strong>Closure packing (S1), including its soundness analysis and a typed-dispatch performance path, is
-now implemented and proposed as a Groovy 6.0 stretch goal (GROOVY-12151)</strong>; the remaining, more
+<strong>Closure packing (S1), including its soundness analysis and a <code>MethodHandle</code>-based dispatch path that
+reaches <code>@CompileStatic</code> call-parity, is now implemented and proposed as a Groovy 6.0 stretch goal
+(GROOVY-12151)</strong>; the remaining, more
 aggressive work — object elision and unifying the two writers — targets Groovy 7.0. The change is
 strictly additive, defaults can be flipped via a flag for back-out, and it is gated so that any
 tooling that reflects on generated-class names has an escape hatch.</p>
@@ -792,9 +793,14 @@ to S0 (a normal closure class) otherwise; under dynamic compilation it is opt-in
 <code>@PackedClosures</code>, backed by the runtime guard.</p>
 </li>
 <li>
-<p><strong>Typed static dispatch</strong> — the hoisted body is typed from the inferred types the type checker
-already computed and compiles statically (typed captures/params/return, zero <code>invokedynamic</code> in
-the body), so packing under <code>@CompileStatic</code> is a speed win and not merely a class-count win.</p>
+<p><strong>Fast dispatch</strong> — two parts. The hoisted body is typed from the inferred types the type checker
+already computed and compiles statically (typed captures/params/return, zero <code>invokedynamic</code> in the
+body). And the shared adapter reaches that body through a <code>MethodHandle</code> constant to the private
+hoisted method, invoked with <code>invokeExact</code> (no reflection), behind a <code>doCall</code> fast path that skips
+argument adaptation on the common exact-arity call. Measured per <code>call()</code> against the generated
+closure class it replaces: a naive shared adapter is ~7–9× slower, whereas the shipped one reaches
+<code>@CompileStatic</code> parity and ~2× under dynamic compilation — so packing is a class-count win at no
+dispatch-speed penalty under <code>@CompileStatic</code>.</p>
 </li>
 </ul>
 </div>
@@ -1093,10 +1099,14 @@ a scope out entirely. The automatic flag path stays lenient.</p>
 </div>
 <div class="paragraph">
 <p>Also implemented and validated: the <strong>capability analysis</strong> (STC&#8217;s delegate-independence proof driving
-automatic packing under <code>@CompileStatic</code>, no annotation needed) and <strong>typed static dispatch</strong>
-(statically-compiled hoisted bodies with typed captures/params/return — zero <code>invokedynamic</code>), with
-compile-time packing exercised across the core module and several others. This implemented slice is
-proposed as a Groovy 6.0 stretch goal (GROOVY-12151). The remaining Groovy 7 work is owner-correct
+automatic packing under <code>@CompileStatic</code>, no annotation needed) and the <strong>dispatch path</strong> — a
+statically-compiled, typed hoisted body reached through a <code>MethodHandle</code> constant to the private
+hoisted method (<code>invokeExact</code>, no reflection) behind a lean <code>doCall</code> fast path — exercised across the
+core module and several others. Measured per <code>call()</code> against the generated closure class it replaces,
+a naive shared adapter is ~7–9× slower; the shipped adapter reaches <code>@CompileStatic</code> parity and ~2×
+under dynamic compilation. (Marking the adapter <code>GeneratedClosure</code> for the metaclass fast path was
+evaluated and found perf-neutral once <code>doCall</code> was lean, so it is not applied.) This implemented slice
+is proposed as a Groovy 6.0 stretch goal (GROOVY-12151). The remaining Groovy 7 work is owner-correct
 retargeting so self-contained nested closures can hoist, S3 object elision, unifying the closure and
 lambda writers, and hardening the automatic path from experimental (opt-in flag) to default-on.</p>
 </div>
@@ -1110,6 +1120,17 @@ of a closure class&#8217;s bytes were <code>Closure</code> scaffolding</strong> 
 <code>serialVersionUID</code>, <code>Reference</code> fields — rather than the closure&#8217;s own code. Grails domain classes
 are the extreme case: a representative <code>RemarkCriteria</code> domain generated <strong>24 closure classes
 totalling 80 KB</strong> — more bytecode than the entire rest of the class (1.19×).</p>
+</div>
+<div class="paragraph">
+<p>Dispatch speed matters as much as class count, because a shared adapter is invoked through the
+<code>Closure</code> machinery rather than being its own class. A naive adapter (reflective invoke plus per-call
+argument adaptation) measured ~7–9× slower to <code>call()</code> than the generated closure class it replaces —
+smaller but slower. The shipped adapter closes that gap with a compile-time <code>MethodHandle</code> constant
+invoked via <code>invokeExact</code> and a <code>doCall</code> fast path that skips adaptation on the common exact-arity
+call: a packed <code>@CompileStatic</code> closure then dispatches at parity with a normal closure, and a packed
+dynamic closure at ~2×. So <code>@CompileStatic</code> packing is strictly a win (fewer classes, same call
+speed), while dynamic packing trades ~2× call cost for the class-count reduction — which is why the
+dynamic path stays opt-in.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1177,8 +1198,8 @@ suite before it lands.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + typed static dispatch + <code>@PackedClosures</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic and statically dispatched under <code>@CompileStatic</code>, opt-in (with runtime guard + escape decline) under dynamic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing (S1) + capability/escape analysis + <code>MethodHandle</code> dispatch + <code>@PackedClosures</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sound closure packing: automatic under <code>@CompileStatic</code> at call-parity dispatch, opt-in (with runtime guard + escape decline) under dynamic</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Groovy 6.0 (stretch, GROOVY-12151)</p></td>
 </tr>
 <tr>
@@ -1299,10 +1320,11 @@ the compatibility valve while tools are updated.</p>
 is dead weight, not an allocation).</p>
 </li>
 <li>
-<p>Closure packing under <code>@CompileStatic</code> is both a class-count win and a speed win: the hoisted
-body is typed from the checker&#8217;s inferred types and compiles statically (zero <code>invokedynamic</code> in
-the body), implemented in the S1 slice — so a packed <code>@CompileStatic</code> closure is smaller without
-trading its body&#8217;s static compilation for dynamic dispatch.</p>
+<p>Closure packing under <code>@CompileStatic</code> is a class-count win at dispatch parity with a normal
+closure: the typed hoisted body compiles statically, and the adapter reaches it through a
+<code>MethodHandle</code> constant (<code>invokeExact</code>) behind a lean <code>doCall</code> fast path. Measured per <code>call()</code>, a
+naive shared adapter is ~7–9× slower; the shipped one is at parity under <code>@CompileStatic</code> and ~2×
+under dynamic compilation (so the dynamic path stays opt-in).</p>
 </li>
 </ul>
 </div>
