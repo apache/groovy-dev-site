@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-12</p>
+<p>2026-07-13</p>
 </td>
 </tr>
 </table>
@@ -779,7 +779,8 @@ closures rather than lambdas — now implemented in the code generator (GROOVY-1
 for Groovy 6.0 as a stretch goal. It covers the hard cases: no-capture and captured closures (by
 value; written captures via shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested
 closures</strong>, implicit <code>it</code>, under both <code>@CompileStatic</code> and dynamic compilation, correctly declining
-closures that use <code>delegate</code>/<code>owner</code>/<code>super</code>. All three safety mechanisms from <em>Guarding the
+closures that use <code>delegate</code>/<code>owner</code>/<code>super</code>, or that carry default parameter values (multi-arity —
+see <em>Excluded and deferred features</em>). All three safety mechanisms from <em>Guarding the
 dynamic trust assertion</em> are implemented and validated: the mandatory <code>PackedClosure</code> runtime
 guard, the compile-time escape decline, and the <code>@PackedClosures(mode = WARN | STRICT)</code> decline
 diagnostics. The two headline capabilities are done:</p>
@@ -845,6 +846,17 @@ proof and, for iteration intrinsics, knowledge of the callee.</p>
 <div class="paragraph">
 <p>Fold the lambda and closure code paths behind the single hoist backend, so the SAM and
 <code>Closure</code> cases are one mechanism selecting different wrappers.</p>
+</div>
+<div class="paragraph">
+<p>A related follow-up surfaced in review: <code>MethodClosure</code> (from <code>.&amp;</code> method references) is the same
+shape — a <code>Closure</code> whose target is a known method that cannot honour a delegate — but it dispatches
+by name with runtime overload selection and <strong>silently ignores</strong> a caller-set delegate, whereas
+<code>PackedClosure</code> binds a fixed <code>MethodHandle</code> and <strong>rejects</strong> one. The two are worth <em>contract</em>-aligning
+(a shared "known-target, delegate-inert" marker and consistent delegate handling), and both could
+share the per-arity handle-selection primitive that default-parameter packing (see <em>Excluded and
+deferred features</em>) also needs. Their dispatch models differ enough, though — a fixed handle versus
+runtime overload selection — that fully merging them into one path is not a goal; this is tracked as a
+separate initiative.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1254,6 +1266,11 @@ stretch goal) builds on the shared backend proven in phases 1–2; phases 4–5 
 <td class="tableblock halign-left valign-top"><p class="tableblock">Serializable closure/lambda hoisting</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Kept on the class-based path initially; hoisting them requires carrying the deserialisation machinery to the enclosing class.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Packing default-parameter (multi-arity) closures</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A single hoisted method cannot reproduce the arity-overloaded dispatch a default parameter generates, so these decline to S0 today. A future slice would hoist one method per arity (reusing the existing default-fill codegen) and have the adapter select a <code>MethodHandle</code> per arity at call time — the same primitive the <em>MethodClosure</em> alignment above would share.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Object elision (S3)</p></td>
