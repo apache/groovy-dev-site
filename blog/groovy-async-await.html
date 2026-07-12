@@ -63,13 +63,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_getting_started' class='anchor-link'>Getting started</a></li><li><a href='#_running_tasks_in_parallel' class='anchor-link'>Running tasks in parallel</a></li><li><a href='#_generators_and_streaming' class='anchor-link'>Generators and streaming</a></li><li><a href='#_deferred_cleanup_defer' class='anchor-link'>Deferred cleanup — <code>defer</code></a></li><li><a href='#_diving_deeper' class='anchor-link'>Diving deeper</a></li><li><a href='#_best_practices' class='anchor-link'>Best practices</a></li><li><a href='#_how_it_relates_to_gpars_and_virtual_threads' class='anchor-link'>How it relates to GPars and virtual threads</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Async/await for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_getting_started' class='anchor-link'>Getting started</a></li><li><a href='#_running_tasks_in_parallel' class='anchor-link'>Running tasks in parallel</a></li><li><a href='#_generators_and_streaming' class='anchor-link'>Generators and streaming</a></li><li><a href='#_deferred_cleanup_defer' class='anchor-link'>Deferred cleanup — <code>defer</code></a></li><li><a href='#_diving_deeper' class='anchor-link'>Diving deeper</a></li><li><a href='#_best_practices' class='anchor-link'>Best practices</a></li><li><a href='#_how_it_relates_to_groovy_concurrent_and_gpars' class='anchor-link'>How it relates to groovy.concurrent and GPars</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Async/await for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-03-27 04:30PM (Last updated: 2026-04-06 11:35PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-03-27 04:30PM (Last updated: 2026-07-12 12:00AM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -652,28 +652,28 @@ or thread-safe types from <code>java.util.concurrent</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_how_it_relates_to_gpars_and_virtual_threads">How it relates to GPars and virtual threads</h2>
+<h2 id="_how_it_relates_to_groovy_concurrent_and_gpars">How it relates to groovy.concurrent and GPars</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Readers of the
+<p>Async/await is one part of Groovy 6&#8217;s broader concurrency toolkit. The same
+<code>groovy.concurrent</code> package also provides parallel collections, actors, agents,
+dataflow variables, and Go-style channels (GEP-18), and they all compose with
+the <code>await</code> and <code>Awaitable</code> combinators shown above — so you build solutions
+from one consistent toolkit rather than learning separate APIs.</p>
+</div>
+<div class="paragraph">
+<p>Before Groovy 6, these features weren&#8217;t built in and the
+<a href="http://www.gpars.org/">GPars</a> library was the popular choice for parallel
+collections, actors, agents, and dataflow. The
 <a href="https://groovy.apache.org/blog/gpars-meets-virtual-threads">GPars meets virtual threads</a>
-blog post will recall that GPars provides parallel collections,
-actors, agents, and dataflow concurrency.</p>
+post shows those GPars features. If you are on Groovy 6 or later, prefer the
+built-in <code>groovy.concurrent</code> equivalents; GPars remains useful for earlier
+Groovy versions and existing GPars codebases. GPars' <code>callAsync()</code> and
+<code>asyncFun()</code> return futures that work naturally with <code>await</code> and the <code>Awaitable</code>
+combinators, so you can mix and match both styles during a migration.</p>
 </div>
 <div class="paragraph">
-<p>Async/await complements GPars rather than replacing it. GPars
-excels at data-parallel operations and actor-based designs.
-Async/await targets sequential-looking code that is actually
-asynchronous, with language-level support for streams, cleanup,
-structured concurrency, and framework bridging.</p>
-</div>
-<div class="paragraph">
-<p>GPars' <code>callAsync()</code> and <code>asyncFun()</code> return futures that work
-naturally with <code>await</code> and the <code>Awaitable</code> combinators, so you
-can mix and match both styles in the same codebase.</p>
-</div>
-<div class="paragraph">
-<p>Both approaches benefit from virtual threads on JDK 21+.</p>
+<p>All of these approaches benefit from virtual threads on JDK 21+.</p>
 </div>
 </div>
 </div>
@@ -720,7 +720,8 @@ concurrent — not the method signature.</p>
 <div class="title">Update history</div>
 <div class="paragraph">
 <p><strong>27/Mar/2026</strong>: Initial version.<br>
-<strong>06/Apr/2026</strong>: Revised version after feedback including numerous simplifications.</p>
+<strong>06/Apr/2026</strong>: Revised version after feedback including numerous simplifications.<br>
+<strong>12/Jul/2026</strong>: Reframe the GPars section around the built-in <code>groovy.concurrent</code> package.</p>
 </div>
 </div>
 </div>

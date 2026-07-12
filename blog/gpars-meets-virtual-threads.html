@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>GPars meets Virtual Threads</a></li><li><a href='#_parallel_collections' class='anchor-link'>Parallel Collections</a></li><li><a href='#_agents' class='anchor-link'>Agents</a></li><li><a href='#_actors' class='anchor-link'>Actors</a></li><li><a href='#_dataflow' class='anchor-link'>Dataflow</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-pekko-gpars'>Using Apache Pekko actors and GPars actors with Groovy&trade;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GPars meets Virtual Threads</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-15 11:28AM (Last updated: 2023-04-14 06:23PM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>GPars meets Virtual Threads</a></li><li><a href='#_parallel_collections' class='anchor-link'>Parallel Collections</a></li><li><a href='#_agents' class='anchor-link'>Agents</a></li><li><a href='#_actors' class='anchor-link'>Actors</a></li><li><a href='#_dataflow' class='anchor-link'>Dataflow</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-pekko-gpars'>Using Apache Pekko actors and Groovy&trade; 6 actors</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./groovy-mina-sshd'>Fanning out across a Fleet with Apache MINA SSHD and Groovy&trade; 6</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-mina'>Streaming Servers with Apache MINA and Groovy&trade; 6</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GPars meets Virtual Threads</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-15 11:28AM (Last updated: 2026-07-12 12:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="./img/gpars_logo.png" alt="gpars" width="150"></span>
@@ -85,6 +85,28 @@ many useful features. Let&#8217;s have a look at a few examples.</p>
 <p>If you want to try these out, use the latest JDK21ea version which has virtual
 thread support as standard. Or use a recent JDK19-20 version
 and enable <em>preview</em> features with your Groovy tooling.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Groovy 6 update:</strong> Since this post was written, Groovy 6 added a native
+concurrency and parallel-processing toolkit in the <code>groovy.concurrent</code> package
+(GEP-18) — parallel collections, agents, actors, dataflow variables, and
+Go-style channels — all virtual-thread-first and composable with
+<a href="https://groovy.apache.org/blog/groovy-async-await"><code>async</code>/<code>await</code></a>. If you are on
+Groovy 6 or later, prefer those built-in features; a good starting point is the
+<a href="https://groovy.apache.org/blog/groovy-async-await">Async/await for Groovy</a> post.
+This post remains a useful reference if you are on an earlier Groovy version or
+are maintaining an existing GPars codebase.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
