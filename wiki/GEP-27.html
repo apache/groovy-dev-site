@@ -854,7 +854,8 @@ by name with runtime overload selection and <strong>silently ignores</strong> a 
 <code>PackedClosure</code> binds a fixed <code>MethodHandle</code> and <strong>rejects</strong> one. The two are worth <em>contract</em>-aligning
 (a shared "known-target, delegate-inert" marker and consistent delegate handling), and both could
 share the per-arity handle-selection primitive that default-parameter packing (see <em>Excluded and
-deferred features</em>) also needs. Their dispatch models differ enough, though — a fixed handle versus
+deferred features</em>) needs — the same mechanism that would close the remaining dynamic-dispatch
+throughput gap (see <em>Performance</em>). Their dispatch models differ enough, though — a fixed handle versus
 runtime overload selection — that fully merging them into one path is not a goal; this is tracked as a
 separate initiative.</p>
 </div>
@@ -1342,6 +1343,22 @@ closure: the typed hoisted body compiles statically, and the adapter reaches it 
 <code>MethodHandle</code> constant (<code>invokeExact</code>) behind a lean <code>doCall</code> fast path. Measured per <code>call()</code>, a
 naive shared adapter is ~7–9× slower; the shipped one is at parity under <code>@CompileStatic</code> and ~2×
 under dynamic compilation (so the dynamic path stays opt-in).</p>
+</li>
+<li>
+<p>Capturing closures (the common case, e.g. <code>{ it + base }</code>) used to pay an extra per-call cost — the
+adapter allocated an argument array prepending the captures on every invocation. Binding the captures
+into the handle once at construction removes that allocation (GROOVY-12151). Measured per <code>call()</code>
+against the generated closure class it replaces, a capturing closure improved from dynamic ~3.2× /
+<code>@CompileStatic</code> ~1.75× to dynamic ~1.9× / <code>@CompileStatic</code> ~0.78× (faster than a normal closure under
+<code>@CompileStatic</code>), matching the non-capturing figures above.</p>
+</li>
+<li>
+<p>The remaining ~2× dynamic gap is the argument-array spreader plus the dynamic MOP <code>call</code>→<code>doCall</code>
+selection (<code>PackedClosure</code> is not a <code>GeneratedClosure</code>) — no longer allocation. A typed per-arity
+<code>invokeExact</code> path would remove the spreader for the common <code>each</code>/<code>collect</code> arities: the <strong>same</strong>
+per-arity handle-selection primitive that default-parameter packing and the MethodClosure alignment
+need (see <em>Unify the two writers</em> and <em>Excluded and deferred features</em>), so that throughput work and
+those follow-ons build one shared mechanism.</p>
 </li>
 </ul>
 </div>
