@@ -1210,6 +1210,67 @@ out under real work (further lane micro-tuning was assessed against those shapes
 in-situ effect). Ratios are measured against a current baseline that includes the <code>Closure.call</code>
 fast-path improvements (GROOVY-12164/12165), i.e. against generated classes at their fastest.</p>
 </div>
+<div class="sect3">
+<h4 id="_self_hosting_a_whole_groovy_module_built_with_the_flag">Self-hosting: a whole Groovy module built with the flag</h4>
+<div class="paragraph">
+<p>As an end-to-end check, Groovy&#8217;s own <code>groovy-macro</code> module was compiled with
+<code>groovy.target.closure.pack</code> on — no source change, since its hot files are already
+<code>@CompileStatic</code>, so packing is automatic — and its test suite run against the packed classes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"><code>groovy-macro</code> module</th>
+<th class="tableblock halign-left valign-top">Baseline</th>
+<th class="tableblock halign-left valign-top">Packed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classes in the module</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">148</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>44</strong> (−70%)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure classes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">115</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>11</strong> (104 packed, 90%)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compiled bytecode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">520 KB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>228 KB</strong> (−56%)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Module test suite</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>66 / 66 pass</strong> against the packed classes</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The 11 residual closure classes are exactly the expected declines: five are one nested-closure
+family (the Groovy 7 owner-retargeting case), two are in the single non-<code>@CompileStatic</code> file (a
+builder, so the automatic flag correctly skips it), and four are flat closures that visibly escape.
+The dominant source is <code>ASTMatcher</code> (113 → 9 closure classes), whose packed form load-verifies
+under <code>-Xverify:all</code>.</p>
+</div>
+<div class="paragraph">
+<p>Two timings on this real module, both controlled (interleaved runs, medians): the <strong>cold</strong> test suite
+ran ~6% <strong>faster</strong> packed in 5/5 rounds — the class-count reduction showing up directly as less
+class loading and verification in a fresh JVM — and a <strong>steady-state</strong> hot loop of <code>ASTMatcher.matches</code>
+(a full AST walk per call) measured at <strong>parity</strong> (≈0.98×, inside the run-to-run noise). So on
+shipping code the pattern from the microbenchmarks holds: packing&#8217;s runtime is parity-to-favourable,
+and its real product is the class-count, bytecode and cold-start reduction. (This also demonstrates
+the internal-adoption path: once default-on, Groovy&#8217;s own <code>@CompileStatic</code> modules — AST, macro,
+GINQ — would each shed most of their closure classes from the distribution jars.)</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_grails_artefact_dsls_and_nested_closures">Grails artefact DSLs and nested closures</h3>
