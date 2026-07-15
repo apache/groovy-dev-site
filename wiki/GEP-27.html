@@ -873,6 +873,15 @@ proof and, for iteration intrinsics, knowledge of the callee.</p>
 <code>Closure</code> cases are one mechanism selecting different wrappers.</p>
 </div>
 <div class="paragraph">
+<p>Convergence also runs the other way: generated closure classes (S0 — everything packing declines)
+can adopt the packed dispatch discipline without being packed. The compiler knows every <code>doCall</code>
+signature at emission time, so it can emit a <code>call(Object&#8230;&#8203;)</code> override on the closure class that
+arity-switches directly to the right <code>doCall</code> (with the MOP-transparency guard inlined). The
+Java/GDK path then becomes plain virtual dispatch — capability-clean under JPMS, no reflection —
+and the runtime&#8217;s reflective <code>doCall</code> cache in <code>Closure.call</code> demotes to serving only legacy jars
+and hand-written subclasses. That cache is a bridge, not a destination.</p>
+</div>
+<div class="paragraph">
 <p>A related follow-up surfaced in review: <code>MethodClosure</code> (from <code>.&amp;</code> method references) is the same
 shape — a <code>Closure</code> whose target is a known method that cannot honour a delegate — but it dispatches
 by name with runtime overload selection and <strong>silently ignores</strong> a caller-set delegate, whereas
@@ -1396,6 +1405,13 @@ interception, categories and <code>respondsTo</code> behave identically to gener
 dispatch of closure classes does not: the hosting class&#8217;s own <code>invokedynamic</code> bootstrap captures
 its lookup — the capability model Java lambdas use — and handing the closure across a module
 boundary is the grant. This deliberately moves enforcement from invocation time to creation time.</p>
+</li>
+<li>
+<p>Packing is independent of Groovy&#8217;s call-site strategy: its <code>invokedynamic</code>/constant-dynamic usage
+is JDK bootstrap machinery (the same category as <code>LambdaMetafactory</code> for statically compiled
+lambdas), emitted regardless of the <code>indy</code> setting — verified byte-identical class counts and
+behaviour under classic (<code>indy=false</code>) compilation, where the dynamic path flows through the
+classic call-site caches to the same dispatch tables.</p>
 </li>
 </ul>
 </div>
