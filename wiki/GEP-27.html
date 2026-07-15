@@ -679,6 +679,11 @@ a fine-grained <strong>opt-out</strong> that packs nothing in its scope; the mos
 <td class="tableblock halign-left valign-top"><p class="tableblock">runtime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">the <em>invisible</em> wrong assumption — "did anyone misuse what I packed?"</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PackedClosure</code> fails fast on serialization (<code>writeObject</code>), naming the hoisted body and the opt-out</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">runtime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the <em>invisible</em> serialization route (a local later serialized, a callee that serializes its argument); visible routes decline at compile time instead</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -687,6 +692,11 @@ closure literal that visibly escapes its method — stored into a field/property
 <code>static constraints = { … }</code> shape), returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal
 — is declined at compile time and kept as a class. This moves the clearest delegate-risk cases from
 a runtime throw to a compile-time non-event; those declines are also what <code>WARN</code>/<code>STRICT</code> report.
+A sibling gate applies the same discipline to the serialization boundary: a literal that is visibly
+serialization-bound — cast or coerced to a <code>Serializable</code> type, or passed directly to a
+<code>writeObject</code> call — declines and keeps its class (so it serializes as before), with transitive
+routes left to the adapter&#8217;s fail-fast <code>writeObject</code>, exactly as transitive escapes are left to the
+delegate guard.
 Because syntactic escape analysis cannot prove that, say, a custom <code>each</code> does not set a delegate,
 the runtime guard remains the essential backstop under dynamic compilation. (A closure that is
 fully self-contained — every free name binds to the owner or its own parameters — is
@@ -1016,9 +1026,11 @@ display in variable views should be checked in IntelliJ IDEA and Eclipse, and ag
 expectations.</p>
 </li>
 <li>
-<p><strong>Serialization.</strong> Serializable closures/lambdas continue on the class-based path in the first
-step; any future extension to hoist them must carry the <code>$deserializeLambda$</code> machinery to the
-enclosing class (as Java does) and be validated for round-trip and versioning.</p>
+<p><strong>Serialization.</strong> Serializable lambdas and visibly serialization-bound closures continue on the
+class-based path (and so serialize as before); a packed closure serialized via a transitive route
+fails fast with a message naming the closure and the opt-out. Any future extension to hoist the
+serializable cases must carry the <code>$deserializeLambda$</code> machinery to the enclosing class (as Java
+does) and be validated for round-trip and versioning.</p>
 </li>
 <li>
 <p><strong>Stub generation / joint compilation and Groovydoc.</strong> Synthetic hoisted methods must remain
@@ -1063,6 +1075,13 @@ correctly excluded from public-API views (Groovydoc, IDE member lists, stub gene
 <div class="paragraph">
 <p>Because the hoisted body reuses the original AST statements, source positions propagate
 unchanged; there is no separate line-mapping step that could drift.</p>
+</div>
+<div class="paragraph">
+<p>The packed-closure leg has the equivalent automated coverage (<code>PackedClosureDebugMetadataTest</code>):
+line-number entries per body line and named locals — including captured values (a written capture
+threaded as a shared <code>Reference</code> still appears under its original name), typed and implicit-<code>it</code>
+parameters, and body locals — on the <code>$packed$closure$</code> methods under both compilation modes, plus
+<code>ACC_SYNTHETIC</code> on the hoisted bodies and on all generated dispatch machinery.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1312,7 +1331,7 @@ stretch goal) builds on the shared backend proven in phases 1–2; phases 4–5 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Serializable closure/lambda hoisting</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kept on the class-based path initially; hoisting them requires carrying the deserialisation machinery to the enclosing class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable lambdas and <em>visibly</em> serialization-bound closures (cast/coerced to a <code>Serializable</code> type, or passed directly to <code>writeObject</code>) are kept on the class-based path; a packed closure reached by a transitive serialization route fails fast at runtime with an actionable message. Hoisting the serializable cases would require carrying the deserialisation machinery to the enclosing class.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Packing default-parameter (multi-arity) closures</p></td>
