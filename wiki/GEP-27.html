@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-15</p>
+<p>2026-07-16</p>
 </td>
 </tr>
 </table>
@@ -210,8 +210,8 @@ hoisted method — no generated class at all, and a zero-allocation singleton wh
 non-capturing (Java parity);</p>
 </li>
 <li>
-<p>a <strong>closure</strong> becomes one shared <code>Closure</code> adapter that dispatches to the hoisted method — no
-per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <code>curry</code>, <code>memoize</code>,
+<p>a <strong>closure</strong> becomes a shared <code>Closure</code> adapter (a small fixed-arity family) that dispatches to
+the hoisted method — no per-closure class, while remaining a real <code>groovy.lang.Closure</code> (so <code>curry</code>, <code>memoize</code>,
 <code>trampoline</code>, and iteration continue to work);</p>
 </li>
 <li>
@@ -418,13 +418,17 @@ runtime. This is the one true soundness boundary (see <em>The soundness boundary
 </li>
 <li>
 <p><strong>Serialization.</strong> A dispatch-table-backed adapter is not portably serializable the way a
-generated closure class is.</p>
+generated closure class is. (<code>dehydrate()</code>/<code>rehydrate()</code> themselves keep working — dispatch
+holds its own receiver, so a dehydrated packed closure stays callable — but the adapter cannot
+be written to an object stream.)</p>
 </li>
 <li>
-<p><strong>Per-literal class identity.</strong> All packed closures share one adapter class, so
-<code>closure.getClass()</code> no longer distinguishes literals, and class-level metaclass changes on
-the adapter are global to packed closures (per-instance <code>setMetaClass</code> is fully honoured —
-see <em>MOP transparency</em>).</p>
+<p><strong>Per-literal class identity.</strong> Packed closures share a small <strong>fixed-arity adapter family</strong>
+(<code>PackedClosure$Fixed0..4</code>, <code>$FixedIt</code> for implicit-parameter literals, <code>$FixedN</code> for higher
+and vararg arities), so <code>closure.getClass()</code> distinguishes arity — enough for class-level
+introspection such as SAM-overload selection — but not individual literals, and class-level
+metaclass changes on a family member affect every packed closure of that arity (per-instance
+<code>setMetaClass</code> is fully honoured — see <em>MOP transparency</em>).</p>
 </li>
 </ul>
 </div>
@@ -533,7 +537,7 @@ chosen, not a selector.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S1</strong> shared <code>Closure</code> adapter</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">closure-shaped, no external delegate/serialization</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">hoisted body + one shared adapter; no per-closure class; <code>curry</code>/<code>memoize</code> preserved</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">hoisted body + a fixed-arity adapter family; no per-closure class; <code>curry</code>/<code>memoize</code> preserved</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>S2</strong> metafactory SAM</p></td>
@@ -705,14 +709,18 @@ a fine-grained <strong>opt-out</strong> that packs nothing in its scope; the mos
 <div class="paragraph">
 <p>A conservative <strong>escape gate</strong> shrinks the runtime surface further and is implemented in the S1 slice: a
 closure literal that visibly escapes its method — stored into a field/property/index (the Grails
-<code>static constraints = { … }</code> shape), returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal
-— is declined at compile time and kept as a class. This moves the clearest delegate-risk cases from
+<code>static constraints = { … }</code> shape), <strong>initialising a field</strong> (<code>def action = { … }</code> at class level,
+which compiles outside the enclosing method&#8217;s visible code and is checked against the class&#8217;s
+fields directly), returned, appended with <code>&lt;&lt;</code>, or placed in a collection literal — is declined at
+compile time and kept as a class. This moves the clearest delegate-risk cases from
 a runtime throw to a compile-time non-event; those declines are also what <code>WARN</code>/<code>STRICT</code> report.
 A sibling gate applies the same discipline to the serialization boundary: a literal that is visibly
-serialization-bound — cast or coerced to a <code>Serializable</code> type, or passed directly to a
-<code>writeObject</code> call — declines and keeps its class (so it serializes as before), with transitive
-routes left to the adapter&#8217;s fail-fast <code>writeObject</code>, exactly as transitive escapes are left to the
-delegate guard.
+serialization-bound — cast or coerced to a <code>Serializable</code> type, passed directly to a
+<code>writeObject</code> call, or held in a <strong>local</strong> that is (the canonical
+<code>def c = { … }; out.writeObject(c)</code> shape, tracked one def-use hop within the method) — declines
+and keeps its class (so it serializes as before), with genuinely transitive routes (helper methods,
+constructor-mediated graphs) left to the adapter&#8217;s fail-fast <code>writeObject</code>, exactly as transitive
+escapes are left to the delegate guard.
 Because syntactic escape analysis cannot prove that, say, a custom <code>each</code> does not set a delegate,
 the runtime guard remains the essential backstop under dynamic compilation.</p>
 </div>
@@ -838,9 +846,11 @@ behind the same flag; only mutated-capture lambdas remain on the class-based pat
 <div class="sect2">
 <h3 id="_stretch_goal_implemented_closure_packing_s1">Stretch goal (implemented): closure packing (S1)</h3>
 <div class="paragraph">
-<p>A shared <code>Closure</code> adapter (<code>PackedClosure</code>) that dispatches to a hoisted body, applied to
-closures rather than lambdas — now implemented in the code generator (GROOVY-12151) and proposed
-for Groovy 6.0 as a stretch goal. It covers the hard cases: no-capture and captured closures (by
+<p>A shared <code>Closure</code> adapter family (<code>PackedClosure</code>, instantiated as the fixed-arity member
+matching the literal — <code>Fixed0..Fixed4</code>, <code>FixedIt</code> for implicit-parameter literals, <code>FixedN</code> for
+higher and vararg arities) that dispatches to a hoisted body, applied to closures rather than
+lambdas — now implemented in the code generator (GROOVY-12151) and proposed for Groovy 6.0 as a
+stretch goal. It covers the hard cases: no-capture and captured closures (by
 value; written captures via shared <code>Reference</code>, including <code>=`/`+</code>), <strong>arbitrary-depth nested
 closures</strong>, implicit <code>it</code>, under both <code>@CompileStatic</code> and dynamic compilation, correctly declining
 closures that use <code>delegate</code>/<code>owner</code>/<code>super</code>, or that carry default parameter values (multi-arity —
@@ -879,12 +889,22 @@ identical outputs, so the adverse micro-shape dilutes out under real work.</p>
 instance&#8217;s metaclass is stock and no category is active (one latched-boolean check, the same
 conditions the classic call-site caches test), and anything MOP-relevant routes through
 <code>invokeMethod</code>. Interception via a per-instance metaclass is honoured identically on the dynamic
-and Java/GDK paths, matching generated closure classes. The adapter has its own registered stock
-metaclass, <code>PackedClosureMetaClass</code> — the analog of <code>ClosureMetaClass</code> for generated closures —
-giving reflection-free <code>call</code>/<code>doCall</code> dispatch on the MOP route, <code>respondsTo</code> answers faithful to
-the instance&#8217;s declared parameter types, and the same category stance as <code>ClosureMetaClass</code>. (The
-<code>GeneratedClosure</code> marker is deliberately not used: its metaclass machinery assumes an inner class
-of the owner, which a shared top-level adapter is not.)</p>
+and Java/GDK paths, matching generated closure classes. The adapter family has its own registered
+stock metaclass, <code>PackedClosureMetaClass</code> — the analog of <code>ClosureMetaClass</code> for generated
+closures — giving reflection-free <code>call</code>/<code>doCall</code> dispatch on the MOP route, <code>respondsTo</code> answers
+faithful to the instance&#8217;s declared parameter types, and the same category stance as
+<code>ClosureMetaClass</code>. Each fixed-arity member carries the <code>GeneratedClosure</code> marker and declares
+exactly the <code>doCall</code> signature(s) its generated-class counterpart would (including the fuzzy
+"0 or 1" pair for implicit-parameter literals), so <strong>class-level</strong> introspection — SAM-overload
+selection by closure arity, <code>ClosureMetaMethod</code> construction, <code>MetaClassImpl</code> method selection
+under a replaced metaclass — behaves exactly as with generated classes; the general dispatch
+entry is deliberately not named <code>doCall</code>, so no varargs signature exists for MOP selection to
+mistake a single <code>Object[]</code> argument for an argument list. Argument adaptation replicates
+metaclass dispatch bit for bit (pinned empirically against classed closures): arity mismatches
+raise <code>MissingMethodException</code>, a single <code>List</code> destructures across a non-one-parameter
+signature, trailing-array parameters vararg-collect, and per-parameter coercion follows the
+metaclass compatibility matrix (<code>BigDecimal</code>→<code>double</code> yes, <code>String</code>→<code>Integer</code> no,
+<code>Closure</code>→SAM yes).</p>
 </li>
 </ul>
 </div>
@@ -957,10 +977,33 @@ a goal; this is tracked as a separate initiative.</p>
 <div class="paragraph">
 <p>Flip closure packing from experimental (opt-in <code>groovy.target.closure.pack</code>) to default-on. This is
 a policy decision gated on the remaining human-only tooling verification (see <em>IDE and tooling
-considerations</em>) and on migrating the tests that assert the old bytecode shape — not on further
-mechanism work: the dispatch and MOP-transparency mechanisms are complete and verified (interception,
-categories, and introspection behave identically to generated closure classes on every path), and the
-remaining documented residuals are those listed under <em>The one that matters: required capability</em>.</p>
+considerations</em>) — not on further mechanism work: the dispatch and MOP-transparency mechanisms are
+complete and verified (interception, categories, and introspection behave identically to generated
+closure classes on every path), and the remaining documented residuals are those listed under
+<em>The one that matters: required capability</em>.</p>
+</div>
+<div class="sect3">
+<h4 id="_hardening_under_maximal_packing_done">Hardening under maximal packing (done)</h4>
+<div class="paragraph">
+<p>The strongest evidence for the flip comes from running <strong>Groovy&#8217;s entire own test suite with the
+flag forced globally on</strong> — core, the test corpus, and everything the tests compile and evaluate at
+runtime — deliberately packing far beyond any real configuration to find where theory and MOP
+reality diverge. The campaign started at <strong>39 failing test classes (~140 failures)</strong> and ended at
+<strong>one</strong> (a single context-dependent case that passes in every standalone reproduction). Everything
+in between was resolved by root-cause fixes that <strong>widened</strong> packed coverage rather than narrowing
+it: the fixed-arity adapter family (restoring class-level arity introspection for SAM-overload
+selection), argument-adaptation parity pinned empirically against classed closures, holder
+threading for captures re-captured by nested closures, flow-inferred capture typing, two escape-
+and serialization-gate extensions (field initialisers; one-hop locals into <code>writeObject</code>), the
+mixed-mode dynamic-island decline, and closure-context contracts re-homed with the body (dynamic
+property fallback for cross-class private access, <code>Map</code>-owner entry semantics, inferred return
+coercion). Tests that assert the <strong>pre-pack generated-class bytecode shape</strong> are conditionally
+skipped under the flag with named reasons (they run unchanged by default), and tests whose
+<strong>subject</strong> is closure-class serialization declare <code>@PackedClosures(mode = DISABLED)</code> fixtures —
+every behavioural test in the suite runs and passes packed. The methodology (forced-global flag,
+per-class JVM isolation, compile-time bytecode verification harnesses, and pinning classed
+behaviour empirically before replicating it) is repeatable for future slices.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1445,7 +1488,7 @@ stretch goal) builds on the shared backend proven in phases 1–2; phases 4–5 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Serializable closure/lambda hoisting</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable lambdas and <em>visibly</em> serialization-bound closures (cast/coerced to a <code>Serializable</code> type, or passed directly to <code>writeObject</code>) are kept on the class-based path; a packed closure reached by a transitive serialization route fails fast at runtime with an actionable message. Hoisting the serializable cases would require carrying the deserialisation machinery to the enclosing class.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Serializable lambdas and <em>visibly</em> serialization-bound closures (cast/coerced to a <code>Serializable</code> type, passed directly to <code>writeObject</code>, held in a local that is, or initialising a field) are kept on the class-based path; a packed closure reached by a genuinely transitive serialization route fails fast at runtime with an actionable message. Hoisting the serializable cases would require carrying the deserialisation machinery to the enclosing class.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Packing default-parameter (multi-arity) closures</p></td>
