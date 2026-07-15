@@ -311,9 +311,15 @@ API is reachable. Anything a compact representation cannot provide is a reason t
 the optimisation for that closure, not to change its meaning.</p>
 </li>
 <li>
-<p><strong>Sound by analysis under static, sound by declaration under dynamic.</strong> Static compilation
-supplies the types needed to prove an optimisation safe and to make the hoisted body fast;
-dynamic compilation cannot prove it, so there the optimisation is opt-in.</p>
+<p><strong>Sound by syntax where possible, by analysis under static, by declaration otherwise.</strong> The one
+behaviour packing cannot reproduce is delegate resolution of a <em>free name</em> — an unqualified
+(implicit-this) call or a name the runtime resolves through the owner/delegate chain. A closure
+that contains no such name (only parameters, locals, captures, constants and explicit/parameter
+receivers) cannot be affected by any delegate, so it is delegate-independent by syntax alone, no
+types needed. For closures that <em>do</em> contain a free name, static compilation&#8217;s type checker can
+prove whether it resolves to the owner (safe) or a delegate (unsafe); dynamic compilation cannot
+prove that, so there the free-name subset is opt-in (declared via <code>@PackedClosures</code>, backed by a
+runtime guard). Static compilation additionally makes the hoisted body fast (typed dispatch).</p>
 </li>
 <li>
 <p><strong>Ship the safe corner first.</strong> The functional-interface (SAM) case is sound by construction —
@@ -454,20 +460,22 @@ flips which half of the problem is hard:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Soundness</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hard — no types, so the dangerous delegate case cannot be detected; must be trusted</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Feasible — types make escape analysis and <code>@DelegatesTo</code> detection possible</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Split: a closure with no free name is provably safe by syntax; one with a free name cannot be checked without types and is trusted (<code>@PackedClosures</code> + runtime guard)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Feasible for all: types prove owner-vs-delegate resolution of every free name, plus escape and <code>@DelegatesTo</code> detection</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance upside</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">~None beyond class count (dispatch was dynamic anyway)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Real — the hoisted body can be statically dispatched, and SAM targets reach <code>LambdaMetafactory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class count (and, for capturing closures, faster dispatch — see <em>Performance</em>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Also real: the hoisted body can be statically dispatched, and SAM targets reach <code>LambdaMetafactory</code></p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>The consequence is that the "easy" dynamic case is the <em>low-value</em> one (unsound without a
-declaration, no speed gain), and the "hard" static case is where the optimisation is both
-<em>provably safe</em> and <em>valuable</em>.</p>
+<p>So the difficulty is not "dynamic vs static" but "free name vs not". The no-free-name subset — a
+large and common class (comparators, mappers, predicates over their own parameters, e.g.
+<code>{ x &#8594; x + 1 }</code> or <code>{ a, b &#8594; a &lt;&#8658; b }</code>) — is provably safe in <em>either</em> mode with no types. The
+free-name subset is where static compilation&#8217;s proof earns its keep, and where dynamic compilation
+must fall back to the trust declaration.</p>
 </div>
 </div>
 <div class="sect2">
@@ -482,9 +490,10 @@ programmer saying "treat me as a function." A brace closure and an arrow lambda 
 </li>
 <li>
 <p><strong>The <code>@PackedClosures</code> annotation</strong> is the same kind of thing: a programmer assertion that a
-closure needs no external delegate, supplied where the compiler cannot prove it (i.e. under
-dynamic compilation). It is named for what it packs — closures; a dynamic arrow-lambda is itself
-a closure, and there is no separate dynamic-lambda packing, so the closures-specific name is exact.</p>
+closure needs no external delegate, supplied where the compiler cannot prove it — i.e. under
+dynamic compilation, for a closure that resolves a free name (the case a delegate could affect;
+the no-free-name subset needs no assertion, being provably safe by syntax). It is named for what
+it packs — closures; a dynamic arrow-lambda is itself a closure, so the same paths apply to it.</p>
 </li>
 <li>
 <p><strong>SAM vs not</strong> is the target-type <em>upper bound</em> on capability: a SAM target permits the
@@ -594,13 +603,20 @@ c()    // a normal closure resolves who() against the delegate -&gt; 'DELEGATE'
 </div>
 </div>
 <div class="paragraph">
-<p>An eligibility check that only looks <em>inside</em> a closure for <code>delegate</code>/<code>owner</code> references does
-not catch this, because the delegate is set by the <em>caller</em> after the closure escapes. Making
-S1 sound therefore requires an <strong>escape analysis</strong>: pack a closure only when it can be proven not
-to reach a delegate-setting context (and is not serialized). Under <code>@CompileStatic</code> this is
-tractable — closures handed to <code>@DelegatesTo</code>-annotated parameters are the detectable danger
-signal, and the target types are known. Under dynamic compilation it cannot be proven, which is
-why the closure optimisation is opt-in there.</p>
+<p>The danger has two halves, and they are worth separating. First, the closure must actually
+<em>resolve a free name</em> that a delegate could intercept — <code>who()</code> above is an unqualified call, so it
+can. A closure that resolves no free name (only its parameters, locals, captures and constants —
+<code>{ x &#8594; x + 1 }</code>) has nothing for any delegate to intercept and is sound regardless. Second, for a
+closure that <em>does</em> resolve a free name, one must know whether that name binds to the owner (safe to
+hoist) or could reach a caller-set delegate — and, because the delegate is set by the <em>caller</em> after
+the closure escapes, an eligibility check that only looks <em>inside</em> the closure for <code>delegate</code>/<code>owner</code>
+references does not catch it. Under <code>@CompileStatic</code> both are tractable: the type checker resolves
+every free name (owner vs delegate), and closures handed to <code>@DelegatesTo</code>-annotated parameters are
+the detectable escape signal. Under dynamic compilation the free-name resolution cannot be proven,
+so a free-name closure there is opt-in (<code>@PackedClosures</code> + runtime guard) — but the no-free-name
+subset is provably safe by syntax and can be packed automatically even dynamically (see <em>Automatic
+dynamic packing of the syntactic subset</em>). Either way a conservative <strong>escape analysis</strong> keeps a
+visibly-escaping closure as a class, so the runtime guard&#8217;s surface stays small.</p>
 </div>
 <div class="paragraph">
 <p>By contrast, everything else survives — verified: <code>curry</code>, <code>memoize</code>, and <code>trampoline</code> all
@@ -698,10 +714,42 @@ serialization-bound — cast or coerced to a <code>Serializable</code> type, or 
 routes left to the adapter&#8217;s fail-fast <code>writeObject</code>, exactly as transitive escapes are left to the
 delegate guard.
 Because syntactic escape analysis cannot prove that, say, a custom <code>each</code> does not set a delegate,
-the runtime guard remains the essential backstop under dynamic compilation. (A closure that is
-fully self-contained — every free name binds to the owner or its own parameters — is
-delegate-independent and safe to pack even where it escapes; exploiting that for nested closures
-needs owner-correct retargeting, see <em>Reference implementation</em>.)</p>
+the runtime guard remains the essential backstop under dynamic compilation.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_automatic_dynamic_packing_of_the_syntactic_subset">Automatic dynamic packing of the syntactic subset</h3>
+<div class="paragraph">
+<p>The delegate concern only arises for a closure that resolves a <em>free name</em>. A closure whose body
+contains none — no implicit-this method call, no unqualified/dynamic variable, only its parameters,
+locals, captures, constants and explicit/parameter receivers — cannot be reached by any delegate,
+so it is delegate-independent <strong>by construction, with no type information at all</strong>. This is a large
+and everyday class: <code>{ x &#8594; x + 1 }</code>, <code>{ it * 2 }</code>, <code>{ a, b &#8594; a &lt;&#8658; b }</code>, <code>{ it.name }</code>,
+<code>{ x &#8594; x + captured }</code>. Such closures are sound to pack under <em>dynamic</em> compilation too, without
+<code>@PackedClosures</code> and without a runtime guard (a caller-set delegate is a harmless no-op, exactly as
+on a normal closure), because there is nothing to prove — a purely syntactic check of the body
+decides it.</p>
+</div>
+<div class="paragraph">
+<p>This is implemented: with the flag on and no annotation, the closures above auto-pack under
+dynamic compilation and behave identically (including a set delegate being ignored, not rejected),
+while a closure with a free name (<code>{ owned() + x }</code>, an implicit-this call, or <code>{ x + missing }</code>, a
+dynamic variable) correctly stays a class. Because a dynamically-compiled lambda is itself compiled
+as a closure, the same syntactic path also body-hoists the equivalent dynamic lambda subset (e.g.
+<code>(x) &#8594; x + 1</code>) for free — it just does not reach the <code>LambdaMetafactory</code> singleton form, which
+remains <code>@CompileStatic</code>-only for the mechanical reason that the metafactory needs the target
+functional-interface type.</p>
+</div>
+<div class="paragraph">
+<p>This makes the default-on story broader than "the <code>@CompileStatic</code>-proven set": a syntactic
+delegate-independence check widens automatic packing to the provably-safe dynamic subset as well.
+Free-name dynamic closures remain opt-in (<code>@PackedClosures</code> + guard), and nested closures still await
+owner-correct retargeting (Groovy 7) — but the trivial subset need not wait for either.</p>
+</div>
+<div class="paragraph">
+<p>(A closure that is fully self-contained is also safe to pack even where it escapes — an escaping
+<code>{ x &#8594; x + 1 }</code> cannot misbehave — but exploiting that for nested closures needs owner-correct
+retargeting, see <em>Reference implementation</em>.)</p>
 </div>
 </div>
 </div>
@@ -951,9 +999,14 @@ means byte-for-byte today&#8217;s behaviour.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in); default-on is Groovy 7</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation, free-name closures</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>@PackedClosures</code> opt-in only</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">off unless annotated</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation, no-free-name subset</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (syntactic proof)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in)</p></td>
 </tr>
 </tbody>
 </table>
@@ -1405,9 +1458,9 @@ stretch goal) builds on the shared backend proven in phases 1–2; phases 4–5 
 <td class="tableblock halign-left valign-top"><p class="tableblock">The most aggressive step; needs escape proof and, for iteration, callee knowledge.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode automatic packing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode automatic packing of <em>free-name</em> closures</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Cannot be proven sound without types; dynamic packing is opt-in via <code>@PackedClosures</code> only.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A closure that resolves a free name cannot be proven delegate-safe without types; that subset stays opt-in via <code>@PackedClosures</code> (+ runtime guard) under dynamic compilation.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A user-visible switch between S1/S2/S3 per closure</p></td>
