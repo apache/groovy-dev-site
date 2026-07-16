@@ -878,9 +878,11 @@ invoking the target directly. One <code>invokedynamic</code> accessor per class 
 constant bundle lazily on first use, and each literal&#8217;s parameter-type <code>Class[]</code> is a
 constant-dynamic resolved once per site. The whole chain is ordinary, JIT-friendly bytecode — no
 reflection, and no per-instance <code>MethodHandle</code> (not constant-foldable, hence many times slower).
-Measured with JMH against the generated classes it replaces (same build, both compilations):
-capturing shapes run <strong>1.4–1.9× faster packed</strong> — the win holding under megamorphic dispatch across
-many classes — while the tightest non-capturing <code>collect</code> trails at ~0.6×; on Grails-shaped
+Measured with JMH against the generated classes it replaces (same build, both compilations,
+re-measured after the fixed-arity family and dispatch-semantics hardening): capturing shapes run
+<strong>1.4× or better packed</strong>, mono and megamorphic alike (individual runs have reached 1.9× against
+slower classed baselines), while the tightest non-capturing <code>collect</code> trails at 0.5–0.7× — a
+hypersensitive-inlining micro-shape whose day-to-day tuning band that is; on Grails-shaped
 in-situ workloads (domain pipelines, validation cycles) the blend nets <strong>+17–23% packed</strong> with
 identical outputs, so the adverse micro-shape dilutes out under real work.</p>
 </li>
@@ -1566,10 +1568,11 @@ the hot shapes allocate no argument array at all, and allocation sits at or belo
 closure-class baseline on capturing shapes.</p>
 </li>
 <li>
-<p>Measured with JMH against the generated classes on the same build: capturing shapes 1.4–1.9×
-faster packed (holding under megamorphic dispatch); tight non-capturing <code>collect</code> ~0.6× — the
-MOP-transparency guard&#8217;s loop-invariant checks, hoisted to zero when the chain inlines. On
-Grails-shaped in-situ workloads the blend nets +17–23% packed with identical outputs.</p>
+<p>Measured with JMH against the generated classes on the same build: capturing shapes 1.4× or
+better packed (holding under megamorphic dispatch); tight non-capturing <code>collect</code> 0.5–0.7× — the
+MOP-transparency guard&#8217;s loop-invariant checks, hoisted when the chain inlines, on a shape whose
+ratio swings with inline-budget details. On Grails-shaped in-situ workloads the blend nets
++17–23% packed with identical outputs.</p>
 </li>
 <li>
 <p>MOP transparency has the same cost model as the classic call-site caches: one latched-boolean and
