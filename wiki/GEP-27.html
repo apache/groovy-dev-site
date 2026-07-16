@@ -760,6 +760,65 @@ owner-correct retargeting (Groovy 7) — but the trivial subset need not wait fo
 retargeting, see <em>Reference implementation</em>.)</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_the_packability_decision_procedure">The packability decision procedure</h3>
+<div class="paragraph">
+<p>The complete boundary, as implemented (<code>ClosureWriter#chooseStrategy</code>; any decline keeps the
+closure a generated class exactly as today, and is what <code>WARN</code>/<code>STRICT</code> — or
+<code>groovy.target.closure.pack.report=true</code> on the flag path — reports with a reason):</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Real-<code>Closure</code> semantics?</strong> References <code>owner</code>/<code>delegate</code>/<code>thisObject</code>/<code>resolveStrategy</code>/
+<code>metaClass</code>/<code>super</code>, has default parameter values, or contains an anonymous inner class → decline.</p>
+</li>
+<li>
+<p><strong>Scope opted out?</strong> The most-specific <code>@PackedClosures</code> mode wins (method over class);
+<code>DISABLED</code> beats an enclosing opt-in and the flag → decline.</p>
+</li>
+<li>
+<p><strong>Triggered and sound?</strong> One of: the annotation (dynamic trust + runtime guard); the flag plus the
+syntactic no-free-name proof (dynamic — any implicit-this call or property, field/property-bound
+or dynamic bare name, or explicit <code>this</code>-property declines); the flag or annotation plus the type
+checker&#8217;s delegate-independence proof (<code>@CompileStatic</code> — which also declines names a
+type-checking extension left to runtime resolution, and <code>this</code>-properties of <code>Map</code>-implementing
+owners). Otherwise → decline.</p>
+</li>
+<li>
+<p><strong>Structural position:</strong> written directly in a method of the owner class; nested closures await
+owner-correct retargeting (Groovy 7) → decline.</p>
+</li>
+<li>
+<p><strong>Visible escape:</strong> stored to a field/property/index, returned, appended with <code>&lt;&lt;</code>, or placed in a
+collection literal → decline.</p>
+</li>
+<li>
+<p><strong>Visibly serialization-bound:</strong> cast/coerced to a <code>Serializable</code> type, or passed to <code>writeObject</code>
+directly or via a literal-holding local → decline.</p>
+</li>
+<li>
+<p><strong>Field initialiser:</strong> a class-level <code>def x = { … }</code> (a field store outside any method&#8217;s visible
+code) → decline.</p>
+</li>
+<li>
+<p><strong>Intersection cast:</strong> the generated class would need per-literal marker interfaces → decline.</p>
+</li>
+<li>
+<p><strong>Trait body:</strong> trait methods live in <code>$Trait$Helper</code> with a synthetic receiver → decline.</p>
+</li>
+<li>
+<p><strong>Constructor special call:</strong> an argument to <code>this(&#8230;&#8203;)</code>/<code>super(&#8230;&#8203;)</code>, where <code>this</code> is not yet
+initialised → decline.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Everything that passes packs. The matrix is pinned as executable documentation by
+<code>PackedClosureBoundariesTest</code> (18 shapes × both compilation modes, plus the special-context
+shapes), and each gate has focused behavioural tests besides.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1052,6 +1111,11 @@ means byte-for-byte today&#8217;s behaviour.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closure packing under dynamic compilation, no-free-name subset</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack</code> (syntactic proof)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">off (opt-in)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Decline reporting on the flag path</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.target.closure.pack.report</code> — every non-packed closure gets a compiler warning naming the gate that declined it</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">off</p></td>
 </tr>
 </tbody>
 </table>
