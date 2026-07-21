@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-16</p>
+<p>2026-07-17</p>
 </td>
 </tr>
 </table>
@@ -1031,6 +1031,63 @@ tables the packed adapter already uses — dispatching with the host class&#8217
 which also gives caller-sensitivity-correct semantics. Their dispatch models differ enough, though —
 a fixed table entry versus runtime overload selection — that fully merging them into one path is not
 a goal; this is tracked as a separate initiative.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_openclosure_a_lexically_bound_core_with_a_resolver_boundary_reference_spike">OpenClosure: a lexically bound core with a resolver boundary (reference spike)</h3>
+<div class="paragraph">
+<p>Out of the GROOVY-12151 review discussion came a proposal (Jochen) for where this architecture
+should ultimately land: split a closure into a <strong>core</strong> that binds all lexical names at creation
+(receiver, captures, body) and a single pluggable <strong>resolver</strong> that answers only for free names —
+the MOP reduced to exactly the dynamic part. The classic <code>groovy.lang.Closure</code> contract
+(owner/delegate/<code>resolveStrategy</code>) becomes a resolver implementation plus a wrapper over the
+core; under static compilation the resolver is provably empty; and the core — "OpenClosure" —
+is a candidate to become the default closure construct, with <code>Closure</code> and <code>OpenClosure</code>
+coexisting (<code>Closure</code> wrapping an <code>OpenClosure</code> at its heart).</p>
+</div>
+<div class="paragraph">
+<p>A working <strong>reference spike</strong> for Groovy 7 exists (branch <code>gep27spikeOpenClosure</code>, behind
+<code>groovy.spike.openclosure</code>; not production code):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Compiler:</strong> a dynamic closure whose only obstacle is free names — exactly what GROOVY-12151
+must decline — hoists through the unchanged packed pipeline with its free reads and
+unqualified calls rewritten into <code>resolver.property(name)</code> / <code>resolver.invoke(name, args)</code> on
+a leading <code>Resolver</code> parameter; the resolver rides as <code>captured[0]</code>, so the dispatch tables,
+ids and capture threading need no modification.</p>
+</li>
+<li>
+<p><strong>Runtime:</strong> <code>OpenClosure</code> (the pure core, not a <code>Closure</code>), <code>OpenClosure.Resolver</code> (the
+boundary; <code>EMPTY</code> for the static case), <code>ClassicResolver</code> (the owner/delegate/strategy triple
+as a resolver), and <code>OpenClosure.AsClosure</code> — the coexistence wrapper, which <strong>extends</strong>
+<code>PackedClosure</code>: <code>setDelegate</code>/<code>setResolveStrategy</code> reconfigure the resolver instead of
+failing fast.</p>
+</li>
+<li>
+<p><strong>Validated:</strong> full behavioural parity with classed compilation across the delegate/strategy
+matrix (owner-first, delegate-first with full and partial interception, delegate-only
+including exception parity, owner-only) — checked against the classed run of the same source,
+not hardcoded expectations; one per-class dispatch table serving ordinary packed and open
+bodies side by side; GDK iteration and <code>curry</code> on the wrapper; and the "template" reading of
+free names — the same hoisted body executed under two different resolvers yields two different
+meanings, the dynamic part supplied entirely from outside.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The alignment findings the spike was built to test: the GROOVY-12151 machinery <strong>is</strong> the
+OpenClosure engine (no dispatch changes were needed); a packed closure is an open closure whose
+resolver is statically known to be empty — the strict runtime guard is precisely the degenerate
+resolver that forbids anyone supplying meanings; and the classic contract reconstructs cleanly
+at the resolver boundary. Free-name &lt;em&gt;writes&lt;/em&gt; are covered too: the resolver&#8217;s
+<code>setProperty(name, value)</code> leg handles plain and compound assignment (<code>total = it`) with the
+same read-then-write MOP pair and strategy order as a classic closure, preserving
+assignment-expression value semantics. Deliberately out of the spike's scope (production work,
+tracked for the design discussion): `+</code>/<code>--</code> on free names, <code>this</code>-qualified accesses, nested
+literals inside open bodies, the <code>@DelegatesTo</code>-typed static variant, per-arity class-level
+presentation of the wrapper, and the serialization posture of resolvers.</p>
 </div>
 </div>
 <div class="sect2">
