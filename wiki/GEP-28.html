@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-28</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-28</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_the_two_grammar_hazards' class='anchor-link'>The two grammar hazards</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-28</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-28</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Dot Shorthands (Context-Typed Member Access)</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>A leading-dot shorthand (<code>.RED</code>) that resolves a member against the type expected by the surrounding context, following Dart 3.10&#8217;s dot shorthands and Swift&#8217;s implicit member expressions. Closes the remaining "enum values without imports" gaps that neither unqualified switch-case constants (GROOVY-8444) nor String-to-enum coercion can reach — method arguments, annotation attributes, <code>==</code> comparisons, typed collection literals, and dynamic-mode case labels — while adding compile-time member checking everywhere it is used. Strictly additive: every proposed form is a syntax error today.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-25</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-25</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+This proposal targets Groovy 7.0 and is an early outline. The final version may differ
+significantly from the current draft, but having this draft available allows us to gather
+early feedback and iterate on the design. We welcome feedback and discussion, but please
+keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the type expected at some position in an expression is known, repeating that type&#8217;s name
+to reference one of its members is ceremony:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">logMessage('Failed to connect', LogLevel.ERROR)     // the parameter already says LogLevel
+Color c = Color.RED                                 // the declaration already says Color
+@Retention(RetentionPolicy.RUNTIME)                 // the attribute already says RetentionPolicy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This GEP proposes a <strong>dot shorthand</strong>: a leading <code>.</code> followed by a member name, resolved against
+the <strong>context type</strong> — the type the surrounding position expects:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">logMessage('Failed to connect', .ERROR)
+Color c = .RED
+@Retention(.RUNTIME)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The shorthand compiles to an ordinary qualified reference (<code>LogLevel.ERROR</code>) at compile time, so
+a misspelt member is a compile error in every compilation mode — unlike today&#8217;s String-to-enum
+coercion, where <code>Color c = 'RED'</code> is convenient but <code>Color c = 'GRN'</code> compiles and fails at
+runtime, even under <code>@CompileStatic</code>.</p>
+</div>
+<div class="paragraph">
+<p>The feature is deliberately staged: enum constants first, then <code>static final</code> fields of the
+context type, then (optionally) static factory methods and constructors, following the scope
+Dart 3.10 shipped. It is strictly additive — <code>.name</code> in expression position is a syntax error in
+every current Groovy version — and it works in <strong>all</strong> compilation modes where a context type is
+syntactically available, which notably includes dynamic code, annotations, and switch case
+labels on declared-enum-typed subjects.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_where_groovy_stands_today">Where Groovy stands today</h3>
+<div class="paragraph">
+<p>Groovy already has three mechanisms for referencing enum constants without a static import, and
+after the <code>@TypeChecked</code> switch-case fix (GROOVY-12190, a GROOVY-11614 follow-up regression, fixed for
+Groovy 5.0.x/6.0) the current landscape is:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Context (no import of constants)</th>
+<th class="tableblock halign-left valign-top">Java</th>
+<th class="tableblock halign-left valign-top">Groovy dynamic</th>
+<th class="tableblock halign-left valign-top"><code>@TypeChecked</code></th>
+<th class="tableblock halign-left valign-top"><code>@CompileStatic</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare constant in switch case (statement and expression forms)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌ runtime <code>MissingPropertyException</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare constant, inferred subject (<code>switch([e][0])</code>, <code>def</code> local)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ via flow typing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String literal → declaration / field / return / default param / ternary / array</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String literal → typed method argument</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum in annotation attribute</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌ (needs static import)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == CONST</code> without qualification</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;Color&gt;</code> from unqualified constants</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>(The Java column is stable across JDK 17–25; Java&#8217;s only unqualified context is the switch case
+label, though since Java 21 the qualified form is also permitted there — JLS §14.11.1.)</p>
+</div>
+<div class="paragraph">
+<p>Each existing mechanism has a structural limit:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Unqualified switch-case constants</strong> (GROOVY-8444, Groovy 3.0.0) ride on the static type
+checker&#8217;s inference, so they cannot work in dynamic code, and they apply to case labels only.</p>
+</li>
+<li>
+<p><strong>String-to-enum coercion</strong> (<code>Color c = 'RED'</code>, via <code>ShortTypeHandling#castToEnum</code> at runtime
+and <code>StaticTypeCheckingSupport</code> under STC) works in every mode but only in assignment-like
+positions, only for enums, and — being value-blind at compile time — defers typos to a runtime
+<code>IllegalArgumentException</code> even under <code>@CompileStatic</code>.</p>
+</li>
+<li>
+<p><strong>Static imports</strong> work everywhere but are the manual ceremony this family of features exists to
+remove, and they pollute the namespace for the whole file.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_gaps_a_context_typed_shorthand_closes">The gaps a context-typed shorthand closes</h3>
+<div class="paragraph">
+<p>A dot shorthand is resolved from the <strong>expected type of the position</strong>, not from the switch
+subject or the assignment target specifically, so one mechanism covers every position that has
+an expected type:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Gap today</th>
+<th class="tableblock halign-left valign-top">With dot shorthand</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typed method argument (<code>m('RED')</code> fails in all modes)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m(.RED)</code> — ✅ under STC (parameter type is the context, as with SAM/lambda target typing); dynamic mode has no known target and stays out of scope</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation attribute (no mode, no mechanism)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Ann(.RED)</code> — ✅ <strong>in all modes</strong>: attribute types are declared, and annotations are resolved at compile time. No other proposal reaches this cell.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;Color&gt; l = [&#8230;&#8203;]</code> (STC rejects strings; dynamic silently keeps them)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[.RED, .BLUE]</code> — ✅ under STC via the generic element type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == 'RED'</code> is silently <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == .RED</code> — ✅ under STC from the other operand&#8217;s static type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode switch on a declared-enum-typed subject</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case .RED:</code> — ✅ resolvable at compile time from the <strong>declared</strong> parameter/variable type, no flow typing needed; subsumes the proposed dynamic-mode extension of GROOVY-8444 with explicit, unambiguous syntax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typo safety of the coercion contexts</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Color c = .RED</code> — a misspelt member is a compile error in every mode, unlike <code>'RED'</code> coercion</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>What remains genuinely unclosable, and is explicitly out of scope: positions where no context
+type exists even syntactically — dynamic-mode arguments to a dynamically dispatched call, and
+dynamic <code>==</code> where neither operand has a declared type.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_precedent">Precedent</h3>
+<div class="paragraph">
+<p>Languages have been converging on exactly this feature:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Swift</strong> has had implicit member expressions (<code>.red</code>) since Swift 1, in a language that — like
+Groovy and unlike Dart — also supports leading-dot method-chain continuation lines, proving the
+grammar coexistence is tractable.</p>
+</li>
+<li>
+<p><strong>Dart 3.10</strong> (2025) shipped dot shorthands for enum values, static fields, static methods and
+constructors, resolved against the context type.</p>
+</li>
+<li>
+<p><strong>Kotlin 2.2</strong> is previewing the bare-name variant ("context-sensitive resolution", KEEP-379),
+where unqualified enum entries resolve in expected-type positions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Java has no equivalent and none proposed; this is a place where Groovy would extend Java
+ergonomics rather than catch up, consistent with the language&#8217;s history.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_syntax">Syntax</h3>
+<div class="paragraph">
+<p>A <strong>dot shorthand</strong> is a leading <code>.</code> immediately followed by an identifier, in expression
+position:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">.IDENTIFIER            // stage 1/2: constant or static field access
+.IDENTIFIER(args)      // stage 3 (optional): static method / factory invocation</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It is valid only where a <strong>context type</strong> is available (below); anywhere else it is a
+compile-time error ("no context type for dot shorthand").</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_context_types">Context types</h3>
+<div class="paragraph">
+<p>The context type is determined syntactically (dynamic mode) or from inference (STC), in the
+positions below. This list is the design surface for review; the intent is to match the
+positions where Groovy already applies target typing for SAM coercion or String-to-enum
+coercion, plus case labels and annotation attributes:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Position</th>
+<th class="tableblock halign-left valign-top">Dynamic mode</th>
+<th class="tableblock halign-left valign-top">STC modes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Variable declaration with explicit type: <code>Color c = .RED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ declared type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field/property initializer, return statement from a typed method, default parameter value, ternary/Elvis branches in the above</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ declared type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Switch case label: <code>case .RED:</code> / <code>case .RED &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ when the subject has a declared enum type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ including inferred subjects (flow typing, as GROOVY-8444 today)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Method/constructor call argument</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌ no known target (compile error)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ from the resolved parameter type</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Annotation attribute: <code>@Ann(.RED)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ (attribute types are compile-time-declared)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>==</code>, <code>!=</code>, <code>in</code> against a typed other operand</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typed collection/array literals: <code>Color[] a = [.RED]</code>, <code>List&lt;Color&gt; l = [.RED]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ arrays (declared component type); ❌ generic lists</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ both</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit target: <code>x as Color</code>, <code>(Color) x</code> applied to a shorthand</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_resolvable_members_staged">Resolvable members (staged)</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 16.6666%;">
+<col style="width: 50%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Stage</th>
+<th class="tableblock halign-left valign-top">Member set</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enum constants of the context type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The core use case; smallest surface</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>static final</code> fields whose type is (assignable to) the context type — e.g. <code>Duration d = .ZERO</code>, <code>BigDecimal b = .ONE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mirrors Dart/Swift; requires the assignability rule to be pinned down</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3 (optional)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static methods and constructors whose return type is the context type — <code>.of(3)</code>, <code>.parse(s)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dart parity; largest surface, deferred until 1–2 prove out</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Stage 1 alone closes every gap in the motivation table.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_semantics">Semantics</h3>
+<div class="paragraph">
+<p>A dot shorthand is <strong>compile-time rewritten</strong> to the equivalent qualified reference
+(<code>propX(classX(contextType), name)</code> — the same rewrite GROOVY-8444&#8217;s case-label support
+performs today in <code>VariableExpressionTransformer</code> and, since the GROOVY-12190 regression fix,
+<code>StaticTypesTransformation</code>). Consequences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>No runtime machinery.</strong> The emitted bytecode is identical to writing <code>Color.RED</code> by hand; the
+MOP sees an ordinary qualified static reference. Dynamic metaprogramming that intercepts
+<code>Color.RED</code> intercepts <code>.RED</code> identically.</p>
+</li>
+<li>
+<p><strong>Fail-fast.</strong> An unresolvable member ("no such constant <code>.GRN</code> on <code>Color`") and a missing
+context type are compile errors in <strong>every</strong> mode — no deferred `MissingPropertyException</code> or
+<code>IllegalArgumentException</code>.</p>
+</li>
+<li>
+<p><strong>STC ordering.</strong> Under STC, shorthand resolution participates in overload selection the same
+way lambda/SAM target typing does today: candidate parameter types supply candidate context
+types; a shorthand that resolves under exactly one applicable overload disambiguates it; one
+that resolves under several ambiguous overloads is an error naming the candidates.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_two_grammar_hazards">The two grammar hazards</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Both were verified empirically against Groovy 5.0.6 and both need an explicit rule; neither is
+believed fatal (Swift lives with both properties).</p>
+</div>
+<div class="sect2">
+<h3 id="_leading_dot_line_continuation">Leading-dot line continuation</h3>
+<div class="paragraph">
+<p>Groovy attaches a line starting with <code>.</code> to the previous expression:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def t = s
+.toUpperCase()      // today: parsed as s.toUpperCase() — and this must not change</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Proposed rule:</strong> chain continuation wins. A leading <code>.name</code> on a new line following a complete
+expression remains member access on that expression, exactly as today; a dot shorthand is only
+recognised where the grammar is <strong>inside</strong> an unfinished expression position (after <code>=</code>, <code>(</code>, <code>,</code>,
+<code>[</code>, <code>&#8594;</code>, <code>case</code>, <code>==</code>, <code>return</code>, an annotation member, etc.). This makes the feature
+whitespace-sensitive in one narrow way — <code>Color c =</code> followed by <code>.RED</code> on the next line <strong>is</strong> a
+shorthand because the <code>=</code> leaves the expression unfinished — and parser error messages for the
+genuinely ambiguous shapes must be written deliberately. This is the same resolution Swift uses.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_float_literals"><code>.5</code> float literals</h3>
+<div class="paragraph">
+<p><code>println .5</code> is <code>0.5</code> today and must stay so. The lexer already distinguishes on the character
+following the dot; <code>.DIGIT</code> remains a numeric literal, <code>.IDENT</code> becomes a shorthand candidate.
+Mechanical, but the interaction with <strong>command expressions</strong> needs a decision: <code>println .RED</code>
+would become grammatically plausible while (dynamic <code>println(Object)</code>) never has a context
+type. Proposal: dot shorthands are <strong>not</strong> recognised in command-expression argument position
+(parenthesised calls only), keeping the command-syntax grammar untouched.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_smaller_interactions">Smaller interactions</h3>
+<div class="paragraph">
+<p><code>?.</code>, <code>*.</code>, <code>.&amp;</code>, <code>..</code>/<code>..&lt;</code> ranges, and slashy strings do not collide with a leading-dot
+identifier in expression position, but each needs a grammar test; <code>[.RED]</code> vs the (invalid
+today) <code>[..RED]</code> range shapes should produce clear errors. Chaining off a shorthand
+(<code>.RED.next()</code>) parses naturally once <code>.RED</code> reduces to an expression; whether Stage 1 allows
+it or defers it is an open question (Swift allows chains whose final type re-enters the context
+type; Dart restricts more tightly).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles">Design principles</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Resolve at compile time, in every mode.</strong> The value of the feature is fail-fast semantics
+from declared types; a runtime-resolved variant would just be a second string coercion.</p>
+</li>
+<li>
+<p><strong>New syntax, no reinterpretation.</strong> Bare names (Kotlin-style) are not given new meaning
+anywhere; only the currently-invalid <code>.name</code> form carries the new semantics. Existing
+programs cannot change meaning.</p>
+</li>
+<li>
+<p><strong>One mechanism, not per-position magic.</strong> Case labels, arguments, annotations and initializers
+all resolve through the same "context type" definition, so the mental model is a single rule.</p>
+</li>
+<li>
+<p><strong>Stay aligned with the coercion positions.</strong> Wherever <code>Color c = 'RED'</code> works today, <code>.RED</code>
+works and is preferred; documentation should present the shorthand as the checked successor
+without deprecating the coercion (which remains for genuinely dynamic string values).</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_7_0_deliverables">Groovy 7.0 deliverables</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What ships</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grammar (lexer + antlr4 rules + continuation-line rule), Stage 1 members (enum constants), declared-type contexts (declarations, fields, returns, defaults, ternaries, case labels, annotation attributes, arrays), all compilation modes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closes the dynamic-case-label, annotation and typo-safety gaps; no STC dependency beyond what exists</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STC-inferred contexts: method/constructor arguments with overload interplay, <code>==</code>/<code>in</code>, generic collection literals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reuses the SAM target-typing machinery; the hard design item is overload interaction</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stage 2 members (<code>static final</code> fields of the context type)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Small increment once 1–2 are stable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 (stretch)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stage 3 members (static factories/constructors, <code>.of(&#8230;&#8203;)</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dart parity; only if 1–3 land early enough for a full release cycle of feedback</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A prototype of the Phase 1 lexer/grammar work (the continuation-line rule in particular) should
+precede GEP acceptance, since parser feasibility is the main technical risk.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shorthands in positions with no context type (dynamic call arguments, dynamic <code>==</code>, GString interpolation, <code>def</code> targets)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nothing to resolve against; explicit compile error keeps the model crisp</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bare-name resolution outside switch cases (Kotlin KEEP-379 style)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ambiguous with property access under the MOP in dynamic code; the dot form exists precisely to avoid reinterpreting valid syntax</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime-resolved shorthands</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Would reintroduce the deferred-failure problem the feature exists to fix</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Command-expression argument position</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grammar risk outweighs benefit; revisit with usage data</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chained member access off a shorthand (<code>.RED.next()</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open question</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Parses naturally; semantic rule (does the chain result need to re-enter the context type?) to be settled in review</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deprecating String-to-enum coercion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remains correct for dynamic string values; shorthand is documented as the preferred literal form</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_and_impact">Compatibility and impact</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>Strictly additive. Every proposed form is a syntax error in Groovy 5/6, so no existing program
+changes meaning or compilation result. The continuation-line rule is defined so that all
+currently-valid leading-dot chains parse exactly as today. No runtime library surface is added;
+the rewrite emits ordinary qualified references.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_binary_compatibility">Binary compatibility</h3>
+<div class="paragraph">
+<p>None affected — the feature is purely a compile-time rewrite; no new classes, markers, or
+call-site shapes.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tooling">Tooling</h3>
+<div class="paragraph">
+<p>The grammar change is the visible surface: IntelliJ IDEA (its own Groovy parser) and Eclipse
+need parser support before the feature is usable in IDEs, and <code>groovy-console</code>/<code>groovysh</code>
+highlighting follows the shipped grammar. This is the same adoption path every grammar addition
+(e.g. switch expressions, <code>?[]</code>) has taken, but it should be flagged to JetBrains early. Stub
+generation and Groovydoc are unaffected (rewrite happens before those consume the AST — to be
+verified for joint compilation in Phase 1).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation">Documentation</h3>
+<div class="paragraph">
+<p>The Groovy documentation&#8217;s enum section should present the full ladder in one place: qualified
+reference → static import → switch-case bare constants → dot shorthands → string coercion
+(dynamic values only), with the mode/position matrix from this GEP&#8217;s motivation section.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Extend bare-name resolution to more contexts (Kotlin KEEP-379 model).</strong> Works for the static
+modes (it is what case labels do today) but is a dead end for dynamic Groovy: a bare <code>RED</code> is
+indistinguishable from a property access, so static resolution would silently change program
+meaning and fight the MOP. Rejected in favour of new, unambiguous syntax that can carry the
+same semantics in every mode.</p>
+</li>
+<li>
+<p><strong>Widen String-to-enum coercion (method args, annotations, generics).</strong> Closes fewer cells
+(annotations and <code>==</code> stay closed), remains enum-only, and doubles down on value-blind
+compile-time checking — the typo problem grows with every new position. Rejected.</p>
+</li>
+<li>
+<p><strong>Do nothing; recommend static imports.</strong> Static imports remain the universal fallback, but the
+ceremony objection stands, the file-wide namespace pollution is real for enums with generic
+constant names (<code>ON</code>, <code>OFF</code>, <code>LEFT</code>), and peer languages are all moving; measured against the
+small grammar cost, the status quo leaves easy ergonomics unclaimed.</p>
+</li>
+<li>
+<p><strong>Sigil variants (<code><mark>RED</code>, <code>@RED</code>, <code>:RED</code>).</strong> Avoid the two grammar hazards but are alien to the
+Java/Dart/Swift family, collide with existing Groovy meanings (<code>@</code> annotations, <code></mark></code> shebang,
+method-pointer proximity), and forgo the "reads as the qualified form with the type elided"
+property that makes the dot form self-explanatory. Rejected.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://dart.dev/blog/announcing-dart-3-10">Announcing Dart 3.10</a> — dot shorthands as shipped
+(enum values, static fields/methods, constructors, context-type resolution)</p>
+</li>
+<li>
+<p><a href="https://github.com/dart-lang/language/blob/main/accepted/future-releases/dot-shorthands/proposal.md">Dart dot shorthands feature specification</a></p>
+</li>
+<li>
+<p><a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language/expressions/#Implicit-Member-Expression">Swift implicit member expressions</a> — the longest-standing precedent, in a language with leading-dot chain continuation</p>
+</li>
+<li>
+<p><a href="https://github.com/Kotlin/KEEP/blob/master/proposals/context-sensitive-resolution.md">Kotlin KEEP-379: context-sensitive resolution</a> — the bare-name alternative this GEP rejects for dynamic-mode reasons</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8444">GROOVY-8444</a> — unqualified enum constants in switch cases (Groovy 3.0.0)</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11614">GROOVY-11614</a> — switch-expression case constants; its follow-up refactor caused the <code>@TypeChecked</code> regression</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12190">GROOVY-12190</a> — the <code>@TypeChecked</code> regression fix that restores the baseline this GEP builds on</p>
+</li>
+<li>
+<p><code>org.codehaus.groovy.transform.sc.transformers.VariableExpressionTransformer</code>,
+<code>org.codehaus.groovy.transform.StaticTypesTransformation</code>,
+<code>org.codehaus.groovy.transform.stc.EnumTypeCheckingExtension</code> — the existing enum-constant
+rewrite this proposal generalises</p>
+</li>
+<li>
+<p><code>org.codehaus.groovy.runtime.typehandling.ShortTypeHandling#castToEnum</code>,
+<code>org.codehaus.groovy.transform.stc.StaticTypeCheckingSupport</code> — the String-to-enum coercion
+whose positions (and value-blindness) motivate the design</p>
+</li>
+<li>
+<p><a href="GEP-27.html">GEP-27: Compact Closure and Lambda Compilation</a> — companion GEP in the same series</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
