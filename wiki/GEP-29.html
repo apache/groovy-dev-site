@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-29</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-29</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-29</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-29</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Stricter JSpecify Nullness for the Static Type Checker</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Make nullness a first-class qualifier in Groovy&#8217;s static type checking, with JSpecify
+(<code>org.jspecify.annotations</code>) as the annotation vocabulary and semantics reference. Groovy 6&#8217;s
+incubating <code>NullChecker</code> extension (plus its 6.x pipeline: type-annotation ingestion, package-info
+reading, broader guard recognition, expression-level nullness) is the migration vehicle and proving
+ground; this GEP covers what the extension architecture cannot reach — nullness in the inference
+lattice, generics and type-variable nullness, overload interplay, standard library annotation, and
+emission for Java-side checkers. Opt-in per module; unannotated and non-opted code compiles
+identically.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-28</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-28</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+This proposal targets Groovy 7.0 and is an early outline. The final version may differ
+significantly from the current draft, but having this draft available allows us to gather
+early feedback and iterate on the design. We welcome feedback and discussion, but please
+keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Null-mishandling remains the largest class of JVM bug that today&#8217;s type systems let through, and
+it is disproportionately common in generated and rapidly-composed code. The JVM ecosystem has
+converged on <a href="https://jspecify.dev/">JSpecify</a> as the standard nullness vocabulary: JSpecify 1.0
+shipped in 2024, and Spring Framework 7 ships with JSpecify annotations across its public API.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 answers with the incubating <code>groovy.typecheckers.NullChecker</code> — an annotation-driven
+type-checking extension with optional flow-sensitive analysis, null-guard recognition, and a
+bridge from groovy-contracts (<code>@Requires</code>/<code>@Ensures</code> conditions inferring non-nullness). That is
+a <strong>lint with local flow</strong>. This GEP proposes the Groovy 7 step: <strong>nullness as part of the type
+system</strong> — a qualifier carried on every inferred type, refined by the flow typing the static type
+checker already performs, defined by JSpecify semantics (type-use positions, <code>@NullMarked</code>
+scoping, generics), ingested from annotated dependencies, applied to Groovy&#8217;s own idioms
+(<code>?.</code>, <code>?:</code>, <code>*.</code>, Groovy truth), progressively declared by the standard library, and emitted so
+Java-side tools see Groovy APIs the same way.</p>
+</div>
+<div class="paragraph">
+<p>The one-line pitch: <strong>Groovy statically checks what Java only annotates</strong> — with Groovy&#8217;s syntax
+(<code>?.</code> and friends) making the fixes as ergonomic as the diagnostics.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_where_groovy_stands_today">Where Groovy stands today</h3>
+<div class="paragraph">
+<p>The Groovy 6 baseline is further along than commonly assumed:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>NullChecker</code> (incubating, <code>groovy-typecheckers</code>) checks annotation violations — null to
+<code>@NonNull</code> variables/parameters/returns, unguarded <code>@Nullable</code> dereferences,
+<code>@MonotonicNonNull</code> re-assignment — recognizing annotations by simple name from any package
+(JSR-305 style, Spring&#8217;s legacy annotations, JSpecify names including <code>@NullMarked</code> /
+<code>@NullUnmarked</code> at class level).</p>
+</li>
+<li>
+<p>A <code>strict</code> option adds method-local flow analysis: null-literal tracking through assignments,
+ternaries and Elvis expressions, variable-to-variable propagation, guard recognition
+(<code>x != null</code> comparisons, early exits), and uninitialized-variable detection.</p>
+</li>
+<li>
+<p>groovy-contracts feeds the checker: <code>@Requires</code>/<code>@Ensures</code> conditions infer non-nullness for
+parameters and returns via <code>StaticTypesMarker.INFERRED_NON_NULL</code>
+(<code>org.apache.groovy.contracts.ast.visitor.AnnotationClosureVisitor</code>), so the
+contracts-then-types hardening ladder already interoperates.</p>
+</li>
+<li>
+<p>A 6.x pipeline extends this within the extension architecture:
+<a href="https://issues.apache.org/jira/browse/GROOVY-12206">GROOVY-12206</a> (ingest type-use annotations
+from compiled classes), <a href="https://issues.apache.org/jira/browse/GROOVY-12207">GROOVY-12207</a>
+(read dependency <code>package-info.class</code>, package-level <code>@NullMarked</code> scoping),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12208">GROOVY-12208</a> (broader guard vocabulary:
+Groovy truth, <code>instanceof</code>, conjunctions, <code>Objects.nonNull</code>, asserts),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12209">GROOVY-12209</a> (expression-level nullness:
+safe-navigation results, nullable arguments, ternary/Elvis over non-literals).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Two 6.x candidates were deliberately deferred <strong>to this GEP</strong> so their semantics are settled once:
+a strict JSpecify mode (fully-qualified matching, spec-exact scoping, in-scope non-null
+defaulting) and a JSpecify conformance-suite harness. They appear below as Phase 1 deliverables.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_structural_limits_of_the_extension_architecture">The structural limits of the extension architecture</h3>
+<div class="paragraph">
+<p><code>NullChecker</code> re-walks method bodies <strong>after</strong> type checking, with its own small dataflow keyed by
+<strong>variables</strong>. GROOVY-12208/12209 push that model to its useful limit; beyond it lie things a
+post-hoc visitor cannot reach:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Nullness is not part of the inferred type.</strong> Expression results, generic returns
+(<code>list.get(0)</code> on a <code>List&lt;@Nullable String&gt;</code>), SAM/closure parameter nullness via target
+typing, and multi-method overload selection are all invisible to a pass that only tags
+variables.</p>
+</li>
+<li>
+<p><strong>No generics nullness.</strong> <code>List&lt;@Nullable String&gt;</code> vs <code>@Nullable List&lt;String&gt;</code>,
+<code>T extends @Nullable Object</code>, wildcard rules, <code>String @Nullable []</code> vs <code>@Nullable String[]</code> —
+JSpecify is a <strong>type-use</strong> system, and type-use positions require the checker to live where
+types are constructed and compared, not where statements are visited.</p>
+</li>
+<li>
+<p><strong>Duplicated, weaker flow analysis.</strong> The static type checker already performs flow typing
+(<code>instanceof</code> narrowing, ternary merging); the extension re-implements a partial copy for
+nullness. Integration replaces two engines with one.</p>
+</li>
+<li>
+<p><strong>No producing side.</strong> An extension can consume annotations but cannot make Groovy-compiled
+APIs carry spec-correct type-use annotations for Java-side checkers, and cannot annotate the
+GDK.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_ecosystem_timing">The ecosystem timing</h3>
+<div class="paragraph">
+<p>Pure JSpecify annotations are <code>@Target(TYPE_USE)</code> only: in bytecode they live exclusively in
+type-annotation attributes, which Groovy historically discarded — a library annotated with pure
+JSpecify was <strong>invisible</strong> to Groovy tooling even in non-generic positions (the ingestion gap
+GROOVY-12206 closes). With Spring Framework 7, Micrometer, and a growing list of libraries
+publishing JSpecify metadata, the information Groovy needs is increasingly just sitting in the
+jars. Kotlin demonstrated the adoption dynamics: a JVM language that understands nullability
+metadata at the type level makes annotated Java APIs materially safer to consume, and its users
+then push more libraries to annotate.</p>
+</div>
+<div class="paragraph">
+<p>There is also a distinctly Groovy angle: Groovy&#8217;s syntax already contains the <strong>repair kit</strong> —
+<code>?.</code>, <code>?:</code>, <code>*.</code> with null-elision — so nullness diagnostics in Groovy pair every finding with a
+one-character fix, and the checker can equally flag the reverse (<code>?.</code> on a receiver proved
+non-null is noise worth a hint). No Java-side tool can offer that pairing. And for AI-assisted
+development, machine-checkable nullness turns the most common class of generated-code defect
+into a compile-time signal rather than a production incident.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_nullness_as_a_type_qualifier">Nullness as a type qualifier</h3>
+<div class="paragraph">
+<p>Every type the static type checker infers carries a nullness qualifier:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Qualifier</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NonNull</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Proved or declared non-null; dereference and passing to non-null positions allowed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Nullable</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">May be null; unguarded dereference is a diagnostic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Unspecified</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No information (unannotated code outside <code>@NullMarked</code> scope, dynamic values); checked leniently, matching JSpecify&#8217;s "unspecified" semantics</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Qualifiers are <strong>refined by flow</strong>: the same narrowing the checker performs for <code>instanceof</code>
+applies to null tests, Groovy-truth guards, safe-navigation, and Elvis — one flow engine,
+shared. Method-local results from GROOVY-12208/12209 become the conformance baseline for the
+integrated engine.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jspecify_semantics">JSpecify semantics</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Vocabulary</strong>: <code>org.jspecify.annotations.Nullable</code>, <code>NonNull</code>, <code>NullMarked</code>, <code>NullUnmarked</code>,
+matched fully-qualified. The lenient simple-name recognition of <code>NullChecker</code> remains for the
+mixed pre-JSpecify ecosystem, as a configuration choice.</p>
+</li>
+<li>
+<p><strong>Scoping</strong>: <code>@NullMarked</code>/<code>@NullUnmarked</code> innermost-wins along module → package → class →
+method nesting, per the JSpecify specification. Within a marked scope, unannotated
+non-primitive type uses default to non-null.</p>
+</li>
+<li>
+<p><strong>Type-use positions</strong>: nullness attaches where JSpecify puts it — including type arguments,
+type-variable bounds, wildcards, and array component vs array reference. Groovy&#8217;s grammar
+already accepts annotations in these source positions and Groovy-compiled classes carry them;
+dependency ingestion is GROOVY-12206/12207.</p>
+</li>
+<li>
+<p><strong>Conformance</strong>: an adapter runs the applicable subset of the JSpecify conformance suite in CI,
+categorized pass / known-gap / bug, published as a support matrix in the documentation. The
+matrix <strong>is</strong> the honest statement of which semantics each release implements.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_groovy_idiom_rules">Groovy idiom rules</h3>
+<div class="paragraph">
+<p>The distinctive part of the proposal — the rules no Java checker can express:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Idiom</th>
+<th class="tableblock halign-left valign-top">Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>a?.b</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Result is <code>Nullable</code> by definition; <code>(a?.b).c</code> is a diagnostic, <code>a?.b?.c</code> is not. Applying <code>?.</code> to a receiver proved <code>NonNull</code> earns an info-level "redundant safe navigation" hint (off by default, delight when on)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>x ?: d</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Result nullness is `d&#8217;s nullness (the Groovy-truth semantics of Elvis guarantee the left branch contributes only non-null values)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if (x) { &#8230;&#8203; }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy truth narrows <code>x</code> to <code>NonNull</code> within the block (truthiness implies non-null; the converse is not assumed)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*.</code> spread</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Propagates: <code>list*.name</code> on a <code>List&lt;@Nullable Foo&gt;</code> element type is a diagnostic on <code>.name</code>; the spread result&#8217;s elements are nullable when the receiver list is nullable</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def</code> / dynamic values</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Unspecified</code> — dynamic Groovy is unchanged; the qualifier only becomes load-bearing where static checking is already in force</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Implicit truth conversions</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>x != null</code>, <code>Objects.nonNull(x)</code>, <code>assert x</code>, conjunctions, early exits — the full guard vocabulary of GROOVY-12208, applied as type refinement</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_producing_side">Producing side</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Groovy source can declare <code>@NullMarked</code></strong> at any JSpecify scope, and the compiler emits
+type-use annotations into bytecode (and joint-compilation stubs) at spec-correct positions, so
+NullAway, IntelliJ, the JSpecify reference checker, and Kotlin see Groovy APIs precisely.</p>
+</li>
+<li>
+<p><strong>The GDK is annotated progressively</strong>: wave 1 covers the highest-traffic DGM surfaces
+(collections, strings, IO), with the fat-free functional-interface overloads annotated from
+birth. Annotating the GDK is mechanical but large; it ships in waves with the conformance
+matrix tracking coverage, and is itself strong dogfooding of the checker.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_adoption_model">Adoption model</h3>
+<div class="paragraph">
+<p>Strictly opt-in, two independent switches:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Consuming</strong>: a compiler/<code>@TypeChecked</code> configuration (or simply the presence of <code>@NullMarked</code>
+in the code being compiled) enables nullness checking; severity is configurable with warnings
+as the default tier and errors opt-in, so large codebases can ratchet.</p>
+</li>
+<li>
+<p><strong>Producing</strong>: annotating Groovy code is just annotating — no flag required; emission is on
+whenever annotations are present.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>NullChecker</code> remains as the friendly entry point and the home of lenient-mode heuristics; once
+the integrated engine lands, its strict mode delegates to core and the extension graduates from
+incubating. Nothing about dynamic-only Groovy changes.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_7_0_deliverables">Groovy 7.0 deliverables</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What ships</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nullness qualifier representation on inferred types; consumption of ingested metadata (GROOVY-12206/12207); strict JSpecify scoping and defaulting; conformance harness and first support matrix</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The two deferred 6.x items land here, on GEP-settled semantics</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Unified flow refinement (subsumes the GROOVY-12208/12209 method-local logic at type level); expression nullness everywhere; closure/SAM parameter nullness via target typing; Groovy idiom rules incl. <code>?.</code>/<code>?:</code>/spread/truth</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user-visible heart of the feature</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generics: type-argument and type-variable nullness, wildcard rules, arrays; overload selection interplay</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The technically hardest phase; conformance matrix gates it honestly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GDK annotation wave 1 + emission into bytecode/stubs; documentation ladder (dynamic → <code>@TypeChecked</code> → contracts → nullness) presented in one place</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Producing-side; begins as soon as Phase 1 emission plumbing exists</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A Phase 1 spike — the qualifier representation threaded through inference without breaking the
+existing STC test suite — should precede GEP acceptance, since representation cost (every
+inferred-type comparison now carries a qualifier) is the main technical risk.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime null-check injection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@NullCheck</code> (AST transform) already exists and remains orthogonal: it hardens at runtime, this GEP verifies at compile time; they compose</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kotlin-style nullable type syntax (<code>String?</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Interop-first: JSpecify annotations are the ecosystem&#8217;s shared vocabulary. Sugar mapping <code>String?</code> onto the same qualifier could be a later, separate GEP once semantics are proven</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Changing dynamic Groovy semantics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic code stays <code>Unspecified</code>; the MOP is untouched</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constructor initialization checking (partially-initialized <code>this</code> escaping, à la Checker Framework&#8217;s initialization checker)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valuable but a distinct analysis with its own annotation set; revisit after Phase 3</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full <code>@MonotonicNonNull</code> semantics in core</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Remains in `NullChecker&#8217;s lenient layer until demand is shown</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Other pluggable type qualifiers (units, tainting)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nullness is special-cased by ecosystem convergence; a general qualifier framework is out of scope</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Valhalla null-restricted types alignment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Watch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If the JDK&#8217;s null-restricted value type work lands during Groovy 7&#8217;s lifetime, the qualifier model should map onto it; tracked, not blocked on</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_and_impact">Compatibility and impact</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>Opt-in by construction: code that neither enables checking nor carries JSpecify annotations
+compiles bit-for-bit identically. Ingestion (GROOVY-12206/12207) only makes existing metadata
+reachable. New diagnostics appear only inside opted-in scopes, warnings-first.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_binary_compatibility">Binary compatibility</h3>
+<div class="paragraph">
+<p>Emitted type-use annotations are additive classfile metadata; no new call-site shapes, markers,
+or runtime types. GDK annotation waves change no signatures — only annotations — and are
+therefore binary-compatible by definition, though they <strong>do</strong> change what strict Java-side
+checkers report against Groovy APIs, which is release-noted per wave.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance">Performance</h3>
+<div class="paragraph">
+<p>Two costs to measure from Phase 1 onward: qualifier threading through inference (per-compilation
+CPU) and lazy retention of ingested type annotations (memory, bounded by the laziness
+requirements in GROOVY-12206). Both gated by the spike.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tooling">Tooling</h3>
+<div class="paragraph">
+<p>IntelliJ IDEA maintains its own Groovy inference and its own nullness inspections; alignment
+should be flagged to JetBrains early, as with every STC-visible change. Stub generation must
+carry type-use annotations for joint compilation (part of Phase 4 emission work). The
+conformance matrix doubles as the tooling-facing statement of semantics.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_documentation">Documentation</h3>
+<div class="paragraph">
+<p>One page presenting the hardening ladder end-to-end: dynamic Groovy → <code>@TypeChecked</code> →
+groovy-contracts → nullness — with the contracts bridge (already live in Groovy 6) as the worked
+example that these layers compound rather than compete.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Grow <code>NullChecker</code> indefinitely instead of integrating.</strong> The 6.x pipeline deliberately takes
+this as far as it goes; the limits section is the evidence it is not a terminal state.
+Retained as the migration vehicle, rejected as the destination.</p>
+</li>
+<li>
+<p><strong>Rely on external tools (NullAway, Checker Framework) over Groovy output.</strong> They analyze Java
+sources or bytecode without Groovy&#8217;s AST, see none of the idioms (<code>?.</code> chains, Elvis, spread,
+Groovy truth), and cannot check dynamic-to-static boundaries. Useful for Java consumers of
+emitted annotations — which is exactly why the producing side matters — but not a substitute
+for checking Groovy itself.</p>
+</li>
+<li>
+<p><strong>Introduce nullable types as language syntax first (Kotlin model).</strong> Maximal ergonomics but
+forks the vocabulary from the Java ecosystem at the moment the ecosystem finally standardized;
+JSpecify-first keeps every annotation meaningful to and from Java, and leaves room for syntax
+sugar later.</p>
+</li>
+<li>
+<p><strong>Do nothing.</strong> Spring 7-era APIs carry machine-readable nullness that Groovy would silently
+discard; Kotlin reads it, IDEs read it, and Groovy would be the JVM language that ignores the
+metadata its own users' dependencies publish.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://jspecify.dev/">JSpecify</a> — specification, 1.0 release, and design documents</p>
+</li>
+<li>
+<p><a href="https://github.com/jspecify/jspecify/tree/main/conformance-tests">JSpecify conformance test suite</a> — basis for the Phase 1 harness and support matrix</p>
+</li>
+<li>
+<p><a href="https://docs.spring.io/spring-framework/reference/core/null-safety.html">Spring Framework null-safety</a> — JSpecify adoption across the Spring 7 API surface</p>
+</li>
+<li>
+<p><a href="https://github.com/uber/NullAway">NullAway</a> and <a href="https://checkerframework.org/manual/#nullness-checker">Checker Framework Nullness Checker</a> — prior art for JSpecify-aware checking on the JVM</p>
+</li>
+<li>
+<p><a href="https://kotlinlang.org/docs/null-safety.html">Kotlin null safety</a> — precedent for type-system nullness with annotation-driven Java interop</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12206">GROOVY-12206</a> — ingest type-use annotations when reading compiled classes</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12207">GROOVY-12207</a> — consult <code>package-info.class</code> of dependencies during resolution</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12208">GROOVY-12208</a> — NullChecker: broaden null-guard recognition</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12209">GROOVY-12209</a> — NullChecker: expression-level nullness</p>
+</li>
+<li>
+<p><code>groovy.typecheckers.NullChecker</code>, <code>org.apache.groovy.typecheckers.CheckingVisitor</code> — the incubating Groovy 6 checker this proposal builds on</p>
+</li>
+<li>
+<p><code>org.apache.groovy.contracts.ast.visitor.AnnotationClosureVisitor</code> — the groovy-contracts bridge inferring non-nullness from <code>@Requires</code>/<code>@Ensures</code> via <code>StaticTypesMarker.INFERRED_NON_NULL</code></p>
+</li>
+<li>
+<p><code>groovy.transform.NullCheck</code> — the existing runtime-hardening transform this proposal composes with</p>
+</li>
+<li>
+<p><a href="GEP-27.html">GEP-27: Compact Closure and Lambda Compilation</a> and <a href="GEP-28.html">GEP-28: Dot Shorthands</a> — companion GEPs in the same series</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
