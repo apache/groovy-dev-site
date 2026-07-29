@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-30</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/admin/dashboard/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-30</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-30</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-30</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Isolating java.beans and java.desktop from the Groovy Core Runtime</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Remove the hard dependency of the always-loaded Groovy core spine (metaclass system,
+compiler, <code>GroovyObject</code> hierarchy) on <code>java.beans</code> — and hence on the <code>java.desktop</code> module that
+contains it — by introducing a small internal bean-introspection abstraction with a
+<code>java.beans</code>-backed default and a reflection-only fallback. Features whose <strong>public API</strong> exposes
+<code>java.beans</code> types (<code>@Bindable</code>/<code>@Vetoable</code>, observable collections) keep their API but become
+lazily-loaded leaves that fail fast with a clear message when the platform lacks beans support.
+Benefits three environments at once: Android (today served by a shaded openbeans whose gaps are
+only discovered at runtime), jlink-minimized server runtimes that omit <code>java.desktop</code>, and
+GraalVM native-image (smaller closed-world reachability, less reflection metadata). Behavior on
+a full desktop JDK is unchanged.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-29</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-07-29</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+This proposal targets Groovy 7.0 and is an early outline. The final version may differ
+significantly from the current draft, but having this draft available allows us to gather
+early feedback and iterate on the design. We welcome feedback and discussion, but please
+keep in mind that the details are not yet finalized.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>java.beans</code> is a desktop-era API: since JDK 9 it lives in the <code>java.desktop</code> module alongside
+AWT and Swing, and platforms that are not desktops — Android, jlink-minimized server images,
+GraalVM native-image closed worlds — either omit it entirely or pay for it disproportionately.
+Groovy core today reaches for <code>java.beans</code> in its most load-bearing places: the default
+metaclass implementation, the bytecode <code>Verifier</code>, and the record-type transform. In practice,
+<strong>loading Groovy loads java.desktop</strong> and <strong>compiling a record requires java.desktop to be present</strong>.</p>
+</div>
+<div class="paragraph">
+<p>The dependency is small and fully mapped: exactly <strong>fifteen</strong> <code>java.beans</code> types (verified at
+the member level against the grooid jar during the GROOVY-12199 packaging work) plus two direct
+desktop stragglers (<code>java.awt.Image</code> in the record transform&#8217;s generated <code>BeanInfo</code> companion,
+and a Swing-based lexer debugging tool inside the core jar). Because the surface is this small,
+the modern answer is not to shade a substitute implementation underneath it (the Android
+approach since 2014, via relocated openbeans) but to <strong>retire the dependency from the core
+spine</strong>: a minimal internal introspection abstraction, <code>java.beans</code>-backed where the platform has
+it, reflection-only where it does not, and lazily-isolated leaves for the few features whose
+public API is inherently beans-shaped.</p>
+</div>
+<div class="paragraph">
+<p>The one-line pitch: <strong>Groovy core should run — and compile records — on any JVM subset that can
+run <code>java.base</code>.</strong></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_where_groovy_stands_today_the_verified_inventory">Where Groovy stands today: the verified inventory</h3>
+<div class="paragraph">
+<p>The complete <code>java.beans</code>/<code>java.desktop</code> surface of the core jar (Groovy 6 master, 2026-07-29),
+grouped by how it is reached:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 30%;">
+<col style="width: 30%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Usage site</th>
+<th class="tableblock halign-left valign-top">Types used</th>
+<th class="tableblock halign-left valign-top">When it executes</th>
+<th class="tableblock halign-left valign-top">Severity without java.desktop</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.lang.MetaClassImpl</code>, <code>o.c.g.runtime.metaclass.ClosureMetaClass</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Introspector</code>, <code>BeanInfo</code>, <code>PropertyDescriptor</code>, <code>MethodDescriptor</code>, <code>EventSetDescriptor</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime — metaclass initialization and JavaBeans event-support detection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spine.</strong> The default MOP cannot initialize</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>o.c.g.runtime.InvokerHelper</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Introspector.flushFromCaches</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime — class-info cache eviction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spine.</strong> Loaded by essentially every Groovy program</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>o.c.g.classgen.Verifier</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.beans.Transient</code> — a <strong>class literal in a static initializer</strong> (<code>TRANSIENT_ANNOTATION</code>,
+from GROOVY-8284)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile time — every class compilation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spine.</strong> The compiler cannot load; on Android this has silently meant "no on-device
+compilation" since 2020, because the relocated <code>groovyjarjaropenbeans.Transient</code> does not exist
+in openbeans 1.0.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.lang.GroovyObjectSupport</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Transient</code> annotation on <code>getMetaClass()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class-file metadata only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Benign — reflection silently drops unresolvable annotation types, but the marker is then
+invisible to introspectors</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>o.c.g.transform.RecordTypeASTTransformation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SimpleBeanInfo</code>, <code>BeanDescriptor</code>, <code>MethodDescriptor</code>, <code>PropertyDescriptor</code>,
+<code>EventSetDescriptor</code>, <strong><code>java.awt.Image</code></strong> — class literals in static finals; generates a
+<code>BeanInfo</code> companion class for records</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile time — any record declaration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spine-adjacent.</strong> Compiling a record hard-requires java.desktop</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>o.c.g.transform.BuilderASTTransformation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Introspector</code>, <code>BeanInfo</code>, <code>PropertyDescriptor</code>, <code>IntrospectionException</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile time — only when <code>@Builder</code> is applied</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leaf — but the failure would be a raw <code>NoClassDefFoundError</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.beans.BindableASTTransformation</code> / <code>VetoableASTTransformation</code> (+ stubbers)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PropertyChangeSupport</code>, <code>PropertyChangeListener</code>, <code>VetoableChangeSupport</code>,
+<code>VetoableChangeListener</code>, <code>PropertyVetoException</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Compile time when <code>@Bindable</code>/<code>@Vetoable</code> applied; <strong>generated user code</strong> calls the support
+classes at runtime</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leaf — note these live in <strong>core</strong>, not groovy-swing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.util.ObservableList</code> / <code>ObservableMap</code> / <code>ObservableSet</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>PropertyChangeSupport</code>, <code>PropertyChangeEvent</code>, <code>PropertyChangeListener</code> — <strong>in public
+signatures</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runtime, only if instantiated</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leaf with API exposure — signatures cannot change compatibly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.apache.groovy.antlr.LexerFrame</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>javax.swing.<strong></code>, <code>java.awt.</strong></code> — a Swing debugging UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Only when explicitly launched</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leaf — but it ships inside the core jar</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Everything else that touches <code>java.beans</code> (groovy-swing bindings, groovy-console, groovydoc
+tooling) lives in modules whose whole purpose is desktop UI; they are out of scope and correct
+as-is.</p>
+</div>
+<div class="paragraph">
+<p>Two facts make this inventory actionable. First, it is <strong>complete and member-verified</strong>: during
+the GROOVY-12199 shadow-migration review, every class <strong>and every method/field reference</strong> from
+Groovy code into the beans namespace was resolved against openbeans 1.0.2 — fourteen of the
+fifteen types resolve fully; only <code>java.beans.Transient</code> is missing. Second, it is <strong>small</strong>: the
+spine portion is five files, and the beans API they actually consume (property/event
+descriptors, <code>decapitalize</code>, cache flush, a marker annotation) is a fraction of <code>java.beans</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_three_environments_pay_for_this_today">Three environments pay for this today</h3>
+<div class="paragraph">
+<p><strong>Android.</strong> Android has never shipped <code>java.beans</code> (beyond a vestigial <code>PropertyChange*</code> subset).
+The grooid jar therefore bundles openbeans relocated to <code>groovyjarjaropenbeans.<strong></code> and rewrites
+every <code>java.beans</code> reference — machinery that GROOVY-12199 just migrated from ant-jarjar to
+shadow, where a string-relocation subtlety (<code>Java9.JAVA8_PACKAGES()</code>) already required a
+targeted <code>skipStringConstants</code> carve-out. Shading *works</strong>, but its failure mode is silent: the
+<code>Transient</code> gap sat unnoticed for six years because nothing verifies the relocated world is
+closed. Retiring the spine dependency removes the need for the relocation (and openbeans) for
+every app that does not itself use the beans-shaped leaves.</p>
+</div>
+<div class="paragraph">
+<p><strong>Minimized server runtimes.</strong> <code>jlink</code>-built images routinely omit <code>java.desktop</code> — it is one of
+the heaviest platform modules, and headless services have no use for it. Groovy on such an image
+fails at metaclass initialization. There is no workaround short of adding the module back;
+Groovy is the reason a headless service ships AWT.</p>
+</div>
+<div class="paragraph">
+<p><strong>GraalVM native-image.</strong> <code>Introspector</code>-based introspection needs reflection metadata for every
+introspected type, and reachability of <code>java.beans</code> pulls desktop classes into the closed-world
+analysis. A reflection-only introspector on a documented internal seam is easier to supply
+metadata for, easier to initialize at build time, and shrinks images. (This GEP does not promise
+full native-image support — dynamic Groovy has larger obstacles there — but it removes one
+structural one, and <code>@CompileStatic</code>-heavy applications benefit immediately.)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_why_now">Why now</h3>
+<div class="paragraph">
+<p>The <code>java.beans</code> usage predates the module system; when it was written, "the JDK" was one
+indivisible thing. Post-JDK-9, <code>java.desktop</code> is severable and increasingly severed. Meanwhile
+the historical reasons Groovy leaned on <code>Introspector</code> have weakened: the MOP&#8217;s own
+property/method model (<code>MetaClass</code>, <code>MetaProperty</code>, <code>CachedClass</code>) has long been the primary
+mechanism, with <code>java.beans</code> supplying supplementary event-set detection and descriptor
+compatibility. The remaining coupling is habit plus a thin slice of genuine function — exactly
+the shape an internal abstraction handles well.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_a_three_tier_classification">A three-tier classification</h3>
+<div class="paragraph">
+<p>Every current usage falls into one of three tiers, with different obligations:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 42.8571%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Tier</th>
+<th class="tableblock halign-left valign-top">Definition</th>
+<th class="tableblock halign-left valign-top">Obligation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Spine</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code loaded by essentially every Groovy program or compilation: <code>MetaClassImpl</code>,
+<code>ClosureMetaClass</code>, <code>InvokerHelper</code>, <code>Verifier</code>, <code>GroovyObjectSupport</code>,
+<code>RecordTypeASTTransformation</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must neither load nor link against <code>java.beans</code>/<code>java.desktop</code> types when they are absent.
+Full behavior preserved when they are present</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Leaf</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opt-in features whose implementation (<code>@Builder</code> introspection strategy) or public API
+(<code>@Bindable</code>/<code>@Vetoable</code>, <code>Observable*</code> collections) is beans-shaped</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API unchanged. Classes remain lazily loaded; when used on a platform without beans support they
+fail fast with a <strong>clear, documented</strong> error naming the feature and the missing module — never a
+raw <code>NoClassDefFoundError</code> from deep inside generated code</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Desktop tooling</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LexerFrame</code> and anything else that is a UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Moved out of the core jar (to groovy-console or a dev-tools artifact), or failing that, loaded
+only reflectively</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_the_introspection_seam">The introspection seam</h3>
+<div class="paragraph">
+<p>Introduce a minimal internal abstraction — working name
+<code>org.apache.groovy.beans.IntrospectionService</code> (final naming during implementation; hanging it
+off <code>VMPlugin</code>, which already abstracts platform variance, is the natural alternative) — with
+exactly the operations the spine consumes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>property descriptors for a class (name, type, read/write methods), honouring the transient
+marker;</p>
+</li>
+<li>
+<p>event-set detection (the <code>add*Listener</code>/<code>remove*Listener</code> pair recognition <code>MetaClassImpl</code>
+performs today);</p>
+</li>
+<li>
+<p><code>decapitalize</code> and cache-flush hooks (<code>InvokerHelper.flushFromCaches</code>);</p>
+</li>
+<li>
+<p>transient-marker recognition (see below).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Two implementations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>java.beans</code>-backed</strong> (default when <code>java.desktop</code> is present): delegates to <code>Introspector</code>
+and friends, preserving today&#8217;s behavior bit-for-bit, including interop with user-supplied
+custom <code>BeanInfo</code> classes — this is the compatibility anchor.</p>
+</li>
+<li>
+<p><strong>Reflection-only</strong> (selected automatically when <code>java.beans</code> is absent; forceable via a system
+property for testing): implements the same contract from <code>java.lang.reflect</code> alone. It does
+<strong>not</strong> honour custom <code>BeanInfo</code> classes — that is inherent, documented, and irrelevant on the
+platforms where it activates (they cannot express custom <code>BeanInfo</code> today either).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Selection is a one-time reflective probe at startup (<code>Class.forName("java.beans.Introspector")</code>
+guarded, never a static link), cached, with the chosen implementation exposed for diagnostics.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spine_specific_fixes">Spine-specific fixes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>Verifier</code></strong>: replace the <code>ClassHelper.make(Transient.class)</code> class literal with a name-based
+<code>ClassHelper.make("java.beans.Transient")</code> (no class loading), or — preferable if review
+agrees — introduce <code>groovy.transform.Transient</code> as the marker Groovy itself recognises, with
+<code>java.beans.Transient</code> still emitted <strong>additionally</strong> when the platform has it. The choice
+affects only what annotation generated <code>getMetaClass()</code> methods carry; both variants remove
+the class-load-time link. Either way the emitted marker is preserved on beans-capable
+platforms because real consumers still honour it: <code>Introspector</code>/<code>XMLEncoder</code> (the original
+GROOVY-8284 driver) and Jackson&#8217;s getter-based property discovery (which respects
+<code>@java.beans.Transient</code> since 2.6). Field-based serializers are unaffected throughout — the
+generated <code>metaClass</code> field already carries <code>ACC_TRANSIENT</code>.</p>
+</li>
+<li>
+<p><strong><code>RecordTypeASTTransformation</code></strong>: move the <code>SimpleBeanInfo</code>/<code>BeanDescriptor</code>/<code>Image</code> class
+literals out of static finals into the code path that actually generates the <code>BeanInfo</code>
+companion, and generate that companion only when the introspection seam reports beans support
+(or when explicitly requested via <code>@RecordOptions</code>). Compiling a record then requires only
+<code>java.base</code>; the companion remains generated by default on desktop JDKs.</p>
+</li>
+<li>
+<p><strong><code>MetaClassImpl</code> / <code>ClosureMetaClass</code></strong>: route descriptor and event-set queries through the
+seam. This is the delicate migration — the existing <code>java.beans</code> path must remain the default
+implementation precisely so that behavior (including descriptor caching and custom <code>BeanInfo</code>
+honouring) is unchanged where it matters. Golden tests comparing full property/event maps
+before and after, across a corpus of representative classes, gate this phase.</p>
+</li>
+<li>
+<p><strong><code>GroovyObjectSupport</code></strong>: annotation usage may stay (annotations are metadata; they do not
+force loading), aligned with whichever marker decision <code>Verifier</code> lands on.</p>
+</li>
+<li>
+<p><strong><code>BuilderASTTransformation</code></strong>: replace compile-time <code>Introspector</code> use with the seam or with
+Groovy&#8217;s own AST-level property enumeration (which the other builder strategies already use).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_verification_is_part_of_the_proposal">Verification is part of the proposal</h3>
+<div class="paragraph">
+<p>The GROOVY-12199 lesson is that this class of dependency regresses <strong>silently</strong>. Two standing
+guards:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a CI job that runs the core spine test subset on a <code>jlink</code> runtime built <strong>without</strong>
+<code>java.desktop</code> — compiling classes and records, initializing metaclasses, exercising the MOP;</p>
+</li>
+<li>
+<p>an ArchUnit-style structural test over the core jar asserting that no class outside an
+allowlist (the leaf tier) references <code>java.beans</code>/<code>java.awt</code>/<code>javax.swing</code> types in its
+constant pool — the same constant-pool analysis used to produce this GEP&#8217;s inventory,
+made permanent.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles">Design principles</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Behavior-identical where java.desktop exists.</strong> The default path stays <code>java.beans</code>-backed;
+desktop and server users on full JDKs see no observable change, including custom <code>BeanInfo</code>
+interop.</p>
+</li>
+<li>
+<p><strong>Isolate, don&#8217;t reimplement the world.</strong> The seam&#8217;s contract is the handful of operations
+Groovy actually uses — not a general beans replacement, not a public API. Internal (<code>@Internal</code>,
+<code>org.apache.groovy.*</code> namespace), so it can evolve.</p>
+</li>
+<li>
+<p><strong>Leaves keep their API; failures name the feature.</strong> No signature of <code>ObservableList</code> or
+<code>@Bindable</code>-generated code changes. The compatibility cost of purging beans types from public
+APIs is out of all proportion to the benefit, and lazy class loading already gives the
+isolation — what is missing is only the <strong>diagnostic quality</strong> when the platform cannot support
+the feature.</p>
+</li>
+<li>
+<p><strong>No new modules, no new artifacts, no packaging redesign.</strong> Android variant publishing, grooid
+retirement, and native-image metadata shipping are follow-on opportunities this GEP enables
+but does not undertake.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_7_0_deliverables">Groovy 7.0 deliverables</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 12.5%;">
+<col style="width: 37.5%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">What ships</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spine link-severing: <code>Verifier</code> marker fix, <code>RecordTypeASTTransformation</code> lazy/conditional
+<code>BeanInfo</code> companion, <code>InvokerHelper</code> guard; the desktop-less <code>jlink</code> CI job proving "core
+loads, classes and records compile"</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Small, independent, low-risk changes; the CI job locks them in. The <code>Verifier</code> fix also repairs
+on-device compilation for Android (broken since 2020)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The introspection seam: interface, <code>java.beans</code>-backed default, reflection-only fallback,
+selection probe; <code>MetaClassImpl</code>/<code>ClosureMetaClass</code>/<code>BuilderASTTransformation</code> migrated onto it;
+golden-equivalence test corpus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The bulk of the work and review attention; behavior-identical default is the acceptance
+criterion</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Leaf hygiene: fail-fast diagnostics for <code>@Bindable</code>/<code>@Vetoable</code>/<code>Observable*</code> on beans-less
+platforms; <code>LexerFrame</code> relocated out of core; the constant-pool structural test made permanent</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mechanical once tiers are agreed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4 (stretch)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grooid packaging simplification: relocation and openbeans bundling become leaf-only (or drop
+entirely with leaves documented as unsupported on Android); GraalVM reachability-metadata for
+the reflection-only introspector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Follow-on value; can trail into 7.x without blocking the GEP</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Feature</th>
+<th class="tableblock halign-left valign-top">Status</th>
+<th class="tableblock halign-left valign-top">Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Removing <code>java.beans</code> types from public APIs (<code>ObservableList</code> signatures, <code>@Bindable</code>
+semantics)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Binary and source compatibility cost vastly exceeds benefit; lazy
+loading already isolates them</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A public bean-introspection API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The seam is internal; a public API would freeze
+exactly the surface this GEP exists to keep flexible</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Full GraalVM native-image support</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Out of scope</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic Groovy has independent obstacles
+(runtime class generation, reflective dispatch); this GEP removes one structural blocker only</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Android variant publishing via Gradle Module Metadata (replacing the grooid classifier),
+indy-backend-on-ART work</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Real opportunities revealed by the same analysis, but
+packaging/backend concerns separate from dependency isolation</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extending openbeans (e.g. adding <code>Transient</code> in a 1.0.3)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Superseded</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Worth doing
+opportunistically for Groovy 5/6 grooid users, but this GEP removes the reason to need it</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.logging</code>, <code>javax.script</code> and other non-<code>java.base</code> audit work</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A
+follow-up audit using the same constant-pool tooling may propose more; this GEP deliberately
+stays on the beans/desktop seam where the evidence is complete</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility_and_impact">Compatibility and impact</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_backwards_compatibility">Backwards compatibility</h3>
+<div class="paragraph">
+<p>No public API signatures change. On a full JDK, the default implementation preserves current
+behavior including custom <code>BeanInfo</code> interop; the golden-equivalence corpus is the gate. The
+only intentionally observable changes are on platforms where the current behavior is <strong>failure</strong>:
+clear diagnostics instead of <code>NoClassDefFoundError</code>, and working compilation where it was
+impossible.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_binary_compatibility">Binary compatibility</h3>
+<div class="paragraph">
+<p>Spine classes keep their public members (per the project&#8217;s compatibility policy for
+<code>classgen</code>/<code>ast</code> packages). The <code>BeanInfo</code> companion class for records remains generated by
+default on desktop JDKs; a record compiled on a beans-less platform simply lacks the companion —
+code reflectively looking it up must already handle its absence (pre-Groovy-4-record classes
+never had one).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_tooling_and_documentation">Tooling and documentation</h3>
+<div class="paragraph">
+<p>joint-compilation stub generation, Groovydoc, and IDEs are unaffected (no syntax or AST-shape
+changes). Documentation gains one page: which Groovy features require <code>java.desktop</code>, what the
+failure looks like without it, and how the introspection fallback differs (custom <code>BeanInfo</code>
+only). The Android/grooid README notes the phase-4 simplification when it lands.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Keep shading (status quo).</strong> Proven for Android, but it addresses only Android, adds a
+maintenance surface of its own (GROOVY-12199&#8217;s <code>skipStringConstants</code> carve-out; the silent
+six-year <code>Transient</code> gap), and does nothing for jlink or native-image. Rejected as the
+<strong>primary</strong> mechanism; retained during transition and for leaves.</p>
+</li>
+<li>
+<p><strong>Depend on openbeans everywhere.</strong> Inverts the problem: desktop users lose custom <code>BeanInfo</code>
+interop and gain a third-party dependency in exchange for uniformity nobody asked for.
+Rejected.</p>
+</li>
+<li>
+<p><strong>Ask the JDK/desugaring ecosystem to supply java.beans.</strong> <code>desugar_jdk_libs</code> deliberately
+excludes beans as non-Android API surface, and no JDK effort exists to split beans out of
+<code>java.desktop</code> (JEP 200 fixed the module graph in 2014). Waiting is not a plan. Rejected.</p>
+</li>
+<li>
+<p><strong>Purge beans from public APIs too (maximal version).</strong> Cleanest end state, Groovy-8-sized
+compatibility break, and the leaves involved are low-traffic. The tiered design captures ~all
+of the value at ~none of the cost. Rejected for 7.0; re-evaluable later with usage data.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2740">PR #2740 / GROOVY-12199</a> — jarjar→shadow migration
+whose review produced the member-level verified inventory this GEP is built on (15 types;
+openbeans 1.0.2 covers 14; <code>java.beans.Transient</code> missing)</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8284">GROOVY-8284</a> — origin of the
+<code>java.beans.Transient</code> class literal in <code>Verifier</code> (the current on-device-compilation blocker
+on Android)</p>
+</li>
+<li>
+<p><a href="https://openjdk.org/jeps/200">JEP 200: The Modular JDK</a> — <code>java.beans</code> placed in
+<code>java.desktop</code></p>
+</li>
+<li>
+<p><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.desktop/module-summary.html"><code>java.desktop</code>
+module summary</a> — the module Groovy core currently cannot run without</p>
+</li>
+<li>
+<p><a href="https://developer.android.com/studio/write/java8-support-table">Android core library
+desugaring coverage</a> — <code>java.beans</code> absent from <code>desugar_jdk_libs</code>, confirming no
+toolchain-side fix is coming</p>
+</li>
+<li>
+<p><a href="https://github.com/melix/openbeans">openbeans</a> — the Apache-Harmony-derived shim bundled into
+the grooid jar today (<code>me.champeau.openbeans:openbeans:1.0.2</code>)</p>
+</li>
+<li>
+<p><a href="https://www.graalvm.org/latest/reference-manual/native-image/metadata/">GraalVM reachability
+metadata</a> — the mechanism the reflection-only introspector simplifies</p>
+</li>
+<li>
+<p><code>groovy.lang.MetaClassImpl</code>, <code>org.codehaus.groovy.classgen.Verifier</code>,
+<code>org.codehaus.groovy.transform.RecordTypeASTTransformation</code>,
+<code>groovy.beans.BindableASTTransformation</code>, <code>groovy.util.ObservableList</code> — the inventory&#8217;s
+primary sites in-tree</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/admin/dashboard/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
