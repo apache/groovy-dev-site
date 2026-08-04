@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-28</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_the_two_grammar_hazards' class='anchor-link'>The two grammar hazards</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-28</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-28</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#mental-model' class='anchor-link'>Mental model</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_the_two_grammar_hazards' class='anchor-link'>The two grammar hazards</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_groovy_7_0_deliverables' class='anchor-link'>Groovy 7.0 deliverables</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility_and_impact' class='anchor-link'>Compatibility and impact</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-28</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-07-25</p>
+<p>2026-08-04</p>
 </td>
 </tr>
 </table>
@@ -361,7 +361,7 @@ an expected type:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == 'RED'</code> is silently <code>false</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == .RED</code> — ✅ under STC from the other operand&#8217;s static type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == .RED</code> — ✅ <strong>in all modes</strong> when the other operand has a declared type; ✅ under STC when its type is inferred</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic-mode switch on a declared-enum-typed subject</p></td>
@@ -376,7 +376,54 @@ an expected type:</p>
 <div class="paragraph">
 <p>What remains genuinely unclosable, and is explicitly out of scope: positions where no context
 type exists even syntactically — dynamic-mode arguments to a dynamically dispatched call, and
-dynamic <code>==</code> where neither operand has a declared type.</p>
+<code>==</code> where neither operand has a declared type.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_two_distinct_benefits">The two distinct benefits</h3>
+<div class="paragraph">
+<p>The shorthand pays off in two different ways, and they are worth separating because they appeal
+to different readers.</p>
+</div>
+<div class="paragraph">
+<p><strong>No import at all.</strong> In an argument position the type name never appears in the calling file, so
+neither an import of the type nor a static import of its constants is needed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">// LogLevel.groovy
+enum LogLevel { DEBUG, INFO, WARN, ERROR }
+
+// Loggers.groovy
+void logPrint(String message, LogLevel level) { … }
+
+// App.groovy — no import of LogLevel, and no static import of INFO
+logPrint('Hello world', .INFO)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This works because the parameter&#8217;s type is a resolved reference in <code>logPrint&#8217;s signature; the
+<strong>caller&#8217;s</strong> import list plays no part in resolving `.INFO</code>, exactly as it plays no part in
+<code>def x = foo()</code> where <code>foo&#8217;s return type is unimported. This makes the shorthand strictly
+stronger than a static import, which still requires naming the type once (or importing `.*</code> and
+polluting the file namespace).</p>
+</div>
+<div class="paragraph">
+<p><strong>A checked literal.</strong> In a declaration position the type name is still present, one token away, so
+the saving is small — and if brevity were the whole argument this position would be weak. It is
+not the whole argument. The realistic competitor to <code>Color c = .RED</code> is not <code>Color c = Color.RED</code>
+but the coercion Groovy programmers actually write today:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Color c = 'RED'    // works
+Color c = 'GRN'    // also compiles — under @CompileStatic too — and fails at runtime
+Color c = .GRN     // compile error, in every mode</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>So the declaration case is about turning a value-blind string into a checked literal; the
+reduction in ceremony is a side benefit, not the point.</p>
 </div>
 </div>
 <div class="sect2">
@@ -409,6 +456,126 @@ ergonomics rather than catch up, consistent with the language&#8217;s history.</
 </div>
 </div>
 <div class="sect1">
+<h2 id="mental-model">Mental model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Programmers already have a mental model for this feature, because Java gave them one for switch
+case labels:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>"I already told the compiler the enum type in the switch clause, so I should be able to refer to
+the actual enum values in the case labels."</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>That sentence is not really about switches. It is about <strong>positions</strong>. Java applies it in exactly
+one position, and applies it invisibly, through a bare name. This GEP applies the same sentence
+to every position that already knows its type, and marks it with a leading dot so it can never be
+confused with a property access. The rule in one line:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Whatever I already told the compiler at this position, I should not have to say again in order
+to name one of its members. <code>.X</code> means "that type&#8217;s `X`".</strong></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>A practical corollary for readers of code: <strong>you can always expand <code>.X</code> by mentally re-inserting
+the type the position already names.</strong> If you cannot say out loud which type the position expects,
+the shorthand is not legal there — and that is precisely the compile error the feature emits.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_rule_restated_per_position">The rule, restated per position</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Position</th>
+<th class="tableblock halign-left valign-top">What the programmer already told the compiler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Color c = .RED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I gave the variable&#8217;s type on the left of the <code>=</code>; the right side should not repeat it."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Field/property initializer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I declared the field&#8217;s type on this very line."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>return .RED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I declared the method&#8217;s return type in its signature."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default parameter value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I declared the parameter&#8217;s type right there."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case .RED:</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java&#8217;s own sentence, generalised: "I told the compiler the subject&#8217;s type <strong>when I declared the subject</strong>" — which is why this also works in dynamic mode, where the <code>switch</code> clause alone tells the compiler nothing.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m(.RED)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"The method&#8217;s signature already declared the parameter&#8217;s type; the call site is the one place that should not have to repeat it." The same bargain a lambda strikes when it takes its shape from the SAM parameter.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Ann(.RED)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"The annotation&#8217;s own declaration gave the attribute&#8217;s type."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>c == .RED</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"The other operand has a type, and the comparison is only meaningful against that type."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;Color&gt; l = [.RED, .BLUE]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I gave the element type once; repeating it per element is the worst ratio of all."</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>.RED as Color</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">"I am giving the type in this very expression."</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_where_the_model_stops_and_why">Where the model stops, and why</h3>
+<div class="paragraph">
+<p>The same sentence explains the exclusions, which is the real test of whether a mental model is
+honest rather than decorative. Each excluded position fails it identically — <strong>nothing was ever
+told to the compiler, so there is nothing to elide</strong> (the full position-by-position breakdown is
+in <a href="#context-types">Context types</a>):</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>An argument to a dynamically dispatched call: the compiler does not know which method will be
+selected, so no parameter type exists to read.</p>
+</li>
+<li>
+<p><code>==</code> where neither operand has a declared type.</p>
+</li>
+<li>
+<p><code>def x = .RED</code>, and GString interpolation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Note that these are not "dynamic mode is unsupported". Dynamic mode supports the shorthand
+wherever a type was <strong>declared</strong>; it fails only where none was.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_proposal">Proposal</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -429,11 +596,13 @@ compile-time error ("no context type for dot shorthand").</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_context_types">Context types</h3>
+<h3 id="context-types">Context types</h3>
 <div class="paragraph">
-<p>The context type is determined syntactically (dynamic mode) or from inference (STC), in the
-positions below. This list is the design surface for review; the intent is to match the
-positions where Groovy already applies target typing for SAM coercion or String-to-enum
+<p>The table below is organised by <strong>what supplies the context type</strong>, not by compilation mode. That
+is the distinction that actually matters: a declared type is available to the compiler in every
+mode, so the first column is not "dynamic mode" but "works everywhere". Only the second column
+depends on static type checking. This list is the design surface for review; the intent is to
+match the positions where Groovy already applies target typing for SAM coercion or String-to-enum
 coercion, plus case labels and annotation attributes:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -445,53 +614,109 @@ coercion, plus case labels and annotation attributes:</p>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">Position</th>
-<th class="tableblock halign-left valign-top">Dynamic mode</th>
-<th class="tableblock halign-left valign-top">STC modes</th>
+<th class="tableblock halign-left valign-top">Context type from a <strong>declaration</strong> (all modes)</th>
+<th class="tableblock halign-left valign-top">Context type from <strong>inference</strong> (STC only)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Variable declaration with explicit type: <code>Color c = .RED</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ declared type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ the declared type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Field/property initializer, return statement from a typed method, default parameter value, ternary/Elvis branches in the above</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ declared type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ the declared type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Switch case label: <code>case .RED:</code> / <code>case .RED &#8594;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✅ when the subject has a declared enum type</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ including inferred subjects (flow typing, as GROOVY-8444 today)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ inferred subjects (<code>switch(list[0])</code>, <code>def</code> local) via flow typing, as GROOVY-8444 today</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Method/constructor call argument</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">❌ no known target (compile error)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">❌ the target method is not known until dispatch, so no parameter type exists (compile error)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✅ from the resolved parameter type</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Annotation attribute: <code>@Ann(.RED)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ (attribute types are compile-time-declared)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ always — attribute types are compile-time-declared</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>==</code>, <code>!=</code>, <code>in</code> against a typed other operand</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">❌</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>==</code>, <code>!=</code>, <code>in</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ when the other operand has a syntactically declared type: a typed local, parameter, or field access resolvable at compile time (see <a href="#equality">Equality and membership</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ when the other operand&#8217;s type comes from flow typing</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Typed collection/array literals: <code>Color[] a = [.RED]</code>, <code>List&lt;Color&gt; l = [.RED]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ arrays (declared component type); ❌ generic lists</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅ both</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ arrays, from the declared component type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ generic collections, from the element type</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explicit target: <code>x as Color</code>, <code>(Color) x</code> applied to a shorthand</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">✅</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✅ the cast <strong>is</strong> the declaration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>The only ❌ in the table is the position where nothing was declared and nothing can be inferred,
+which is the mental model doing its job rather than an arbitrary restriction.</p>
+</div>
+<div class="sect3">
+<h4 id="equality">Equality and membership</h4>
+<div class="paragraph">
+<p>Version 1 of this GEP marked <code>==</code> as unsupported in dynamic mode outright. That was inconsistent
+with its own treatment of declarations, case labels and arrays, all of which resolve from a
+syntactically declared type in every mode. Given</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Palette {
+    Color myColor                                   // declared
+    def anything                                    // not declared
+
+    boolean isRed()   { this.myColor  == .RED }     // ✅ every mode: Color is declared
+    boolean isRed2()  { this.anything == .RED }     // ❌ dynamic; ✅ under STC iff flow typing pinned it
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>the declared field supplies a context type by exactly the same route <code>Color c = .RED</code> does, so
+the shorthand resolves.</p>
+</div>
+<div class="paragraph">
+<p>This is sound even though dynamic Groovy can subvert the declared type through the MOP. The
+declared type is used only to decide <strong>which constant <code>.RED</code> names</strong>; the emitted bytecode is the
+ordinary qualified reference <code>Color.RED</code>. If <code>getProperty</code> interception or an <code>ExpandoMetaClass</code>
+has made the runtime value something other than a <code>Color</code>, the comparison simply evaluates to
+<code>false</code> — byte-for-byte the same outcome as hand-writing <code>Color.RED</code>. The shorthand adds no
+runtime machinery and therefore cannot introduce a runtime discrepancy.</p>
+</div>
+<div class="paragraph">
+<p>Contrast this with the argument position, where the ❌ is unavoidable rather than conservative:
+in <code>logPrint('hi', .INFO)</code> under dynamic dispatch the compiler does not know which <code>logPrint</code>
+will be selected, so there is no parameter type to read. The distinction is <strong>declared vs not
+declared</strong>, never <strong>dynamic vs static</strong>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Kotlin encountered a hazard specific to this position: in Kotlin 2.3, context-sensitive
+resolution combined with equality and type operators can become ambiguous when a clashing class
+declaration is imported, and the compiler now emits a warning. Groovy will face the same
+interaction and the resolution rules for this cell should be specified with that case in mind.
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_resolvable_members_staged">Resolvable members (staged)</h3>
@@ -528,6 +753,17 @@ coercion, plus case labels and annotation attributes:</p>
 </table>
 <div class="paragraph">
 <p>Stage 1 alone closes every gap in the motivation table.</p>
+</div>
+<div class="paragraph">
+<p>Stage 3 is the stage that draws the most enthusiasm in early feedback, and it is genuinely the
+nicest sugar of the three — but it carries a design cost the constant cases do not. In a
+<strong>declaration</strong> position (<code>Duration d = .ofSeconds(3)</code>) it is straightforward, since the context
+type is fixed before the call is resolved. In an <strong>argument</strong> position it is circular: the
+shorthand&#8217;s context type comes from the candidate parameter type, while candidate selection
+wants the argument&#8217;s type. Dart resolves this and provides a reference implementation to follow,
+but it is a substantially larger item than looking up a constant on a known enum, which is why
+it is staged last. Splitting Stage 3 so that declaration-position factories can land earlier
+than argument-position ones is an open question for review.</p>
 </div>
 </div>
 <div class="sect2">
@@ -629,7 +865,9 @@ programs cannot change meaning.</p>
 </li>
 <li>
 <p><strong>One mechanism, not per-position magic.</strong> Case labels, arguments, annotations and initializers
-all resolve through the same "context type" definition, so the mental model is a single rule.</p>
+all resolve through the same "context type" definition, so the mental model is a single rule —
+stated in <a href="#mental-model">Mental model</a>, along with its per-position restatement and the reason each
+excluded position is excluded.</p>
 </li>
 <li>
 <p><strong>Stay aligned with the coercion positions.</strong> Wherever <code>Color c = 'RED'</code> works today, <code>.RED</code>
@@ -659,12 +897,12 @@ without deprecating the coercion (which remains for genuinely dynamic string val
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Grammar (lexer + antlr4 rules + continuation-line rule), Stage 1 members (enum constants), declared-type contexts (declarations, fields, returns, defaults, ternaries, case labels, annotation attributes, arrays), all compilation modes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grammar (lexer + antlr4 rules + continuation-line rule), Stage 1 members (enum constants), <strong>all declared-type contexts</strong> — declarations, fields, returns, defaults, ternaries, case labels, annotation attributes, arrays, and <code>==</code>/<code>!=</code>/<code>in</code> against a declared operand — in all compilation modes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Closes the dynamic-case-label, annotation and typo-safety gaps; no STC dependency beyond what exists</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">STC-inferred contexts: method/constructor arguments with overload interplay, <code>==</code>/<code>in</code>, generic collection literals</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">STC-inferred contexts: method/constructor arguments with overload interplay, <code>==</code>/<code>in</code> against inferred operands, generic collection literals</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Reuses the SAM target-typing machinery; the hard design item is overload interaction</p></td>
 </tr>
 <tr>
@@ -703,9 +941,9 @@ precede GEP acceptance, since parser feasibility is the main technical risk.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Shorthands in positions with no context type (dynamic call arguments, dynamic <code>==</code>, GString interpolation, <code>def</code> targets)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Shorthands in positions with no context type: arguments to a dynamically dispatched call, <code>==</code> where <strong>neither</strong> operand has a declared or inferred type, GString interpolation, <code>def</code> targets</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Not planned</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Nothing to resolve against; explicit compile error keeps the model crisp</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nothing to resolve against; explicit compile error keeps the model crisp. Note this excludes only the untyped cases — <code>==</code> against a declared operand ships in Phase 1</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Bare-name resolution outside switch cases (Kotlin KEEP-379 style)</p></td>
@@ -771,7 +1009,10 @@ verified for joint compilation in Phase 1).</p>
 <div class="paragraph">
 <p>The Groovy documentation&#8217;s enum section should present the full ladder in one place: qualified
 reference → static import → switch-case bare constants → dot shorthands → string coercion
-(dynamic values only), with the mode/position matrix from this GEP&#8217;s motivation section.</p>
+(dynamic values only), with the mode/position matrix from this GEP&#8217;s motivation section. The
+one-line rule from <a href="#mental-model">Mental model</a> should lead that section: readers who take away only
+"the leading dot means the type this position already declares" can predict every supported
+position and every excluded one without consulting the matrix.</p>
 </div>
 </div>
 </div>
@@ -825,7 +1066,13 @@ property that makes the dot form self-explanatory. Rejected.</p>
 <p><a href="https://docs.swift.org/swift-book/documentation/the-swift-programming-language/expressions/#Implicit-Member-Expression">Swift implicit member expressions</a> — the longest-standing precedent, in a language with leading-dot chain continuation</p>
 </li>
 <li>
-<p><a href="https://github.com/Kotlin/KEEP/blob/master/proposals/context-sensitive-resolution.md">Kotlin KEEP-379: context-sensitive resolution</a> — the bare-name alternative this GEP rejects for dynamic-mode reasons</p>
+<p><a href="https://github.com/Kotlin/KEEP/blob/main/proposals/KEEP-0379-context-sensitive-resolution.md">Kotlin KEEP-379: context-sensitive resolution</a> — the bare-name alternative this GEP rejects for dynamic-mode reasons; previewed in Kotlin 2.2</p>
+</li>
+<li>
+<p><a href="https://kotlinlang.org/docs/whatsnew23.html">What&#8217;s new in Kotlin 2.3</a> — the ambiguity warning added for context-sensitive resolution under equality and type operators, the hazard noted in <a href="#equality">Equality and membership</a></p>
+</li>
+<li>
+<p><a href="https://dart.dev/language/dot-shorthands">Dart dot shorthands (language documentation)</a> — the shipped user-facing semantics</p>
 </li>
 <li>
 <p><a href="https://issues.apache.org/jira/browse/GROOVY-8444">GROOVY-8444</a> — unqualified enum constants in switch cases (Groovy 3.0.0)</p>
@@ -851,6 +1098,15 @@ whose positions (and value-blindness) motivate the design</p>
 <p><a href="GEP-27.html">GEP-27: Compact Closure and Lambda Compilation</a> — companion GEP in the same series</p>
 </li>
 </ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>1 (2026-07-25) Initial draft<br>
+2 (2026-08-04) Mental model section added; <code>==</code>/<code>!=</code>/<code>in</code> corrected to work in all modes against a declared operand (was dynamic-mode ❌) and moved to Phase 1; context-type table recut by declaration vs inference rather than compilation mode; no-import benefit and checked-literal rationale made explicit; Stage 3 argument-position overload circularity noted</p>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>

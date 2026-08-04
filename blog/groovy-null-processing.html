@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy&trade; Processing Nulls In Lists</a></li><li><a href='#_libraries_covered' class='anchor-link'>Libraries covered</a></li><li><a href='#_mutating_a_list_to_remove_its_nulls' class='anchor-link'>Mutating a list to remove its nulls</a></li><li><a href='#_producing_a_new_list_without_nulls' class='anchor-link'>Producing a new list without nulls</a></li><li><a href='#_other_null_related_functionality' class='anchor-link'>Other null related functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy&trade;</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy&trade;</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./netbeans'>Using Apache NetBeans with Apache Groovy&trade;</a></li><li><a href='./groovy-sequenced-collections'>Groovy&trade; and Sequenced Collections (JEP-431)</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy&trade; Processing Nulls In Lists</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-02-06 12:00AM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy&trade; Processing Nulls In Lists</a></li><li><a href='#_libraries_covered' class='anchor-link'>Libraries covered</a></li><li><a href='#_mutating_a_list_to_remove_its_nulls' class='anchor-link'>Mutating a list to remove its nulls</a></li><li><a href='#_producing_a_new_list_without_nulls' class='anchor-link'>Producing a new list without nulls</a></li><li><a href='#_other_null_related_functionality' class='anchor-link'>Other null related functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further Information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&trade;</a></li><li><a href='./wordle-checker'>Checking Wordle with Groovy&trade;</a></li><li><a href='./lego-bricks-with-groovy'>Lego Bricks with Groovy&trade;</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./netbeans'>Using Apache NetBeans with Apache Groovy&trade;</a></li><li><a href='./groovy-sequenced-collections'>Groovy&trade; and Sequenced Collections (JEP-431)</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./groovy-haiku-processing'>Groovy&trade; Haiku processing</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy&trade; Processing Nulls In Lists</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-02-06 12:00AM (Last updated: 2026-09-02 10:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>This <a href="https://www.programmergirl.com/java-remove-nulls-from-list/">article</a> by <a href="https://www.programmergirl.com/about-me/">Shubhra Srivastava</a>
@@ -98,7 +98,7 @@ gaps in the JDK offerings and while some of those gaps in the JDK have now been 
 itself, Commons Collections still contains much useful functionality.</p>
 </li>
 <li>
-<p><a href="https://www.eclipse.org/collections/">Eclipse Collections</a> which comes with many container types including
+<p><a href="https://eclipse.dev/collections/">Eclipse Collections</a> which comes with many container types including
 immutable collections, primitive collections, bimaps, multimaps and bags as well as numerous utility
 methods. It focuses on reduced memory footprint and efficient containers. It might be particularly
 of interest if you need primitive collections, immutable collections or some more exotic collection
@@ -211,6 +211,35 @@ assert ['A', null, 'B', '', 0].findResults().size() == 4      // <b class="conum
 </li>
 </ol>
 </div>
+<div class="paragraph">
+<p>Each of these builds the whole list eagerly. From Groovy 5,
+and further enhanced in Groovy 6, the
+long-standing eager methods have lazy counterparts — <code>collecting</code>,
+<code>collectingMany</code>, <code>findingAll</code>, <code>findingResults</code> and friends — which
+return an <code>Iterator</code> rather than a <code>List</code>. The no-arg shortcut is
+available here too:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">assert ['A', null, 'B'].iterator().findingResults().toList() == ['A', 'B']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Laziness matters when the source is large or unbounded and you only
+want the first few non-null results — nothing beyond those is ever
+computed:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var firstFour = (1..Integer.MAX_VALUE).iterator()
+    .findingResults{ it % 3 == 0 ? it : null }
+    .take(4).toList()
+assert firstFour == [3, 6, 9, 12]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Call <code>toList()</code> when you do want the whole thing.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_guava_2">Guava</h3>
@@ -242,10 +271,33 @@ assert ['A', null, 'B', '', 0].findResults().size() == 4      // <b class="conum
 <h2 id="_other_null_related_functionality">Other null related functionality</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Before concluding, we should mention some other Groovy functionality related to null.
-Although not related to list processing, Groovy&#8217;s <code>@NullCheck</code> AST transform is useful
-to automatically add null checking into your own classes, methods, and constructors. For further details,
-see the <a href="https://docs.groovy-lang.org/latest/html/documentation/#xform-NullCheck">documentation</a>.</p>
+<p>Before concluding, we should mention some other Groovy functionality related to null.</p>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>@NullCheck</code> AST transform automatically adds null checking into your own
+classes, methods, and constructors — see the
+<a href="https://docs.groovy-lang.org/latest/html/documentation/#xform-NullCheck">documentation</a>.</p>
+</div>
+<div class="paragraph">
+<p>Groovy 6 adds <code>takeIf</code>, which returns the receiver when a predicate holds and <code>null</code>
+otherwise. It reads naturally alongside the Elvis operator, turning a test into a
+value:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var url = 'example.com'
+assert (url.takeIf{ it.startsWith('http') } ?: "https://$url") == 'https://example.com'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>More substantially, Groovy 6 moves null handling from a runtime concern to a
+compile-time one. The <code>NullChecker</code> type-checking extension catches null
+dereferences, unsafe assignments and missing null checks before the code runs, and
+in <code>strict</code> mode it infers nullness from flow without needing any annotations at
+all. The companion post
+<a href="https://groovy.apache.org/blog/groovy-null-checker">Compile-time null safety for Groovy</a>
+covers it, along with the dynamic idioms — safe navigation, Elvis, Groovy truth —
+that this post has been leaning on throughout.</p>
 </div>
 </div>
 </div>
@@ -258,7 +310,7 @@ see the <a href="https://docs.groovy-lang.org/latest/html/documentation/#xform-N
 <p>Java – Remove all nulls from a List (<a href="https://www.programmergirl.com/java-remove-nulls-from-list/">original</a> and <a href="https://www.javacodegeeks.com/2019/03/java-remove-nulls-from-list.html">javacodegeeks</a>)</p>
 </li>
 <li>
-<p>Eclipse Collections (<a href="https://www.eclipse.org/collections/">website</a> and <a href="https://github.com/eclipse/eclipse-collections">github site</a>)</p>
+<p>Eclipse Collections (<a href="https://eclipse.dev/collections/">website</a> and <a href="https://github.com/eclipse-collections/eclipse-collections">github site</a>)</p>
 </li>
 <li>
 <p>Guava (<a href="https://github.com/google/guava/wiki">user guide</a>)</p>
