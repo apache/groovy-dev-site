@@ -69,18 +69,23 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-09-12 08:00AM</span></p><hr/><div id="preamble">
+        </div><br/><span>Published: 2026-08-13 08:00AM</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>Groovy can be very efficient in terms of lines of code/AI tokens processed ...
-POGO using AST transforms (lines/tokens): Groovy 15/86, Java 126/998
-record with behavior: Groovy 23/190, Java 122/1029
-scalable reading: 288 tokens of source → 83 tokens of verified spec → 0 bodies opened. The reader who needs to know what a class promises no longer pays to read what it does.
+<pre>Groovy 6 - supporting more flexible or stricter efficient code - your choice.
+
+Groovy can be very efficient in terms of lines of code/AI tokens processed ...
+  POGO using AST transforms (lines/tokens): Groovy 15/86, Java 126/998
+  Record with behavior: Groovy 23/190, Java 122/1029
+  Scalable reading: 288 tokens of source → 83 tokens of verified spec → 0 bodies opened.
+  The reader who needs to know what a class promises no longer pays to read what it does.
 
 Groovy can be fast (compared with CPython and Rust-based pydantic-core) ...
-Ready to serve (spawn + handshake + tools): Python ~215 ms, Groovy JVM ~410–470 ms, Groovy Native ~18 ms
-Steady-state (search n=20): Python 5.6 ms, Groovy JVM dynamic 10.5 ms, Groovy native static 5.1 ms</pre>
+  Ready to serve (spawn + handshake + tools):
+    Python ~215 ms, Groovy JVM ~410–470 ms, Groovy Native ~18 ms
+  Steady-state (search n=20):
+    Python 5.6 ms, Groovy JVM dynamic 10.5 ms, Groovy native static 5.1 ms</pre>
 </div>
 </div>
 </div>
@@ -257,6 +262,41 @@ bodies were opened.</p>
 </tr>
 </tbody>
 </table>
+<div class="sect2">
+<h3 id="_the_saving_is_a_subtree_not_a_percentage">The saving is a subtree, not a percentage</h3>
+<div class="paragraph">
+<p>The table understates the deal, because "read the body" was never the
+true price. <code>deposit</code> is three lines, but one of them calls
+<code>log.add(&#8230;&#8203;)</code>, and proving that call can&#8217;t touch <code>balance</code> — the
+question <code>@Modifies</code> answers outright — means proving it for
+everything beneath it. In JDK 25&#8217;s sources the traversal runs</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>deposit → ArrayList.add(E) → add(E, Object[], int) → grow(int)
+        → grow() → ArraysSupport.newLength → hugeLength</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>— six levels and about 460 CL100K tokens down <strong>one branch of one
+line</strong>, and still unfinished: <code>Arrays.copyOf</code> bottoms out in native
+code, the <code>modCount</code> semantics live in a superclass, and the
+<code>GString.toString()</code> on the same line opens a second subtree of its
+own. The <code>@Modifies({ [this.balance, this.log] })</code> that settles the
+question is about a dozen tokens.</p>
+</div>
+<div class="paragraph">
+<p>That is the real shape of the trade. Without declarations, reading
+cost compounds: a method with <em>k</em> callees, chased <em>d</em> levels deep, is
+<em>k^d</em> bodies. A verified declaration truncates the recursion — every
+annotated signature is a leaf the traversal stops at. It also answers
+the obvious objection that the annotations make the class <strong>bigger</strong>,
+which they do: annotating <code>Account</code> roughly triples it (74 CL100K
+tokens to 229). The extra tokens buy a constant-size wall in place of
+an unbounded subtree, on every path that would otherwise descend —
+a constant, traded for an exponential.</p>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_the_part_that_makes_it_work">The part that makes it work</h3>
 <div class="paragraph">
