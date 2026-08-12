@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='null safety, type checking, static analysis, annotations'/><meta name='description' content='This post looks at a proposed type-checking extension for Groovy which catches null-safety violations at compile time.'/><title>The Apache Groovy programming language - Blogs - Compile-time null safety for Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='null safety, type checking, static analysis, annotations'/><meta name='description' content='Groovy&apos;s null story, from the dynamic operators you already use to the NullChecker type-checking extension that catches null bugs at compile time.'/><title>The Apache Groovy programming language - Blogs - Compile-time null safety for Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,25 +63,28 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Compile-time null safety for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_two_levels_of_strictness' class='anchor-link'>Two levels of strictness</a></li><li><a href='#_the_problem_the_billion_dollar_mistake_at_runtime' class='anchor-link'>The problem: the billion-dollar mistake at runtime</a></li><li><a href='#_example_1_looking_up_a_book_nullable_parameters' class='anchor-link'>Example 1: looking up a book — <code>@Nullable</code> parameters</a></li><li><a href='#_example_2_greeting_a_customer_catching_null_arguments' class='anchor-link'>Example 2: greeting a customer — catching null arguments</a></li><li><a href='#_example_3_safe_access_patterns_the_checker_is_smart' class='anchor-link'>Example 3: safe access patterns — the checker is smart</a></li><li><a href='#_example_4_non_null_by_default_less_annotation_noise' class='anchor-link'>Example 4: non-null by default — less annotation noise</a></li><li><a href='#_example_5_lazy_initialisation_monotonicnonnull_and_lazy' class='anchor-link'>Example 5: lazy initialisation — <code>@MonotonicNonNull</code> and <code>@Lazy</code></a></li><li><a href='#_example_6_going_strict_flow_sensitive_analysis' class='anchor-link'>Example 6: going strict — flow-sensitive analysis</a></li><li><a href='#_annotation_compatibility' class='anchor-link'>Annotation compatibility</a></li><li><a href='#_how_this_compares_to_java_approaches' class='anchor-link'>How this compares to Java approaches</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Compile-time null safety for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Compile-time null safety for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_first_the_dynamic_story' class='anchor-link'>First, the dynamic story</a></li><li><a href='#_two_levels_of_strictness' class='anchor-link'>Two levels of strictness</a></li><li><a href='#_the_problem_the_billion_dollar_mistake_at_runtime' class='anchor-link'>The problem: the billion-dollar mistake at runtime</a></li><li><a href='#_example_1_looking_up_a_book_nullable_parameters' class='anchor-link'>Example 1: looking up a book — <code>@Nullable</code> parameters</a></li><li><a href='#_example_2_greeting_a_customer_catching_null_arguments' class='anchor-link'>Example 2: greeting a customer — catching null arguments</a></li><li><a href='#_example_3_safe_access_patterns_the_checker_is_smart' class='anchor-link'>Example 3: safe access patterns — the checker is smart</a></li><li><a href='#_example_4_non_null_by_default_less_annotation_noise' class='anchor-link'>Example 4: non-null by default — less annotation noise</a></li><li><a href='#_example_5_lazy_initialisation_monotonicnonnull_and_lazy' class='anchor-link'>Example 5: lazy initialisation — <code>@MonotonicNonNull</code> and <code>@Lazy</code></a></li><li><a href='#_example_6_going_strict_flow_sensitive_analysis' class='anchor-link'>Example 6: going strict — flow-sensitive analysis</a></li><li><a href='#_annotation_compatibility' class='anchor-link'>Annotation compatibility</a></li><li><a href='#_how_this_compares' class='anchor-link'>How this compares</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Compile-time null safety for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-04-02 10:00AM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-04-02 10:00AM (Last updated: 2026-08-12 10:00AM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A proposed enhancement, targeted for Groovy 6,
-adds compile-time null-safety analysis as a type-checking extension
-(<a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894</a>,
-<a href="https://github.com/apache/groovy/pull/2426">PR #2426</a>).
+<p>Groovy 6 ships compile-time null-safety analysis as a type-checking
+extension
+(<a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894</a>).
 Inspired by the
-<a href="https://checkerframework.org/manual/#nullness-checker">Checker Framework</a>,
-<a href="https://jspecify.dev/">JSpecify</a>, and similar tools in Kotlin and C#,
-the proposal catches null dereferences, unsafe assignments, and
+<a href="https://checkerframework.org/manual/<mark>nullness-checker">Checker Framework</a>,
+<a href="https://jspecify.dev/">JSpecify</a>, and similar tools in Kotlin and C</mark>,
+<code>NullChecker</code> catches null dereferences, unsafe assignments, and
 missing null checks <em>before</em> your code ever runs.</p>
+</div>
+<div class="paragraph">
+<p>That is the second half of Groovy&#8217;s null story, though, and it is
+worth starting with the first.</p>
 </div>
 <div class="paragraph">
 <p>The extension plugs into Groovy&#8217;s existing <code>@TypeChecked</code>
@@ -102,11 +105,73 @@ bookshop where customers browse, reserve, and review books.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_first_the_dynamic_story">First, the dynamic story</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Long before any compile-time checking, Groovy gave dynamic code a set
+of tools for dealing with absence. If you write in a dynamic style —
+or you are reading Groovy that does — these are the idioms doing the
+work, and they cost nothing:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong><code>null</code> is an object.</strong> <code>null.getClass()</code> returns
+<code>org.codehaus.groovy.runtime.NullObject</code>, Groovy&#8217;s null singleton.
+That is why <code>null.toString()</code> yields <code>'null'</code> rather than throwing,
+and why <code>null.equals(null)</code> is <code>true</code>.</p>
+</li>
+<li>
+<p><strong>Groovy truth.</strong> <code>null</code> is falsy, so <code>if (name)</code> is both a null check
+and an emptiness check. Empty strings, empty collections and zero are
+falsy too — usually what you meant, occasionally not, so it pays to
+know which you are relying on.</p>
+</li>
+<li>
+<p><strong>Safe navigation, <code>?.</code></strong> — <code>user?.address?.city</code> yields <code>null</code> rather
+than throwing the moment any link in the chain is absent. Chains
+short-circuit, so one <code>?.</code> protects everything downstream of it.</p>
+</li>
+<li>
+<p><strong>Elvis, <code>?:</code></strong> — <code>name ?: 'Anonymous'</code> supplies a default for a falsy
+value, and the elvis assignment <code>name ?= 'Anonymous'</code> does it in
+place.</p>
+</li>
+<li>
+<p><strong>Safe indexing, <code>?[]</code></strong> — <code>list?[0]</code> and <code>map?[key]</code> extend the same
+courtesy to subscripting.</p>
+</li>
+<li>
+<p><strong>Spread-dot on absence.</strong> <code>list*.name</code> returns <code>null</code> for a null
+list rather than throwing.</p>
+</li>
+<li>
+<p><strong>GDK methods tolerate null.</strong> <code>sort</code> orders nulls first,
+<code>groupBy</code> will happily key on <code>null</code>, and string interpolation
+renders it as <code>null</code> instead of failing.</p>
+</li>
+<li>
+<p><strong><code>@NullCheck</code></strong> generates explicit runtime guards on parameters when
+you want fail-fast behaviour at the boundary rather than quiet
+propagation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Between them these cover a great deal of everyday code, and they are
+the reason Groovy programs tend to bend rather than break around
+missing values. What they cannot tell you is whether a value <strong>can</strong> be
+null in the first place — every one of them is a decision you make at
+the point of use, and forgetting one is invisible until runtime. That
+is the gap the rest of this post is about.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_two_levels_of_strictness">Two levels of strictness</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The proposal provides two checkers. Pick the level that suits
-your code:</p>
+<p><code>NullChecker</code> has two levels. Pick the one that suits your code:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -128,7 +193,7 @@ your code:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Existing projects adopting null safety incrementally.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StrictNullChecker</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NullChecker(strict: true)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Everything <code>NullChecker</code> does, <em>plus</em> flow-sensitive tracking — even unannotated <code>def x = null; x.toString()</code> is flagged.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">New code or modules where you want full coverage.</p></td>
 </tr>
@@ -142,7 +207,7 @@ your code:</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker')
 class RelaxedCode { /* … */ }
 
-@TypeChecked(extensions = 'groovy.typecheckers.StrictNullChecker')
+@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
 class StrictCode { /* … */ }</code></pre>
 </div>
 </div>
@@ -168,8 +233,8 @@ println name.toUpperCase()   // NullPointerException at runtime</code></pre>
 </div>
 <div class="paragraph">
 <p>The code compiles, the tests might even pass if they don&#8217;t hit that
-path, and the exception surfaces in production. The NullChecker
-proposal moves this class of error to compile time.</p>
+path, and the exception surfaces in production. <code>NullChecker</code> moves
+this class of error to compile time.</p>
 </div>
 </div>
 </div>
@@ -287,9 +352,9 @@ String formatTitle(@Nullable String title) {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.StrictNullChecker')
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
 static main(args) {
-    def title = null
+    String title = null
     title ?= 'Untitled'
     title.toUpperCase()                        // ok: elvis cleared nullable state
 }</code></pre>
@@ -299,6 +364,71 @@ static main(args) {
 <p>The checker performs the same kind of narrowing that a human reader
 does: once you&#8217;ve ruled out null — whether by an <code>if</code>, an early
 <code>return</code>, a <code>throw</code>, or an elvis assignment — the variable is safe.</p>
+</div>
+<div class="paragraph">
+<p>Since the first version of this post, guard recognition has been
+broadened considerably
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12208">GROOVY-12208</a>).
+All of these now narrow:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">if (s) { s.length() }                          // Groovy truth
+if (Objects.nonNull(s)) { s.length() }         // Objects.nonNull / isNull
+assert s != null; s.length()                   // assert, plain or comparing
+if (o instanceof String) { o.length() }        // instanceof, and !instanceof
+if (s != null &amp;&amp; s.length() &gt; 0) { … }         // short-circuit conjunction
+if (s == null || s.isEmpty()) return -1        // disjunction, as an early exit
+while (s != null &amp;&amp; n &lt; 1) { n = s.length() }  // and in while loops, not just if</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A companion change
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12209">GROOVY-12209</a>)
+taught the checker to reason about the <strong>results</strong> of the nullable
+operators rather than just the variables feeding them. A ternary is
+nullable only if a branch can actually be null once the condition&#8217;s
+own guard facts are applied, so <code>s != null ? s : 'default'</code> is not
+nullable. An elvis expression is nullable only if its fallback is —
+which makes <code>s ?: 'default'</code> a recognised way to hand a <code>@Nullable</code>
+value to something that demands non-null:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static String needsNonNull(@NonNull String s) { s.toUpperCase() }
+
+static String pass(@Nullable String s) {
+    needsNonNull(s ?: 'fallback')              // ok: elvis cannot yield null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Most recently, the checker learned that some <strong>method calls</strong> are
+guards too
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12250">GROOVY-12250</a>).
+A validator that throws on null — <code>Objects.requireNonNull</code>, or a
+Guava-style <code>checkNotNull</code> — guarantees its argument is non-null
+whenever it completes normally, so the code after it is safe:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker')
+int titleWidth(@Nullable String title) {
+    Objects.requireNonNull(title, 'title must be supplied')
+    title.length()                             // ok: requireNonNull throws on null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same reasoning covers test code, which previously collected
+false positives for values it had just asserted were present.
+<code>assertNotNull(title)</code> now narrows <code>title</code> — with the message
+parameter in either position, so JUnit 4&#8217;s <code>(message, actual)</code> and
+JUnit 5 / TestNG&#8217;s <code>(actual, message)</code> conventions both work — and
+fluent chains such as <code>assertThat(title).isNotNull()</code> narrow too,
+even through intermediate calls like <code>describedAs(&#8230;&#8203;)</code>. As with
+annotations, matching is by simple name, so any library following
+the standard naming conventions works without configuration.</p>
 </div>
 </div>
 </div>
@@ -438,13 +568,13 @@ always safe and won&#8217;t trigger null dereference warnings.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The standard <code>NullChecker</code> only flags issues involving annotated
-code — unannotated code passes silently. The <code>StrictNullChecker</code>
+code — unannotated code passes silently. The <code>strict</code> mode
 goes further, tracking nullability through assignments and control
 flow even without annotations:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.StrictNullChecker')
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
 static main(args) {
     def x = null
     x.toString()                               // compile error
@@ -463,7 +593,7 @@ non-null value clears the nullable state:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.StrictNullChecker')
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
 static main(args) {
     def x = null
     x = 'hello'
@@ -474,6 +604,42 @@ static main(args) {
 <div class="paragraph">
 <p>This is ideal for new modules where you want comprehensive null
 coverage from the start, without annotating every declaration.</p>
+</div>
+<div class="sect2">
+<h3 id="_strict_mode_also_checks_field_initialisation">Strict mode also checks field initialisation</h3>
+<div class="paragraph">
+<p>Declaring a field <code>@NonNull</code> promises it never holds null — but a
+field that is <strong>never assigned at all</strong> holds null from construction
+onwards, and earlier versions of the checker let that pass silently.
+Strict mode now verifies definite initialisation
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12251">GROOVY-12251</a>):
+every explicitly-annotated <code>@NonNull</code> instance field must be
+assigned at its declaration, in an instance initialiser block, or by
+every declared constructor (a constructor delegating via <code>this(&#8230;&#8203;)</code>
+relies on its delegate):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker(strict: true)')
+class Library {
+    @NonNull String catalog                    // never assigned
+    Library(String catalog) { }                // oops — forgot this.catalog = catalog
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - @NonNull field 'catalog' is not initialized by all constructors</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The check is deliberately confined to strict mode so that
+named-argument bean construction — <code>new Book(title: 'Groovy in
+Action')</code> — keeps working unflagged in relaxed code. Fields annotated
+<code>@MonotonicNonNull</code> or <code>@Lazy</code> are excluded, since as Example 5
+showed, they are <em>supposed</em> to start out null; so are primitives and
+static fields.</p>
+</div>
 </div>
 </div>
 </div>
@@ -518,6 +684,96 @@ class name. This means it works with annotations from any library:</p>
 </tr>
 </tbody>
 </table>
+<div class="sect2">
+<h3 id="_jspecify_on_compiled_dependencies">JSpecify on compiled dependencies</h3>
+<div class="paragraph">
+<p>Simple-name matching handles annotations in your own source. Two
+Groovy 6 changes extend the same reach to <strong>libraries you did not
+compile yourself</strong>:
+<a href="https://issues.apache.org/jira/browse/GROOVY-12206">GROOVY-12206</a>
+ingests type-use annotations when reading compiled classes, and
+<a href="https://issues.apache.org/jira/browse/GROOVY-12207">GROOVY-12207</a>
+consults a dependency&#8217;s <code>package-info.class</code> during resolution.</p>
+</div>
+<div class="paragraph">
+<p>Together they mean a JSpecify-annotated jar works out of the box.
+Given this Java library, compiled separately and available only as
+class files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">// package-info.java
+@org.jspecify.annotations.NullMarked
+package com.acme;
+
+// Repo.java
+public class Repo {
+    public @Nullable String findName(String id) { … }
+    public String greeting() { … }        // @NullMarked ==&gt; implicitly non-null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>a Groovy consumer gets both halves of the contract with no annotations
+of its own:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker')
+class Consumer {
+    static int bad(Repo r)  { r.findName('u42').length() }   // compile error
+    static int good(Repo r) { r.greeting().length() }        // fine
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Potential null dereference: 'findName()' may return null</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That is the producer/consumer split working across a jar boundary: the
+library author declared the contract once, and every downstream Groovy
+file compiled under <code>NullChecker</code> collects the benefit. JSpecify is
+bundled with the Groovy 6 distribution, so there is nothing to add.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nullable_type_arguments">Nullable type arguments</h3>
+<div class="paragraph">
+<p>Type-use annotations can also sit <em>inside</em> a generic type:
+<code>List&lt;@Nullable String&gt;</code> is a list whose <strong>elements</strong> may be null even
+though the list itself never is. The changes above made those
+annotations visible to the compiler, but the checker never looked
+inside the type arguments. Now it does
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12252">GROOVY-12252</a>):
+element access on such a collection is nullable, however you spell
+it —</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'groovy.typecheckers.NullChecker')
+class Catalog {
+    static int firstTitleLength(List&lt;@Nullable String&gt; titles) {
+        titles.get(0).length()                 // flagged — and so are
+    }                                          // titles[0], titles.head(), …
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Potential null dereference: 'get()' may return null</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Subscript access (<code>xs[0]</code>), the GDK&#8217;s <code>head()</code> and <code>first()</code>, and map
+lookups on a <code>Map&lt;String, @Nullable Integer&gt;</code> — both <code>m.get(key)</code> and
+<code>m[key]</code> — are all recognised. The nullness flows through class- and
+method-level type variables, and, as with the rest of the JSpecify
+support, works for annotations read from compiled dependencies.
+Guarding the element narrows it exactly as for any other nullable
+value.</p>
+</div>
 <div class="paragraph">
 <p>If you prefer not to add an external dependency, you can define
 your own minimal annotations — the checker only cares about the
@@ -536,47 +792,122 @@ simple name:</p>
 </div>
 </div>
 </div>
+</div>
 <div class="sect1">
-<h2 id="_how_this_compares_to_java_approaches">How this compares to Java approaches</h2>
+<h2 id="_how_this_compares">How this compares</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Java developers wanting compile-time null safety currently reach
-for external tools — the
-<a href="https://checkerframework.org/manual/#nullness-checker">Checker Framework</a>,
-<a href="https://errorprone.info/">Error Prone</a>, or IDE-specific inspections
-(IntelliJ, Eclipse). Each brings its own setup, annotation flavour,
-and build integration.</p>
+<p>The three mainstream approaches to null safety differ less in what
+they catch than in <strong>where the information about nullness is kept</strong>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 40%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Approach</th>
+<th class="tableblock halign-left valign-top">Nullness is…</th>
+<th class="tableblock halign-left valign-top">What you write</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kotlin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">part of the <strong>type</strong> — <code>String</code> and <code>String?</code> are different types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a <code>?</code> on every type that may be absent</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java + JSpecify / Checker Framework</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a <strong>declaration on the element</strong>, read by a tool</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Nullable</code> / <code>@NonNull</code> annotations</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy <code>NullChecker(strict: true)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>inferred from flow</strong> through the method body</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nothing</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>In strict mode the checker works out that <code>def x = null</code> makes <code>x</code>
+nullable, that <code>x = 'hello'</code> clears it, and that a guard narrows it —
+without a <code>?</code> in the type and without an annotation. That is a real
+ergonomic difference: the same analysis a careful reader does, applied
+mechanically, to code you have not modified.</p>
 </div>
 <div class="paragraph">
-<p>Groovy&#8217;s NullChecker offers several advantages:</p>
+<p>It is emphatically <strong>not</strong> a claim to beat Kotlin&#8217;s model, and on the
+axis that matters most the trade runs the other way:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Zero setup.</strong> It&#8217;s a type-checking extension — add one
-annotation and you&#8217;re done. No annotation processor configuration,
-no extra compiler flags, no Gradle plugin.</p>
+<p><strong>Kotlin&#8217;s guarantee is total and always on.</strong> Nullness carried in the
+type survives every call boundary, every generic instantiation and
+every module edge, and the compiler will not let you opt out. Groovy&#8217;s
+flow analysis is local to the code being checked, and you choose where
+to switch it on.</p>
 </li>
 <li>
-<p><strong>Works with any annotation library.</strong> Simple-name matching means
-you can use JSpecify, JSR-305, JetBrains, SpotBugs, Checker
-Framework, or your own — interchangeably.</p>
+<p><strong>Past your own code, declarations still carry the information.</strong> Flow
+inference knows about values it can watch being created and narrowed.
+What a library returns is a fact only that library can state — which
+is exactly why the JSpecify support above matters.</p>
 </li>
 <li>
-<p><strong>Understands Groovy idioms.</strong> Safe navigation (<code>?.</code>), elvis
-assignment (<code>?=</code>), <code>@Lazy</code> fields, and Groovy truth are all
-recognised. A Java-only tool can&#8217;t help here.</p>
-</li>
-<li>
-<p><strong>Two-tier strictness.</strong> Start with annotation-only checking on
-existing code, then enable flow-sensitive mode for new modules —
-no all-or-nothing migration.</p>
-</li>
-<li>
-<p><strong>Complements <code>@NullCheck</code>.</strong> Catch violations at compile time
-while keeping the runtime guard as a safety net.</p>
+<p><strong>Kotlin pays the cost once, at the type.</strong> Groovy pays it per
+analysis scope. Whether that is a saving depends on how much of your
+codebase you turn the checker on for.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Against the <strong>Java</strong> tooling in that middle row — the
+<a href="https://checkerframework.org/manual/#nullness-checker">Checker Framework</a>,
+<a href="https://errorprone.info/">Error Prone</a>, or IDE-specific inspections in
+IntelliJ and Eclipse, each with its own setup, annotation flavour and
+build integration — Groovy&#8217;s checker has some practical advantages:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Zero setup.</strong> It is a type-checking extension: add one annotation,
+or register it once in a compiler configuration script, and you are
+done. No annotation processor configuration, no extra compiler flags,
+no Gradle plugin.</p>
+</li>
+<li>
+<p><strong>Any annotation library.</strong> Simple-name matching means JSpecify,
+JSR-305, JetBrains, SpotBugs, Checker Framework or your own hand-rolled
+marker all work, interchangeably, including from compiled dependencies.</p>
+</li>
+<li>
+<p><strong>It understands Groovy idioms.</strong> Safe navigation, elvis assignment,
+<code>@Lazy</code> fields and Groovy truth are all recognised as narrowing forms.
+A Java-only tool cannot help you here, because it has never heard of
+them.</p>
+</li>
+<li>
+<p><strong>Incremental by construction.</strong> Annotation-only checking on existing
+code, flow-sensitive mode on new modules — the two levels mean there
+is no all-or-nothing migration to schedule.</p>
+</li>
+<li>
+<p><strong>It complements <code>@NullCheck</code>.</strong> Catch violations at compile time and
+keep the generated runtime guard as a safety net.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The honest summary is that these are different points on an
+adoption-cost-versus-strength curve rather than better and worse. If
+you are starting fresh and want the guarantee everywhere, a type system
+that encodes nullness is the stronger tool. If you have an existing
+Groovy codebase and want most of the benefit without touching a single
+declaration, inference on the variable gets you a long way for nothing.</p>
 </div>
 </div>
 </div>
@@ -584,13 +915,13 @@ while keeping the runtime guard as a safety net.</p>
 <h2 id="_the_full_picture">The full picture</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The examples above cover the most common scenarios. The complete
-proposal also includes detection of nullable method return value
-dereferences, <code>@Nullable</code> values flowing into <code>@NonNull</code> parameters
-through variables, nullable propagation in ternary and elvis
-expressions, and integration with JSpecify&#8217;s <code>@NullMarked</code> /
-<code>@NullUnmarked</code> scoping. The full spec is available in the
-<a href="https://github.com/apache/groovy/pull/2426">PR</a>.</p>
+<p>The examples above cover the most common scenarios. <code>NullChecker</code>
+also detects nullable method return value dereferences, <code>@Nullable</code>
+values flowing into <code>@NonNull</code> parameters through variables, nullable
+propagation in ternary and elvis expressions, and JSpecify&#8217;s
+<code>@NullMarked</code> / <code>@NullUnmarked</code> scoping. The reference documentation
+is in the
+<a href="https://docs.groovy-lang.org/docs/latest6/html/documentation/typecheckers.html">type checkers user guide</a>.</p>
 </div>
 <div class="paragraph">
 <p>For complementary null-related checks — such as detecting broken
@@ -605,27 +936,22 @@ these type checkers.</p>
 <h2 id="_wed_love_your_feedback">We&#8217;d love your feedback</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The NullChecker feature is currently a proposal in
-<a href="https://github.com/apache/groovy/pull/2426">PR #2426</a>
-(tracking issue
-<a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894</a>).
-Null safety is a foundational concern, and we want to get the
-design right.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Comment</strong> on the <a href="https://github.com/apache/groovy/pull/2426">PR</a> or
-the <a href="https://issues.apache.org/jira/browse/GROOVY-11894">JIRA issue</a>
-with your thoughts, use cases, or design suggestions.</p>
-</li>
-<li>
-<p><strong>Vote</strong> on the JIRA issue if you&#8217;d like to see this feature land.</p>
-</li>
-</ul>
+<p><code>NullChecker</code> shipped in Groovy 6
+(<a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894</a>),
+and has been refined since on the strength of real usage — broader
+guard recognition, nullable-expression tracking, JSpecify support
+reaching into compiled dependencies, narrowing through
+<code>requireNonNull</code>-style validators and test assertions,
+definite-initialisation checking for <code>@NonNull</code> fields, and
+<code>@Nullable</code> type arguments in generics all landed after the first
+version of this post.</p>
 </div>
 <div class="paragraph">
-<p>Your feedback helps us gauge interest and shape the final design.</p>
+<p>Null safety is a foundational concern and the edges are where the
+design gets tested, so if the checker flags something it shouldn&#8217;t, or
+stays quiet where you expected a diagnostic, please
+<a href="https://issues.apache.org/jira/browse/GROOVY">raise an issue</a> — a small
+reproducer is worth a great deal.</p>
 </div>
 </div>
 </div>
@@ -633,14 +959,14 @@ with your thoughts, use cases, or design suggestions.</p>
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Through our <em>Groovy Shelf</em> bookshop examples we&#8217;ve seen how the
-proposed NullChecker catches null dereferences, unsafe assignments,
+<p>Through our <em>Groovy Shelf</em> bookshop examples we&#8217;ve seen how
+<code>NullChecker</code> catches null dereferences, unsafe assignments,
 and missing null checks at compile time — from looking up books
 with nullable titles, to enforcing non-null parameters, recognising
 Groovy&#8217;s safe-navigation idioms, applying class-level defaults with
 <code>@NonNullByDefault</code>, handling lazy initialisation with
 <code>@MonotonicNonNull</code>, and tracking nullability through control flow
-with the <code>StrictNullChecker</code>. The setup is minimal, the annotation
+with <code>NullChecker(strict: true)</code>. The setup is minimal, the annotation
 compatibility is broad, and the two-tier strictness model lets you
 adopt null safety at your own pace.</p>
 </div>
@@ -652,10 +978,27 @@ adopt null safety at your own pace.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/apache/groovy/pull/2426">PR #2426 — NullChecker type-checking extension</a></p>
+<p><a href="https://docs.groovy-lang.org/docs/latest6/html/documentation/typecheckers.html">Groovy type checkers user guide — NullChecker reference</a></p>
 </li>
 <li>
-<p><a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894 — Tracking issue</a></p>
+<p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type checking extensions</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-11894">GROOVY-11894 — NullChecker</a>
+(<a href="https://github.com/apache/groovy/pull/2426">PR #2426</a>), plus the follow-ups:
+<a href="https://issues.apache.org/jira/browse/GROOVY-12206">GROOVY-12206</a> and
+<a href="https://issues.apache.org/jira/browse/GROOVY-12207">GROOVY-12207</a> (JSpecify on
+compiled dependencies),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12208">GROOVY-12208</a> (broader
+guards),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12209">GROOVY-12209</a> (nullable
+expression tracking),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12250">GROOVY-12250</a> (validator
+and assertion narrowing),
+<a href="https://issues.apache.org/jira/browse/GROOVY-12251">GROOVY-12251</a> (definite
+initialisation of <code>@NonNull</code> fields) and
+<a href="https://issues.apache.org/jira/browse/GROOVY-12252">GROOVY-12252</a> (nullable
+type arguments)</p>
 </li>
 <li>
 <p><a href="https://jspecify.dev/">JSpecify — Standard Java annotations for null safety</a></p>
@@ -665,6 +1008,9 @@ adopt null safety at your own pace.</p>
 </li>
 <li>
 <p><a href="https://groovy-lang.org/objectorientation.html#_safe_navigation_operator">Groovy safe navigation operator</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy6-ai-friendly">Groovy 6 for humans and AI agents</a> — where these declarations fit the wider picture</p>
 </li>
 <li>
 <p><a href="https://codenarc.org/">CodeNarc</a></p>
