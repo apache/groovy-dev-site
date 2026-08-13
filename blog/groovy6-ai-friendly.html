@@ -296,6 +296,9 @@ tokens to 229). The extra tokens buy a constant-size wall in place of
 an unbounded subtree, on every path that would otherwise descend —
 a constant, traded for an exponential.</p>
 </div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/modifies_traversal.png" alt="one line is six levels and 460 tokens deep without contracts; @Modifies makes the signature a leaf the traversal stops at" width="800"></span></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_the_part_that_makes_it_work">The part that makes it work</h3>
@@ -1209,6 +1212,9 @@ helper scripts, generalised: <strong>anything deterministic and well-trodden
 should be a script rather than something the model re-derives.</strong> Data
 reshaping is the most well-trodden path there is. The saving is not a
 tweak to a prompt; it is a decision not to spend the context at all.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/token_economy.png" alt="80,012 tokens of CSV pulled into context, or a 9-line script plus the answer it prints: 262 tokens, right every run" width="800"></span></p>
 </div>
 </div>
 <div class="sect2">
