@@ -487,8 +487,13 @@ Finished generating 'iris' in 23.2s.</pre>
 <code>--no-fallback</code> (now explicitly deprecated: "No effect, no replacement available"), and the two
 <code>--initialize-at-run-time</code> entries for <code>GrapeIvy</code> and <code>RandomWeights</code> (run-time initialization is
 the default for application classes these days). The blanket <code>--initialize-at-build-time</code> has to go
-too, and not merely for tidiness&#8201;&#8212;&#8201;it now <strong>fails the build</strong>, because build-initializing Groovy&#8217;s
-call-site cache would place its <code>PIC-Cleaner</code> thread into the image heap.</p>
+too, and not merely for tidiness: forcing Groovy&#8217;s runtime to initialize at build time pulls its
+internal state into the image heap, which <code>native-image</code> rejects. On 6.0.0-beta-2 specifically it
+fails on the call-site cache&#8217;s <code>PIC-Cleaner</code> thread&#8201;&#8212;&#8201;a thread that
+<a href="https://issues.apache.org/jira/browse/GROOVY-12142">GROOVY-12142</a> has since removed entirely&#8201;&#8212;&#8201;but
+the general point outlives that particular symptom, since a seeded <code>Random</code> in the image heap is
+rejected just the same. Run-time initialization is what the AOT link mode expects; just leave the
+flag off.</p>
 </div>
 <div class="paragraph">
 <p>Now we are ready to run our application:</p>
