@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./groovy-text-similarity'>Groovy&trade; Text Similarity</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./wayang-tensorflow'>Using TensorFlow from Apache Wayang</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-25 10:52AM (Last updated: 2022-06-27 11:16AM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='#_deep_learning' class='anchor-link'>Deep Learning</a></li><li><a href='#_encog' class='anchor-link'>Encog</a></li><li><a href='#_eclipse_deeplearning4j' class='anchor-link'>Eclipse DeepLearning4j</a></li><li><a href='#_deep_netts' class='anchor-link'>Deep Netts</a></li><li><a href='#_deep_netts_with_graalvm' class='anchor-link'>Deep Netts with GraalVM</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./groovy-text-similarity'>Groovy&trade; Text Similarity</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./wayang-tensorflow'>Using TensorFlow from Apache Wayang</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-06-25 10:52AM (Last updated: 2026-08-20 10:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="./img/iris_flowers.png" alt="iris flowers" width="200"></span>
@@ -147,7 +147,11 @@ The libraries we are going to use do much of the work for us. They typically pro
 in a somewhat declarative way, the layers in our network.</p>
 </div>
 <div class="paragraph">
-<p>Just before exploring our examples, we should pre-warn folks that while we do time running the examples, no attempt was made to rigorously ensure that the examples were identical across the different technologies. The different technologies support slightly different ways to set up their respective network layers. The parameters were tweaked so that when run there was typically at most one or two errors in the validation. Also, the initial parameters for the runs can be set with random or pre-defined seeds. When random ones are used, each run will have slightly different errors. We&#8217;d need to do some additional alignment of examples and use a framework like <a href="https://github.com/openjdk/jmh">JMH</a> if we wanted to get a more rigorous time comparison between the technologies. Nevertheless, it should give a very rough guide as to the speed to the various technologies.</p>
+<p>Just before exploring our examples, we should pre-warn folks that while we do time running the examples, no attempt was made to rigorously ensure that the examples were identical across the different technologies. The different technologies support slightly different ways to set up their respective network layers. The parameters were tweaked so that when run there was typically at most one or two errors in the validation. Also, the initial parameters for the runs can be set with random or pre-defined seeds. When random ones are used, each run will have slightly different errors. We&#8217;d need to do some additional alignment of examples and use a framework like <a href="https://github.com/openjdk/jmh">JMH</a> if we wanted to get a more rigorous time comparison between the technologies. Nevertheless, it should give a very rough guide as to the speed to the various technologies.
+One more caveat since this post was first written: the Encog and DeepLearning4J transcripts below
+are still the original 2022 runs on a Linux box, while the Deep Netts and GraalVM sections have been
+re-run on an Apple Silicon machine with Groovy 6.0.0-beta-2 and GraalVM CE 25. Compare numbers within
+a section, not across them.</p>
 </div>
 </div>
 </div>
@@ -368,41 +372,48 @@ new ClassifierEvaluator().with {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time groovy -cp "build/lib/*" Iris.groovy
-16:49:27.089 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
-16:49:27.091 [main] INFO deepnetts.core.DeepNetts - TRAINING NEURAL NETWORK
-16:49:27.091 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
-16:49:27.100 [main] INFO deepnetts.core.DeepNetts - Epoch:1, Time:6ms, TrainError:0.8584314, TrainErrorChange:0.8584314, TrainAccuracy: 0.5252525
-16:49:27.103 [main] INFO deepnetts.core.DeepNetts - Epoch:2, Time:3ms, TrainError:0.52278274, TrainErrorChange:-0.33564866, TrainAccuracy: 0.52820516
+<pre><span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/Iris</span>$ DEPS=$(ls build/lib/*.jar | grep -v groovy- | paste -sd: -)
+<span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/Iris</span>$ time groovy -cp "$DEPS" NNFF_DeepNetts.groovy
+[main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+[main] INFO deepnetts.core.DeepNetts - TRAINING NEURAL NETWORK
+[main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+[main] INFO deepnetts.core.DeepNetts - Epoch:1, Time:1ms, TrainError:0.76851964, TrainErrorChange:0.76851964, TrainAccuracy: 0.53125
+[main] INFO deepnetts.core.DeepNetts - Epoch:2, Time:0ms, TrainError:0.4646519, TrainErrorChange:-0.30386773, TrainAccuracy: 0.53763443
 ...
-16:49:27.911 [main] INFO deepnetts.core.DeepNetts - Epoch:3031, Time:0ms, TrainError:0.029988592, TrainErrorChange:-0.015680967, TrainAccuracy: 1.0
+[main] INFO deepnetts.core.DeepNetts - Epoch:3293, Time:0ms, TrainError:0.03997116, TrainErrorChange:-0.0088177845, TrainAccuracy: 1.0
 TRAINING COMPLETED
-16:49:27.911 [main] INFO deepnetts.core.DeepNetts - Total Training Time: 820ms
-16:49:27.911 [main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
+[main] INFO deepnetts.core.DeepNetts - Total Training Time: 187ms
+[main] INFO deepnetts.core.DeepNetts - ------------------------------------------------------------------------
 CLASSIFIER EVALUATION METRICS
-Accuracy: 0.95681506 (How often is classifier correct in total)
-Precision: 0.974359 (How often is classifier correct when it gives positive prediction)
-F1Score: 0.974359 (Harmonic average (balance) of precision and recall)
-Recall: 0.974359 (When it is actually positive class, how often does it give positive prediction)
+Accuracy: 1.0 (How often is classifier correct in total)
+Precision: 1.0 (How often is classifier correct when it gives positive prediction)
+F1Score: 1.0 (Harmonic average (balance) of precision and recall)
+Recall: 1.0 (When it is actually positive class, how often does it give positive prediction)
 
 CONFUSION MATRIX
                           none    Iris-setosaIris-versicolor Iris-virginica
            none              0              0              0              0
     Iris-setosa              0             14              0              0
-Iris-versicolor              0              0             18              1
+Iris-versicolor              0              0             19              0
  Iris-virginica              0              0              0             12
 
-real	0m3.160s
-user	0m10.156s
-sys	0m0.483s</pre>
+real	0m0.975s
+user	0m2.434s
+sys	0m0.153s</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This is faster than DeepLearning4j and similar to Encog. This is to be expected given our small data set and isn&#8217;t indicative of performance for larger problems.</p>
+<p>(We leave the Groovy jar out of <code>-cp</code> here since the <code>groovy</code> launcher already puts it on the
+classpath; Groovy 6 warns about the duplication if you don&#8217;t.)</p>
+</div>
+<div class="paragraph">
+<p>This run happened to classify the whole test set correctly, and the whole thing&#8201;&#8212;&#8201;JVM startup,
+Groovy compilation of the script, 3293 training epochs and evaluation&#8201;&#8212;&#8201;takes just under a second.
+This is to be expected given our small data set and isn&#8217;t indicative of performance for larger problems.</p>
 </div>
 <div class="paragraph">
 <p>Another plus is the dependency list. It isn&#8217;t quite the single jar situation as we saw with Encog but not far off.
-There is the Encog jar, the JSR381 VisRec API which is in a separate jar, and a handful of logging jars.</p>
+There is the Deep Netts jar, the JSR381 VisRec API which is in a separate jar, and a handful of logging jars.</p>
 </div>
 </div>
 </div>
@@ -410,7 +421,7 @@ There is the Encog jar, the JSR381 VisRec API which is in a separate jar, and a 
 <h2 id="_deep_netts_with_graalvm">Deep Netts with GraalVM</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Another technology we might want to consider if performance is important to us is <a href="https://www.graalvm.org/">GraalVM</a>. GraalVM is a high-performance JDK distribution designed to speed up the execution of applications written in Java and other JVM languages. We&#8217;ll look at creating a native version of our Iris Deep Netts application. We used GraalVM 22.1.0 Java 17 CE and Groovy 4.0.3. We&#8217;ll cover just the basic steps but there are other places for additional setup info and troubleshooting help like <a href="https://e.printstacktrace.blog/graalvm-and-groovy-how-to-start/">here</a>, <a href="https://github.com/wololock/gttp">here</a> and <a href="https://simply-how.com/fix-graalvm-native-image-compilation-issues">here</a>.</p>
+<p>Another technology we might want to consider if performance is important to us is <a href="https://www.graalvm.org/">GraalVM</a>. GraalVM is a high-performance JDK distribution designed to speed up the execution of applications written in Java and other JVM languages. We&#8217;ll look at creating a native version of our Iris Deep Netts application. We used GraalVM CE 25 (JDK 25) and Groovy 6.0.0-beta-2. We&#8217;ll cover just the basic steps but there are other places for additional setup info and troubleshooting help like <a href="https://e.printstacktrace.blog/graalvm-and-groovy-how-to-start/">here</a>, <a href="https://github.com/wololock/gttp">here</a> and <a href="https://simply-how.com/fix-graalvm-native-image-compilation-issues">here</a>.</p>
 </div>
 <div class="paragraph">
 <p>Groovy has two natures. Its dynamic nature supports adding methods at runtime through metaprogramming
@@ -418,64 +429,127 @@ and interacting with method dispatch processing through missing method intercept
 Some of these tricks make heavy use of reflection and dynamic class loading and cause problems for
 GraalVM which is trying to determine as much information as it can at compile time. Groovy&#8217;s static
 nature has a more limited set of metaprogramming capabilities but allows bytecode much closer to
-Java to be produced. Luckily, we aren&#8217;t relying on any dynamic Groovy tricks for our example.
-We&#8217;ll compile it up using static mode:</p>
+Java to be produced. When this post was first written, the recipe was to compile the script in
+static mode (<code>groovyc --compile-static</code>) and hope that the libraries in play went along with it.</p>
+</div>
+<div class="paragraph">
+<p><strong>That step is no longer needed.</strong> Groovy 6.0.0-beta-2 added an
+<a href="https://groovy.apache.org/releasenotes/groovy-6.0.html#native-image">AOT link mode</a> for
+<code>invokedynamic</code> dispatch (<a href="https://issues.apache.org/jira/browse/GROOVY-12234">GROOVY-12234</a>,
+with <a href="https://issues.apache.org/jira/browse/GROOVY-12227">GROOVY-12227</a> covering closures).
+A native image can&#8217;t retarget a call site once it has been linked, and retargeting is exactly how
+Groovy&#8217;s dynamic dispatch installs its inline caches&#8201;&#8212;&#8201;which is what made dynamic Groovy a
+non-starter here. In AOT link mode each site instead links once, permanently, and cache freshness
+travels as data. The mode is detected automatically inside a native image, so there is nothing to
+switch on. Because it changes <em>linking</em> rather than <em>compilation</em>, it also means already-published
+indy-compiled jars become native-capable without being recompiled.</p>
+</div>
+<div class="paragraph">
+<p>So we compile our script the ordinary way&#8201;&#8212;&#8201;no annotations, no flags, fully dynamic:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ groovyc -cp "build/lib/*" --compile-static Iris.groovy</pre>
+<pre><span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/IrisGraalVM</span>$ groovyc -cp "build/lib/deepnetts-core-1.13.4.jar:build/lib/visrec-api-1.0.5.jar" iris.groovy</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Next we build our native application:</p>
+<p>Next we run the application once under the <code>native-image-agent</code>, which records the reflective
+lookups and resource reads Groovy performs while registering its metaclasses. This step is still
+required&#8201;&#8212;&#8201;without the generated metadata the binary builds successfully but then fails
+initializing <code>GroovySystem</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ native-image  --report-unsupported-elements-at-runtime \
-   --initialize-at-run-time=groovy.grape.GrapeIvy,deepnetts.net.weights.RandomWeights \
-   --initialize-at-build-time --no-fallback  -H:ConfigurationFileDirectories=conf/  -cp ".:build/lib/*" Iris</pre>
+<pre><span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/IrisGraalVM</span>$ java -agentlib:native-image-agent=config-output-dir=conf/ \
+   -cp ".:build/lib/*" -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN iris
+...
+<span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/IrisGraalVM</span>$ ls conf/
+reachability-metadata.json</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We told GraalVM to initialize <code>GrapeIvy</code> at runtime (to avoid needing Ivy jars in the classpath
-since Groovy will lazily load those classes only if we use <code>@Grab</code> statements).
-We also did the same for the <code>RandomWeights</code> class to avoid it being locked into a random seed fixed at compile time.</p>
+<p>Then we build our native application:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre><span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/IrisGraalVM</span>$ native-image -H:ConfigurationFileDirectories=conf/ -cp ".:build/lib/*" iris
+GraalVM Native Image: Generating 'iris' (executable)...
+ - Java version: 25.0.4+7, vendor version: GraalVM CE 25.2.4+7.1
+...
+  29.45MiB in total image size, 29.45MiB in total file size
+Finished generating 'iris' in 23.2s.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That command is considerably shorter than the one this post used to show. Along with
+<code>--compile-static</code>, the following have all gone away:
+<code>--report-unsupported-elements-at-runtime</code> (a no-op for several GraalVM releases now),
+<code>--no-fallback</code> (now explicitly deprecated: "No effect, no replacement available"), and the two
+<code>--initialize-at-run-time</code> entries for <code>GrapeIvy</code> and <code>RandomWeights</code> (run-time initialization is
+the default for application classes these days). The blanket <code>--initialize-at-build-time</code> has to go
+too, and not merely for tidiness&#8201;&#8212;&#8201;it now <strong>fails the build</strong>, because build-initializing Groovy&#8217;s
+call-site cache would place its <code>PIC-Cleaner</code> thread into the image heap.</p>
 </div>
 <div class="paragraph">
 <p>Now we are ready to run our application:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre><span class="lime">paulk@pop-os</span>:<span class="blue">/extra/projects/iris_encog</span>$ time ./iris
-...
+<pre><span class="lime">paulk@quoll</span>:<span class="blue">~/Projects/groovy-data-science/subprojects/IrisGraalVM</span>$ time ./iris -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN
 CLASSIFIER EVALUATION METRICS
-Accuracy: 0.93460923 (How often is classifier correct in total)
-Precision: 0.96491224 (How often is classifier correct when it gives positive prediction)
-F1Score: 0.96491224 (Harmonic average (balance) of precision and recall)
-Recall: 0.96491224 (When it is actually positive class, how often does it give positive prediction)
+Accuracy: 1.0 (How often is classifier correct in total)
+Precision: 1.0 (How often is classifier correct when it gives positive prediction)
+F1Score: 1.0 (Harmonic average (balance) of precision and recall)
+Recall: 1.0 (When it is actually positive class, how often does it give positive prediction)
 
 CONFUSION MATRIX
                           none    Iris-setosaIris-versicolor Iris-virginica
            none              0              0              0              0
-    Iris-setosa              0             21              0              0
-Iris-versicolor              0              0             20              2
- Iris-virginica              0              0              0             17
+    Iris-setosa              0             14              0              0
+Iris-versicolor              0              0             19              0
+ Iris-virginica              0              0              0             12
 
-real    0m0.131s
-user    0m0.096s
-sys     0m0.029s</pre>
+real	0m0.048s
+user	0m0.036s
+sys	0m0.009s</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>We can see here that the speed has dramatically increased. This is great,
-but we should note, that using GraalVM often involves some tricky
-investigation especially for Groovy which by default has its dynamic
-nature. There are a few features of Groovy which won&#8217;t be available
-when using Groovy&#8217;s static nature and some libraries might be
-problematical. As an example, Deep Netts has log4j2 as one of its
-dependencies. At the time of writing, there are still issues using
-log4j2 with GraalVM. We excluded the <code>log4j-core</code> dependency and used
-<code>log4j-to-slf4j</code> backed by <code>logback-classic</code> to sidestep this problem.</p>
+<p>(Note that the log level is now passed when <em>running</em> the binary. A <code>-D</code> option given to
+<code>native-image</code> no longer bakes a system property into the image the way it once did.)</p>
+</div>
+<div class="paragraph">
+<p>For the same work, on the same machine, that is 48ms against roughly 420ms for the same pre-compiled
+classes on the JVM, and around 900ms to run the script from source. And unlike the 2022 version of this post, we
+got there without giving up any of Groovy&#8217;s dynamic nature. It is worth being concrete about how
+much has changed: repeating this exact recipe with Groovy 5.0.6 produces a binary that builds
+cleanly and then dies on the first dynamic call, and adding <code>--compile-static</code> back doesn&#8217;t save it
+either&#8201;&#8212;&#8201;it fails inside the <code>tap</code> closure, whose delegate-based property assignment stays dynamic
+no matter how the enclosing script is compiled:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Exception in thread "main" java.lang.BootstrapMethodError: java.lang.NullPointerException
+	at iris$_run_closure1.doCall(iris.groovy:34)
+	at ...
+	at org.codehaus.groovy.vmplugin.v8.IndyInterface.bootstrap(IndyInterface.java:229)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The honest limit of the new mode is steady-state dispatch rather than startup: with no JIT, every
+dynamic call site crossed in a native image costs a few microseconds, so a genuinely hot inner loop
+still wants <code>@CompileStatic</code> (statically compiled code crosses no dynamic sites at all). Training
+this little network doesn&#8217;t come close to that threshold. Runtime compilation&#8201;&#8212;&#8201;<code>GroovyShell</code>,
+<code>Eval</code> and friends&#8201;&#8212;&#8201;and dynamic proxy generation remain off the table in a native image
+regardless; the AOT link mode addresses dispatch, not code generation.</p>
+</div>
+<div class="paragraph">
+<p>One caveat from the original version of this post has also expired. Deep Netts has log4j2 as one of
+its dependencies, and back then there were still issues using log4j2 with GraalVM, so we excluded
+<code>log4j-core</code> and routed through <code>log4j-to-slf4j</code> to sidestep the problem. <code>log4j-core</code> now ships its
+own GraalVM reachability metadata, and building this example against the stock dependency works
+fine. We still make the swap, but now only because <code>slf4j-simple</code> gives us a one-property knob for
+quietening the training log, as seen above.</p>
 </div>
 </div>
 </div>
@@ -493,6 +567,15 @@ through to options which scale to massive computing farms in the cloud.</p>
 <div class="title">Update history</div>
 <div class="paragraph">
 <p><strong>27/Sep/2022</strong>: I put the Deep Netts GraalVM <em>iris</em> application with some more detailed instructions into its own <a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/IrisGraalVM">subproject</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>20/Aug/2026</strong>: Updated to Groovy 6.0.0-beta-2 and GraalVM CE 25 (JDK 25), and re-ran the Deep Netts
+and GraalVM examples. The headline change: <code>--compile-static</code>/<code>@CompileStatic</code> is no longer needed to
+build the native image, thanks to Groovy 6&#8217;s AOT link mode for dynamic dispatch. Several
+<code>native-image</code> flags the old recipe relied on are now unnecessary or actively harmful, and the log4j2
+workaround is obsolete. The deep learning libraries themselves have barely moved: Encog 3.4 and
+DeepLearning4J 1.0.0-M2.1 are both still the most recent published releases, and Deep Netts went
+from 1.13.2 to 1.13.4.</p>
 </div>
 </div>
 </div>

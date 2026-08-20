@@ -1363,7 +1363,7 @@ covering closures) is that retargeting only ever installs caches — the
 dispatch semantics live entirely in method selection. So under a native
 image each site links once, permanently, and cache freshness travels as
 data. The mode switches on automatically under a native-image build
-(there is a <code>-Dgroovy.indy.aot=true</code> diagnostic flag for trying it on a
+(there is a <code>-Dgroovy.indy.aot.link=true</code> diagnostic flag for trying it on a
 plain JVM), and because it changes linking rather than compilation,
 already-published indy-compiled jars become native-capable without
 being recompiled. With that in place, the policy server above builds as
