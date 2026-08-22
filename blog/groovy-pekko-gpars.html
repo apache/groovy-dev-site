@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&trade; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&trade; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-07-12 12:00AM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&trade; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_an_activeobject_implementation' class='anchor-link'>An @ActiveObject implementation</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&trade; List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&trade; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-08-22 12:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekko logo" width="100"></span>
@@ -100,6 +100,9 @@ includes a legacy GPars version of this example too.</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/pekko_groovy6_actors.png" alt="The three-actor hello world system, and the whole bot actor in Groovy 6" width="800"></span></p>
 </div>
 </div>
 </div>
@@ -144,7 +147,7 @@ to tell it the maximum number of times to echo the message before stopping.</p>
 <h2 id="_a_pekko_implementation_in_groovy">A Pekko implementation in Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This example uses Groovy 6.0.0-alpha-2 and Pekko 1.6.0.
+<p>This example uses Groovy 6.0.0-beta-2 and Pekko 1.7.0.
 It was tested with JDK 21 and 25.</p>
 </div>
 <div class="paragraph">
@@ -412,6 +415,107 @@ Greeting 3 for World</pre>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_an_activeobject_implementation">An @ActiveObject implementation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Pekko version is class-based: each actor is a class, its state lives in
+fields, and incoming messages arrive in a receive method. If you like that
+shape but not the ceremony, Groovy 6 offers another option. Annotate an
+ordinary class with <code>@ActiveObject</code> and its methods with <code>@ActiveMethod</code>,
+and the compiler routes those calls through an internal actor. Callers just
+see normal method calls, but all <code>@ActiveMethod</code> calls on an instance are
+processed one at a time, so the object&#8217;s state needs no locks and no
+concurrent collections.</p>
+</div>
+<div class="paragraph">
+<p>Because our objects call back into one another, we mark the methods
+<code>blocking = false</code>, so a call returns immediately instead of waiting for the
+method to run. There are also no message classes to write: the method
+parameters <em>are</em> the message.</p>
+</div>
+<div class="paragraph">
+<p>Our greeter becomes a class with a single method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.transform.ActiveMethod
+import groovy.transform.ActiveObject
+
+@ActiveObject
+class HelloWorld {
+    @ActiveMethod(blocking = false)
+    void greet(String whom, HelloWorldBot replyTo) {
+        println "Hello $whom!"
+        replyTo.greeted(whom, this)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The bot keeps its counter in a plain private field. Since every call is
+serialized through its own actor, incrementing it is safe:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ActiveObject
+class HelloWorldBot {
+    private final int max
+    private int greetingCounter
+
+    HelloWorldBot(int max) { this.max = max }
+
+    @ActiveMethod(blocking = false)
+    void greeted(String whom, HelloWorld from) {
+        greetingCounter++
+        println "Greeting $greetingCounter for $whom"
+        if (greetingCounter &lt; max) from.greet(whom, this)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And the main class creates the greeter and a bot per request, just like before:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@ActiveObject
+class HelloWorldMain {
+    private final HelloWorld greeter = new HelloWorld()
+
+    @ActiveMethod(blocking = false)
+    void sayHello(String name) {
+        greeter.greet(name, new HelloWorldBot(3))
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Kicking off the system now looks like ordinary object-oriented code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var main = new HelloWorldMain()
+
+main.sayHello('World')
+main.sayHello('Groovy 6')
+
+sleep 2000</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is the same as before, and there is nothing to shut down&#8201;&#8212;&#8201;when the script ends, so does the JVM. Compare the <code>HelloWorldBot</code> here with
+the Pekko one earlier: same two fields and the same logic, but no <code>Behavior</code>
+types, no <code>createReceive</code> builder, and no message records.</p>
+</div>
+<div class="paragraph">
+<p>For request/reply, leave <code>blocking</code> at its default of <code>true</code> and the call
+returns the method&#8217;s result once the actor has processed it. If you want the
+reply but not the wait, <code>blocking = false</code> on a method with a return value
+hands back an <code>Awaitable</code> you can <code>await</code> later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_discussion">Discussion</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -457,7 +561,8 @@ for the bigger picture.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have had a quick glimpse at using actors with Apache Pekko and with Groovy 6&#8217;s
-built-in <code>groovy.concurrent</code> package (with GPars noted as the pre-Groovy-6 option).</p>
+built-in <code>groovy.concurrent</code> package&#8201;&#8212;&#8201;both with explicit actors and with
+<code>@ActiveObject</code> classes (with GPars noted as the pre-Groovy-6 option).</p>
 </div>
 <div class="paragraph">
 <p>The sample code can be found here:</p>
@@ -466,7 +571,7 @@ built-in <code>groovy.concurrent</code> package (with GPars noted as the pre-Gro
 <p><a href="https://github.com/paulk-asert/groovy-pekko-gpars" class="bare">https://github.com/paulk-asert/groovy-pekko-gpars</a></p>
 </div>
 <div class="paragraph">
-<p>It contains <code>pekko</code>, <code>groovy6</code>, and legacy <code>gpars</code> versions of the example.</p>
+<p>It contains <code>pekko</code>, <code>groovy6</code>, <code>activeobject</code>, and legacy <code>gpars</code> versions of the example.</p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -477,7 +582,8 @@ built-in <code>groovy.concurrent</code> package (with GPars noted as the pre-Gro
 <strong>26/Jul/2023</strong>: Update to Pekko 1.0.1.<br>
 <strong>25/Jun/2024</strong>: Update to Pekko 1.0.3.<br>
 <strong>28/Sep/2024</strong>: Update to Pekko 1.1.1.<br>
-<strong>12/Jul/2026</strong>: Update to Pekko 1.6.0 and Groovy 6; replace the GPars example with the built-in <code>groovy.concurrent</code> actors (GPars retained as a legacy reference).</p>
+<strong>12/Jul/2026</strong>: Update to Pekko 1.6.0 and Groovy 6; replace the GPars example with the built-in <code>groovy.concurrent</code> actors (GPars retained as a legacy reference).<br>
+<strong>22/Aug/2026</strong>: Update to Pekko 1.7.0 and Groovy 6.0.0-beta-2; add an <code>@ActiveObject</code> version of the example.</p>
 </div>
 </div>
 </div>
