@@ -69,7 +69,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-07-03 08:00PM (Last updated: 2026-07-08 08:00PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-07-03 08:00PM (Last updated: 2026-08-24 08:00PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -481,6 +481,55 @@ left open:</p>
 @Ensures({ result &gt;= 4 })
 static int titleLen(String name) { name.length() }   // no NPE obligation remains</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Where does that leave <code>NullChecker</code>? It records nullness one declaration at
+a time, which leaves a whole class of facts unsayable — there is no
+annotation for "at least one of these two is non-null". A precondition is
+just a boolean expression, so it states the fact directly, and the solver
+carries the premise through the guards:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ a != null || b != null })      // no annotation vocabulary for this
+@NonNull static String pick(String a, String b) {
+    if (a != null) return a
+    return b                               // premise + failed guard ==&gt; b != null
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That verifies. The interesting case is the buggy variant, where the guard
+tests the wrong variable — the sort of typo that survives review because it
+reads almost right:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ a != null || b != null })
+@NonNull static String pick(String a, String b) {
+    if (b != null) return a                // oops — guarded b, returned a
+    return b
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove postcondition of pick holds on this return path
+    ensured: (result != null)
+    counterexample: a = null, b = ""
+    fails on: pick(null, "")
+[Static type checking] - Cannot prove postcondition of pick holds on this return path
+    ensured: (result != null)
+    counterexample: a = "", b = null
+    fails on: pick("", null)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Both return paths refuted, each with its own witness. <code>NullChecker</code> is quiet
+on this one — the parameters carry no annotations, so it has nothing to
+contradict — and that is the division of labour working rather than a gap.
+Nullness-as-a-declaration and nullness-as-a-consequence-of-a-premise are
+different claims, and only the second needs a solver.</p>
 </div>
 </div>
 </div>

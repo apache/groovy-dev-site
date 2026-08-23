@@ -63,13 +63,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Compile-time null safety for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_first_the_dynamic_story' class='anchor-link'>First, the dynamic story</a></li><li><a href='#_two_levels_of_strictness' class='anchor-link'>Two levels of strictness</a></li><li><a href='#_the_problem_the_billion_dollar_mistake_at_runtime' class='anchor-link'>The problem: the billion-dollar mistake at runtime</a></li><li><a href='#_example_1_looking_up_a_book_nullable_parameters' class='anchor-link'>Example 1: looking up a book — <code>@Nullable</code> parameters</a></li><li><a href='#_example_2_greeting_a_customer_catching_null_arguments' class='anchor-link'>Example 2: greeting a customer — catching null arguments</a></li><li><a href='#_example_3_safe_access_patterns_the_checker_is_smart' class='anchor-link'>Example 3: safe access patterns — the checker is smart</a></li><li><a href='#_example_4_non_null_by_default_less_annotation_noise' class='anchor-link'>Example 4: non-null by default — less annotation noise</a></li><li><a href='#_example_5_lazy_initialisation_monotonicnonnull_and_lazy' class='anchor-link'>Example 5: lazy initialisation — <code>@MonotonicNonNull</code> and <code>@Lazy</code></a></li><li><a href='#_example_6_going_strict_flow_sensitive_analysis' class='anchor-link'>Example 6: going strict — flow-sensitive analysis</a></li><li><a href='#_annotation_compatibility' class='anchor-link'>Annotation compatibility</a></li><li><a href='#_how_this_compares' class='anchor-link'>How this compares</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Compile-time null safety for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Compile-time null safety for Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_first_the_dynamic_story' class='anchor-link'>First, the dynamic story</a></li><li><a href='#_two_levels_of_strictness' class='anchor-link'>Two levels of strictness</a></li><li><a href='#_the_problem_the_billion_dollar_mistake_at_runtime' class='anchor-link'>The problem: the billion-dollar mistake at runtime</a></li><li><a href='#_example_1_looking_up_a_book_nullable_parameters' class='anchor-link'>Example 1: looking up a book — <code>@Nullable</code> parameters</a></li><li><a href='#_example_2_greeting_a_customer_catching_null_arguments' class='anchor-link'>Example 2: greeting a customer — catching null arguments</a></li><li><a href='#_example_3_safe_access_patterns_the_checker_is_smart' class='anchor-link'>Example 3: safe access patterns — the checker is smart</a></li><li><a href='#_example_4_non_null_by_default_less_annotation_noise' class='anchor-link'>Example 4: non-null by default — less annotation noise</a></li><li><a href='#_example_5_lazy_initialisation_monotonicnonnull_and_lazy' class='anchor-link'>Example 5: lazy initialisation — <code>@MonotonicNonNull</code> and <code>@Lazy</code></a></li><li><a href='#_example_6_going_strict_flow_sensitive_analysis' class='anchor-link'>Example 6: going strict — flow-sensitive analysis</a></li><li><a href='#_example_7_kotlin_style_non_null_by_default_codebase_wide' class='anchor-link'>Example 7: Kotlin-style non-null by default, codebase-wide</a></li><li><a href='#_annotation_compatibility' class='anchor-link'>Annotation compatibility</a></li><li><a href='#_how_this_compares' class='anchor-link'>How this compares</a></li><li><a href='#_the_full_picture' class='anchor-link'>The full picture</a></li><li><a href='#_wed_love_your_feedback' class='anchor-link'>We&#8217;d love your feedback</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Compile-time null safety for Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-04-02 10:00AM (Last updated: 2026-08-12 10:00AM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-04-02 10:00AM (Last updated: 2026-08-24 10:00AM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -644,6 +644,95 @@ static fields.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_example_7_kotlin_style_non_null_by_default_codebase_wide">Example 7: Kotlin-style non-null by default, codebase-wide</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Examples 4 and 6 are more useful together than apart, and a
+<a href="https://docs.groovy-lang.org/latest/html/documentation/#_configscript_example_static_compilation_by_default">compiler configuration script</a>
+applies both to every class you compile without touching a single
+source file. Pass it with <code>groovy</code>/<code>groovyc --configscript</code>, or set
+Gradle&#8217;s <code>groovyOptions.configurationScript</code>:</p>
+</div>
+<div class="listingblock">
+<div class="title">config.groovy</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.transform.TypeChecked
+import org.codehaus.groovy.ast.AnnotationNode
+import org.codehaus.groovy.ast.ClassHelper
+import org.jspecify.annotations.NullMarked
+
+withConfig(configuration) {
+    // 1. statically type-check everything, with flow-sensitive null checking
+    ast(extensions: 'groovy.typecheckers.NullChecker(strict: true)', TypeChecked)
+
+    // 2. non-null by default — a class can still opt out with @NullUnmarked
+    inline(phase: 'CONVERSION') { source, context, classNode -&gt;
+        def optOuts = ['NullMarked', 'NonNullByDefault', 'NullUnmarked']
+        if (classNode.annotations.every { it.classNode.nameWithoutPackage !in optOuts }) {
+            classNode.addAnnotation(new AnnotationNode(ClassHelper.make(NullMarked)))
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The two customizers map onto the two halves of Kotlin&#8217;s model. The
+<code>inline</code> one runs at conversion — before type checking, so the
+annotation is in place by the time the checker looks — and stamps
+<code>@NullMarked</code> on every class that hasn&#8217;t already opted in or out, so
+an unannotated type means non-null (Kotlin&#8217;s <code>String</code>) while
+<code>@Nullable</code> becomes the equivalent of <code>String?</code>. The <code>ast</code> one turns
+the checker on everywhere, making a violation a compile error rather
+than a lint warning you can scroll past. Only <code>groovy-typecheckers</code>
+and the small JSpecify jar need to be on the compile classpath.</p>
+</div>
+<div class="paragraph">
+<p>With that config in place, the offending code needs no annotations
+beyond the one that states the fact:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Nullable String findBlurb() { null }     // Kotlin: fun findBlurb(): String? = null
+String shelve(String title) { ... }       // Kotlin: fun shelve(title: String): String
+
+String blurb = findBlurb()                // Kotlin: val blurb: String = findBlurb()
+println blurb.length()                    // compile error
+println shelve(findBlurb())               // compile error</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[Static type checking] - Potential null dereference: 'blurb' may be null
+[Static type checking] - Cannot pass @Nullable value to @NonNull parameter 'title' of 'shelve'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The idiomatic fixes are spelled exactly as they are in Kotlin —
+<code>findBlurb() ?: 'no description'</code> and <code>findBlurb()?.length()</code> — and
+both compile and run clean. Returning a nullable value from a
+now-implicitly-non-null method is caught too.</p>
+</div>
+<div class="paragraph">
+<p>Stamping <code>@NullMarked</code> on everything sounds like it should flood
+idiomatic property classes with field-initialisation errors, but the
+definite-initialisation check from Example 6 deliberately only looks
+at fields you annotated <code>@NonNull</code> yourself. Fields that are merely
+non-null <strong>by default</strong> are left alone, so <code>new Book(title: 'Groovy in
+Action')</code> keeps working unflagged.</p>
+</div>
+<div class="paragraph">
+<p>One honest difference from Kotlin is worth calling out. Kotlin rejects
+the declaration <code>val blurb: String = findBlurb()</code> itself, because
+locals carry non-null types. Under JSpecify semantics <code>@NullMarked</code>
+deliberately does not apply to local variables, so the strict-mode
+flow analysis instead tracks the nullable value into <code>blurb</code> and flags
+the first <strong>unsafe use</strong> of it — a dereference, a non-null argument, or
+a non-null return. The same bugs are caught; the error arrives a line
+later.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_annotation_compatibility">Annotation compatibility</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -849,7 +938,8 @@ axis that matters most the trade runs the other way:</p>
 type survives every call boundary, every generic instantiation and
 every module edge, and the compiler will not let you opt out. Groovy&#8217;s
 flow analysis is local to the code being checked, and you choose where
-to switch it on.</p>
+to switch it on — though as Example 7 showed, "everywhere" is a
+legitimate choice, made once in a configuration script.</p>
 </li>
 <li>
 <p><strong>Past your own code, declarations still carry the information.</strong> Flow
@@ -924,6 +1014,18 @@ is in the
 <a href="https://docs.groovy-lang.org/docs/latest6/html/documentation/typecheckers.html">type checkers user guide</a>.</p>
 </div>
 <div class="paragraph">
+<p>There is a ceiling worth knowing about. Annotations state nullness one
+declaration at a time, so a fact that <em>relates</em> two declarations —
+"at least one of <code>a</code> and <code>b</code> is non-null" — has no spelling in
+JSpecify&#8217;s vocabulary, and neither does a property that isn&#8217;t about
+null at all, such as a stock count that must never go negative. Those
+want contracts rather than annotations: the companion post on
+<a href="https://groovy.apache.org/blog/groovy6-formal-methods">Groovy 6 features for formal method advocates</a>
+shows <code>@Requires</code>/<code>@Ensures</code> obligations discharged by an SMT solver at
+compile time, composing with <code>NullChecker</code> in the same <code>@TypeChecked</code>
+declaration.</p>
+</div>
+<div class="paragraph">
 <p>For complementary null-related checks — such as detecting broken
 null-check logic, unnecessary null guards before <code>instanceof</code>, or
 <code>Boolean</code> methods returning <code>null</code> — consider using
@@ -965,9 +1067,10 @@ and missing null checks at compile time — from looking up books
 with nullable titles, to enforcing non-null parameters, recognising
 Groovy&#8217;s safe-navigation idioms, applying class-level defaults with
 <code>@NonNullByDefault</code>, handling lazy initialisation with
-<code>@MonotonicNonNull</code>, and tracking nullability through control flow
-with <code>NullChecker(strict: true)</code>. The setup is minimal, the annotation
-compatibility is broad, and the two-tier strictness model lets you
+<code>@MonotonicNonNull</code>, tracking nullability through control flow
+with <code>NullChecker(strict: true)</code>, and turning the whole lot on
+codebase-wide from a compiler configuration script. The setup is
+minimal, the annotation compatibility is broad, and the two-tier strictness model lets you
 adopt null safety at your own pace.</p>
 </div>
 </div>
@@ -1011,6 +1114,9 @@ type arguments)</p>
 </li>
 <li>
 <p><a href="https://groovy.apache.org/blog/groovy6-ai-friendly">Groovy 6 for humans and AI agents</a> — where these declarations fit the wider picture</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy6-formal-methods">Groovy 6 features for formal method advocates</a> — contracts for the properties annotations can&#8217;t express</p>
 </li>
 <li>
 <p><a href="https://codenarc.org/">CodeNarc</a></p>
