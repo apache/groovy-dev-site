@@ -83,10 +83,6 @@ Inspired by the
 missing null checks <em>before</em> your code ever runs.</p>
 </div>
 <div class="paragraph">
-<p>That is the second half of Groovy&#8217;s null story, though, and it is
-worth starting with the first.</p>
-</div>
-<div class="paragraph">
 <p>The extension plugs into Groovy&#8217;s existing <code>@TypeChecked</code>
 infrastructure — no new compiler plugins, no separate build step,
 just an annotation on the classes or methods you want checked.
@@ -101,6 +97,10 @@ what the day-to-day experience would feel like.
 To make things concrete, the examples follow a running theme:
 building the backend for <em>The Groovy Shelf</em>, a fictitious online
 bookshop where customers browse, reserve, and review books.</p>
+</div>
+<div class="paragraph">
+<p>That is the second half of Groovy&#8217;s null story, though, and it is
+worth starting with the first.</p>
 </div>
 </div>
 </div>
@@ -356,7 +356,7 @@ String formatTitle(@Nullable String title) {
 static main(args) {
     String title = null
     title ?= 'Untitled'
-    title.toUpperCase()                        // ok: elvis cleared nullable state
+    title.toUpperCase()                        // ok: elvis assignment cleared nullable state
 }</code></pre>
 </div>
 </div>
