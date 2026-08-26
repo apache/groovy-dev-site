@@ -63,7 +63,14 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_groovys_csv_module' class='anchor-link'>Groovy&#8217;s CSV module</a></li><li><a href='#_commons_csv' class='anchor-link'>Commons CSV</a></li><li><a href='#_opencsv' class='anchor-link'>OpenCSV</a></li><li><a href='#_jackson_databind_csv' class='anchor-link'>Jackson Databind CSV</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./groovy-record-performance'>Groovy&trade; Record Performance</a></li><li><a href='./groovy-records'>Groovy&trade; Records</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&trade;</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Reading and Writing CSV files with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-07-25 02:26PM (Last updated: 2026-08-25 10:00AM)</span></p><hr/><div class="sect1">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_groovys_csv_module' class='anchor-link'>Groovy&#8217;s CSV module</a></li><li><a href='#_commons_csv' class='anchor-link'>Commons CSV</a></li><li><a href='#_opencsv' class='anchor-link'>OpenCSV</a></li><li><a href='#_jackson_databind_csv' class='anchor-link'>Jackson Databind CSV</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./deck-of-cards-with-groovy'>Deck of cards with Groovy&trade;, JDK collections and Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./groovy-record-performance'>Groovy&trade; Record Performance</a></li><li><a href='./groovy-records'>Groovy&trade; Records</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&trade;</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Reading and Writing CSV files with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-07-25 02:26PM (Last updated: 2026-08-26 10:00AM)</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="./img/csv_typed.png" alt="Reading a CSV file by hand with split versus reading it into records with Groovy&#8217;s CsvSlurper" width="800"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -370,10 +377,78 @@ assert sales[0].date.monthValue == 3</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Writing typed objects back out is <code>CsvBuilder.toCsv(data, type)</code>. One
-thing to watch there: the column order comes from Jackson&#8217;s view of the
-type rather than the declaration order, so if the exact ordering
-matters, supply a schema yourself.</p>
+<p>Writing typed objects back out is <code>CsvBuilder.toCsv(data, type)</code>.
+Records are written in component declaration order and other classes
+alphabetically. If the order matters, <code>@JsonPropertyOrder</code> on the type
+pins it explicitly; records came out alphabetically too in Groovy 6 beta versions,
+and the annotation gives the same result either way.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_revisiting_the_summary">Revisiting the summary</h3>
+<div class="paragraph">
+<p>Now that our rows are records, we can revisit the multiple wins summary
+from earlier. The grouping key becomes the interesting part of the line
+rather than a column index, and <code>countBy</code> does in one step what
+<code>groupBy</code> followed by a size mapping did before, so the <code>bySize</code> helper
+has no equivalent here:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def multipleWins = { Closure select -&gt; cyclists
+    .countBy(select)
+    .findAll { it.value &gt; 1 }
+    .sort { -it.value }
+    .entrySet()
+    .join(', ')
+}
+println 'Multiple wins by country:\n' + multipleWins{ it.country }
+println 'Multiple wins by rider:\n' + multipleWins{ it.full() }
+println 'Multiple wins by team:\n' + multipleWins{ it.team }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The output is identical to the earlier version, but nothing in the
+processing depends any more on which position a column happens to
+occupy in the file.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/csv_summary.png" alt="The multiple wins summary rewritten with records and countBy, alongside its output" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s <code>groovy-ginq</code> module is worth a mention here too. GINQ can
+group by several keys at once, so the team and country travel along
+with the rider, and a second aggregate comes with them in the same
+pass:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def repeatWinners = GQ {
+    from c in cyclists
+    groupby c.full() as rider, c.team as team, c.country as country
+    having count() &gt; 1
+    orderby count() in desc, rider
+    select rider, team, country, count() as wins, max(c.stage) as lastWin
+}
+repeatWinners.each {
+    println "$it.wins wins  $it.rider ($it.team, $it.country), last on stage $it.lastWin"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>which gives us:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>3 wins  Tadej Pogačar (UAE Team Emirates, 🇸🇮), last on stage 17
+3 wins  Wout van Aert (Jumbo-Visma, 🇧🇪), last on stage 20
+2 wins  Jasper Philipsen (Alpecin-Deceuninck, 🇧🇪), last on stage 21
+2 wins  Jonas Vingegaard (Jumbo-Visma, 🇩🇰), last on stage 18</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Doing that with closures means holding on to a representative element
+for each group and re-extracting the other columns from it.</p>
 </div>
 <div class="paragraph">
 <p>The module is incubating in Groovy 6, so we&#8217;d love your feedback. The
@@ -679,6 +754,15 @@ OpenCSV, Commons CSV and Jackson Databind CSV libraries.</p>
 <div class="paragraph">
 <p>Code for other examples of using Groovy for Data Science:<br>
 <a href="https://github.com/paulk-asert/groovy-data-science" class="bare">https://github.com/paulk-asert/groovy-data-science</a></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>25/Jul/2022</strong>: Initial version.<br>
+<strong>26/Aug/2026</strong>: Version 2: added a section on Groovy 6&#8217;s <code>groovy-csv</code> module — <code>CsvSlurper</code>, <code>CsvBuilder</code>, RFC 4180 quoting, and typed <code>parseAs</code> reading straight into records; revisited the multiple wins summary using records with <code>countBy</code>, and with a <code>groovy-ginq</code> query grouping by several keys at once.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
