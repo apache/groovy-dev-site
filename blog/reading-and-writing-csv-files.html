@@ -226,6 +226,17 @@ script:</p>
 </div>
 </div>
 <div class="paragraph">
+<p>Under the covers, <code>groovy-csv</code> currently builds on the CSV support in
+<a href="https://github.com/FasterXML/jackson-databind">Jackson Databind</a>, which
+we&#8217;ll be looking at directly later in this post. That is an
+implementation detail rather than part of the module&#8217;s API, and it
+stays mostly out of sight, but a few hints reveal it here and there —
+most visibly in the annotations recognised when reading and writing
+typed objects. In theory the underlying library could change, though
+that happens only rarely, and never without considering the porting
+options for existing users.</p>
+</div>
+<div class="paragraph">
 <p>This module is row-oriented rather than line-oriented: <code>CsvBuilder</code>
 writes a collection of maps, and <code>CsvSlurper</code> reads back a list of maps
 keyed by the header names. So, we&#8217;ll express our podium data like this:</p>
@@ -357,13 +368,14 @@ assert cyclists[0].stage == 1    // an int, not a String</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Jackson Databind performs the databinding here, which is why that is a
-Jackson annotation. We only need it for the two components whose names
-don&#8217;t match their column, and <code>stage</code> arrives as an <code>int</code> without any
-help. We&#8217;ll meet the same annotations again in the Jackson Databind
-section later, but here we don&#8217;t assemble a <code>CsvMapper</code> and a
-<code>CsvSchema</code> ourselves. Conversion isn&#8217;t limited to numbers, <code>java.time</code>
-types work too, with <code>@JsonFormat</code> where the pattern isn&#8217;t the default:</p>
+<p>This is one of those places where the Jackson underpinnings show
+through: <code>@JsonProperty</code> is a Jackson annotation. We only need it for
+the two components whose names don&#8217;t match their column, and <code>stage</code>
+arrives as an <code>int</code> without any help. We&#8217;ll meet the same annotations
+again in the Jackson Databind section later, but here we don&#8217;t
+assemble a <code>CsvMapper</code> and a <code>CsvSchema</code> ourselves. Conversion isn&#8217;t
+limited to numbers, <code>java.time</code> types work too, with <code>@JsonFormat</code>
+where the pattern isn&#8217;t the default:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -377,11 +389,14 @@ assert sales[0].date.monthValue == 3</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Writing typed objects back out is <code>CsvBuilder.toCsv(data, type)</code>.
-Records are written in component declaration order and other classes
-alphabetically. If the order matters, <code>@JsonPropertyOrder</code> on the type
-pins it explicitly; records came out alphabetically too in Groovy 6 beta versions,
-and the annotation gives the same result either way.</p>
+<p>Writing typed objects back out is <code>CsvBuilder.toCsv(data, type)</code>. If
+the column order matters, <code>@JsonPropertyOrder</code> on the type pins it
+explicitly. Without it, columns follow Jackson&#8217;s own ordering, which is
+alphabetical; from 6.0.0-beta-4 onwards records instead keep their
+component declaration order
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12296">GROOVY-12296</a>),
+while other classes stay alphabetical. The annotation gives the same
+result either way.</p>
 </div>
 </div>
 <div class="sect2">
