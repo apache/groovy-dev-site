@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='data science, groovy, matrices, ojalgo, commons math, nd4j, ejml, vector api, eclipse deeplearning4j'/><meta name='description' content='This post looks at using Groovy to write a number of applications involving matrices. It uses a number of open source matrix libraries.'/><title>The Apache Groovy programming language - Blogs - Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='data science, groovy, matrices, ojalgo, commons math, nd4j, ejml, vector api, eclipse deeplearning4j, gpu, cuda, jcuda, cublas'/><meta name='description' content='This post looks at using Groovy to write applications involving matrices. It uses some open source matrix libraries, the Vector API, and cuBLAS on a GPU.'/><title>The Apache Groovy programming language - Blogs - Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,8 +63,11 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='#_fibonacci' class='anchor-link'>Fibonacci</a></li><li><a href='#_leslie_matrices' class='anchor-link'>Leslie Matrices</a></li><li><a href='#_encryption_with_matrices' class='anchor-link'>Encryption with matrices</a></li><li><a href='#_shape_manipulation' class='anchor-link'>Shape manipulation</a></li><li><a href='#_language_and_tool_extensibility' class='anchor-link'>Language and tool extensibility</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./solving-simple-optimization-problems-with-groovy'>Solving simple optimization problems with Groovy&trade; using Commons Math, Hipparchus, OptaPlanner, and Timefold</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy&trade;</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-08-18 01:41PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='#_fibonacci' class='anchor-link'>Fibonacci</a></li><li><a href='#_matrix_multiplication_on_a_gpu' class='anchor-link'>Matrix multiplication on a GPU</a></li><li><a href='#_leslie_matrices' class='anchor-link'>Leslie Matrices</a></li><li><a href='#_encryption_with_matrices' class='anchor-link'>Encryption with matrices</a></li><li><a href='#_shape_manipulation' class='anchor-link'>Shape manipulation</a></li><li><a href='#_language_and_tool_extensibility' class='anchor-link'>Language and tool extensibility</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./solving-simple-optimization-problems-with-groovy'>Solving simple optimization problems with Groovy&trade; using Commons Math, Hipparchus, OptaPlanner, and Timefold</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./reading-and-writing-csv-files'>Reading and Writing CSV files with Groovy&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./multimodal-universe-with-groovy'>Exploring the Multimodal Universe with Groovy&trade;</a></li><li><a href='./fun-with-obfuscated-groovy'>Fun with obfuscated Groovy&trade;</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&trade; and Apache Ignite</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&trade; with Apache Wayang and Apache Spark&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Matrix calculations with Groovy&trade;, Apache Commons Math, ojAlgo, Nd4j and EJML</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2022-08-18 01:41PM (Last updated: 2026-08-26 12:00PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="./img/matrix_crossover.png" alt="cuBLAS on a GPU overtakes the Vector API on the CPU at around a 110x110 matrix" width="800"></span></p>
+</div>
 <div class="paragraph">
 <p>This blogs looks at performing matrix calculations with Groovy
 using various libraries:
@@ -76,10 +79,9 @@ using various libraries:
 (part of Eclipse <a href="https://deeplearning4j.konduit.ai/">Deeplearning4j</a>).
 We&#8217;ll also take a quick
 look at using the incubating Vector API for matrix calculations
-(JEPs <a href="https://openjdk.org/jeps/338">338</a>,
-<a href="https://openjdk.org/jeps/414">414</a>,
-<a href="https://openjdk.org/jeps/417">417</a>,
-and <a href="https://openjdk.org/jeps/426">426</a>).</p>
+(first proposed in <a href="https://openjdk.org/jeps/338">JEP 338</a> and
+re-incubated ever since, most recently as
+<a href="https://openjdk.org/jeps/537">JEP 537</a>).</p>
 </div>
 </div>
 </div>
@@ -271,7 +273,7 @@ website provide links to numerous benchmarks backing that claim.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">def factory = Primitive64Matrix.FACTORY
+<pre class="prettyprint highlight"><code data-lang="groovy">def factory = MatrixR064.FACTORY
 def m = factory.rows([[1d, 1d], [1d, 0d]] as double[][])
 println m * m * m
 println m**15</code></pre>
@@ -279,17 +281,19 @@ println m**15</code></pre>
 </div>
 <div class="paragraph">
 <p>We can see it supports the same operator overloading features we
-saw for Commons Math.</p>
+saw for Commons Math. (This class used to be called
+<code>Primitive64Matrix</code>; the <code>MatrixR064</code> name arrived in ojAlgo 53,
+which offers both, and the old name was removed in 54.)</p>
 </div>
 <div class="paragraph">
 <p>When we run the script, it has the following output:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>org.ojalgo.matrix.Primitive64Matrix &lt; 2 x 2 &gt;
+<pre>org.ojalgo.matrix.MatrixR064 &lt; 2 x 2 &gt;
 { { 3.0,	2.0 },
 { 2.0,	1.0 } }
-org.ojalgo.matrix.Primitive64Matrix &lt; 2 x 2 &gt;
+org.ojalgo.matrix.MatrixR064 &lt; 2 x 2 &gt;
 { { 987.0,	610.0 },
 { 610.0,	377.0 } }</pre>
 </div>
@@ -302,12 +306,12 @@ second reveals the next three numbers in the sequence.</p>
 <div class="sect2">
 <h3 id="_exploring_the_vector_api_and_ejml">Exploring the Vector API and EJML</h3>
 <div class="paragraph">
-<p>From JDK16, various versions (JEPs
-<a href="https://openjdk.org/jeps/338">338</a>,
-<a href="https://openjdk.org/jeps/414">414</a>,
-<a href="https://openjdk.org/jeps/417">417</a>,
-<a href="https://openjdk.org/jeps/426">426</a>) of the Vector API
-have been available as an incubating preview feature.
+<p>The Vector API arrived in JDK16 as an incubator module
+(<a href="https://openjdk.org/jeps/338">JEP 338</a>) and has been re-incubated in
+every release since — twelve times as of JDK27
+(<a href="https://openjdk.org/jeps/537">JEP 537</a>). Note that an <strong>incubator
+module</strong> is not the same thing as a <strong>preview feature</strong>: it needs
+<code>--add-modules</code>, but not <code>--enable-preview</code>.
 The HotSpot compiler has previously already had some minimal
 optimisations that can leverage vector hardware instructions
 but the Vector API expands the scope of possible optimisations
@@ -381,8 +385,12 @@ printf "Vector:    %6.2f ms\n", (t3 - t2)/1000_000</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This example was run on JDK16 with the following VM options:
-<code>–enable-preview –add-modules jdk.incubator.vector</code>.</p>
+<p>This example was originally run on JDK16 with the VM options
+<code>--enable-preview --add-modules jdk.incubator.vector</code>. Only the second
+of those is actually required, and the first is worth avoiding: classes
+compiled with <code>--enable-preview</code> carry a version marker that ties them
+to the exact JDK which produced them, so such a build stops loading on
+any later JDK.</p>
 </div>
 <div class="paragraph">
 <p>The output looks like this:</p>
@@ -410,6 +418,264 @@ For a more predictable comparison, consider running the
 And you may wish to wait until the Vector API is out of preview
 before relying on it for any production code - but by all means,
 consider trying it out now.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_matrix_multiplication_on_a_gpu">Matrix multiplication on a GPU</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The previous section asked what wider hardware buys us: the Vector API
+processes several doubles per instruction instead of one. A GPU takes
+that idea to its logical extreme — thousands of lanes instead of four —
+so it is a natural next question, and one with a less obvious answer
+than you might expect.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use <a href="https://github.com/jcuda/jcuda">JCuda</a>, which wraps the CUDA
+APIs for the JVM, and specifically its cuBLAS binding. cuBLAS is
+NVIDIA&#8217;s tuned linear algebra library, which makes it the fair
+comparison against EJML: both are libraries written by people who care
+a great deal about matrix multiplication, rather than code we wrote
+ourselves.</p>
+</div>
+<div class="sect2">
+<h3 id="_talking_to_cublas_from_groovy">Talking to cuBLAS from Groovy</h3>
+<div class="paragraph">
+<p>JCuda publishes platform-specific native artifacts, so the dependencies
+need the classifier for your platform, and the classifier-less
+transitive dependency turned off:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Grab('org.jcuda:jcuda:12.6.0;transitive=false')
+@Grab('org.jcuda:jcublas:12.6.0;transitive=false')
+@Grab('org.jcuda:jcuda-natives:12.6.0:linux-x86_64;transitive=false')
+@Grab('org.jcuda:jcublas-natives:12.6.0:linux-x86_64;transitive=false')</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With that in place, we can raise our Fibonacci matrix to the third
+power on the GPU. It is two <code>cublasDgemm</code> calls, wrapped in the
+allocate/copy/compute/copy-back/free sequence that CUDA requires:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">final int N = 2
+double[] q = [1, 1, 1, 0]                        // [[1, 1], [1, 0]]
+
+def handle = new cublasHandle()
+JCublas2.cublasCreate(handle)
+
+long bytes = (long) (N * N * Sizeof.DOUBLE)
+def dQ = new Pointer(), dS = new Pointer(), dR = new Pointer()
+JCuda.cudaMalloc(dQ, bytes); JCuda.cudaMalloc(dS, bytes); JCuda.cudaMalloc(dR, bytes)
+JCuda.cudaMemcpy(dQ, Pointer.to(q), bytes, cudaMemcpyHostToDevice)
+
+Pointer alpha = Pointer.to([1.0d] as double[])
+Pointer beta = Pointer.to([0.0d] as double[])
+
+JCublas2.cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, N, N, N, alpha, dQ, N, dQ, N, beta, dS, N)
+JCublas2.cublasDgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N, N, N, N, alpha, dS, N, dQ, N, beta, dR, N)
+
+double[] result = new double[N * N]
+JCuda.cudaMemcpy(Pointer.to(result), dR, bytes, cudaMemcpyDeviceToHost)
+
+JCuda.cudaFree(dQ); JCuda.cudaFree(dS); JCuda.cudaFree(dR)
+JCublas2.cublasDestroy(handle)
+
+assert result == [3, 2, 2, 1] as double[]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same <code>[3, 2, 2, 1]</code> we saw from every other library. Two details
+are worth pointing out. Everything here is a <code>Pointer</code> into device
+memory rather than a Java array, which is why the boilerplate exists at
+all. And cuBLAS is <strong>column-major</strong>, following the Fortran BLAS
+tradition — our matrix and its powers happen to be symmetric so the
+flat array reads identically either way, but that will not be true in
+general, and it is the easiest thing to get quietly wrong.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_when_is_it_worth_it">When is it worth it?</h3>
+<div class="paragraph">
+<p>Here is the awkward part. Our Fibonacci matrix is 2x2, which is about
+24,000 floating-point operations for the whole calculation — roughly
+two nanoseconds of work for a GPU, against a kernel launch cost
+measured in microseconds. So rather than a single number, it is more
+useful to vary the matrix size and watch what happens.</p>
+</div>
+<div class="paragraph">
+<p>All the figures below were measured in one session on the same machine
+— a freely available <a href="https://colab.research.google.com/">Google Colab</a>
+notebook with an NVIDIA T4 — because comparing a GPU on one machine
+against a CPU on another tells you nothing. The notebook is in the
+<a href="https://github.com/paulk-asert/MatrixGroovy/blob/main/notebooks/groovy_jcuda_colab.ipynb">example code repo</a>
+if you&#8217;d like to run it yourself; it installs everything it needs.
+Throughput in GFLOPS, so bigger is better:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2857%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">N</th>
+<th class="tableblock halign-left valign-top"><code>mult_ikj_simple</code></th>
+<th class="tableblock halign-left valign-top"><code>mult_ikj</code></th>
+<th class="tableblock halign-left valign-top"><code>mult_ikj_vector</code></th>
+<th class="tableblock halign-left valign-top">cuBLAS (compute)</th>
+<th class="tableblock halign-left valign-top">cuBLAS (with transfer)</th>
+<th class="tableblock halign-left valign-top">Winner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, by 42x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">64</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.11</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.56</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.87</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, by 3x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">256</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.63</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">26.4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, by 5x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.81</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.83</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.52</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">69.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">45.2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, by 8x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1024</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.57</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.54</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.23</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">69.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">51.1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, by 10x</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2048</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">232.9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">173.5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4096</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">252.3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">216.8</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The crossover sits somewhere between 64 and 256. Below that, the CPU
+wins outright: at our actual Fibonacci size the CPU is some forty times
+quicker, because the GPU spends all its time being handed work rather
+than doing it. Above it the GPU pulls ahead, but by roughly one order
+of magnitude — not the hundreds-fold difference GPU marketing might
+lead you to expect, once you are comparing against a properly measured
+CPU rather than a naive loop.</p>
+</div>
+<div class="paragraph">
+<p>Two things temper the GPU column. The first is that a T4 performs
+double-precision arithmetic at one thirty-second of its single-precision
+rate — about 254 GFLOPS — so these numbers show the card at its worst.
+We used doubles throughout to match the rest of this post; in floats
+the picture would look very different and the crossover would arrive
+sooner. The second is the transfer column: moving the matrices to the
+card and back costs real time, and it is what erodes a 13x advantage in
+raw computation down to 10x once you account for it.</p>
+</div>
+<div class="paragraph">
+<p>The card only reaches its stride past N=1024, where throughput jumps
+from about 70 GFLOPS to over 230 and then settles near 250 — around
+98% of what the hardware can do in double precision. Below that it is
+largely idle, waiting.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_has_changed_since_this_post_was_written">What has changed since this post was written</h3>
+<div class="paragraph">
+<p>Re-running the EJML comparison years later turned up something we did
+not expect. When this post first appeared, <code>mult_ikj</code> — the
+carefully-optimised version, and what EJML actually uses — was around
+three times faster than <code>mult_ikj_simple</code>, written straight from the
+mathematical definition. That gap has closed entirely: on a current JDK
+the two are within measurement noise of one another at every size we
+tried. The JIT compiler now does for free what previously had to be
+done by hand.</p>
+</div>
+<div class="paragraph">
+<p>The Vector API lane is still ahead, consistently by about a factor of
+two. That machine&#8217;s hardware offers four doubles per vector, so a
+perfect result would have been 4x, and 2x for a straightforward
+implementation is a respectable outcome. On hardware with narrower
+vectors the advantage is correspondingly smaller.</p>
+</div>
+<div class="paragraph">
+<p>And the Vector API itself? This post originally suggested waiting until
+it left preview. It is still an incubator module, on its twelfth
+incubation, so that advice stands — though it works perfectly well if
+you are willing to pass <code>--add-modules jdk.incubator.vector</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_health_warnings">Health warnings</h3>
+<div class="paragraph">
+<p>The usual microbenchmark disclaimer applies with extra force here. Colab
+hands out shared, virtualised hardware, so absolute timings vary between
+sessions: across runs we saw the largest matrices repeat to within a
+percent or so, while the smallest varied by nearly half. Treat the small-N
+figures as indicative and the shape of the curve as the real result.</p>
+</div>
+<div class="paragraph">
+<p>Two measurement traps are worth passing on, since both produced
+confidently wrong numbers before being caught. A single warm-up call is
+not enough: at small sizes it leaves the vectorised method interpreted,
+where it measures about seven times <strong>slower</strong> than scalar code. And
+timing several matrix sizes inside one JVM pollutes the JIT profile —
+the same method compiled against many different loop trip counts
+degrades to generic code, and the scalar lanes then read some three
+times slower than they truly are. Each size needs its own JVM, which is
+precisely the discipline
+<a href="https://github.com/openjdk/jmh">jmh</a> enforces, and which we should
+probably have used from the outset.</p>
 </div>
 </div>
 </div>
@@ -646,7 +912,7 @@ factory method for creating a transform matrix.</p>
         fill ? g.fillPolygon(poly) : g.drawPolygon(poly)
     }
 
-    static List&lt;Primitive64Matrix&gt; vectors(List&lt;Integer&gt;... pts) {
+    static List&lt;MatrixR064&gt; vectors(List&lt;Integer&gt;... pts) {
         pts.collect{ factory.column(*it) }
     }
 
@@ -928,6 +1194,15 @@ using matrices on the JVM isn&#8217;t hard, and you have numerous
 options. We also saw a brief glimpse at the Vector API which
 looks like an exciting addition to the JVM (hopefully arriving
 soon in non-preview mode).</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>18/Aug/2022</strong>: Initial version.<br>
+<strong>26/Aug/2026</strong>: Version 2: added a section on matrix multiplication on a GPU, calling NVIDIA&#8217;s cuBLAS through JCuda and measuring where offloading starts to pay off; re-ran the EJML comparison on a current JDK, where <code>mult_ikj</code> and <code>mult_ikj_simple</code> now perform alike and only the Vector API lane remains ahead.</p>
+</div>
+</div>
 </div>
 </div>
 </div></div></div></div></div><footer id='footer'>
