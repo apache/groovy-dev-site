@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-31</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-31</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_rationale' class='anchor-link'>Rationale</a></li><li><a href='#_realm' class='anchor-link'>Realm</a></li><li><a href='#_extension_method_sets' class='anchor-link'>Extension method sets</a></li><li><a href='#_realm_definitions' class='anchor-link'>Realm definitions</a></li><li><a href='#_realm_definition_metadata' class='anchor-link'>Realm definition metadata</a></li><li><a href='#_realm_usage' class='anchor-link'>Realm usage</a></li><li><a href='#_lexical_categories' class='anchor-link'>Lexical categories</a></li><li><a href='#_dynamic_categories' class='anchor-link'>Dynamic categories</a></li><li><a href='#_groovy_dyn' class='anchor-link'>GROOVY_DYN</a></li><li><a href='#_dispatch_layers' class='anchor-link'>Dispatch layers</a></li><li><a href='#_object_method_mop' class='anchor-link'>Object method MOP</a></li><li><a href='#_metaclass_layers' class='anchor-link'>MetaClass layers</a></li><li><a href='#_groovyobject' class='anchor-link'>GroovyObject</a></li><li><a href='#_compiler_semantics' class='anchor-link'>Compiler semantics</a></li><li><a href='#_static_compilation' class='anchor-link'>Static compilation</a></li><li><a href='#_core_extension_methods' class='anchor-link'>Core extension methods</a></li><li><a href='#_extension_discovery' class='anchor-link'>Extension discovery</a></li><li><a href='#_runtime_representation' class='anchor-link'>Runtime representation</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_impact' class='anchor-link'>Impact</a></li><li><a href='#_work_items' class='anchor-link'>Work items</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-31</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<hr>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-31</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Realm based dynamic semantics</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Jochen "blackdrag" Theodorou</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-08-31</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-08-31</p>
+</td>
+</tr>
+</table>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP introduces realms as semantic environments for Groovy dispatch.</p>
+</div>
+<div class="paragraph">
+<p>A realm defines an ordered set of dispatch layers and an ordered set of extension method providers. A realm inherits the definition of one other realm and may replace individual properties.</p>
+</div>
+<div class="paragraph">
+<p>The default realm is <code>GROOVY_DYN</code>, which represents the current fully dynamic Groovy semantics.</p>
+</div>
+<div class="paragraph">
+<p>Realms are known to the compiler and the runtime. They allow dynamic semantics to be restricted without requiring static compilation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_rationale">Rationale</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy dynamic dispatch currently depends on a number of mechanisms which are not explicitly scoped. Extension methods may be discovered from the compilation environment, categories may affect dynamic execution, and MetaClass changes may affect code which did not explicitly opt into them.</p>
+</div>
+<div class="paragraph">
+<p>This makes it difficult to define a stable semantic environment for library code.</p>
+</div>
+<div class="paragraph">
+<p>For example, a library may require the Groovy core extension methods and its own extensions, but not extensions which happen to be visible on the class path.</p>
+</div>
+<div class="paragraph">
+<p>A library may also require a MetaClass system which is isolated from the one used by the application.</p>
+</div>
+<div class="paragraph">
+<p>Realms provide an explicit semantic environment for such code.</p>
+</div>
+<div class="paragraph">
+<p>The realm is also available to the compiler. A fixed realm can therefore provide guarantees which allow dynamic-looking operations to be compiled to direct calls or stable invokedynamic call sites.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_realm">Realm</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm is an immutable semantic environment.</p>
+</div>
+<div class="paragraph">
+<p>A realm has one parent realm. A realm initially has all properties of its parent. A realm may replace the value of individual properties.</p>
+</div>
+<div class="paragraph">
+<p>A realm definition cannot introduce new kinds of properties.</p>
+</div>
+<div class="paragraph">
+<p>The initial properties are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ordered dispatch layers</p>
+</li>
+<li>
+<p>extension method set</p>
+</li>
+<li>
+<p>MetaClass layer</p>
+</li>
+<li>
+<p>object method MOP layer</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Further properties may be introduced by later GEPs.</p>
+</div>
+<div class="paragraph">
+<p>Realm inheritance is configuration inheritance. Runtime state is not inherited unless the corresponding layer is explicitly shared.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_extension_method_sets">Extension method sets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>An extension method set is an ordered list of extension method provider classes.</p>
+</div>
+<div class="paragraph">
+<p>The order determines precedence. The first element has the highest precedence.</p>
+</div>
+<div class="paragraph">
+<p>A realm may define its extension method set explicitly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>extensions = [
+    MyExtensions,
+    RealmB.extensions
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An extension set reference inserts the complete effective extension set of the referenced realm at that position.</p>
+</div>
+<div class="paragraph">
+<p>An extension set may therefore be assembled from sets belonging to different realms.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>RealmB.extensions = [E2, E3, E4]
+RealmC.extensions = [E5, E4]
+
+RealmA.extensions = [E1, RealmB.extensions, RealmC.extensions]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>produces:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>[E1, E2, E3, E5, E4]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>An extension provider occurs at most once in the effective extension set. Repeated occurrences are normalized so that the last occurrence determines its position.</p>
+</div>
+<div class="paragraph">
+<p>Cycles in extension-set references are not allowed.</p>
+</div>
+<div class="paragraph">
+<p>An empty extension set is valid:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>extensions = []</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A provider being present on the class path does not make it part of a realm&#8217;s extension set.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_realm_definitions">Realm definitions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm is declared using <code>@RealmDef</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>import static GroovyLanguage.GROOVY_CORE_REALM
+import MyExtensions
+
+@RealmDef
+MY_LIBRARY_REALM = {
+    extends GROOVY_CORE_REALM
+    extensions [
+        MyExtensions,
+        GROOVY_CORE_REALM.extensions
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>@RealmDef</code> is a compiler recognized local transform.</p>
+</div>
+<div class="paragraph">
+<p>The body of a realm definition is declarative. It is not executed as an ordinary closure.</p>
+</div>
+<div class="paragraph">
+<p>Referenced realms and extension providers are resolved by the compiler.</p>
+</div>
+<div class="paragraph">
+<p>A realm definition creates a realm token represented by a generated <code>static final</code> inner class.</p>
+</div>
+<div class="paragraph">
+<p>The token identifies the realm. It is not the materialized runtime realm.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_realm_definition_metadata">Realm definition metadata</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Realm tokens contain the realm definition as annotations.</p>
+</div>
+<div class="paragraph">
+<p>Conceptually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>@RealmDefinitionVersion(1)
+@RealmDefinition(
+    extendsRealm = GROOVY_CORE_REALM.class,
+    extensions = {
+        MyExtensions.class
+    }
+)
+public static final class MY_LIBRARY_REALM {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>RealmDefinitionVersion</code> identifies the version of the realm definition encoding.</p>
+</div>
+<div class="paragraph">
+<p>The realm token itself provides the semantic identity of the realm. A library may therefore define several versions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>LIB_X_1_1
+LIB_X_2
+LIB_X</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A consumer may select the required version by referring to its token.</p>
+</div>
+<div class="paragraph">
+<p>The definition encoding version is independent of the semantic version represented by the token.</p>
+</div>
+<div class="paragraph">
+<p>An unknown definition encoding version must be rejected before the corresponding definition annotation is interpreted.</p>
+</div>
+<div class="paragraph">
+<p>The realm definition metadata must be readable by class file inspection and by Java reflection without initializing the realm token class.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_realm_usage">Realm usage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm may be selected for a package, class or method using <code>@Realm</code>.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>@Realm(MY_LIBRARY_REALM)
+class LibraryImplementation {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>@Realm(MY_LIBRARY_REALM)
+def method() {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A package-level realm declaration establishes the default realm for the package.</p>
+</div>
+<div class="paragraph">
+<p>If no realm is declared, the realm is <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>use(Realm)</code> selects the specified realm for the lexical scope of the <code>use</code> construct:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>use(MY_LIBRARY_REALM) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The realm operand must be a statically identifiable realm token. A runtime variable containing a realm cannot be used.</p>
+</div>
+<div class="paragraph">
+<p>Entering a method compiled for another realm changes the realm used by dynamic operations in that method. A caller realm is not implicitly propagated to the callee.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_lexical_categories">Lexical categories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A lexical category is a temporary extension method layer.</p>
+</div>
+<div class="paragraph">
+<p>For a realm <code>R</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>R + Category</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>is a derived realm in which the category has higher precedence than the extension method set of <code>R</code>.</p>
+</div>
+<div class="paragraph">
+<p>The compiler may create a synthetic realm token for such a derived realm. The token need not be externally visible.</p>
+</div>
+<div class="paragraph">
+<p>The same derived realm definition within one class may reuse its generated token.</p>
+</div>
+<div class="paragraph">
+<p>A lexical category affects the call sites compiled in its scope. It does not modify the dynamic category context.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dynamic_categories">Dynamic categories</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dynamic categories are initially supported only by <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p>A dynamic category is the current dynamic category context together with a temporary extension method layer.</p>
+</div>
+<div class="paragraph">
+<p>The current dynamic category mechanism may continue to use dynamically scoped state.</p>
+</div>
+<div class="paragraph">
+<p>A realm other than <code>GROOVY_DYN</code> does not use the dynamic category context.</p>
+</div>
+<div class="paragraph">
+<p>For example, a dynamic category active in a caller does not affect a method executing in a realm which does not use <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p>Using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>use(GROOVY_DYN) {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>selects the fully dynamic Groovy semantics, including dynamic categories.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_dyn">GROOVY_DYN</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GROOVY_DYN</code> is the predefined realm representing the current fully dynamic Groovy semantics.</p>
+</div>
+<div class="paragraph">
+<p>It provides:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the open extension method environment</p>
+</li>
+<li>
+<p>dynamic categories</p>
+</li>
+<li>
+<p>the full object method MOP</p>
+</li>
+<li>
+<p>the current MetaClass system</p>
+</li>
+<li>
+<p>the current dynamic dispatch semantics</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>GROOVY_DYN</code> is the default when no realm is declared.</p>
+</div>
+<div class="paragraph">
+<p>The first implementation should preserve the current semantics of <code>GROOVY_DYN</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dispatch_layers">Dispatch layers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm contains ordered dispatch layers.</p>
+</div>
+<div class="paragraph">
+<p>Extension method sets contribute extension method layers.</p>
+</div>
+<div class="paragraph">
+<p>Lexical and dynamic categories are temporary extension method layers above the realm&#8217;s declared extension method layers.</p>
+</div>
+<div class="paragraph">
+<p>The MetaClass system is represented by a MetaClass layer.</p>
+</div>
+<div class="paragraph">
+<p>The absence of a MetaClass layer means that MetaClass based dispatch is not used by the realm.</p>
+</div>
+<div class="paragraph">
+<p>A MetaClass layer is not itself a <code>MetaClass</code>. The layer defines how MetaClass state is used for dispatch.</p>
+</div>
+<div class="paragraph">
+<p>A realm may have an isolated MetaClass layer or use a shared MetaClass layer.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_object_method_mop">Object method MOP</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The object method MOP is separate from the MetaClass system.</p>
+</div>
+<div class="paragraph">
+<p>The initial non-<code>GROOVY_DYN</code> method MOP consists of:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>methodMissing
+propertyMissing</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>No marker interface is required for these methods.</p>
+</div>
+<div class="paragraph">
+<p><code>invokeMethod</code> is part of the full <code>GROOVY_DYN</code> object MOP.</p>
+</div>
+<div class="paragraph">
+<p>The semantics of other general MOP methods are not changed by this GEP.</p>
+</div>
+<div class="paragraph">
+<p>The full <code>GroovyObject</code> protocol is part of <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p>A realm which does not use the full <code>GroovyObject</code> protocol does not require a class to implement <code>GroovyObject</code> merely for realm based dispatch.</p>
+</div>
+<div class="paragraph">
+<p><code>GroovyObjectSupport</code> remains available for Java implementations.</p>
+</div>
+<div class="paragraph">
+<p>The long term goal is to reduce the dependency of Groovy dispatch on <code>GroovyObject</code> and <code>GroovyObjectSupport</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_metaclass_layers">MetaClass layers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A MetaClass layer defines the MetaClass system used by a realm.</p>
+</div>
+<div class="paragraph">
+<p>A realm may have no MetaClass layer.</p>
+</div>
+<div class="paragraph">
+<p>A realm may have an isolated MetaClass layer.</p>
+</div>
+<div class="paragraph">
+<p>A realm may use a shared MetaClass layer.</p>
+</div>
+<div class="paragraph">
+<p>For an isolated MetaClass layer, MetaClass state is local to the realm.</p>
+</div>
+<div class="paragraph">
+<p>For a shared MetaClass layer, the same MetaClass system may be used by multiple realms.</p>
+</div>
+<div class="paragraph">
+<p>Initially, <code>GROOVY_DYN</code> provides the shared/open MetaClass system.</p>
+</div>
+<div class="paragraph">
+<p>A MetaClass mutation changes only the MetaClass state of the realm in which the mutation is performed, unless the corresponding MetaClass layer is shared.</p>
+</div>
+<div class="paragraph">
+<p>Per-instance MetaClass state remains supported. Realm based lookup extends the existing association with a realm.</p>
+</div>
+<div class="paragraph">
+<p>Conceptually:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>(class, instance, realm) -&gt; MetaClass</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>getMetaClass()</code> is not required as the general mechanism for obtaining realm MetaClass state.</p>
+</div>
+<div class="paragraph">
+<p>The MetaClass returned through the legacy <code>GroovyObject</code> protocol is the MetaClass seen by <code>GROOVY_DYN</code>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovyobject">GroovyObject</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>GroovyObject</code> is not required for realm based dispatch.</p>
+</div>
+<div class="paragraph">
+<p>In <code>GROOVY_DYN</code>, the current <code>GroovyObject</code> semantics remain.</p>
+</div>
+<div class="paragraph">
+<p>In another realm, a class may use the object method MOP without implementing <code>GroovyObject</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>getMetaClass()</code> and <code>setMetaClass()</code> are legacy <code>GROOVY_DYN</code> object operations.</p>
+</div>
+<div class="paragraph">
+<p>A realm which needs access to a MetaClass system does not need to expose these methods through every object.</p>
+</div>
+<div class="paragraph">
+<p>The existing <code>@POJO</code> transformation remains supported.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compiler_semantics">Compiler semantics</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm provides semantic information to the compiler.</p>
+</div>
+<div class="paragraph">
+<p>The compiler may use the realm to determine the possible dispatch targets of an operation.</p>
+</div>
+<div class="paragraph">
+<p>A realm does not imply static compilation.</p>
+</div>
+<div class="paragraph">
+<p>The compiler may decide for each operation between:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>direct JVM invocation</p>
+</li>
+<li>
+<p>stable <code>invokedynamic</code></p>
+</li>
+<li>
+<p>fully dynamic <code>invokedynamic</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A direct invocation is possible if the compiler can prove that the target does not change.</p>
+</div>
+<div class="paragraph">
+<p>A realm with a fixed extension method set and no mutable MetaClass layer can provide such guarantees.</p>
+</div>
+<div class="paragraph">
+<p>An operation may still require <code>invokedynamic</code> even in a fixed realm when its target depends on runtime information.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>receiver."$name"()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>has a runtime dependent method name.</p>
+</div>
+<div class="paragraph">
+<p>Spread arguments may similarly require <code>invokedynamic</code> because the argument list is not statically fixed.</p>
+</div>
+<div class="paragraph">
+<p>A mutable MetaClass layer may require invalidation of cached call site targets.</p>
+</div>
+<div class="paragraph">
+<p>The first implementation may use the existing full <code>invokedynamic</code> mechanism for all realm calls.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_static_compilation">Static compilation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>@CompileStatic</code> is independent of realm selection.</p>
+</div>
+<div class="paragraph">
+<p>When static compilation is used with a realm, static method selection uses the extension method set defined by the realm and does not use the realm&#8217;s MetaClass layer.</p>
+</div>
+<div class="paragraph">
+<p>For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>@CompileStatic
+@Realm(MY_LIBRARY_REALM)
+class Library {
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The relationship between realm based partial static compilation and the existing <code>@CompileStatic</code> skip mode is intentionally not defined by this GEP.</p>
+</div>
+<div class="paragraph">
+<p>Type checking extensions remain part of static type checking and are separate from runtime extension methods.</p>
+</div>
+<div class="paragraph">
+<p>A construct such as:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>receiver."$name"()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>remains unsupported by static compilation.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_core_extension_methods">Core extension methods</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Groovy core extension methods are extension method sets and may be used explicitly by realm definitions.</p>
+</div>
+<div class="paragraph">
+<p>Different semantic environments may use different core extension implementations.</p>
+</div>
+<div class="paragraph">
+<p>This allows a core extension method to use semantics appropriate for the realm in which its implementation is compiled.</p>
+</div>
+<div class="paragraph">
+<p>For example, a collection operation which internally performs a truth test need not implicitly use the fully dynamic semantics of <code>GROOVY_DYN</code> when used from statically compiled code.</p>
+</div>
+<div class="paragraph">
+<p>The exact partitioning of core extension implementations is an implementation concern.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_extension_discovery">Extension discovery</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Explicit realm definitions name the extension providers which belong to the realm.</p>
+</div>
+<div class="paragraph">
+<p><code>GROOVY_DYN</code> remains an open extension environment.</p>
+</div>
+<div class="paragraph">
+<p>The existing service mechanism continues to discover extension providers for <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p>The service mechanism is not used to discover realm definitions.</p>
+</div>
+<div class="paragraph">
+<p>A future change of the extension discovery mechanism, for example to use JPMS services, is independent of the realm model.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_runtime_representation">Runtime representation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A realm token is a generated <code>static final</code> inner class.</p>
+</div>
+<div class="paragraph">
+<p>The token is passed to invokedynamic call sites.</p>
+</div>
+<div class="paragraph">
+<p>The runtime associates the token with the realm definition and may lazily materialize the corresponding runtime realm.</p>
+</div>
+<div class="paragraph">
+<p>The association is not stored as mutable state in the token.</p>
+</div>
+<div class="paragraph">
+<p>The runtime representation of a realm should be reusable and must not be recreated for every invocation.</p>
+</div>
+<div class="paragraph">
+<p>The lifetime of the token follows the lifetime of its defining class loader.</p>
+</div>
+<div class="paragraph">
+<p>The lifetime of materialized runtime state may depend on the presence of mutable MetaClass state.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Code without a realm declaration uses <code>GROOVY_DYN</code>.</p>
+</div>
+<div class="paragraph">
+<p>Existing <code>use(Category)</code> semantics remain supported.</p>
+</div>
+<div class="paragraph">
+<p>Existing MetaClass APIs remain available.</p>
+</div>
+<div class="paragraph">
+<p>Existing <code>GroovyObject</code>, <code>GroovyObjectSupport</code>, <code>MetaClass</code>, <code>ExpandoMetaClass</code> and <code>ProxyMetaClass</code> remain supported during the transition.</p>
+</div>
+<div class="paragraph">
+<p>Realm-aware MetaClass behavior is opt-in.</p>
+</div>
+<div class="paragraph">
+<p>Code which opts into an isolated realm may no longer observe MetaClass or extension-method changes made in another realm.</p>
+</div>
+<div class="paragraph">
+<p>Extension methods which are not part of an explicitly defined extension set are not visible in that realm.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_impact">Impact</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Realms introduce an explicit boundary for dynamic semantics.</p>
+</div>
+<div class="paragraph">
+<p>The default behavior is unchanged.</p>
+</div>
+<div class="paragraph">
+<p>The main observable change for code using a realm is that dynamic extension methods and MetaClass state are determined by the selected realm rather than by unrelated dynamic state.</p>
+</div>
+<div class="paragraph">
+<p>The compiler gains a semantic environment which can be used for more precise method selection and later optimization.</p>
+</div>
+<div class="paragraph">
+<p>A new MOP is not required by this GEP.</p>
+</div>
+<div class="paragraph">
+<p>The existing MetaClass implementation may initially be used as a realm layer. Alternative MOP implementations may be introduced for selected realms.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_work_items">Work items</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>introduce <code>Realm</code> and realm tokens</p>
+</li>
+<li>
+<p>implement <code>@RealmDef</code></p>
+</li>
+<li>
+<p>implement <code>@Realm</code></p>
+</li>
+<li>
+<p>implement <code>@RealmDefinitionVersion</code> and realm definition metadata</p>
+</li>
+<li>
+<p>make <code>GROOVY_DYN</code> the default realm</p>
+</li>
+<li>
+<p>make invokedynamic call sites realm aware</p>
+</li>
+<li>
+<p>define and implement ordered extension sets</p>
+</li>
+<li>
+<p>implement lexical category realm derivation</p>
+</li>
+<li>
+<p>adapt the existing MetaClass implementation as a realm layer</p>
+</li>
+<li>
+<p>implement realm-local MetaClass state</p>
+</li>
+<li>
+<p>investigate realm based direct invocation and stable call sites</p>
+</li>
+<li>
+<p>investigate realm specific core extension implementations</p>
+</li>
+<li>
+<p>add tests for realm inheritance and extension ordering</p>
+</li>
+<li>
+<p>add tests for realm isolation</p>
+</li>
+<li>
+<p>add tests for realm crossing</p>
+</li>
+<li>
+<p>add tests for lexical categories and dynamic categories</p>
+</li>
+<li>
+<p>add tests for incremental compilation and realm definitions in dependent JARs</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_open_questions">Open questions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following are intentionally not defined by this GEP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the complete final set of realm properties;</p>
+</li>
+<li>
+<p>the detailed runtime representation of realm-local MetaClass state;</p>
+</li>
+<li>
+<p>the exact set of methods in the non-<code>GROOVY_DYN</code> object method MOP;</p>
+</li>
+<li>
+<p>the exact implementation of per-instance MetaClass state;</p>
+</li>
+<li>
+<p>the exact rules for direct invocation and stable invokedynamic;</p>
+</li>
+<li>
+<p>the final source syntax for lexical category declarations;</p>
+</li>
+<li>
+<p>the exact set of realm specific core extension implementations.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-1.html">GEP-1: Groovy Enhancement Proposal</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-8.html">GEP-8: Static type checking</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-10.html">GEP-10: Static compilation</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-11.html">GEP-11: Groovy 3 semantics and new MOP</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">1 (2026-08-31)</dt>
+<dd>
+<p>Initial proposal</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
