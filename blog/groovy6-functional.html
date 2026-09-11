@@ -63,13 +63,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_maybe_style_null_safety_without_the_wrapper' class='anchor-link'>Maybe-style null-safety without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#_from_contract_grade_to_proof_grade_an_smt_backed_precondition_postcondition_and_loop_checker' class='anchor-link'>From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy 6 features for Functional Programmers</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_what_groovy_already_gave_you' class='anchor-link'>What Groovy already gave you</a></li><li><a href='#_monoids_and_semigroups_checked' class='anchor-link'>Monoids and Semigroups, checked</a></li><li><a href='#_purity_and_frame_conditions_groovys_answer_to_io_state' class='anchor-link'>Purity and frame conditions — Groovy&#8217;s answer to <code>IO</code> / <code>State</code></a></li><li><a href='#_monadic_comprehensions_do' class='anchor-link'>Monadic comprehensions: <code>DO</code></a></li><li><a href='#_linting_native_chains_monadicshapechecker' class='anchor-link'>Linting native chains: <code>MonadicShapeChecker</code></a></li><li><a href='#_maybe_style_null_safety_without_the_wrapper' class='anchor-link'>Maybe-style null-safety without the wrapper</a></li><li><a href='#_immutability_ergonomics' class='anchor-link'>Immutability ergonomics</a></li><li><a href='#_termination_and_loop_invariants' class='anchor-link'>Termination and loop invariants</a></li><li><a href='#_property_based_tests_mechanically_derived_from_the_annotations' class='anchor-link'>Property-based tests, mechanically derived from the annotations</a></li><li><a href='#who-writes-annotations' class='anchor-link'>Who writes the annotations?</a></li><li><a href='#_building_your_own_checked_dsl_a_wire_diagram_demo' class='anchor-link'>Building your own checked DSL: a wire-diagram demo</a></li><li><a href='#proof-grade' class='anchor-link'>From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</a></li><li><a href='#_how_it_stacks_up' class='anchor-link'>How it stacks up</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy 6 features for Functional Programmers</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-06-01 08:00AM</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-06-01 08:00AM (Last updated: 2026-09-11 08:00PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -174,7 +174,9 @@ sections — the <code>WIRE</code> DSL and the SMT-backed checker — are <stron
 prototypes</strong>: spikes built on the same public extension SPI the Groovy
 team uses for the in-tree checkers, included here to show how far that
 SPI reaches, not as Groovy 6 features. Each is flagged again where it
-appears.</p>
+appears. The SMT spike has since grown into the separate
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a> project,
+which the monoid section also draws on; it too is external to Groovy.</p>
 </div>
 </div>
 </div>
@@ -329,7 +331,61 @@ lifting <code>add</code> into a wrapper and unlifting the result.</p>
 <div class="paragraph">
 <p>The <code>Monoid</code>/<code>Semigroup</code> types from FunctionalJava and HighJ are also
 recognised, which means existing FJ-shaped combiners flow through
-<code>sumParallel</code> without rewriting.</p>
+<code>sumParallel</code> without rewriting. Recognised, though, means <em>trusted</em>:
+<code>CombinerChecker</code> checks the shape of the call site, not the algebra
+inside the carrier. That is true of the wrapper libraries too. A
+<code>Monoid&lt;Integer&gt;</code> built from subtraction type-checks in FunctionalJava,
+just as a lawless <code>Monoid</code> instance compiles in Haskell or Cats, where
+the laws are left to property-based tests.</p>
+</div>
+<div class="paragraph">
+<p>The external, experimental
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a> project,
+which grew out of the SMT spike <a href="#proof-grade">later in this post</a>,
+closes that gap when the carrier is built from a lambda it can see:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import fj.F2
+import fj.Monoid
+
+@TypeChecked(extensions = ['groovy.typecheckers.CombinerChecker', 'verification.VerifyChecker'])
+class Totals {
+    @Requires({ xs != null })
+    static int total(List&lt;Integer&gt; xs) {
+        Monoid&lt;Integer&gt; add = Monoid.monoid({ int a, int b -&gt; a + b } as F2&lt;Integer, Integer, Integer&gt;, 0)   // proves
+        xs.sumParallel(add::sum)
+    }
+
+    @Requires({ xs != null })
+    static int diff(List&lt;Integer&gt; xs) {
+        Monoid&lt;Integer&gt; sub = Monoid.monoid({ int a, int b -&gt; a - b } as F2&lt;Integer, Integer, Integer&gt;, 0)   // refutes
+        xs.sumParallel(sub::sum)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>add</code> proves both laws, associativity and the identity <code>0</code>, without a
+word. <code>sub</code> fails the compile, pointing at the lambda:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove Monoid associativity for combiner sub
+    law: sub(sub(a, b), c) == sub(a, sub(b, c))
+    counterexample: a = 0, b = 0, c = -1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>CombinerChecker</code> still accepts both call sites; each checker reports
+only its own kind of error. A <code>Monoid&lt;Double&gt;</code> built from <code>+</code> refutes
+too, because floating-point addition is not associative, which tends
+to surprise anyone who has shipped one. And a carrier with no body in
+sight, such as the library constant <code>Monoid.intAdditionMonoid</code>, is not
+quietly waved through: it is recorded in groovy-verify&#8217;s trust ledger
+as <code>[opaque carrier] … its associativity and identity are assumed, not
+proven</code>, printed with <code>VERIFY_TRUST=report</code>, and <code>VERIFY_TRUST=deny:carrier</code>
+turns it into a build failure.</p>
 </div>
 </div>
 </div>
@@ -766,9 +822,14 @@ or a small ASM walker can use them as a specification:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The agent never reads the body of <code>add</code> or <code>merge</code>. The compile-time
-<code>CombinerChecker</code> is the guarantee that the annotation is trustworthy
-enough to treat as a specification.</p>
+<p>The agent never reads the body of <code>add</code> or <code>merge</code>. <code>CombinerChecker</code>
+guarantees the annotation is <em>present</em> wherever a parallel reduction
+relies on it, so the claim can&#8217;t silently go missing; the generated
+properties then test that the claim is <em>true</em>, and groovy-verify can
+go a step further and prove it. A FunctionalJava <code>Monoid</code> value has no
+annotation to derive a property from, so its laws are either tested by
+hand or, when it is built from a visible lambda, proved as shown in the
+monoid section.</p>
 </div>
 <div class="paragraph">
 <p>The same idea applies elsewhere:</p>
@@ -1129,7 +1190,7 @@ Groovy team uses to build the in-tree checkers.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_from_contract_grade_to_proof_grade_an_smt_backed_precondition_postcondition_and_loop_checker">From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</h2>
+<h2 id="proof-grade">From contract-grade to proof-grade: an SMT-backed precondition, postcondition, and loop checker</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The previous demo wrote a <strong>structural</strong> checker — names, arity, field
@@ -1415,6 +1476,14 @@ is enough to host a real SMT solver and turn a contract-grade
 annotation proof-grade, for a fragment, with counterexamples, today.
 A hat-tip to Dafny for setting the counterexample-UX bar and to
 OpenJML for the loud-unknown discipline this spike borrows wholesale.</p>
+</div>
+<div class="paragraph">
+<p>The spike has since grown into its own project,
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a>, which
+now reaches well beyond the linear-integer fragment described here,
+including the monoid laws shown earlier. The
+<a href="https://groovy.apache.org/blog/groovy6-formal-methods">formal-methods post</a>
+covers it in depth.</p>
 </div>
 </div>
 </div>
@@ -1736,6 +1805,15 @@ counterexample UX the contract annotations and the SMT spike echo</p>
 diagnostic taxonomy and the loud-"unknown"-over-silent-pass discipline</p>
 </li>
 <li>
+<p><a href="https://github.com/paulk-asert/groovy-verify">groovy-verify</a> — the external
+verifier the SMT spike grew into; proves the monoid laws of <code>@Reducer</code>
+methods and of lambda-built FunctionalJava, Palatable and Purefun carriers</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy6-formal-methods">Groovy 6 features for formal method advocates</a> —
+the companion post covering groovy-verify in depth</p>
+</li>
+<li>
 <p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — the <code>wire-*</code>
 subprojects covering the macro form (shown above) plus the
 builder and builder-with-checker variants, and the <code>verification</code>
@@ -1746,6 +1824,14 @@ builder and builder-with-checker variants, and the <code>verification</code>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>11/Sep/2026</strong>: The monoid section now shows the external <code>groovy-verify</code>
+project proving, or refuting with a counterexample, the laws of a
+FunctionalJava <code>Monoid</code> value built from a lambda, including the classic
+subtraction monoid that type-checks in every FP library. Clarified that
+<code>CombinerChecker</code> guarantees an associativity claim is present, not that
+it is true, and noted that the SMT spike has since grown into groovy-verify.</p>
+</div>
 <div class="paragraph">
 <p><strong>01/Jun/2026</strong>: Added <code>pbt-fj</code> and <code>pbt-vavr</code> subprojects to the companion repo, which generate the same property-based tests as the main <code>pbt</code> subproject but using the <code>functionaljava-quickcheck</code> and <code>vavr-test</code> libraries respectively.</p>
 </div>
