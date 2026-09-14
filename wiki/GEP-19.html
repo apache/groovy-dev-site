@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-19</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_java_alignment' class='anchor-link'>Java alignment</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-19</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-19</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_features' class='anchor-link'>Features</a></li><li><a href='#switch-position' class='anchor-link'>Position, exhaustiveness and unmatched values</a></li><li><a href='#_compilation' class='anchor-link'>Compilation</a></li><li><a href='#_java_alignment' class='anchor-link'>Java alignment</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#remaining-work' class='anchor-link'>Remaining work</a></li><li><a href='#_references' class='anchor-link'>References</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-19</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-04-25</p>
+<p>2026-09-14</p>
 </td>
 </tr>
 </table>
@@ -813,6 +813,132 @@ can be materialised non-destructively.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="switch-position">Position, exhaustiveness and unmatched values</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy 6 settled how a <code>switch</code> decides whether it produces a value, and
+pattern matching inherits that rule rather than introducing one of its
+own. As in Java, the arrow only decides fall-through; the <strong>position</strong>
+decides whether a value is produced
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12399">GROOVY-12399</a>,
+<a href="https://issues.apache.org/jira/browse/GROOVY-12408">GROOVY-12408</a>).</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A <code>switch</code> whose value is not used is a <strong>statement</strong>, whatever its arm
+shape. That includes one written as the last statement of a method,
+closure or script: the implicit return applies to the statement, as it
+does to a trailing <code>if</code> or colon-form <code>switch</code>.</p>
+</li>
+<li>
+<p>A <code>switch</code> in <strong>expression</strong> position — <code>return switch (&#8230;&#8203;) {&#8230;&#8203;}</code>, an
+assignment, an argument, or the value of an arrow arm — is a switch
+expression.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_exhaustiveness">Exhaustiveness</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 16.6666%;">
+<col style="width: 50.0001%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Position</th>
+<th class="tableblock halign-left valign-top">Must be exhaustive?</th>
+<th class="tableblock halign-left valign-top">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expression</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Always</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Settled in Groovy 6
+ (<a href="https://issues.apache.org/jira/browse/GROOVY-12255">GROOVY-12255</a>),
+ independently of patterns. A <code>default</code>, a complete set of enum
+ constants, an unconditional pattern, or type tests covering a sealed
+ hierarchy all satisfy it.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Statement, with a pattern label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Matches JEP 441, which requires exhaustiveness of a statement only where
+ it uses a pattern label.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Statement, without a pattern label</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Constant, class-literal and range labels never demand a <code>default</code>. This
+ is what keeps every <code>switch</code> statement written before patterns existed
+ compiling unchanged.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Two distinctions are worth keeping apart. What <strong>triggers</strong> the
+requirement is a pattern label and nothing else; what <strong>satisfies</strong> it is
+any coverage the compiler can prove, so a class-literal label can help
+satisfy a check that a pattern has triggered without being able to
+trigger one itself.</p>
+</div>
+<div class="paragraph">
+<p>Whether <code>case null</code> should also trigger the requirement, as it does in
+Java, is left open. Java has that rule because <code>case null</code> is itself new
+in Java 21; in Groovy it is long-standing and matches today, so adopting
+the trigger would reject working code. See <a href="#remaining-work">Remaining work</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_unmatched_values_at_runtime">Unmatched values at runtime</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Form</th>
+<th class="tableblock halign-left valign-top">When nothing matches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Statement</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nothing happens; control continues after the <code>switch</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expression</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IllegalStateException</code> naming the selector</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustive enum expression, where a constant was added after the switch
+ was compiled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IncompatibleClassChangeError</code>. Java throws <code>MatchException</code> here since
+ JEP 441; Groovy cannot while its baseline predates Java 21 (see
+ <a href="#remaining-work">Remaining work</a>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bracket-form declaration</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IllegalArgumentException</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A <code>null</code> selector matches no constant or type label, so in statement
+position it falls through and in expression position it raises
+<code>IllegalStateException</code>. Java instead throws <code>NullPointerException</code>
+unless a <code>case null</code> label is present; Groovy&#8217;s labels match through
+<code>isCase</code>, for which <code>null</code> is an ordinary value that simply matches
+nothing, so the Java behaviour is not adopted.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_compilation">Compilation</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -905,7 +1031,9 @@ side effects.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pattern matching for <code>switch</code> (JEP 441, 21)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Shipped</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Arrow-form <code>switch</code>, this proposal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arrow-form <code>switch</code>, this proposal. Exhaustiveness follows JEP 441&#8217;s
+ split between statement and expression position; <code>MatchException</code> and
+ <code>case null</code> are not adopted, see <a href="#switch-position">position and exhaustiveness</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>when</code> guards (Java 21)</p></td>
@@ -921,7 +1049,9 @@ side effects.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Primitive patterns (JEP 507)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Preview</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Groovy already coerces; revisit when finalised</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Included in the reference implementation, ahead of this text. Groovy
+ already coerces, so the surface form costs little; whether to ship it
+ before the JEP finalises is open</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deconstructors for arbitrary classes</p></td>
@@ -1006,10 +1136,14 @@ the design space open for a future relaxation if usage warrants it.</p></td>
  <code>default -&gt;</code> or <code>case var _ -&gt;</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustiveness enforcement</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Warn-only initially</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Java errors for sealed-type expression switches; Groovy emits a
- warning in 7.0 and may escalate via opt-in flag in 7.x</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exhaustiveness enforcement severity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether a non-exhaustive switch is an error or a warning is not
+ settled. Erroring matches Java and matches what Groovy 6 already does
+ for switch expressions; warning is safer while the coverage analysis
+ is incomplete, since a pattern the compiler cannot prove exhaustive is
+ rejected even where Java accepts it. A split by how much the compiler
+ knows is proposed in <a href="#remaining-work">Remaining work</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1093,6 +1227,13 @@ triggered only by syntactic forms that currently fail to parse:</p>
 and empty-map patterns respectively. No existing program depends on
 these never-matching legacy forms.</p>
 </div>
+<div class="paragraph">
+<p>One carve-out is not purely additive. A parameterised type label such as
+<code>case List&lt;String&gt; l</code> parses today as a legacy <code>isCase</code> label followed by
+comparison operators, and is reinterpreted as a type pattern. The legacy
+reading is not useful, but unlike the forms above it does parse, so it is
+called out rather than folded into the table.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_semantics_across_forms"><code>_</code> semantics across forms</h3>
@@ -1144,6 +1285,120 @@ patterns, <code>Type(&#8230;&#8203;)</code> patterns) that does not parse today.
 </div>
 </div>
 <div class="sect1">
+<h2 id="remaining-work">Remaining work</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>These are open for discussion rather than settled. A reference
+implementation exists and informs the notes below, but it is a draft and
+its current behaviour should not be read as a decision.</p>
+</div>
+<div class="sect2">
+<h3 id="_severity_and_what_the_compiler_can_actually_prove">Severity, and what the compiler can actually prove</h3>
+<div class="paragraph">
+<p>The coverage analysis is deliberately conservative in one place: record,
+list and map patterns never contribute to it, because a deconstruction
+can fail on arity or on a component even when its head type matches. The
+consequence is that a switch Java accepts as exhaustive can be rejected
+here. For example, with <code>sealed interface S permits P</code> and
+<code>record P(Object o)</code>, the single arm <code>case P(Object o) -&gt;</code> covers <code>S</code> in
+Java but not in the current analysis.</p>
+</div>
+<div class="paragraph">
+<p>That argues against a single severity for every case:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 16.6666%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">What the compiler knows</th>
+<th class="tableblock halign-left valign-top">Analysis</th>
+<th class="tableblock halign-left valign-top">Suggested</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Explicit <code>default</code>, or an unconditional type pattern covering the
+ selector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No diagnostic</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A sealed hierarchy covered by simple type patterns; all constants of an
+ enum</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Complete</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Any record, list or map pattern present</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Incomplete by construction</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Warning, until component coverage is implemented</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Implementing recursive component coverage — a record pattern is
+unconditional for its type when all of its component patterns are —
+would let the third row move up to error.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_case_null_as_an_exhaustiveness_trigger"><code>case null</code> as an exhaustiveness trigger</h3>
+<div class="paragraph">
+<p>Discussed in <a href="#switch-position">position and exhaustiveness</a>. Adopting
+Java&#8217;s rule would reject working Groovy code; not adopting it leaves a
+visible difference from Java. Either way it should be a decision rather
+than an omission.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_return_break_and_continue_in_arrow_arms"><code>return</code>, <code>break</code> and <code>continue</code> in arrow arms</h3>
+<div class="paragraph">
+<p>Groovy rejects all three inside a statement-position arrow arm, and has
+since the 4.0 parser; Java allows them. For constant labels the colon
+form is a workaround, but <strong>pattern labels require the arrow form</strong>, so
+under this proposal there is no way to return out of a matching arm. This
+is not caused by pattern matching, but pattern matching is what makes it
+hard to live with, so it should be fixed alongside.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_minimum_jdk_for_groovy_7">Minimum JDK for Groovy 7</h3>
+<div class="paragraph">
+<p>Two items depend on it and neither is available below Java 21:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>java.lang.runtime.MatchException</code>, which JEP 441 specifies when an
+exhaustive pattern switch matches nothing at runtime. Below 21 Groovy
+must keep using <code>IncompatibleClassChangeError</code> for the enum case.</p>
+</li>
+<li>
+<p><code>java.lang.runtime.SwitchBootstraps.typeSwitch</code>, the indy dispatch path
+the Compilation section describes as desirable. The reference
+implementation defers it for the same reason.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pattern_arms_and_statement_position">Pattern arms and statement position</h3>
+<div class="paragraph">
+<p>The reference implementation now checks exhaustiveness of a pattern
+switch statement, which was previously happening only by accident: before
+position became decisive, every arrow switch was an expression and so was
+checked on that path. The trigger deliberately keys on pattern labels
+alone, since reusing the expression check would demand a <code>default</code> from
+every switch statement in existence.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_references">References</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -1171,6 +1426,15 @@ patterns, <code>Type(&#8230;&#8203;)</code> patterns) that does not parse today.
 </li>
 <li>
 <p><a href="GEP-20.html">GEP-20: Multi-assignment Destructuring</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12255">GROOVY-12255: first-class switch expressions</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12399">GROOVY-12399: position decides statement or expression</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12408">GROOVY-12408: a trailing switch is a statement</a></p>
 </li>
 </ul>
 </div>
