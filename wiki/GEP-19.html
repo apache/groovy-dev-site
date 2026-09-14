@@ -138,33 +138,26 @@
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all" style="width: 80%;">
-<colgroup>
-<col style="width: 100%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<em>WARNING:</em>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><em>WARNING:</em>
 Material on this page is still under development!
 We are currently working Groovy 6.0 and this proposal targets Groovy 7.0.
 The final version of this proposal may differ significantly from the current draft,
 but having this draft available allows us to gather early feedback, future align design
 decisions in Groovy 6 as best we can, and iterate on the design.
-We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.
-</td>
-</tr>
-</table>
-</div></div></td>
-</tr>
-</tbody>
-</table>
+We welcome feedback and discussion, but please keep in mind that the details are not yet finalized.</p>
+</div>
+<div class="paragraph">
+<p>A reference implementation of the <code>switch</code> and <code>instanceof</code> pattern features exists
+and is kept ported to current Groovy master; learnings from that work are folded into
+this document. It is a draft: where this page describes what the implementation does,
+that records where the work has got to rather than a settled decision.
+Bracket-form assignment is deferred pending further review (see below).</p>
+</div>
+</blockquote>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -179,11 +172,14 @@ pattern-matching trajectory (JEPs 440, 441, 456, 507).</p>
 <p>The proposal adds list patterns (<code>[var h, var&#8230;&#8203; t]</code>), map patterns
 (<code>[name: var n, var&#8230;&#8203; rest]</code>), record patterns (<code>Type(var x, var y)</code>),
 type patterns with binding (<code>String s</code>), guard clauses (<code>when</code>), and a
-unified wildcard form (<code>_</code> inside record patterns; <code>var _</code> elsewhere). The same pattern grammar is also accepted
-in <code>def [&#8230;&#8203;] = &#8230;&#8203;</code> bracket-form declarations, providing a consistent
+unified wildcard form (<code><em></code> inside record patterns; <code>var _</code> elsewhere).
+The same pattern grammar is additionally proposed for
+<code>def [&#8230;&#8203;] = &#8230;&#8203;</code> bracket-form declarations, providing a consistent
 destructuring grammar between switch case labels and assignment for
-users who want it. The everyday parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) is
-covered separately by GEP-20 and ships in Groovy 6.x.</p>
+users who want it; that part of the proposal is deferred pending
+further review (see _Bracket-form assignment</em>). The everyday parens
+form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) is covered separately by GEP-20 and ships in
+Groovy 6.x.</p>
 </div>
 <div class="paragraph">
 <p>All existing <code>switch</code> semantics are preserved: legacy <code>isCase</code> matching
@@ -266,11 +262,13 @@ convention and GEP-20), and rest slots accept the shortcut <code>&#8230;&#8203;<
 (or <code>&#8230;&#8203; ident</code>) for <code>var&#8230;&#8203; _</code> (or <code>var&#8230;&#8203; ident</code>).</p>
 </li>
 <li>
-<p><strong>Shared bracket-form grammar with assignment</strong> — the pattern grammar
-is accepted by <code>def [&#8230;&#8203;] = expr</code> declarations as by
-<code>case [&#8230;&#8203;] &#8594;</code> labels. The parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>) covered
-by GEP-20 remains the canonical surface for everyday destructuring;
-the bracket form is the opt-in bridge to switch pattern grammar.</p>
+<p><strong>Shared bracket-form grammar with assignment (deferred)</strong> — the
+pattern grammar would be accepted by <code>def [&#8230;&#8203;] = expr</code> declarations
+as by <code>case [&#8230;&#8203;] &#8594;</code> labels. The parens form (<code>def (&#8230;&#8203;) = &#8230;&#8203;</code>)
+covered by GEP-20 remains the canonical surface for everyday
+destructuring; the bracket form would be the opt-in bridge to switch
+pattern grammar. This feature is deferred pending further review
+(see <em>Bracket-form assignment</em>).</p>
 </li>
 <li>
 <p><strong>Forward-compatible lowering</strong> — list and map patterns desugar through
@@ -287,6 +285,21 @@ change needed.</p>
 <div class="sect1">
 <h2 id="_features">Features</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>Pattern case labels are supported in the arrow form (<code>case &#8230;&#8203; -&gt;</code>)
+only; a pattern with a colon label is a compile-time error. Pattern
+and legacy labels may mix freely within a single (arrow-form) switch,
+each label keeping its own semantics.</p>
+</div>
+<div class="paragraph">
+<p>Patterns never match <code>null</code>: a <code>null</code> subject simply falls through to
+the next arm (or <code>default</code>). Groovy&#8217;s <code>switch</code> thus keeps its existing
+null-friendliness — a <code>null</code> subject is not an error, and the legacy
+<code>case null</code> label still matches it — where Java&#8217;s pattern switch
+throws <code>NullPointerException</code> for an unmatched <code>null</code>. Within a
+pattern, a typed element does not match a <code>null</code> value, while <code>var</code> /
+<code>def</code> bindings and <code>_</code> wildcards do.</p>
+</div>
 <div class="sect2">
 <h3 id="_type_patterns_with_binding">Type patterns with binding</h3>
 <div class="paragraph">
@@ -330,8 +343,19 @@ switch (obj) {
 </div>
 <div class="paragraph">
 <p>Bare <code>_</code> is permitted inside <code>Type(&#8230;&#8203;)</code> because record-pattern
-component grammar is not expression grammar — there is no collision
-with <code>_</code> as an identifier in expression position.</p>
+component grammar is not expression grammar. One carve-out results:
+a call label whose sole argument is <code><em></code> — in practice only
+<code>case foo(</em>) -&gt;</code> with <code>_</code> in scope as a variable — reparses as a
+record pattern with a wildcard component. Call labels with any other
+argument shapes (<code>case foo()</code>, <code>case foo(bar)</code>, <code>case lower('ABC')</code>)
+keep their legacy <code>isCase</code> semantics; record patterns are only
+recognised when every component is pattern-shaped.</p>
+</div>
+<div class="paragraph">
+<p>A value deconstructs positionally if it is a record — native or
+emulated, Groovy or Java — or if it provides a <code>toList()</code> method,
+which is the current spelling of the <code>Deconstructable</code> strategy (see
+<em>Compilation</em>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -378,23 +402,39 @@ compile error.</p>
 </ul>
 </div>
 <div class="paragraph">
+<p>Matching rules:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Literal elements (e.g. <code>1</code> in <code>[1, var x, &#8230;&#8203;]</code>) match their
+corresponding element by Groovy equality (<code>==</code>).</p>
+</li>
+<li>
+<p>Typed elements and typed rest bindings are runtime type tests: a
+mismatching (or <code>null</code>) element fails the match rather than casting.</p>
+</li>
+<li>
+<p>A rest binding always binds a new <code>List</code> holding the collected
+elements; array and other <code>Iterable</code> inputs are materialised, and a
+matched <code>List</code> is never aliased by a rest binding.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Type rules:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>For <code>List&lt;T&gt;</code> input, untyped element bindings are inferred as <code>T</code>,
-the rest binding as <code>List&lt;T&gt;</code>.</p>
+<p>An <code>Iterable&lt;T&gt;</code> input that is not a <code>List</code> is materialised as a
+list once for matching, so it must be traversable non-destructively.</p>
 </li>
 <li>
-<p>For <code>T[]</code> input, the rest binding is inferred as <code>T[]</code>.</p>
-</li>
-<li>
-<p>For other <code>Iterable&lt;T&gt;</code> input, the iterable is materialised as a list
-once for matching.</p>
-</li>
-<li>
-<p>For <code>Object</code> input, bindings fall back to <code>Object</code> and <code>List</code>.</p>
+<p>Untyped bindings are dynamically typed. For <code>List&lt;T&gt;</code> input, the
+static type checker may in future infer untyped element bindings as
+<code>T</code> and the rest binding as <code>List&lt;T&gt;</code> (a planned refinement);
+bindings are otherwise <code>Object</code> and <code>List</code>.</p>
 </li>
 </ul>
 </div>
@@ -403,7 +443,11 @@ once for matching.</p>
 <h3 id="_map_patterns">Map patterns</h3>
 <div class="paragraph">
 <p>Map patterns destructure <code>Map</code> values by key. Keys are compile-time
-constant expressions; values are arbitrary patterns:</p>
+constants — identifier keys, string or number literals; a computed key
+(a parenthesised expression or GString) is a compile-time error in a
+map pattern, though it remains valid in a legacy map label. Values are
+arbitrary patterns; literal values (e.g. <code>'circle'</code> below) match by
+Groovy equality (<code>==</code>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -427,8 +471,11 @@ these keys" — is expressed via a guard:</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The rest binding <code>var&#8230;&#8203; rest</code> in a map pattern binds a <code>Map</code> of the
-entries not matched by named keys.</p>
+<p>The rest binding <code>var&#8230;&#8203; rest</code> in a map pattern binds a new <code>Map</code> of
+the entries not matched by named keys (the matched map is never
+aliased). A named key whose value pattern is a wildcard still requires
+the key to be present: <code>[name: var _]</code> matches a map with a <code>name</code> key
+whatever its value (even <code>null</code>), but not a map lacking one.</p>
 </div>
 </div>
 <div class="sect2">
@@ -448,7 +495,10 @@ case [:]  -&gt; "empty map"</code></pre>
 <p>The legacy <code>isCase</code> semantics for these — never matching anything,
 because <code>[].contains(x)</code> and <code>[:].get(x)</code> are always false / null —
 have no practical use, so claiming the pattern interpretation removes
-no functionality.</p>
+no functionality. Since patterns require the arrow form, the
+colon-form spellings <code>case []:</code> and <code>case [:]:</code> — previously
+compiling, never-matching dead code — become compile-time errors
+rather than silently keeping their useless legacy meaning.</p>
 </div>
 </div>
 <div class="sect2">
@@ -584,6 +634,13 @@ case Point(int x, int y) when x == y          -&gt; "diagonal point"</code></pre
 evaluated once after pattern matching succeeds; arms with failing
 guards fall through to the next arm.</p>
 </div>
+<div class="paragraph">
+<p><code>when</code> guards apply to pattern labels only. A guard on a
+legacy-shaped label (e.g. <code>case [1, 2, 3] when g -&gt;</code>, where the
+literal has no binding form) is a compile-time error rather than
+silently choosing between containment and equality semantics; adding
+a binding form makes the label a pattern.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_patterns_in_instanceof">Patterns in <code>instanceof</code></h3>
@@ -605,6 +662,16 @@ if (point instanceof Point(int x, int y)) {
 <p>List and map patterns are not valid in <code>instanceof</code> because they have
 no type at the head. To test "is this value shaped like &#8230;&#8203;", use a
 single-arm <code>switch</code> expression returning a boolean.</p>
+</div>
+<div class="paragraph">
+<p>One divergence from Java in <code>instanceof</code> position: a primitive-typed
+record component (e.g. <code>x</code> in <code>instanceof Point(int x, _)</code>) binds its
+wrapper type (<code>Integer</code>), because the <code>instanceof</code> lowering lives in
+expression context where the primitive re-declaration used by the
+switch lowering is unavailable. In <code>switch</code> case labels the declared
+primitive type is bound, matching Java (JEP 440). The difference is
+only visible to the static type checker (e.g. overload selection);
+values are identical.</p>
 </div>
 </div>
 <div class="sect2">
@@ -721,13 +788,41 @@ expression position — <code>case [_] -&gt;</code> therefore retains its legacy
 meaning. Users wanting a single-element wildcard pattern write
 <code>case [var _] -&gt;</code>.</p>
 </div>
+<div class="paragraph">
+<p>A nested <code>[&#8230;&#8203;]</code> element inside a pattern follows the same rule: a
+pattern-shaped nested literal is a nested pattern, while a plain
+nested literal (e.g. the inner <code>[1, 2]</code> in <code>[[1, 2], var x]</code>) is a
+literal element matched by equality.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_bracket_form_assignment">Bracket-form assignment</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+This feature is <strong>deferred pending further review</strong> and is not
+part of the reference implementation. Relative to the rest of this
+proposal it adds the least over the shipped GEP-20 parens form
+(nested patterns, runtime type tests and strict arity are the only
+deltas), it forks rest-binding semantics between switch and
+assignment contexts (see the lowering below), it introduces a second
+declaration-destructuring syntax with the opposite failure philosophy
+to the parens form (strict <code>IllegalArgumentException</code> vs null
+padding), and Java&#8217;s anticipated statement-level ("let") patterns may
+yet suggest an aligned surface and failure semantics. The design
+below is retained as the current straw-man for that review.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>In Groovy 7.0, <code>def [&#8230;&#8203;] = expr</code> accepts the same pattern grammar as
-switch case labels. This is the bridge between switch and assignment
-destructuring:</p>
+<p>In Groovy 7.0, <code>def [&#8230;&#8203;] = expr</code> would accept the same pattern
+grammar as switch case labels. This is the bridge between switch and
+assignment destructuring:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -928,12 +1023,13 @@ the trigger would reject working code. See <a href="#remaining-work">Remaining w
 </tbody>
 </table>
 <div class="paragraph">
-<p>A <code>null</code> selector matches no constant or type label, so in statement
-position it falls through and in expression position it raises
-<code>IllegalStateException</code>. Java instead throws <code>NullPointerException</code>
-unless a <code>case null</code> label is present; Groovy&#8217;s labels match through
-<code>isCase</code>, for which <code>null</code> is an ordinary value that simply matches
-nothing, so the Java behaviour is not adopted.</p>
+<p>A <code>null</code> subject is not an error, as set out under <em>Features</em>: it
+matches no constant or type label, so in statement position it falls
+through and in expression position it raises <code>IllegalStateException</code>,
+while a legacy <code>case null</code> label still matches it. Java instead throws
+<code>NullPointerException</code> unless a <code>case null</code> label is present. Groovy&#8217;s
+labels match through <code>isCase</code>, for which <code>null</code> is an ordinary value
+that simply matches nothing, so the Java behaviour is not adopted.</p>
 </div>
 </div>
 </div>
@@ -973,29 +1069,62 @@ When Java&#8217;s deconstructor JEP ships, surface forms like
 that lower to the same <code>Deconstructable</code> calls — no re-architecture.</p>
 </div>
 <div class="paragraph">
-<p>Implementation considerations:</p>
+<p>In the reference implementation, everything is parse-time desugaring:
+no new AST node kinds and no bytecode-format changes. A value
+deconstructs positionally if it is a record — native or emulated,
+Groovy or Java, with components resolved reflectively and invoked
+through the meta-object protocol so both kinds behave identically —
+or if it provides a <code>toList()</code> method. Runtime support lives in the
+<code>@Incubating</code> classes <code>RecordPatternSupport</code>, <code>ListPatternSupport</code>
+and <code>MapPatternSupport</code>.</p>
+</div>
+<div class="paragraph">
+<p>Implementation considerations (reflecting the reference
+implementation):</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>Switch dispatch on JDK 21+ should evaluate
-<code>java.lang.runtime.SwitchBootstraps.typeSwitch</code> as the dispatch path
-for arms whose patterns admit it, on parity with how Java compiles
-pattern switch.</p>
+<p>A switch whose case labels are all patterns lowers each arm to
+nested <code>instanceof</code> checks and binding declarations in a per-arm
+scope — no per-arm closure is allocated, pattern variable names may
+repeat across arms, and a matched value is destructured exactly
+once, with the <code>when</code> guard as the innermost check. Measured against
+closure-based <code>isCase</code> dispatch this is roughly 6x faster under
+<code>@CompileStatic</code> (arms become plain <code>INSTANCEOF</code> branches) and 1.4x
+faster in dynamic code. Switches mixing patterns with legacy labels
+retain closure-based labels for the pattern arms.</p>
 </li>
 <li>
-<p>Bindings live in synthetic locals; the static type checker propagates
-narrowed types into them.</p>
+<p>Emitting <code>java.lang.runtime.SwitchBootstraps.typeSwitch</code>
+invokedynamic dispatch — on parity with how Java compiles pattern
+switch — remains future work for when a JDK 21+ bytecode target is
+available; the nested-<code>instanceof</code> shape above is what that
+bootstrap degenerates to for small label counts.</p>
 </li>
 <li>
-<p>For dynamic Groovy, bindings are typed <code>Object</code> and runtime checks
-dominate; for <code>@CompileStatic</code>, narrowed types let the JIT see
-through.</p>
+<p>Bindings are ordinary local variables (the <code>instanceof</code> binding
+machinery from JEP 394 support); the static type checker propagates
+narrowed types into them. For dynamic Groovy, untyped bindings are
+dynamically typed and runtime checks dominate; for <code>@CompileStatic</code>,
+narrowed types let the JIT see through.</p>
+</li>
+<li>
+<p>The static type checker additionally reports an <strong>error</strong> for a
+pattern that provably cannot match the switch subject&#8217;s static type
+and for a record pattern whose arity disagrees with the record, and
+<strong>warns</strong> for an arm dominated by a preceding label (unreachable).
+A non-exhaustive switch is currently an error, following what Groovy
+6 already does for switch expressions; whether that is the right
+severity is open, and is discussed under <a href="#remaining-work">Remaining work</a>.
+A <code>default</code> branch, an unconditional pattern, or full
+sealed-hierarchy coverage each satisfy exhaustiveness. These are
+static-typing diagnostics only; dynamic Groovy remains permissive.</p>
 </li>
 <li>
 <p>Iterable inputs that are not <code>List</code> or array are materialised as a
-list once per match attempt; this is observable for iterators with
-side effects.</p>
+list once per match attempt; this is observable for sources with
+side effects, which must be traversable non-destructively.</p>
 </li>
 </ul>
 </div>
@@ -1049,9 +1178,10 @@ side effects.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Primitive patterns (JEP 507)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Preview</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Included in the reference implementation, ahead of this text. Groovy
- already coerces, so the surface form costs little; whether to ship it
- before the JEP finalises is open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Supported (incubating): <code>case int i</code> tests the wrapper type and binds
+ the primitive, matching JEP 507&#8217;s semantics for a reference-typed
+ subject (an <code>Integer</code> matches <code>int</code>; no widening or narrowing).
+ Semantics may be tweaked if JEP 507 shifts before finalising</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deconstructors for arbitrary classes</p></td>
@@ -1086,6 +1216,16 @@ side effects.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bracket-form assignment (<code>def [&#8230;&#8203;] = expr</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Largely overlaps the shipped GEP-20 parens form (nested patterns,
+type tests and strict arity are the only deltas); strict-match
+(<code>IllegalArgumentException</code>) vs null-padding philosophies and
+switch-vs-assignment rest semantics diverge; no Java
+statement-pattern anchor yet. Held for further review — see
+<em>Bracket-form assignment</em>.</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>*name</code> / <code>*_</code> rest sugar (in bracket-form patterns / switch)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deferred</p></td>
@@ -1156,8 +1296,9 @@ the design space open for a future relaxation if usage warrants it.</p></td>
 <h3 id="_backwards_compatibility">Backwards compatibility</h3>
 <div class="paragraph">
 <p>Every program valid in Groovy 6 compiles with identical semantics in
-Groovy 7. The disambiguation rule is purely parser-local and is
-triggered only by syntactic forms that currently fail to parse:</p>
+Groovy 7, with the narrow carve-outs itemised below. The
+disambiguation rule is purely parser-local and is triggered only by
+syntactic forms that currently fail to parse:</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1182,6 +1323,10 @@ triggered only by syntactic forms that currently fail to parse:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [_] &#8594;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy (list containing <code>_</code>)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case foo() &#8594;</code> / <code>case foo(bar) &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [var h, var&#8230;&#8203; t] &#8594;</code></p></td>
@@ -1228,11 +1373,33 @@ and empty-map patterns respectively. No existing program depends on
 these never-matching legacy forms.</p>
 </div>
 <div class="paragraph">
-<p>One carve-out is not purely additive. A parameterised type label such as
-<code>case List&lt;String&gt; l</code> parses today as a legacy <code>isCase</code> label followed by
-comparison operators, and is reinterpreted as a type pattern. The legacy
-reading is not useful, but unlike the forms above it does parse, so it is
-called out rather than folded into the table.</p>
+<p>Beyond the empty literals, the full list of carve-outs — forms that
+parse today and change meaning — is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>case List&lt;String&gt; l -&gt;</code> (a generic type followed by an
+identifier): previously a chained comparison expression
+(<code>(List &lt; String) &gt; l</code>), now a type pattern. The legacy parse
+cannot usefully evaluate (it compares a class against a class).</p>
+</li>
+<li>
+<p><code>case foo(<em>) -&gt;</code> with <code></em></code> in scope as a variable: previously a
+method-call label passing <code><em></code>, now a record pattern with a wildcard
+component (see _Record patterns</em>).</p>
+</li>
+<li>
+<p>Colon-form <code>case []:</code> and <code>case [:]:</code> (and colon-form pattern-shaped
+labels generally): previously compiling, now compile-time errors,
+since patterns require the arrow form. The legacy colon forms could
+never match.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>No realistic program relies on any of these legacy meanings; they are
+itemised for completeness.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1263,7 +1430,7 @@ warning in Groovy 7.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Identifier — unchanged from today</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [var _, &#8230;&#8203;] = expr</code> (bracket form)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def [var _, &#8230;&#8203;] = expr</code> (bracket form, deferred)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Wildcard — bind-and-discard</p></td>
 </tr>
 <tr>
