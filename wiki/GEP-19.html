@@ -343,13 +343,19 @@ switch (obj) {
 </div>
 <div class="paragraph">
 <p>Bare <code>_</code> is permitted inside <code>Type(&#8230;&#8203;)</code> because record-pattern
-component grammar is not expression grammar. One carve-out results:
-a call label whose sole argument is <code><em></code> — in practice only
-<code>case foo(</em>) -&gt;</code> with <code>_</code> in scope as a variable — reparses as a
-record pattern with a wildcard component. Call labels with any other
-argument shapes (<code>case foo()</code>, <code>case foo(bar)</code>, <code>case lower('ABC')</code>)
-keep their legacy <code>isCase</code> semantics; record patterns are only
-recognised when every component is pattern-shaped.</p>
+component grammar is not expression grammar. A call-shaped label is
+read as a record pattern only when its arguments are pattern-shaped,
+so <code>case foo()</code>, <code>case foo(bar)</code> and <code>case lower('ABC')</code> keep their
+legacy <code>isCase</code> semantics.</p>
+</div>
+<div class="paragraph">
+<p>One narrow carve-out results. Argument forms such as <code>var x</code> do not
+parse today, so claiming them breaks nothing; bare <code><em></code> does, because it
+is an ordinary identifier. A label spelled <code>case Foo(</em>) -&gt;</code>, where the
+name is capitalised and <code><em></code> is in scope as a variable, therefore changes
+meaning: it called <code>Foo(</em>)</code> before and is now read as a record pattern
+on the type <code>Foo</code>. The lower-case spelling <code>case foo(_) -&gt;</code> is
+unaffected and still calls <code>foo</code>.</p>
 </div>
 <div class="paragraph">
 <p>A value deconstructs positionally if it is a record — native or
@@ -495,10 +501,11 @@ case [:]  -&gt; "empty map"</code></pre>
 <p>The legacy <code>isCase</code> semantics for these — never matching anything,
 because <code>[].contains(x)</code> and <code>[:].get(x)</code> are always false / null —
 have no practical use, so claiming the pattern interpretation removes
-no functionality. Since patterns require the arrow form, the
-colon-form spellings <code>case []:</code> and <code>case [:]:</code> — previously
-compiling, never-matching dead code — become compile-time errors
-rather than silently keeping their useless legacy meaning.</p>
+no functionality. Because patterns require the arrow form, the
+reinterpretation applies to <code>case [] -&gt;</code> and <code>case [:] -&gt;</code> only; the
+colon-form spellings <code>case []:</code> and <code>case [:]:</code> keep their legacy
+never-matching meaning, so nothing that compiles today stops
+compiling.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1329,6 +1336,14 @@ syntactic forms that currently fail to parse:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case foo(_) &#8594;</code> (lower case)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case []:</code> / <code>case [:]:</code> (colon form)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy, never matched, unchanged</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>case [var h, var&#8230;&#8203; t] &#8594;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No — new, claims unused grammar</p></td>
 </tr>
@@ -1385,20 +1400,23 @@ identifier): previously a chained comparison expression
 cannot usefully evaluate (it compares a class against a class).</p>
 </li>
 <li>
-<p><code>case foo(<em>) -&gt;</code> with <code></em></code> in scope as a variable: previously a
-method-call label passing <code><em></code>, now a record pattern with a wildcard
-component (see _Record patterns</em>).</p>
-</li>
-<li>
-<p>Colon-form <code>case []:</code> and <code>case [:]:</code> (and colon-form pattern-shaped
-labels generally): previously compiling, now compile-time errors,
-since patterns require the arrow form. The legacy colon forms could
-never match.</p>
+<p><code>case Foo(<em>) -&gt;</code>, where <code>Foo</code> names a method rather than a type and
+<code></em></code> is in scope as a variable: previously a call label passing <code><em></code>,
+now a record pattern on the type <code>Foo</code> (see _Record patterns</em>). Only
+the capitalised spelling is affected; <code>case foo(_) -&gt;</code> still calls
+<code>foo</code>, and other argument shapes such as <code>var x</code> do not parse today
+so they claim no existing meaning.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>No realistic program relies on any of these legacy meanings; they are
+<p>That is the complete list. Colon-form labels are deliberately not on
+it: a pattern requires the arrow form, so a colon-form label is never
+read as a pattern and keeps whatever it means today, including the
+never-matching <code>case []:</code> and <code>case [:]:</code>.</p>
+</div>
+<div class="paragraph">
+<p>No realistic program relies on either legacy meaning; they are
 itemised for completeness.</p>
 </div>
 </div>
