@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk24, chop, collate, inject, streams, fold, scan'/><meta name='description' content='This post looks at using Gatherers4J (relies on JDK24 stream gatherer API) with Groovy as well as similar Iterator extension methods.'/><title>The Apache Groovy programming language - Blogs - Exploring Gatherers4J with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='gatherers, jdk24, jdk25, jdk27, gatherers4j, graalvm, native, chop, collate, inject, streams, fold, scan'/><meta name='description' content='This post looks at using Gatherers4J (relies on JDK24 stream gatherer API) with Groovy as well as similar Iterator extension methods.'/><title>The Apache Groovy programming language - Blogs - Exploring Gatherers4J with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring Gatherers4J with Groovy&trade;</a></li><li><a href='#_revisiting_collate_with_gatherers4j' class='anchor-link'>Revisiting Collate with Gatherers4J</a></li><li><a href='#_exploring_gatherers4j_other_functionality' class='anchor-link'>Exploring Gatherers4J other functionality</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy&trade;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring Gatherers4J with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-05-06 08:30PM</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring Gatherers4J with Groovy&trade;</a></li><li><a href='#_revisiting_collate_with_gatherers4j' class='anchor-link'>Revisiting Collate with Gatherers4J</a></li><li><a href='#_exploring_gatherers4j_other_functionality' class='anchor-link'>Exploring Gatherers4J other functionality</a></li><li><a href='#_using_gatherers4j_with_graalvm_native_images' class='anchor-link'>Using Gatherers4J with GraalVM native images</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-gatherers'>Using Gatherers with Groovy&trade;</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring Gatherers4J with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2025-05-06 08:30PM (Last updated: 2026-09-17 02:00PM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <table><tr><td style="padding: 0px; padding-left: 20px; padding-right: 20px; font-size: 18pt; line-height: 1.5; margin: 0px">
 <div class="paragraph">
@@ -86,8 +86,8 @@ your own gatherer equivalents for chop, collate and other built-in Groovy functi
 <p>Other folks have also been looking at useful gatherers and libraries
 are starting to emerge.
 <a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J</a>
-is one such library. We&#8217;ll use 0.11.0, Groovy 5 snapshot (pre-release),
-and JDK 24.</p>
+is one such library. We&#8217;ll use 0.14.0, Groovy 6, and JDK 27.
+The gatherers API itself is JDK 24, but Gatherers4J 0.14.0 needs JDK 25 or later.</p>
 </div>
 <div class="paragraph">
 <p>Let&#8217;s now look at numerous other gatherers (and their Groovy iterator equivalents)
@@ -880,19 +880,19 @@ assert ('A'..'G').stream()
 </div>
 <div class="paragraph">
 <p>Groovy doesn&#8217;t have a specific method for taking/dropping the nth element
-but you either use <code>findAllLazy</code> with <code>withIndex</code>, or <code>tapEvery</code>:</p>
+but you either use <code>findingAll</code> with <code>withIndex</code>, or <code>tapEvery</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 // drop every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAll { next, i -&gt; i % 3 }
+    .findingAll { next, i -&gt; i % 3 }
     *.first == ['B', 'C', 'E', 'F']
 
 // take every 3rd
 assert ('A'..'G').iterator().withIndex()
-    .findAll { next, i -&gt; i % 3 == 0 }
+    .findingAll { next, i -&gt; i % 3 == 0 }
     *.first == ['A', 'D', 'G']
 
 // also take every 3rd
@@ -971,15 +971,15 @@ assert abcde.stream()
 </div>
 </div>
 <div class="paragraph">
-<p>Groovy doesn&#8217;t have an all-in-one equivalent, but you can use <code>withIndex</code> plus <code>findAllLazy</code>:</p>
+<p>Groovy doesn&#8217;t have an all-in-one equivalent, but you can use <code>withIndex</code> plus <code>findingAll</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddddee">
 assert abcde.iterator().withIndex()
-    .findAll { s, n -&gt; n % 2 == 0 }*.first == ['A', 'C', 'E']
+    .findingAll { s, n -&gt; n % 2 == 0 }*.first == ['A', 'C', 'E']
 assert abcde.iterator().withIndex()
-    .findAll { s, n -&gt; n &lt; 2 || s == 'E' }*.first == ['A', 'B', 'E']
+    .findingAll { s, n -&gt; n &lt; 2 || s == 'E' }*.first == ['A', 'B', 'E']
 <br/></div></code></pre>
 </div>
 </div>
@@ -1023,7 +1023,7 @@ assert mixed.stream()
 <div class="paragraph">
 <p>Groovy doesn&#8217;t have an exact equivalent but does have an eager <code>grep</code>
 which lets you do similar things, and other functionality like matching
-regex patterns. You can also use <code>findAllLazy</code> in combination with
+regex patterns. You can also use <code>findingAll</code> in combination with
 <code>getClass()</code> or <code>instanceof</code> as needed:</p>
 </div>
 <div class="listingblock">
@@ -1034,7 +1034,7 @@ assert mixed.iterator().grep(Integer) == [3]
 assert mixed.iterator().grep(Number) == [1, 2, 3, 4, 5.0, 6.0]
 assert mixed.iterator().grep(~/\d/).toString() == '[1, 2, 3, 4, 7]'
 assert mixed.iterator()
-    .findAllLazy{ it.getClass() in [Integer, Short] }
+    .findingAll{ it.getClass() in [Integer, Short] }
     .toList() == [2, 3]
 <br/></div></code></pre>
 </div>
@@ -1142,6 +1142,109 @@ assert ['A', 'B', 'C', 'A'].iterator()
 </div>
 </div>
 <div class="sect1">
+<h2 id="_using_gatherers4j_with_graalvm_native_images">Using Gatherers4J with GraalVM native images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Gatherers4J and Groovy both work inside a GraalVM native image, and the
+<a href="https://github.com/paulk-asert/groovy-gatherers">example repo</a> builds every example in this
+post as its own native image. A native image resolves reflection at build time, so it needs to be
+told what will be looked up at run time. For Groovy that is mostly handled already: the
+Groovy jars ship reachability metadata for what the runtime does on its own behalf, and
+<code>native-image</code> picks it up from the jars with no configuration.</p>
+</div>
+<div class="paragraph">
+<p>What is left is what your own code does, recorded with the tracing agent. One thing the
+agent cannot see is worth knowing about when using a library like Gatherers4J. When a
+closure is passed where a functional interface is expected, Groovy coerces it through a
+<code>java.lang.reflect.Proxy</code>, and the agent does not observe that, so the proxy has to be
+registered by hand. Writing the argument as a lambda or a method reference makes no
+difference by itself: in dynamic Groovy <code>Integer::sum</code> is a <code>MethodClosure</code>, and it is
+coerced the same way. The gatherer factories take several such arguments at once, so for
+the examples in this post the list is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>java.util.function.Function
+java.util.function.BiFunction
+java.util.function.Predicate
+java.util.function.BiPredicate
+java.util.function.Supplier
+java.util.function.Consumer
+java.util.function.BiConsumer
+java.util.function.BinaryOperator
+java.util.function.UnaryOperator
+java.util.Comparator
+com.ginsberg.gatherers4j.IndexedAccumulatorFunction</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That last one is the library&#8217;s own functional interface, used by its <code>*Indexed</code>
+factories. The <code>java.util.function</code> ones cover the closures the factories take, and the
+four that <code>Gatherer.ofSequential</code> itself takes: a <code>Supplier</code> initialiser, an <code>Integrator</code>,
+a <code>BinaryOperator</code> combiner and a <code>BiConsumer</code> finisher. Writing your own gatherers rather
+than using the library, you would also need <code>java.util.stream.Gatherer$Integrator</code> and
+<code>java.util.stream.Gatherer$Integrator$Greedy</code>.</p>
+</div>
+<div class="paragraph">
+<p>Each becomes a <code>{"type": {"proxy": ["&#8230;&#8203;"]}}</code> entry in <code>reachability-metadata.json</code>.
+You discover them one at a time: the image builds, then fails on the first missing one with
+a <code>MissingReflectionRegistrationError</code> naming the interface. Listing interfaces that turn
+out not to be needed is harmless, so it is reasonable to add the whole signature of the
+factories you use in one go.</p>
+</div>
+<div class="paragraph">
+<p>There is a way to avoid those proxy entries altogether, and it depends on how the code is
+compiled rather than on how the argument is written. The coercion happens because a dynamic
+Groovy closure is not itself an implementation of the target interface. Under
+<code>@CompileStatic</code>, where the target type is known, both a lambda and a method reference
+compile through <code>LambdaMetafactory</code> into a real implementation of that interface, exactly as
+Java would, so no proxy is involved:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy"><div style="background-color: #ddeedd">
+@CompileStatic
+class Stat {
+    static void main(String[] args) {
+        var result = (1..5).stream()
+            .gather(Gatherers4j.filterIndexedInteger n, Integer s) -&gt; n % 2 == 0
+            .toList()
+        assert result == [1, 3, 5]
+    }
+}
+<br/></div></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Built as a native image, that version needs no hand-written proxy entries at all: the agent
+records none, and the image builds and runs as is. The same holds for a method reference:
+<code>Arrays.parallelPrefix(nums, Integer::sum)</code> needs a <code>BinaryOperator</code> proxy entry when
+compiled dynamically and none at all under <code>@CompileStatic</code>. So if you are targeting native
+images and are willing to annotate the types, static compilation removes this whole category
+of configuration. The dynamic examples in this post keep their proxy list.</p>
+</div>
+<div class="paragraph">
+<p>Two other things help. Record with <code>-Dgroovy.indy.aot.link=true</code> so the JVM links call sites
+the way the image will, which creates the same metaclasses the image will need. And when
+trimming Groovy&#8217;s own entries out of your recording, drop only what the Groovy jars already
+ship rather than everything in a <code>groovy.*</code> package: a third-party class can live in such a
+package, and a Groovy API class your own dynamic code reaches is yours to record.</p>
+</div>
+<div class="paragraph">
+<p>The payoff is the usual one. For the examples in this post, built with GraalVM for JDK 25, the image is 42 MB and starts in
+well under a tenth of a second against a bit over a second on the JVM, with identical output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>$ ./native-build.sh --only Gatherers4jExamples
+...
+Finished generating 'Gatherers4jExamples' in 37.6s.
+  OK, output identical to the JVM run</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_further_information">Further information</h2>
 <div class="sectionbody">
 <div class="ulist">
@@ -1162,10 +1265,13 @@ assert ['A', 'B', 'C', 'A'].iterator()
 <p><a href="https://nipafx.dev/implementing-gatherers/">Implementing New Java Stream Operations</a></p>
 </li>
 <li>
-<p><a href="https://github.com/paulk-asert/groovy-gatherers">Source code on GitHub</a></p>
+<p><a href="https://github.com/paulk-asert/groovy-gatherers">Source code on GitHub</a> (including <code>native-build.sh</code>, which builds each example as a native image)</p>
 </li>
 <li>
 <p><a href="https://tginsberg.github.io/gatherers4j/">Gatherers4J GitHub site</a></p>
+</li>
+<li>
+<p><a href="https://www.graalvm.org/latest/reference-manual/native-image/metadata/">GraalVM reachability metadata</a></p>
 </li>
 <li>
 <p><a href="https://timyates.github.io/groovy-stream/">Groovy-stream GitHub site</a></p>
@@ -1185,7 +1291,11 @@ Gatherers4j works well with Groovy, offering additional stream functionality not
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>06/May/2025</strong>: Initial version<br></p>
+<p><strong>06/May/2025</strong>: Initial version<br>
+<strong>17/Sep/2026</strong>: Updated for Gatherers4J 0.14.0, Groovy 6 and JDK 27.
+Renamed <code>findAllLazy</code> to <code>findingAll</code>, the name the lazy iterator methods
+shipped under in Groovy 6 (GROOVY-11606).
+Added a section on using Gatherers4J with GraalVM native images.</p>
 </div>
 </div>
 </div>
