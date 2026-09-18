@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel, micronaut-ai, quarkus-ai'/><meta name='description' content='A tour of using Groovy with modern AI libraries including Ollama4j, LangChain4j, Spring AI, Embabel, Micronaut, and Quarkus.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel, micronaut-ai, quarkus-ai, graalvm, native-image'/><meta name='description' content='A tour of using Groovy with modern AI libraries including Ollama4j, LangChain4j, Spring AI, Embabel, Micronaut, and Quarkus, including native Micronaut.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,13 +63,13 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_using_micronaut_langchain4j' class='anchor-link'>Using Micronaut LangChain4j</a></li><li><a href='#_using_quarkus_langchain4j' class='anchor-link'>Using Quarkus LangChain4j</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_using_micronaut_langchain4j' class='anchor-link'>Using Micronaut LangChain4j</a></li><li><a href='#_micronaut_native_images' class='anchor-link'>Micronaut native images</a></li><li><a href='#_using_quarkus_langchain4j' class='anchor-link'>Using Quarkus LangChain4j</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2025-11-14 08:05PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2026-09-18 08:00PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="quoteblock">
@@ -100,7 +100,7 @@ unchanged, but feel free to try other models and see what results you get.
 Some of the examples also use the <code>qwen3:8b</code> model. It seems to give better results when using tools.
 See the example repo for how to run the needed services using docker,
 or within GitHub actions if you don&#8217;t have Ollama already running locally.
-We also used Groovy 5 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
+We also used Groovy 6 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
 </div>
 </div>
 </div>
@@ -138,7 +138,7 @@ println "Found ollama: ${ollama.ping()}"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">var prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
-var builder = OllamaChatRequestBuilder.builder()
+var builder = OllamaChatRequest.builder()
     .withModel('mistral:7b')
 
 var request = builder
@@ -209,7 +209,7 @@ println "Best thing:\n$result.responseModel.message.response"</code></pre>
     .build()
 
 String prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
-println "Response: " + chatModel.chat(prompt)</code></pre>
+println "Response:\n" + chatModel.chat(prompt)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -353,8 +353,9 @@ var bot = AiServices.builder(HolidayBot)
     .build()
 
 var prompt = '''
-What are 4 interesting things to do for a long weekend vacation in Caloundra?
-Provide location, and suggested non-overlapping day and time for each activity.
+What are 4 interesting things to do for a weekend away in Caloundra?
+Return holiday activity suggestions as structured JSON matching Itinerary.
+Give a description, location, day of weekend, and suggested time of day for each of the four activities.
 '''
 var response = bot.extractActivitiesFrom(prompt)
 
@@ -393,13 +394,13 @@ in JSON using its record component names and values.</p>
 <div class="listingblock">
 <div class="content">
 <pre>Four things:
-Activity(Visit Australia Zoo, Beerwah, Queensland (Approx. 30 minutes drive from Caloundra), Day 1 - Friday, 9:00 AM - 5:00 PM)
-Activity(Explore Kings Beach and the Coastal Walk, Caloundra, Queensland, Day 2 - Saturday, 8:00 AM - Afternoon)
-Activity(Relax at Bulcock Beach Market, Bulcock Street, Caloundra, Day 3 - Sunday, 6:00 AM - 1:00 PM)
-Activity(Explore the Glass House Mountains, Glass House Mountains, Queensland (Approx. 45 minutes drive from Caloundra), Day 4 - Monday, 9:00 AM - 3:00 PM)
+Activity(Visit Kings Beach, Kings Beach, Caloundra, Saturday, Morning/Afternoon)
+Activity(Explore the Coastal Walk from Bulcock Beach to Shelly Beach, Bulcock Beach to Shelly Beach, Caloundra, Saturday, Early Afternoon/Late Afternoon)
+Activity(Relax at the Day Spa on Golden Beach, Golden Beach, Caloundra, Sunday, Morning/Afternoon)
+Activity(Enjoy Sunset Dinner Cruise, Pelican Waters or Mooloolaba, Caloundra, Sunday, Late Afternoon/Evening)
 
 Best thing:
-Activity(Relax at Bulcock Beach Market, Bulcock Street, Caloundra, Sunday, 6:00 AM - 1:00 PM)</pre>
+Activity(Relax at the Day Spa on Golden Beach, Golden Beach, Caloundra, Sunday, Morning)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -466,7 +467,7 @@ $response
 </div>
 <div class="paragraph">
 <p>We switched to the <code>qwen3:8b</code> model. It is slightly larger to download but does
-a more reliable job calling tools correctly. The tools are annotation with <code>@Tools</code>
+a more reliable job calling tools correctly. The tools are annotated with <code>@Tool</code>
 and will be automatically found.</p>
 </div>
 <div class="paragraph">
@@ -580,7 +581,7 @@ void main() {
     try(var context = SpringApplication.run(Holiday)) {
         var chatClient = context.getBean(ChatClient.Builder).build()
         var response = chatClient
-                .prompt("What are some interesting things to do while I am on vacation in Caloundra?")
+                .prompt("What are some interesting things to do while over a long weekend in Caloundra?")
                 .call()
                 .entity(Itinerary)
         println "Response:\n" + response.display()
@@ -637,7 +638,7 @@ Factor in expected weather when making recommendations. Do not hallucinate weath
         var chatClient = context.getBean(ChatClient.Builder).build()
         var weekend = context.getBean(WeekendTool)
         var weather = context.getBean(WeatherTool)
-        var options = OllamaChatOptions.builder().model('qwen3:8b').build()
+        var options = OllamaChatOptions.builder().model('qwen3:8b')
         println chatClient
                 .prompt(prompt)
                 .options(options)
@@ -647,6 +648,10 @@ Factor in expected weather when making recommendations. Do not hallucinate weath
     }
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Note that as of Spring AI 2.0, the <code>options</code> method takes the options <em>builder</em> rather than
+the built options, so we no longer call <code>build()</code> ourselves.</p>
 </div>
 <div class="paragraph">
 <p>And the output might look like this:</p>
@@ -775,15 +780,15 @@ class ItineraryAgent {
     @Action
     Alternatives generateItineraries(UserInput userInput, OperationContext context) {
         context.ai()
-            .withLlm('mistral:7b')
-            .createObject("Generate 5 sets of: An itinerary of things to do while on $userInput.content?", Alternatives)
+            .withLlm('qwen3:8b')
+            .createObject("Generate 5 alternative sets of: $userInput.content?", Alternatives)
     }
 
     @Action
     RatedAlternatives rateItineraries(Alternatives alternatives, OperationContext context) {
         new RatedAlternatives(alternatives.content.collect { itinerary -&gt;
             var rating = context.ai()
-                .withLlm('qwen3:8b')
+                .withLlm('mistral:7b')
                 .createObject("Rate this itinerary on variety and number of activities: $itinerary?", Rating)
             new RatedItinerary(itinerary, rating)
         })
@@ -807,7 +812,7 @@ void main() {
 </div>
 </div>
 <div class="paragraph">
-<p>Here we are using two different models for different tasks — <code>mistral:7b</code> for generating itineraries and <code>qwen3:8b</code> for rating them. Embabel provides richer ways to control and configure the models, but this simple approach works well for our example.
+<p>Here we are using two different models for different tasks — <code>qwen3:8b</code> for generating itineraries and <code>mistral:7b</code> for rating them. Embabel provides richer ways to control and configure the models, but this simple approach works well for our example.
 The <code>@AchievesGoal</code> annotation makes use of Embabel&#8217;s goal-oriented action planning (GOAP) capabilities.</p>
 </div>
 <div class="paragraph">
@@ -817,12 +822,18 @@ The <code>@AchievesGoal</code> annotation makes use of Embabel&#8217;s goal-orie
 <div class="content">
 <pre>RatedItinerary[
     itinerary=Itinerary[itinerary=[
-        Activity(Visit Kings Beach, Caloundra, Friday, All day),
-        Activity(Sunset at Mooloolaba Beach, Mooloolaba, Friday, Evening),
-        Activity(Explore Bulcock Beach Markets, Caloundra, Saturday, Morning to Early Afternoon),
-        Activity(Snorkeling at Dicky Beach, Dicky Beach, Saturday, Afternoon),
-        Activity(Relax at Shelly Beach, Caloundra, Sunday, All day)]],
-    rating=Rating[percentage=80.0]]</pre>
+        Activity(Arrival, Caloundra, Friday, Afternoon),
+        Activity(Kings Beach Leisure Park, Kings Beach, Friday, Evening),
+        Activity(Dinner at Bulcock Street Tavern, Caloundra, Friday, Night),
+        Activity(Explore Powerboat Racing Complex, Caloundra, Saturday, Morning),
+        Activity(Lunch at Point Cartwright, Point Cartwright, Saturday, Afternoon),
+        Activity(Sunset Yoga on Mooloolaba Beach, Mooloolaba Beach, Saturday, Evening),
+        Activity(Dinner at Ricky's River Bar &amp; Restaurant, Eumundi, Saturday, Night),
+        Activity(Visit the Ginger Factory, Yandina, Sunday, Morning),
+        Activity(Relax at Golden Beach, Golden Beach, Sunday, Afternoon),
+        Activity(Farewell Dinner, Caloundra, Sunday, Evening),
+        Activity(Departure, Caloundra, Monday, Morning)]],
+    rating=Rating[percentage=90.0]]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -937,6 +948,53 @@ Activity(Visit Waiheke Island and its vineyards, Waiheke Island, Day 2, 1:00 PM 
 </div>
 </div>
 <div class="sect1">
+<h2 id="_micronaut_native_images">Micronaut native images</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy 6 improves support for GraalVM
+<a href="https://www.graalvm.org/latest/reference-manual/native-image/">native image</a>,
+and the Micronaut examples can be compiled ahead-of-time into native executables.
+Micronaut is a good fit here, since its dependency injection and the
+LangChain4j AI service implementations are generated at compile time rather than
+being created reflectively at runtime.</p>
+</div>
+<div class="paragraph">
+<p>The build applies the <code>org.graalvm.buildtools.native</code> plugin and registers one
+native binary per script. The example repo has three Micronaut scripts:
+the two we just saw, plus a <code>Tools</code> variant which adds weather and weekend tools.
+Each gets a compile task, so building and running the tools example looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">./gradlew :micronaut:nativeToolsCompile
+micronaut/build/native/nativeToolsCompile/tools</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use GraalVM 25.2 or later to run the build. Earlier versions fail with
+<code>Could not find target method &#8230;&#8203; invalidateSwitchPoints</code>; they substitute a Groovy
+method which current Groovy versions no longer have.</p>
+</div>
+<div class="paragraph">
+<p>Native image needs to be told about anything reached reflectively.
+For our examples, that metadata lives in
+<code>micronaut/src/main/resources/META-INF/native-image</code>. If you change the examples,
+you can regenerate it by running them with the native-image agent
+and copying the result:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="bash">./gradlew run.micronaut.Holiday run.micronaut.Structured run.micronaut.Tools -Pagent
+./gradlew :micronaut:metadataCopy</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>New entries are merged into the existing metadata, so delete it first if you want
+to drop stale entries.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_using_quarkus_langchain4j">Using Quarkus LangChain4j</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1003,6 +1061,8 @@ Answer:  1. Explore the Minneapolis Sculpture Garden: This 11-acre outdoor museu
 <p>Groovy’s interoperability, concise syntax, and powerful DSL capabilities make it an excellent language for prototyping and composing AI workflows on the JVM.
 Whether you’re chatting with Ollama, integrating via Spring, Micronaut, or Quarkus,
 or orchestrating agents with Embabel, Groovy keeps your code clear and compact.
+And thanks to Groovy 6&#8217;s native image support, those examples don&#8217;t have to stay
+on the JVM — the Micronaut ones compile to native executables.
 Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
 </div>
 <div class="paragraph">
@@ -1015,8 +1075,9 @@ Other examples of using Groovy with Spring AI can be found at:<br>
 <div class="content">
 <div class="title">Update history</div>
 <div class="paragraph">
-<p><strong>15/Oct/2023</strong>: Initial version<br>
-<strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and AI tools examples.</p>
+<p><strong>15/Oct/2025</strong>: Initial version<br>
+<strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and AI tools examples.<br>
+<strong>18/Sep/2026</strong>: Updated for the latest library versions and added Micronaut native image examples.</p>
 </div>
 </div>
 </div>
