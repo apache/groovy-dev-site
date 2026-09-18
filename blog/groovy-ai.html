@@ -69,7 +69,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2026-09-18 08:00PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2026-09-19 08:00PM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="quoteblock">
@@ -137,7 +137,7 @@ println "Found ollama: ${ollama.ping()}"</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">var prompt = 'What are 4 interesting things to do while I am on vacation in Caloundra?'
+<pre class="prettyprint highlight"><code data-lang="groovy">var prompt = 'What are 4 interesting things to do while I am on vacation in Glasgow?'
 var builder = OllamaChatRequest.builder()
     .withModel('mistral:7b')
 
@@ -155,13 +155,17 @@ println "Four things:\n$result.responseModel.message.response"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre>Four things:
- 1. Visit the beautiful beaches: Caloundra is famous for its stunning beaches, including Kings Beach, Moffat Beach, and Bulcock Beach. Spend your days soaking up the sun, swimming, or surfing.
+ 1. Visit the Glasgow Cathedral: This historic cathedral is a must-see in Glasgow. It's one of the 5 great medieval churches
+ of Scotland and offers a glimpse into the city's rich history. The adjoining Necropolis cemetery also provides stunning views of the city.
 
-2. Explore the UnderWater World SeaLife Aquarium: This marine attraction offers a unique opportunity to interact with various sea creatures. You can even have a close encounter with sharks and turtles!
+2. Explore the Kelvingrove Art Gallery and Museum: This world-class museum houses over 8,000 objects, including works by
+artists like Botticelli, Monet, and Rembrandt. It's a great place to spend a day learning about art, history, and science.
 
-3. Visit the Glastonbury Estate: For those who love history, this beautiful estate is worth a visit. It was built in the 1920s and features a variety of artifacts and memorabilia from World War I and II.
+3. Stroll through Glasgow Green Park: One of the city's oldest parks, Glasgow Green offers beautiful landscapes,
+a bandstand, a skate park, and even a mini-golf course. It's a perfect spot for a picnic or a leisurely walk.
 
-4. Take a day trip to the Australia Zoo: Made famous by the Crocodile Hunter, Steve Irwin, the Australia Zoo is just a short drive from Caloundra. It's home to a wide variety of Australian wildlife, including kangaroos, koalas, and crocodiles. Don't miss the daily wildlife shows!</pre>
+4. Take a tour of The Tenement House: This well-preserved Victorian dwelling provides a unique insight into the lives of
+Glasgow's middle class during the early 20th century. The guided tours are informative and engaging, offering a glimpse into a bygone era.</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -186,7 +190,12 @@ println "Best thing:\n$result.responseModel.message.response"</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre>Best thing:
- If you only have half a day and can choose just one activity, I would recommend visiting the beautiful Kings Beach in Caloundra. It offers a lovely stretch of sandy beach, perfect for swimming, sunbathing, or simply taking a leisurely stroll along the shoreline. The beach also has various amenities like picnic areas, BBQ facilities, and a playground for children. Plus, it provides stunning views of the Pacific Ocean and the Glass House Mountains in the distance. It's the perfect place to relax and soak up the sun on your vacation!</pre>
+Given that you have only half a day and want to see a mix of history, culture, and local life, I would recommend visiting
+the Kelvingrove Art Gallery and Museum. It's centrally located, easily accessible, and offers an extensive collection of
+art and artifacts that provide a fascinating glimpse into Glasgow's past and present. Plus, it's free to enter, making it
+a great value for your time.
+If you prefer outdoor activities or want to experience the local vibe, Glasgow Green Park is another excellent choice.
+You can take a leisurely stroll through the park, enjoy the scenery, and even grab a bite at one of the nearby cafes or food trucks.</pre>
 </div>
 </div>
 </div>
@@ -945,6 +954,106 @@ Activity(Hike up Mount Eden, Auckland, Day 2, 9:00 AM - 12:00 PM)
 Activity(Visit Waiheke Island and its vineyards, Waiheke Island, Day 2, 1:00 PM - 6:00 PM)</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Micronaut supports tools too. We&#8217;ll reuse the idea of a fake weather service from earlier,
+but ask about New Zealand destinations this time.</p>
+</div>
+<div class="paragraph">
+<p>Our tools are singleton beans with <code>@Tool</code> annotated methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Singleton
+class WeekendTool {
+    @Tool("The LocalDate of the coming weekend")
+    LocalDate getWeekend() {
+        LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
+    }
+}
+
+@Singleton
+class WeatherTool {
+    @Tool('Gets the expected weather forecast including temperature for a given city and LocalDate')
+    Weather getWeather(String city, LocalDate date) {
+        println "Looking up weather for $city on $date"
+        var fakeWeather = [Auckland: new Weather('sunny', 16, 26),
+                           'Mt Hutt': new Weather('hot', 30, 38)]
+        fakeWeather[city]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Rather than passing tool instances to a builder, as we did with LangChain4j and Spring AI,
+we name the tool classes in the <code>@AiService</code> annotation, and explain in the system message
+how we&#8217;d like them used:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@AiService(tools = [WeatherTool, WeekendTool])
+interface WeatherAwareBot {
+    @SystemMessage('''
+    You are a travel planning assistant that helps users plan activities for their holidays.
+    Before finalizing the itinerary, use the WeatherTool tool for each destination city and each day of the itinerary.
+    Use the WeatherTool by creating a JSON object:
+    { "tool": "getWeather", "arguments": { "city": "...", "date": "YYYY-MM-DD" } }
+    Only after getting results from the tool, produce final Itinerary JSON.
+    Use the WeekendTool to work out the date for "the coming weekend".
+    Use the tool information to adjust your activity suggestions accordingly.
+    Return only an Itinerary JSON structure.
+    ''')
+    Itinerary chat(String userMessage)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the <code>@Tool</code> methods to be callable at runtime, we need the
+<code>micronaut-langchain4j-processor</code> annotation processor on our compile classpath.
+It marks those methods as executable and arranges for them to be registered at startup,
+so no additional wiring is needed in our script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">try(var context = ApplicationContext.run()) {
+    var bot = context.getBean(WeatherAwareBot)
+    println bot
+        .chat('Four great things to see in Auckland this coming weekend.')
+        .display()
+    println bot
+        .chat('A few things to do in Mt Hutt this coming weekend.')
+        .display()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The second question is the interesting one. Mt Hutt is a ski field,
+but our fake forecast says it will be hot, so we don&#8217;t want to be offered skiing.</p>
+</div>
+<div class="paragraph">
+<p>For Auckland, the output might look like:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Activity(Auckland Museum, 155 Queen Street, Auckland, 2025-11-14, 10:00 AM)
+Activity(Beachside Stroll, Mission Bay Beach, 2025-11-14, 3:00 PM)
+Activity(Harbour Bridge Walk, Auckland Harbour Bridge, 2025-11-15, 9:00 AM)
+Activity(Sky Tower Panorama, Sky Tower, 666 Queen Street, 2025-11-15, 2:00 PM)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And for Mt Hutt:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Activity(Mt Hutt Summit Walk, Mt Hutt Summit Track, 2025-11-15, 9:00 AM)
+Activity(Lake Hutt Picnic, Lake Hutt, 2025-11-15, 1:00 PM)
+Activity(Scenic Drive to Tutea Valley, Tutea Valley, Mt Hutt, 2025-11-16, 10:00 AM)
+Activity(Water Activities at Lake Hutt, Lake Hutt, 2025-11-16, 2:00 PM)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Sure enough, no skiing.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -960,8 +1069,7 @@ being created reflectively at runtime.</p>
 </div>
 <div class="paragraph">
 <p>The build applies the <code>org.graalvm.buildtools.native</code> plugin and registers one
-native binary per script. The example repo has three Micronaut scripts:
-the two we just saw, plus a <code>Tools</code> variant which adds weather and weekend tools.
+native binary for each of the three Micronaut scripts we&#8217;ve just seen.
 Each gets a compile task, so building and running the tools example looks like this:</p>
 </div>
 <div class="listingblock">
@@ -1077,7 +1185,7 @@ Other examples of using Groovy with Spring AI can be found at:<br>
 <div class="paragraph">
 <p><strong>15/Oct/2025</strong>: Initial version<br>
 <strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and AI tools examples.<br>
-<strong>18/Sep/2026</strong>: Updated for the latest library versions and added Micronaut native image examples.</p>
+<strong>19/Sep/2026</strong>: Updated for the latest library versions and added Micronaut tools and native image examples.</p>
 </div>
 </div>
 </div>
