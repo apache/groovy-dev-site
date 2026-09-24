@@ -6991,8 +6991,8 @@ At the heart of this is the <code><a href="api/geb/Configuration.html">Configura
 <div class="sect3">
 <h4 id="the-config-script"><a class="link" href="#the-config-script">7.1.1. The config script</a></h4>
 <div class="paragraph">
-<p>Geb attempts to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> script named <code>GebConfig.groovy</code> from the <em>default package</em> (in other words, in the root of a directory that is on the classpath).
-If it is not found, Geb will try to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> class named <code>GebConfig</code> from the <em>default package</em> - this is useful if you run tests that use Geb from an IDE because you won&#8217;t have
+<p>Geb attempts to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> script named <code>GebConfig.groovy</code> from the <em>default package</em> (in other words, in the root of a directory that is on the classpath).
+If it is not found, Geb will try to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> class named <code>GebConfig</code> from the <em>default package</em> - this is useful if you run tests that use Geb from an IDE because you won&#8217;t have
 to specify <code>GebConfig.groovy</code> as a resource, Geb will simply fall back to the compiled version of the script.
 If both script and class are not found Geb will continue using all defaults.</p>
 </div>
@@ -7021,7 +7021,7 @@ You can also put your script together with your compilation source and then the 
 <div class="sect4">
 <h5 id="environment-sensitivity"><a class="link" href="#environment-sensitivity">Environment sensitivity</a></h5>
 <div class="paragraph">
-<p>The Groovy <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> mechanism has built in support for environment sensitive configuration, and Geb leverages this by using the <strong><code>geb.env</code></strong> system property to determine the environment
+<p>The Groovy <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> mechanism has built in support for environment sensitive configuration, and Geb leverages this by using the <strong><code>geb.env</code></strong> system property to determine the environment
 to use.
 An effective use of this mechanism is to configure different drivers based on the designated Geb &#8220;environment&#8221; (concrete details on how to do this further down).</p>
 </div>
@@ -7128,7 +7128,7 @@ adapter which is not true for system properties.</p>
 <p>This is the preferred mechanism, as it allows the most control over the drivers creation and configuration.</p>
 </div>
 <div class="paragraph">
-<p>You can use the <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> mechanism&#8217;s environment sensitivity to configure different drivers per environment&#8230;&#8203;</p>
+<p>You can use the <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> mechanism&#8217;s environment sensitivity to configure different drivers per environment&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8925,13 +8925,13 @@ original exception and provides access to the <code>HttpURLConnection</code> use
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb supports being used in scripting environments via both the <code>Browser.drive()</code> method, and by using the <a href="api/geb/binding/BindingUpdater.html"><code>geb.binding.BindingUpdater</code></a> class that populates and updates a
-<a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/api/groovy/lang/Binding.html"><code>groovy.lang.Binding</code></a> that can be used with scripts.
+<a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/api/groovy/lang/Binding.html"><code>groovy.lang.Binding</code></a> that can be used with scripts.
 This is also the same mechanism that can be used with <a href="#cucumber-jvm">Cucumber-JVM</a>.</p>
 </div>
 <div class="sect2">
 <h3 id="setup"><a class="link" href="#setup">11.1. Setup</a></h3>
 <div class="paragraph">
-<p>To use the binding support, you simply create a <a href="api/geb/binding/BindingUpdater.html"><code>BindingUpdater</code></a> object with a <a href="https://docs.groovy-lang.org/docs/groovy-4.0.26/html/api/groovy/lang/Binding.html"><code>Binding</code></a> and <code><a href="api/geb/Browser.html">Browser</a></code>&#8230;&#8203;</p>
+<p>To use the binding support, you simply create a <a href="api/geb/binding/BindingUpdater.html"><code>BindingUpdater</code></a> object with a <a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/api/groovy/lang/Binding.html"><code>Binding</code></a> and <code><a href="api/geb/Browser.html">Browser</a></code>&#8230;&#8203;</p>
 </div>
 <div class="listingblock">
 <div class="content">
