@@ -112,19 +112,27 @@
 <li><a href="#driver-quirks">3.3. Driver quirks</a></li>
 </ul>
 </li>
-<li><a href="#navigator">4. Interacting with content</a>
+<li><a href="#geb-playwright">4. Geb Playwright</a>
 <ul class="sectlevel2">
-<li><a href="#the-function">4.1. The <code>$()</code> function</a>
+<li><a href="#geb-playwright-installation">4.1. Installation</a></li>
+<li><a href="#geb-playwright-configuration">4.2. Configuration</a></li>
+<li><a href="#geb-playwright-webdriver">4.3. What the adapter implements</a></li>
+<li><a href="#geb-playwright-playwright-api">4.4. Playwright features</a></li>
+</ul>
+</li>
+<li><a href="#navigator">5. Interacting with content</a>
+<ul class="sectlevel2">
+<li><a href="#the-function">5.1. The <code>$()</code> function</a>
 <ul class="sectlevel3">
-<li><a href="#css-selectors">4.1.1. CSS Selectors</a></li>
-<li><a href="#using-webdrivers-by-class-selectors">4.1.2. Using WebDriver&#8217;s <code>By</code> class selectors</a></li>
-<li><a href="#dynamic-navigators">4.1.3. Dynamic Navigators</a>
+<li><a href="#css-selectors">5.1.1. CSS Selectors</a></li>
+<li><a href="#using-webdrivers-by-class-selectors">5.1.2. Using WebDriver&#8217;s <code>By</code> class selectors</a></li>
+<li><a href="#dynamic-navigators">5.1.3. Dynamic Navigators</a>
 <ul class="sectlevel4">
 <li><a href="#creating-directly-from-webelement-objects">Creating directly from <code>WebElement</code> objects</a></li>
 </ul>
 </li>
-<li><a href="#indexes-and-ranges">4.1.4. Indexes and ranges</a></li>
-<li><a href="#attribute-text-and-visibility-matching">4.1.5. Attribute, text and visibility matching</a>
+<li><a href="#indexes-and-ranges">5.1.4. Indexes and ranges</a></li>
+<li><a href="#attribute-text-and-visibility-matching">5.1.5. Attribute, text and visibility matching</a>
 <ul class="sectlevel4">
 <li><a href="#attributes-and-text">Attributes and text</a>
 <ul class="sectlevel5">
@@ -135,43 +143,43 @@
 <li><a href="#visibility">Visibility</a></li>
 </ul>
 </li>
-<li><a href="#navigators-are-iterable">4.1.6. Navigators are iterable</a></li>
-<li><a href="#listening-to-navigator-events">4.1.7. Listening to Navigator events</a></li>
-<li><a href="#equals-and-hashcode">4.1.8. <code>equals()</code> and <code>hashCode()</code></a></li>
+<li><a href="#navigators-are-iterable">5.1.6. Navigators are iterable</a></li>
+<li><a href="#listening-to-navigator-events">5.1.7. Listening to Navigator events</a></li>
+<li><a href="#equals-and-hashcode">5.1.8. <code>equals()</code> and <code>hashCode()</code></a></li>
 </ul>
 </li>
-<li><a href="#finding-and-filtering">4.2. Finding &amp; filtering</a></li>
-<li><a href="#composition">4.3. Composition</a></li>
-<li><a href="#traversing">4.4. Traversing</a></li>
-<li><a href="#clicking">4.5. Clicking</a></li>
-<li><a href="#determining-visibility">4.6. Determining visibility</a></li>
-<li><a href="#focus">4.7. Focus</a></li>
-<li><a href="#size-and-location">4.8. Size and location</a></li>
-<li><a href="#accessing-tag-name-attributes-text-and-classes">4.9. Accessing tag name, attributes, text and classes</a></li>
-<li><a href="#css-properties">4.10. CSS properties</a></li>
-<li><a href="#sending-keystrokes">4.11. Sending keystrokes</a>
+<li><a href="#finding-and-filtering">5.2. Finding &amp; filtering</a></li>
+<li><a href="#composition">5.3. Composition</a></li>
+<li><a href="#traversing">5.4. Traversing</a></li>
+<li><a href="#clicking">5.5. Clicking</a></li>
+<li><a href="#determining-visibility">5.6. Determining visibility</a></li>
+<li><a href="#focus">5.7. Focus</a></li>
+<li><a href="#size-and-location">5.8. Size and location</a></li>
+<li><a href="#accessing-tag-name-attributes-text-and-classes">5.9. Accessing tag name, attributes, text and classes</a></li>
+<li><a href="#css-properties">5.10. CSS properties</a></li>
+<li><a href="#sending-keystrokes">5.11. Sending keystrokes</a>
 <ul class="sectlevel3">
 <li><a href="#non-characters-e-g-delete-key-key-chords-etc">Non characters (e.g. delete key, key chords, etc.)</a></li>
 </ul>
 </li>
-<li><a href="#accessing-input-values">4.12. Accessing input values</a></li>
-<li><a href="#form-control-shortcuts">4.13. Form control shortcuts</a></li>
-<li><a href="#setting-form-control-values">4.14. Setting form control values</a>
+<li><a href="#accessing-input-values">5.12. Accessing input values</a></li>
+<li><a href="#form-control-shortcuts">5.13. Form control shortcuts</a></li>
+<li><a href="#setting-form-control-values">5.14. Setting form control values</a>
 <ul class="sectlevel3">
-<li><a href="#select">4.14.1. Select</a></li>
-<li><a href="#multiple-select">4.14.2. Multiple select</a></li>
-<li><a href="#checkbox">4.14.3. Checkbox</a></li>
-<li><a href="#multiple-checkboxes">4.14.4. Multiple checkboxes</a></li>
-<li><a href="#radio">4.14.5. Radio</a></li>
-<li><a href="#text-inputs-and-textareas">4.14.6. Text inputs and textareas</a></li>
-<li><a href="#file-upload">4.14.7. File upload</a></li>
+<li><a href="#select">5.14.1. Select</a></li>
+<li><a href="#multiple-select">5.14.2. Multiple select</a></li>
+<li><a href="#checkbox">5.14.3. Checkbox</a></li>
+<li><a href="#multiple-checkboxes">5.14.4. Multiple checkboxes</a></li>
+<li><a href="#radio">5.14.5. Radio</a></li>
+<li><a href="#text-inputs-and-textareas">5.14.6. Text inputs and textareas</a></li>
+<li><a href="#file-upload">5.14.7. File upload</a></li>
 </ul>
 </li>
-<li><a href="#complex-interactions">4.15. Complex interactions</a>
+<li><a href="#complex-interactions">5.15. Complex interactions</a>
 <ul class="sectlevel3">
-<li><a href="#using-actions">4.15.1. Using the WebDriver <code>Actions</code> API directly</a></li>
-<li><a href="#interact-closures">4.15.2. Using <code>interact()</code></a></li>
-<li><a href="#interact-examples">4.15.3. Interact examples</a>
+<li><a href="#using-actions">5.15.1. Using the WebDriver <code>Actions</code> API directly</a></li>
+<li><a href="#interact-closures">5.15.2. Using <code>interact()</code></a></li>
+<li><a href="#interact-examples">5.15.3. Interact examples</a>
 <ul class="sectlevel4">
 <li><a href="#drag-and-drop">Drag and drop</a></li>
 <li><a href="#control-clicking">Control-clicking</a></li>
@@ -181,13 +189,13 @@
 </li>
 </ul>
 </li>
-<li><a href="#pages">5. Pages</a>
+<li><a href="#pages">6. Pages</a>
 <ul class="sectlevel2">
-<li><a href="#the-page-object-pattern-2">5.1. The Page Object pattern</a></li>
-<li><a href="#the-page-superclass">5.2. The <code>Page</code> superclass</a></li>
-<li><a href="#content-dsl">5.3. The content DSL</a>
+<li><a href="#the-page-object-pattern-2">6.1. The Page Object pattern</a></li>
+<li><a href="#the-page-superclass">6.2. The <code>Page</code> superclass</a></li>
+<li><a href="#content-dsl">6.3. The content DSL</a>
 <ul class="sectlevel3">
-<li><a href="#template-options">5.3.1. Template options</a>
+<li><a href="#template-options">6.3.1. Template options</a>
 <ul class="sectlevel4">
 <li><a href="#required"><code>required</code></a></li>
 <li><a href="#content-dsl-min"><code>min</code></a></li>
@@ -201,255 +209,255 @@
 <li><a href="#content-dsl-page"><code>page</code></a></li>
 </ul>
 </li>
-<li><a href="#aliasing">5.3.2. Aliasing</a></li>
-<li><a href="#accessing-content-names">5.3.3. Accessing content names</a></li>
+<li><a href="#aliasing">6.3.2. Aliasing</a></li>
+<li><a href="#accessing-content-names">6.3.3. Accessing content names</a></li>
 </ul>
 </li>
-<li><a href="#at-checker">5.4. &#8220;At&#8221; verification</a>
+<li><a href="#at-checker">6.4. &#8220;At&#8221; verification</a>
 <ul class="sectlevel3">
 <li><a href="#unexpected-pages">Unexpected pages</a></li>
 </ul>
 </li>
-<li><a href="#page-urls">5.5. Page URLs</a>
+<li><a href="#page-urls">6.5. Page URLs</a>
 <ul class="sectlevel3">
-<li><a href="#url-fragments">5.5.1. URL fragments</a></li>
-<li><a href="#page-level-at-check-waiting">5.5.2. Page level <code>atCheckWaiting</code> configuration</a></li>
+<li><a href="#url-fragments">6.5.1. URL fragments</a></li>
+<li><a href="#page-level-at-check-waiting">6.5.2. Page level <code>atCheckWaiting</code> configuration</a></li>
 </ul>
 </li>
-<li><a href="#advanced-page-navigation">5.6. Advanced page navigation</a>
+<li><a href="#advanced-page-navigation">6.6. Advanced page navigation</a>
 <ul class="sectlevel3">
-<li><a href="#named-params">5.6.1. Named params</a></li>
-<li><a href="#advanced-page-navigation-url-fragments">5.6.2. URL fragments</a></li>
+<li><a href="#named-params">6.6.1. Named params</a></li>
+<li><a href="#advanced-page-navigation-url-fragments">6.6.2. URL fragments</a></li>
 </ul>
 </li>
-<li><a href="#parameterized-pages">5.7. Parametrized pages</a></li>
-<li><a href="#pages-inheritance">5.8. Inheritance</a></li>
-<li><a href="#lifecycle-hooks">5.9. Lifecycle hooks</a>
+<li><a href="#parameterized-pages">6.7. Parametrized pages</a></li>
+<li><a href="#pages-inheritance">6.8. Inheritance</a></li>
+<li><a href="#lifecycle-hooks">6.9. Lifecycle hooks</a>
 <ul class="sectlevel3">
-<li><a href="#onloadpage-previouspage">5.9.1. <code>onLoad(Page previousPage)</code></a></li>
-<li><a href="#onunloadpage-newpage">5.9.2. <code>onUnload(Page newPage)</code></a></li>
-<li><a href="#listening-to-page-events">5.9.3. Listening to Page events</a></li>
+<li><a href="#onloadpage-previouspage">6.9.1. <code>onLoad(Page previousPage)</code></a></li>
+<li><a href="#onunloadpage-newpage">6.9.2. <code>onUnload(Page newPage)</code></a></li>
+<li><a href="#listening-to-page-events">6.9.3. Listening to Page events</a></li>
 </ul>
 </li>
-<li><a href="#dealing-with-frames">5.10. Dealing with frames</a>
+<li><a href="#dealing-with-frames">6.10. Dealing with frames</a>
 <ul class="sectlevel3">
-<li><a href="#executing-code-in-the-context-of-a-frame">5.10.1. Executing code in the context of a frame</a></li>
-<li><a href="#switching-pages-and-frames-at-once">5.10.2. Switching pages and frames at once</a></li>
+<li><a href="#executing-code-in-the-context-of-a-frame">6.10.1. Executing code in the context of a frame</a></li>
+<li><a href="#switching-pages-and-frames-at-once">6.10.2. Switching pages and frames at once</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#modules">6. Modules</a>
+<li><a href="#modules">7. Modules</a>
 <ul class="sectlevel2">
-<li><a href="#base-and-context">6.1. Base and context</a></li>
-<li><a href="#module-is-a-navigator">6.2. <code>Module</code> is-a <code>Navigator</code></a></li>
-<li><a href="#reusing-modules-across-pages">6.3. Reusing modules across pages</a></li>
-<li><a href="#repeating-content">6.4. Using modules for repeating content</a></li>
-<li><a href="#the-content-dsl">6.5. The content DSL</a></li>
-<li><a href="#inheritance">6.6. Inheritance</a></li>
-<li><a href="#form-control-modules">6.7. Form control modules</a>
+<li><a href="#base-and-context">7.1. Base and context</a></li>
+<li><a href="#module-is-a-navigator">7.2. <code>Module</code> is-a <code>Navigator</code></a></li>
+<li><a href="#reusing-modules-across-pages">7.3. Reusing modules across pages</a></li>
+<li><a href="#repeating-content">7.4. Using modules for repeating content</a></li>
+<li><a href="#the-content-dsl">7.5. The content DSL</a></li>
+<li><a href="#inheritance">7.6. Inheritance</a></li>
+<li><a href="#form-control-modules">7.7. Form control modules</a>
 <ul class="sectlevel3">
-<li><a href="#form-element">6.7.1. <code>FormElement</code></a></li>
-<li><a href="#checkbox-module">6.7.2. <code>Checkbox</code></a></li>
-<li><a href="#select-2">6.7.3. <code>Select</code></a></li>
-<li><a href="#multipleselect">6.7.4. <code>MultipleSelect</code></a></li>
-<li><a href="#textinput">6.7.5. <code>TextInput</code></a></li>
-<li><a href="#textarea">6.7.6. <code>Textarea</code></a></li>
-<li><a href="#fileinput">6.7.7. <code>FileInput</code></a></li>
-<li><a href="#radio-buttons-module">6.7.8. <code>RadioButtons</code></a></li>
-<li><a href="#searchinput">6.7.9. <code>SearchInput</code></a></li>
-<li><a href="#dateinput">6.7.10. <code>DateInput</code></a></li>
-<li><a href="#datetimelocalinput">6.7.11. <code>DateTimeLocalInput</code></a></li>
-<li><a href="#timeinput">6.7.12. <code>TimeInput</code></a></li>
-<li><a href="#monthinput">6.7.13. <code>MonthInput</code></a></li>
-<li><a href="#weekinput">6.7.14. <code>WeekInput</code></a></li>
-<li><a href="#emailinput">6.7.15. <code>EmailInput</code></a></li>
-<li><a href="#telinput">6.7.16. <code>TelInput</code></a></li>
-<li><a href="#numberinput">6.7.17. <code>NumberInput</code></a></li>
-<li><a href="#rangeinput">6.7.18. <code>RangeInput</code></a></li>
-<li><a href="#urlinput">6.7.19. <code>UrlInput</code></a></li>
-<li><a href="#passwordinput">6.7.20. <code>PasswordInput</code></a></li>
-<li><a href="#colorinput">6.7.21. <code>ColorInput</code></a></li>
+<li><a href="#form-element">7.7.1. <code>FormElement</code></a></li>
+<li><a href="#checkbox-module">7.7.2. <code>Checkbox</code></a></li>
+<li><a href="#select-2">7.7.3. <code>Select</code></a></li>
+<li><a href="#multipleselect">7.7.4. <code>MultipleSelect</code></a></li>
+<li><a href="#textinput">7.7.5. <code>TextInput</code></a></li>
+<li><a href="#textarea">7.7.6. <code>Textarea</code></a></li>
+<li><a href="#fileinput">7.7.7. <code>FileInput</code></a></li>
+<li><a href="#radio-buttons-module">7.7.8. <code>RadioButtons</code></a></li>
+<li><a href="#searchinput">7.7.9. <code>SearchInput</code></a></li>
+<li><a href="#dateinput">7.7.10. <code>DateInput</code></a></li>
+<li><a href="#datetimelocalinput">7.7.11. <code>DateTimeLocalInput</code></a></li>
+<li><a href="#timeinput">7.7.12. <code>TimeInput</code></a></li>
+<li><a href="#monthinput">7.7.13. <code>MonthInput</code></a></li>
+<li><a href="#weekinput">7.7.14. <code>WeekInput</code></a></li>
+<li><a href="#emailinput">7.7.15. <code>EmailInput</code></a></li>
+<li><a href="#telinput">7.7.16. <code>TelInput</code></a></li>
+<li><a href="#numberinput">7.7.17. <code>NumberInput</code></a></li>
+<li><a href="#rangeinput">7.7.18. <code>RangeInput</code></a></li>
+<li><a href="#urlinput">7.7.19. <code>UrlInput</code></a></li>
+<li><a href="#passwordinput">7.7.20. <code>PasswordInput</code></a></li>
+<li><a href="#colorinput">7.7.21. <code>ColorInput</code></a></li>
 </ul>
 </li>
-<li><a href="#unwrapping-modules-returned-from-the-content-dsl">6.8. Unwrapping modules returned from the <code>content</code> DSL</a></li>
+<li><a href="#unwrapping-modules-returned-from-the-content-dsl">7.8. Unwrapping modules returned from the <code>content</code> DSL</a></li>
 </ul>
 </li>
-<li><a href="#configuration">7. Configuration</a>
+<li><a href="#configuration">8. Configuration</a>
 <ul class="sectlevel2">
-<li><a href="#mechanisms">7.1. Mechanisms</a>
+<li><a href="#mechanisms">8.1. Mechanisms</a>
 <ul class="sectlevel3">
-<li><a href="#the-config-script">7.1.1. The config script</a>
+<li><a href="#the-config-script">8.1.1. The config script</a>
 <ul class="sectlevel4">
 <li><a href="#environment-sensitivity">Environment sensitivity</a></li>
 </ul>
 </li>
-<li><a href="#system-properties">7.1.2. System properties</a></li>
-<li><a href="#build-adapter-config">7.1.3. Build adapter</a></li>
+<li><a href="#system-properties">8.1.2. System properties</a></li>
+<li><a href="#build-adapter-config">8.1.3. Build adapter</a></li>
 </ul>
 </li>
-<li><a href="#config-options">7.2. Config options</a>
+<li><a href="#config-options">8.2. Config options</a>
 <ul class="sectlevel3">
-<li><a href="#driver-implementation-configuration">7.2.1. Driver implementation</a>
+<li><a href="#driver-implementation-configuration">8.2.1. Driver implementation</a>
 <ul class="sectlevel4">
 <li><a href="#driver-factory-closure">Factory closure</a></li>
 <li><a href="#driver-class-name">Driver class name</a></li>
 </ul>
 </li>
-<li><a href="#navigator-factory">7.2.2. Navigator factory</a></li>
-<li><a href="#driver-caching-configuration">7.2.3. Driver caching</a></li>
-<li><a href="#quitting-driver-on-browser-reset">7.2.4. Quitting driver on browser reset</a></li>
-<li><a href="#configuration-base-url">7.2.5. Base URL</a></li>
-<li><a href="#template-options-default-values">7.2.6. Template options default values</a></li>
-<li><a href="#waiting-configuration">7.2.7. Waiting</a>
+<li><a href="#navigator-factory">8.2.2. Navigator factory</a></li>
+<li><a href="#driver-caching-configuration">8.2.3. Driver caching</a></li>
+<li><a href="#quitting-driver-on-browser-reset">8.2.4. Quitting driver on browser reset</a></li>
+<li><a href="#configuration-base-url">8.2.5. Base URL</a></li>
+<li><a href="#template-options-default-values">8.2.6. Template options default values</a></li>
+<li><a href="#waiting-configuration">8.2.7. Waiting</a>
 <ul class="sectlevel4">
 <li><a href="#default-waiting-configuration">Defaults</a></li>
 <li><a href="#waiting-presets">Presets</a></li>
 <li><a href="#failure-causes">Failure causes</a></li>
 </ul>
 </li>
-<li><a href="#at-check-waiting">7.2.8. Waiting in &#8220;at&#8221; checkers</a></li>
-<li><a href="#require-page-at-checkers">7.2.9. Requiring &#8220;at&#8221; checkers for implicit &#8220;at&#8221; checks</a></li>
-<li><a href="#waiting-for-base-navigator">7.2.10. Waiting for base navigator</a></li>
-<li><a href="#unexpected-pages-config">7.2.11. Unexpected pages</a></li>
-<li><a href="#default-values-for-withwindow-options">7.2.12. Default values for <code>withWindow()</code> options</a></li>
-<li><a href="#default-values-for-withnewwindow-options">7.2.13. Default values for <code>withNewWindow()</code> options</a></li>
-<li><a href="#reporter-configuration">7.2.14. Reporter</a></li>
-<li><a href="#reports-directory-configuration">7.2.15. Reports directory</a></li>
-<li><a href="#report-test-failures-configuration">7.2.16. Report test failures only</a></li>
-<li><a href="#reporting-listener">7.2.17. Reporting listener</a></li>
-<li><a href="#navigator-events-listener">7.2.18. Navigator events listener</a></li>
-<li><a href="#page-events-listener">7.2.19. Page events listener</a></li>
-<li><a href="#auto-clearing-cookies-configuration">7.2.20. Auto clearing cookies</a></li>
-<li><a href="#auto-clearing-web-storage-configuration">7.2.21. Auto clearing web storage</a></li>
+<li><a href="#at-check-waiting">8.2.8. Waiting in &#8220;at&#8221; checkers</a></li>
+<li><a href="#require-page-at-checkers">8.2.9. Requiring &#8220;at&#8221; checkers for implicit &#8220;at&#8221; checks</a></li>
+<li><a href="#waiting-for-base-navigator">8.2.10. Waiting for base navigator</a></li>
+<li><a href="#unexpected-pages-config">8.2.11. Unexpected pages</a></li>
+<li><a href="#default-values-for-withwindow-options">8.2.12. Default values for <code>withWindow()</code> options</a></li>
+<li><a href="#default-values-for-withnewwindow-options">8.2.13. Default values for <code>withNewWindow()</code> options</a></li>
+<li><a href="#reporter-configuration">8.2.14. Reporter</a></li>
+<li><a href="#reports-directory-configuration">8.2.15. Reports directory</a></li>
+<li><a href="#report-test-failures-configuration">8.2.16. Report test failures only</a></li>
+<li><a href="#reporting-listener">8.2.17. Reporting listener</a></li>
+<li><a href="#navigator-events-listener">8.2.18. Navigator events listener</a></li>
+<li><a href="#page-events-listener">8.2.19. Page events listener</a></li>
+<li><a href="#auto-clearing-cookies-configuration">8.2.20. Auto clearing cookies</a></li>
+<li><a href="#auto-clearing-web-storage-configuration">8.2.21. Auto clearing web storage</a></li>
 </ul>
 </li>
-<li><a href="#runtime-overrides">7.3. Runtime overrides</a></li>
+<li><a href="#runtime-overrides">8.3. Runtime overrides</a></li>
 </ul>
 </li>
-<li><a href="#implicit-assertions">8. Implicit assertions</a>
+<li><a href="#implicit-assertions">9. Implicit assertions</a>
 <ul class="sectlevel2">
-<li><a href="#at-verification">8.1. At verification</a>
+<li><a href="#at-verification">9.1. At verification</a>
 <ul class="sectlevel3">
 <li><a href="#at-check-assertions">At verification with additional assertions</a></li>
 </ul>
 </li>
-<li><a href="#implicit-assertions-waiting">8.2. Waiting</a>
+<li><a href="#implicit-assertions-waiting">9.2. Waiting</a>
 <ul class="sectlevel3">
 <li><a href="#waiting-content">Waiting content</a></li>
 <li><a href="#implicit-assertions-reloading-page-when-waiting">Reloading page when waiting</a></li>
 <li><a href="#selectively-disabling-implicit-assertions">Selectively disabling implicit assertions</a></li>
 </ul>
 </li>
-<li><a href="#implicit-assertions-mechanics">8.3. How it works</a></li>
+<li><a href="#implicit-assertions-mechanics">9.3. How it works</a></li>
 </ul>
 </li>
-<li><a href="#javascript-ajax-and-dynamic-pages">9. Javascript, AJAX and dynamic pages</a>
+<li><a href="#javascript-ajax-and-dynamic-pages">10. Javascript, AJAX and dynamic pages</a>
 <ul class="sectlevel2">
-<li><a href="#js-object">9.1. The &#8220;js&#8221; object</a>
+<li><a href="#js-object">10.1. The &#8220;js&#8221; object</a>
 <ul class="sectlevel3">
-<li><a href="#accessing-variables">9.1.1. Accessing variables</a></li>
-<li><a href="#calling-methods">9.1.2. Calling methods</a></li>
-<li><a href="#executing-arbitrary-code">9.1.3. Executing arbitrary code</a></li>
+<li><a href="#accessing-variables">10.1.1. Accessing variables</a></li>
+<li><a href="#calling-methods">10.1.2. Calling methods</a></li>
+<li><a href="#executing-arbitrary-code">10.1.3. Executing arbitrary code</a></li>
 </ul>
 </li>
-<li><a href="#waiting">9.2. Waiting</a>
+<li><a href="#waiting">10.2. Waiting</a>
 <ul class="sectlevel3">
-<li><a href="#examples">9.2.1. Examples</a></li>
-<li><a href="#wait-for-custom-message">9.2.2. Custom message</a></li>
-<li><a href="#suppressing-waittimeoutexception">9.2.3. Suppressing <code>WaitTimeoutException</code></a></li>
+<li><a href="#examples">10.2.1. Examples</a></li>
+<li><a href="#wait-for-custom-message">10.2.2. Custom message</a></li>
+<li><a href="#suppressing-waittimeoutexception">10.2.3. Suppressing <code>WaitTimeoutException</code></a></li>
 </ul>
 </li>
-<li><a href="#reloading-page-when-waiting">9.3. Reloading the page when waiting</a></li>
-<li><a href="#controlling-network-conditions">9.4. Controlling network conditions</a></li>
-<li><a href="#alert-and-confirm-dialogs">9.5. Alert and confirm dialogs</a>
+<li><a href="#reloading-page-when-waiting">10.3. Reloading the page when waiting</a></li>
+<li><a href="#controlling-network-conditions">10.4. Controlling network conditions</a></li>
+<li><a href="#alert-and-confirm-dialogs">10.5. Alert and confirm dialogs</a>
 <ul class="sectlevel3">
-<li><a href="#alert">9.5.1. <code>alert()</code></a></li>
-<li><a href="#confirm">9.5.2. <code>confirm()</code></a></li>
-<li><a href="#prompt">9.5.3. <code>prompt()</code></a></li>
+<li><a href="#alert">10.5.1. <code>alert()</code></a></li>
+<li><a href="#confirm">10.5.2. <code>confirm()</code></a></li>
+<li><a href="#prompt">10.5.3. <code>prompt()</code></a></li>
 </ul>
 </li>
-<li><a href="#jquery-integration">9.6. jQuery integration</a>
+<li><a href="#jquery-integration">10.6. jQuery integration</a>
 <ul class="sectlevel3">
 <li><a href="#why">Why?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#direct-downloading">10. Direct downloading</a>
+<li><a href="#direct-downloading">11. Direct downloading</a>
 <ul class="sectlevel2">
-<li><a href="#downloading-example">10.1. Downloading example</a></li>
-<li><a href="#fine-grained-request">10.2. Fine grained request</a></li>
-<li><a href="#dealing-with-untrusted-certificates">10.3. Dealing with untrusted certificates</a></li>
-<li><a href="#default-configuration">10.4. Default configuration</a></li>
-<li><a href="#proxy-configuration">10.5. Proxy configuration</a></li>
-<li><a href="#errors">10.6. Errors</a></li>
+<li><a href="#downloading-example">11.1. Downloading example</a></li>
+<li><a href="#fine-grained-request">11.2. Fine grained request</a></li>
+<li><a href="#dealing-with-untrusted-certificates">11.3. Dealing with untrusted certificates</a></li>
+<li><a href="#default-configuration">11.4. Default configuration</a></li>
+<li><a href="#proxy-configuration">11.5. Proxy configuration</a></li>
+<li><a href="#errors">11.6. Errors</a></li>
 </ul>
 </li>
-<li><a href="#binding">11. Scripts and binding</a>
+<li><a href="#binding">12. Scripts and binding</a>
 <ul class="sectlevel2">
-<li><a href="#setup">11.1. Setup</a></li>
-<li><a href="#the-binding-environment">11.2. The binding environment</a>
+<li><a href="#setup">12.1. Setup</a></li>
+<li><a href="#the-binding-environment">12.2. The binding environment</a>
 <ul class="sectlevel3">
-<li><a href="#browser-methods-and-properties">11.2.1. Browser methods and properties</a></li>
-<li><a href="#the-current-page">11.2.2. The current page</a></li>
+<li><a href="#browser-methods-and-properties">12.2.1. Browser methods and properties</a></li>
+<li><a href="#the-current-page">12.2.2. The current page</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#reporting">12. Reporting</a>
+<li><a href="#reporting">13. Reporting</a>
 <ul class="sectlevel2">
-<li><a href="#reporting-on-contents-of-frames">12.1. Reporting on contents of frames</a></li>
-<li><a href="#reporting-on-multiple-windows">12.2. Reporting on multiple windows</a></li>
-<li><a href="#report-group">12.3. The report group</a></li>
-<li><a href="#listening-to-reporting">12.4. Listening to reporting</a></li>
-<li><a href="#cleaning">12.5. Cleaning</a></li>
+<li><a href="#reporting-on-contents-of-frames">13.1. Reporting on contents of frames</a></li>
+<li><a href="#reporting-on-multiple-windows">13.2. Reporting on multiple windows</a></li>
+<li><a href="#report-group">13.3. The report group</a></li>
+<li><a href="#listening-to-reporting">13.4. Listening to reporting</a></li>
+<li><a href="#cleaning">13.5. Cleaning</a></li>
 </ul>
 </li>
-<li><a href="#testing">13. Testing</a>
+<li><a href="#testing">14. Testing</a>
 <ul class="sectlevel2">
-<li><a href="#spock-junit-testng">13.1. Spock, JUnit &amp; TestNG</a>
+<li><a href="#spock-junit-testng">14.1. Spock, JUnit &amp; TestNG</a>
 <ul class="sectlevel3">
-<li><a href="#configuration-2">13.1.1. Configuration</a></li>
-<li><a href="#testing-reporting">13.1.2. Reporting</a></li>
-<li><a href="#cookie-management-in-tests">13.1.3. Cookie management</a></li>
-<li><a href="#web-storage-management-in-tests">13.1.4. Web storage management</a></li>
-<li><a href="#restarting-the-browser-mid-test">13.1.5. Restarting the browser mid-test</a></li>
-<li><a href="#jar-and-class-names">13.1.6. JAR and class names</a></li>
-<li><a href="#example-projects">13.1.7. Example projects</a></li>
+<li><a href="#configuration-2">14.1.1. Configuration</a></li>
+<li><a href="#testing-reporting">14.1.2. Reporting</a></li>
+<li><a href="#cookie-management-in-tests">14.1.3. Cookie management</a></li>
+<li><a href="#web-storage-management-in-tests">14.1.4. Web storage management</a></li>
+<li><a href="#restarting-the-browser-mid-test">14.1.5. Restarting the browser mid-test</a></li>
+<li><a href="#jar-and-class-names">14.1.6. JAR and class names</a></li>
+<li><a href="#example-projects">14.1.7. Example projects</a></li>
 </ul>
 </li>
-<li><a href="#cucumber-jvm">13.2. Cucumber (Cucumber-JVM)</a>
+<li><a href="#cucumber-jvm">14.2. Cucumber (Cucumber-JVM)</a>
 <ul class="sectlevel3">
-<li><a href="#writing-your-own-steps">13.2.1. Writing your own steps</a></li>
-<li><a href="#using-pre-built-steps">13.2.2. Using pre-built steps</a></li>
-<li><a href="#example-project">13.2.3. Example project</a></li>
+<li><a href="#writing-your-own-steps">14.2.1. Writing your own steps</a></li>
+<li><a href="#using-pre-built-steps">14.2.2. Using pre-built steps</a></li>
+<li><a href="#example-project">14.2.3. Example project</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#cloud-browser-testing">14. Cloud browser testing</a>
+<li><a href="#cloud-browser-testing">15. Cloud browser testing</a>
 <ul class="sectlevel2">
-<li><a href="#creating-a-driver">14.1. Creating a driver</a>
+<li><a href="#creating-a-driver">15.1. Creating a driver</a>
 <ul class="sectlevel3">
-<li><a href="#sauce-labs-driver-factory">14.1.1. <code>SauceLabsDriverFactory</code></a></li>
-<li><a href="#browser-stack-driver-factory">14.1.2. <code>BrowserStackDriverFactory</code></a></li>
-<li><a href="#lambda-test-driver-factory">14.1.3. <code>LambdaTestDriverFactory</code></a></li>
+<li><a href="#sauce-labs-driver-factory">15.1.1. <code>SauceLabsDriverFactory</code></a></li>
+<li><a href="#browser-stack-driver-factory">15.1.2. <code>BrowserStackDriverFactory</code></a></li>
+<li><a href="#lambda-test-driver-factory">15.1.3. <code>LambdaTestDriverFactory</code></a></li>
 </ul>
 </li>
-<li><a href="#gradle-plugins">14.2. Gradle plugins</a>
+<li><a href="#gradle-plugins">15.2. Gradle plugins</a>
 <ul class="sectlevel3">
-<li><a href="#geb-saucelabs-plugin">14.2.1. geb-saucelabs plugin</a>
+<li><a href="#geb-saucelabs-plugin">15.2.1. geb-saucelabs plugin</a>
 <ul class="sectlevel4">
 <li><a href="#disabling-sauceconnect">Disabling SauceConnect</a></li>
 </ul>
 </li>
-<li><a href="#geb-browserstack-plugin">14.2.2. geb-browserstack plugin</a>
+<li><a href="#geb-browserstack-plugin">15.2.2. geb-browserstack plugin</a>
 <ul class="sectlevel4">
 <li><a href="#disabling-browserstack-tunnel">Disabling BrowserStack Tunnel</a></li>
 </ul>
 </li>
-<li><a href="#geb-lambdatest-plugin">14.2.3. geb-lambdatest plugin</a>
+<li><a href="#geb-lambdatest-plugin">15.2.3. geb-lambdatest plugin</a>
 <ul class="sectlevel4">
 <li><a href="#disabling-lambdatest-tunnel">Disabling LambdaTest Tunnel</a></li>
 </ul>
@@ -2201,14 +2209,119 @@ The solution is to use a refresh handler that handles the refresh asynchronously
 </div>
 </div>
 <div class="sect1">
-<h2 id="navigator"><a class="link" href="#navigator">4. Interacting with content</a></h2>
+<h2 id="geb-playwright"><a class="link" href="#geb-playwright">4. Geb Playwright</a></h2>
+<div class="sectionbody">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>geb-playwright</code> is experimental. The artifact, package, and configuration may change or be removed. It is not covered by Geb&#8217;s compatibility guarantees.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><code>geb-playwright</code> is an optional Playwright-backed <code>WebDriver</code>. Selenium remains Geb&#8217;s default. <code>geb-core</code> does not depend on Playwright unless you add this module and configure <code>PlaywrightDriver</code>.</p>
+</div>
+<div class="paragraph">
+<p>Existing Geb code — <code>Browser</code>, pages, the content DSL, modules, <code>waitFor</code>, and reporting — keeps working. The adapter implements the WebDriver calls Geb already makes. It does not re-wrap Playwright&#8217;s own API.</p>
+</div>
+<div class="sect2">
+<h3 id="geb-playwright-installation"><a class="link" href="#geb-playwright-installation">4.1. Installation</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="n">dependencies</span> <span class="o">{</span>
+    <span class="n">testImplementation</span> <span class="s1">'org.apache.groovy.geb:geb-playwright:{geb-version}'</span>
+<span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Install the browser once on each machine and CI image:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="bash">npx playwright <span class="nb">install </span>chromium</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The module also exposes <code>./gradlew :module:geb-playwright:installPlaywrightBrowsers</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="geb-playwright-configuration"><a class="link" href="#geb-playwright-configuration">4.2. Configuration</a></h3>
+<div class="paragraph">
+<p><code>PlaywrightDriver.config</code> returns a driver factory, so Geb creates and closes the driver the same way it does for Selenium.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">geb.playwright.PlaywrightDriver</span>
+
+<span class="n">driver</span> <span class="o">=</span> <span class="n">PlaywrightDriver</span><span class="o">.</span><span class="na">config</span> <span class="o">{</span>
+    <span class="n">browserType</span> <span class="o">=</span> <span class="s1">'chromium'</span> <span class="c1">// firefox or webkit</span>
+    <span class="n">headless</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="o">}</span>
+
+<span class="n">cacheDriverPerThread</span> <span class="o">=</span> <span class="kc">true</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>PlaywrightDriver.create { &#8230;&#8203; }</code> builds a driver immediately when you want to manage <code>quit()</code> yourself.</p>
+</div>
+<div class="paragraph">
+<p><code>PlaywrightOptions</code> is the configuration object. The fields that matter for a Geb run are <code>browserType</code>, <code>headless</code>, <code>slowMo</code>, <code>channel</code>, <code>launchArgs</code>, <code>viewportWidth</code>, <code>viewportHeight</code>, <code>ignoreHTTPSErrors</code>, <code>baseURL</code>, <code>defaultTimeoutMs</code>, and <code>navigationTimeoutMs</code>. The same object can also set context options Playwright only accepts at creation time, including locale, time zone, user agent, permissions, geolocation, headers, HAR recording, HTTP credentials, proxy, video, and tracing.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="geb-playwright-webdriver"><a class="link" href="#geb-playwright-webdriver">4.3. What the adapter implements</a></h3>
+<div class="paragraph">
+<p><code>PlaywrightWebDriver</code> implements <code>WebDriver</code>, <code>JavascriptExecutor</code>, <code>TakesScreenshot</code>, <code>HasCapabilities</code>, and the Actions <code>Interactive</code> contract. Locator actions use Playwright&#8217;s actionability checks. Each driver owns one <code>BrowserContext</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>driver.manage().logs()</code> is unsupported. Window position is remembered for WebDriver callers, but Playwright cannot move or minimize native browser chrome. Alerts are best-effort because Playwright delivers dialogs as events. Selenium Grid, <code>RemoteWebDriver</code>, browser profiles, extensions, and BiDi are not provided.</p>
+</div>
+<div class="paragraph">
+<p>Playwright Java is not thread-safe. Do not share a driver, context, or page across threads. Use <code>cacheDriverPerThread = true</code> when workers run in parallel.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="geb-playwright-playwright-api"><a class="link" href="#geb-playwright-playwright-api">4.4. Playwright features</a></h3>
+<div class="paragraph">
+<p>Cast the Geb driver when a test needs Playwright itself:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="rouge highlight"><code data-lang="groovy"><span class="kn">import</span> <span class="nn">com.microsoft.playwright.Page</span>
+<span class="kn">import</span> <span class="nn">com.microsoft.playwright.options.AriaRole</span>
+<span class="kn">import</span> <span class="nn">geb.playwright.PlaywrightWebDriver</span>
+
+<span class="kt">def</span> <span class="n">playwrightDriver</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="na">driver</span> <span class="k">as</span> <span class="n">PlaywrightWebDriver</span>
+<span class="n">playwrightDriver</span><span class="o">.</span><span class="na">page</span><span class="o">.</span><span class="na">getByRole</span><span class="o">(</span><span class="n">AriaRole</span><span class="o">.</span><span class="na">BUTTON</span><span class="o">,</span> <span class="k">new</span> <span class="n">Page</span><span class="o">.</span><span class="na">GetByRoleOptions</span><span class="o">().</span><span class="na">setName</span><span class="o">(</span><span class="s1">'Submit'</span><span class="o">)).</span><span class="na">click</span><span class="o">()</span>
+<span class="n">playwrightDriver</span><span class="o">.</span><span class="na">context</span><span class="o">.</span><span class="na">route</span><span class="o">(</span><span class="s1">'**/api/**'</span><span class="o">)</span> <span class="o">{</span> <span class="n">route</span> <span class="o">-&gt;</span> <span class="n">route</span><span class="o">.</span><span class="na">abort</span><span class="o">()</span> <span class="o">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Tracing and video are context options (<code>tracing</code> and <code>recordVideo</code>). <code>PlaywrightTraceReporter</code> writes the current trace into a Geb report and starts a new one. Those calls are not portable to a Selenium-backed Geb run.</p>
+</div>
+<div class="paragraph">
+<p>Module tests can be skipped with <code>-Dgeb.playwright.skip=true</code> or <code>PLAYWRIGHT_SKIP=true</code>. Skipping tests does not remove the need to install browsers for an application that uses this driver.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="navigator"><a class="link" href="#navigator">5. Interacting with content</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb provides a concise and Groovy interface to the content and controls in your browser.
 This is implemented through the <code>Navigator</code> API which is a jQuery inspired mechanism for finding, filtering and interacting with DOM elements.</p>
 </div>
 <div class="sect2">
-<h3 id="the-function"><a class="link" href="#the-function">4.1. The <code>$()</code> function</a></h3>
+<h3 id="the-function"><a class="link" href="#the-function">5.1. The <code>$()</code> function</a></h3>
 <div class="paragraph">
 <p>The <code>$()</code> function is the access point to the browser&#8217;s page content.
 It returns a <code><a href="api/geb/navigator/Navigator.html">Navigator</a></code> object that is roughly analogous to a jQuery object.
@@ -2261,7 +2374,7 @@ Operations on &#8220;empty&#8221; navigators return <code>null</code> or another
 </table>
 </div>
 <div class="sect3">
-<h4 id="css-selectors"><a class="link" href="#css-selectors">4.1.1. CSS Selectors</a></h4>
+<h4 id="css-selectors"><a class="link" href="#css-selectors">5.1.1. CSS Selectors</a></h4>
 <div class="paragraph">
 <p>You can use any CSS selector that the underlying <code>WebDriver</code> implementation supports&#8230;&#8203;</p>
 </div>
@@ -2272,7 +2385,7 @@ Operations on &#8220;empty&#8221; navigators return <code>null</code> or another
 </div>
 </div>
 <div class="sect3">
-<h4 id="using-webdrivers-by-class-selectors"><a class="link" href="#using-webdrivers-by-class-selectors">4.1.2. Using WebDriver&#8217;s <code>By</code> class selectors</a></h4>
+<h4 id="using-webdrivers-by-class-selectors"><a class="link" href="#using-webdrivers-by-class-selectors">5.1.2. Using WebDriver&#8217;s <code>By</code> class selectors</a></h4>
 <div class="paragraph">
 <p>For all signatures of <code>$()</code> function that accept a css selector there is an equivalent signature where an instance of WebDriver&#8217;s <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.49.0/org/openqa/selenium/By.html">By</a></code> class can be used instead of a <code>String</code>.</p>
 </div>
@@ -2292,7 +2405,7 @@ It is always possible to select the same elements using a css selector as when u
 </div>
 </div>
 <div class="sect3">
-<h4 id="dynamic-navigators"><a class="link" href="#dynamic-navigators">4.1.3. Dynamic Navigators</a></h4>
+<h4 id="dynamic-navigators"><a class="link" href="#dynamic-navigators">5.1.3. Dynamic Navigators</a></h4>
 <div class="paragraph">
 <p>By default when an instance of a <code>Navigator</code> is created a constant reference to the elements matching the selector at that point in time is stored.
 In many situations this is the desired behaviour as it limits the number of WebDriver commands executed to find elements but in the days of modern javascript frameworks and single page applications it might not be.
@@ -2469,7 +2582,7 @@ So, if you for example wanted to create a dynamic <code>Navigator</code> matchin
 </div>
 </div>
 <div class="sect3">
-<h4 id="indexes-and-ranges"><a class="link" href="#indexes-and-ranges">4.1.4. Indexes and ranges</a></h4>
+<h4 id="indexes-and-ranges"><a class="link" href="#indexes-and-ranges">5.1.4. Indexes and ranges</a></h4>
 <div class="paragraph">
 <p>When matching, a single positive integer or integer range can be given to restrict by index.</p>
 </div>
@@ -2499,7 +2612,7 @@ So, if you for example wanted to create a dynamic <code>Navigator</code> matchin
 </div>
 </div>
 <div class="sect3">
-<h4 id="attribute-text-and-visibility-matching"><a class="link" href="#attribute-text-and-visibility-matching">4.1.5. Attribute, text and visibility matching</a></h4>
+<h4 id="attribute-text-and-visibility-matching"><a class="link" href="#attribute-text-and-visibility-matching">5.1.5. Attribute, text and visibility matching</a></h4>
 <div class="paragraph">
 <p>Matches can be made on attributes, node text values as well as visibility via Groovy&#8217;s named parameter syntax.
 For matching on node&#8217;s text use <code>text</code> as the parameter name and for matching on node visibility use <code>displayed</code> as the parameter name.
@@ -2710,7 +2823,7 @@ in this case you can use the composite matchers <code>allOf</code> and <code>any
 </div>
 </div>
 <div class="sect3">
-<h4 id="navigators-are-iterable"><a class="link" href="#navigators-are-iterable">4.1.6. Navigators are iterable</a></h4>
+<h4 id="navigators-are-iterable"><a class="link" href="#navigators-are-iterable">5.1.6. Navigators are iterable</a></h4>
 <div class="paragraph">
 <p>The navigator objects implement the Java <code>Iterable</code> interface, which allows you to do lots of Groovy stuff like using the <code>max()</code> function&#8230;&#8203;</p>
 </div>
@@ -2744,7 +2857,7 @@ in this case you can use the composite matchers <code>allOf</code> and <code>any
 </div>
 </div>
 <div class="sect3">
-<h4 id="listening-to-navigator-events"><a class="link" href="#listening-to-navigator-events">4.1.7. Listening to Navigator events</a></h4>
+<h4 id="listening-to-navigator-events"><a class="link" href="#listening-to-navigator-events">5.1.7. Listening to Navigator events</a></h4>
 <div class="paragraph">
 <p>It is possible to register a listener that gets notified every time certain Navigator events occur.
 The best reference for events that can be listened to is <a href="api/geb/navigator/event/NavigatorEventListener.html">the documentation for <code>NavigatorEventListener</code> interface</a>.
@@ -2771,7 +2884,7 @@ If you wish to only listen to a subset of navigator events then <code><a href="a
 </div>
 </div>
 <div class="sect3">
-<h4 id="equals-and-hashcode"><a class="link" href="#equals-and-hashcode">4.1.8. <code>equals()</code> and <code>hashCode()</code></a></h4>
+<h4 id="equals-and-hashcode"><a class="link" href="#equals-and-hashcode">5.1.8. <code>equals()</code> and <code>hashCode()</code></a></h4>
 <div class="paragraph">
 <p>It&#8217;s possible to check <code>Navigator</code> instances for equality.
 The rules are simple - two empty navigators are always equal and two non empty navigators are only equal if they contain the exact same elements in the same order.</p>
@@ -2850,7 +2963,7 @@ The rules are simple - two empty navigators are always equal and two non empty n
 </div>
 </div>
 <div class="sect2">
-<h3 id="finding-and-filtering"><a class="link" href="#finding-and-filtering">4.2. Finding &amp; filtering</a></h3>
+<h3 id="finding-and-filtering"><a class="link" href="#finding-and-filtering">5.2. Finding &amp; filtering</a></h3>
 <div class="paragraph">
 <p>Navigator objects have <code>find()</code> and <code>$()</code> methods for finding descendants, and <code>filter()</code> and <code>not()</code> methods for reducing the matched content.</p>
 </div>
@@ -2943,7 +3056,7 @@ The rules are simple - two empty navigators are always equal and two non empty n
 </div>
 </div>
 <div class="sect2">
-<h3 id="composition"><a class="link" href="#composition">4.3. Composition</a></h3>
+<h3 id="composition"><a class="link" href="#composition">5.3. Composition</a></h3>
 <div class="paragraph">
 <p>It is also possible to compose navigator objects from other navigator objects, for situations where you can&#8217;t express a content set in one query.
 To do this, simply call the <code>$()</code> function and pass in the navigators to compose.</p>
@@ -2994,7 +3107,7 @@ To do this, simply call the <code>$()</code> function and pass in the navigators
 </div>
 </div>
 <div class="sect2">
-<h3 id="traversing"><a class="link" href="#traversing">4.4. Traversing</a></h3>
+<h3 id="traversing"><a class="link" href="#traversing">5.4. Traversing</a></h3>
 <div class="paragraph">
 <p>Navigators also have methods for selecting content <em>around</em> the matched content.</p>
 </div>
@@ -3122,7 +3235,7 @@ Consider the following markup:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="clicking"><a class="link" href="#clicking">4.5. Clicking</a></h3>
+<h3 id="clicking"><a class="link" href="#clicking">5.5. Clicking</a></h3>
 <div class="paragraph">
 <p>Navigator objects implement the <code>click()</code> method, which will instruct the browser to click the sole element the navigator has matched.
 If that method is called on a multi element <code>Navigator</code> then a <code>SingleElementNavigatorOnlyMethodException</code> is thrown.</p>
@@ -3148,14 +3261,14 @@ This allow page changes to be specified at the same time as click actions.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="determining-visibility"><a class="link" href="#determining-visibility">4.6. Determining visibility</a></h3>
+<h3 id="determining-visibility"><a class="link" href="#determining-visibility">5.6. Determining visibility</a></h3>
 <div class="paragraph">
 <p><code>Navigator</code> objects have a <code>displayed</code> property that indicates whether the element is visible to the user or not.
 The <code>displayed</code> property of a navigator object that doesn&#8217;t match anything is always <code>false</code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="focus"><a class="link" href="#focus">4.7. Focus</a></h3>
+<h3 id="focus"><a class="link" href="#focus">5.7. Focus</a></h3>
 <div class="paragraph">
 <p>Geb comes with an easy way for finding the currently focused element in the form of <code>focused()</code> method which returns a <code>Navigator</code>.</p>
 </div>
@@ -3184,7 +3297,7 @@ The <code>displayed</code> property of a navigator object that doesn&#8217;t mat
 </div>
 </div>
 <div class="sect2">
-<h3 id="size-and-location"><a class="link" href="#size-and-location">4.8. Size and location</a></h3>
+<h3 id="size-and-location"><a class="link" href="#size-and-location">5.8. Size and location</a></h3>
 <div class="paragraph">
 <p>You can obtain the size and location of content on the page.
 All units are in pixels.
@@ -3227,7 +3340,7 @@ The size is available via the <code>height</code> and <code>width</code> propert
 </div>
 </div>
 <div class="sect2">
-<h3 id="accessing-tag-name-attributes-text-and-classes"><a class="link" href="#accessing-tag-name-attributes-text-and-classes">4.9. Accessing tag name, attributes, text and classes</a></h3>
+<h3 id="accessing-tag-name-attributes-text-and-classes"><a class="link" href="#accessing-tag-name-attributes-text-and-classes">5.9. Accessing tag name, attributes, text and classes</a></h3>
 <div class="paragraph">
 <p>The <code>tag()</code>, <code>text()</code> and <code>classes()</code> methods as well as accessing attributes via the <code>@</code> notation or <code>attr()</code> method return the requested content on the <strong>sole</strong> matched element.
 If these methods are called on a multi element <code>Navigator</code> then a <code>SingleElementNavigatorOnlyMethodException</code> is thrown.
@@ -3267,7 +3380,7 @@ The <code>classes()</code> method returns a <code>java.util.List</code> of class
 </div>
 </div>
 <div class="sect2">
-<h3 id="css-properties"><a class="link" href="#css-properties">4.10. CSS properties</a></h3>
+<h3 id="css-properties"><a class="link" href="#css-properties">5.10. CSS properties</a></h3>
 <div class="paragraph">
 <p>Css properties of a single element navigator can be accessed using the <code>css()</code> method.
 If that method is called on a multi element <code>Navigator</code> then a <code>SingleElementNavigatorOnlyMethodException</code> is thrown.</p>
@@ -3307,7 +3420,7 @@ in accordance with the DOM CSS2 specification - you should directly access the l
 </div>
 </div>
 <div class="sect2">
-<h3 id="sending-keystrokes"><a class="link" href="#sending-keystrokes">4.11. Sending keystrokes</a></h3>
+<h3 id="sending-keystrokes"><a class="link" href="#sending-keystrokes">5.11. Sending keystrokes</a></h3>
 <div class="paragraph">
 <p>Given the following html&#8230;&#8203;</p>
 </div>
@@ -3349,7 +3462,7 @@ in accordance with the DOM CSS2 specification - you should directly access the l
 </div>
 </div>
 <div class="sect2">
-<h3 id="accessing-input-values"><a class="link" href="#accessing-input-values">4.12. Accessing input values</a></h3>
+<h3 id="accessing-input-values"><a class="link" href="#accessing-input-values">5.12. Accessing input values</a></h3>
 <div class="paragraph">
 <p>The value of <code>input</code>, <code>select</code> and <code>textarea</code> elements can be retrieved and set with the <code>value</code> method.
 Calling <code>value()</code> with no arguments will return the String value of <em>the sole</em> element in the Navigator.
@@ -3361,7 +3474,7 @@ The exceptions are that when setting a <code>checkbox</code> value the method ex
 </div>
 </div>
 <div class="sect2">
-<h3 id="form-control-shortcuts"><a class="link" href="#form-control-shortcuts">4.13. Form control shortcuts</a></h3>
+<h3 id="form-control-shortcuts"><a class="link" href="#form-control-shortcuts">5.13. Form control shortcuts</a></h3>
 <div class="paragraph">
 <p>Interacting with form controls (<code>input</code>, <code>select</code> etc.) is such a common task in web functional testing that Geb provides convenient shortcuts for common functions.</p>
 </div>
@@ -3466,7 +3579,7 @@ Given page and module definitions for the above mentioned HTML:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="setting-form-control-values"><a class="link" href="#setting-form-control-values">4.14. Setting form control values</a></h3>
+<h3 id="setting-form-control-values"><a class="link" href="#setting-form-control-values">5.14. Setting form control values</a></h3>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3497,7 +3610,7 @@ Given a content definition <code>myContent { $(&quot;form&quot;).someInput }</co
 </table>
 </div>
 <div class="sect3">
-<h4 id="select"><a class="link" href="#select">4.14.1. Select</a></h4>
+<h4 id="select"><a class="link" href="#select">5.14.1. Select</a></h4>
 <div class="paragraph">
 <p>Select values are set by assigning the value or text of the required option. Assigned values are automatically coerced to String. For example&#8230;&#8203;</p>
 </div>
@@ -3543,7 +3656,7 @@ Given a content definition <code>myContent { $(&quot;form&quot;).someInput }</co
 </div>
 </div>
 <div class="sect3">
-<h4 id="multiple-select"><a class="link" href="#multiple-select">4.14.2. Multiple select</a></h4>
+<h4 id="multiple-select"><a class="link" href="#multiple-select">5.14.2. Multiple select</a></h4>
 <div class="paragraph">
 <p>If the select has the <code>multiple</code> attribute it is set with a array or <code>Collection</code> of values.
 Any options not in the values are un-selected.
@@ -3598,7 +3711,7 @@ For example&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="checkbox"><a class="link" href="#checkbox">4.14.3. Checkbox</a></h4>
+<h4 id="checkbox"><a class="link" href="#checkbox">5.14.3. Checkbox</a></h4>
 <div class="paragraph">
 <p>Checkboxes are generally checked/unchecked by setting their value to <code>true</code> or <code>false</code>.</p>
 </div>
@@ -3671,7 +3784,7 @@ For example&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="multiple-checkboxes"><a class="link" href="#multiple-checkboxes">4.14.4. Multiple checkboxes</a></h4>
+<h4 id="multiple-checkboxes"><a class="link" href="#multiple-checkboxes">5.14.4. Multiple checkboxes</a></h4>
 <div class="paragraph">
 <p>You can also check a checkbox by explicitly setting its <code>value</code> or using its label. This is useful when you have a number of checkboxes with the same name, i.e.:</p>
 </div>
@@ -3724,7 +3837,7 @@ For example&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="radio"><a class="link" href="#radio">4.14.5. Radio</a></h4>
+<h4 id="radio"><a class="link" href="#radio">5.14.5. Radio</a></h4>
 <div class="paragraph">
 <p>Radio values are set by assigning the value of the radio button that is to be selected or the label text associated with a radio button.</p>
 </div>
@@ -3767,7 +3880,7 @@ For example&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="text-inputs-and-textareas"><a class="link" href="#text-inputs-and-textareas">4.14.6. Text inputs and textareas</a></h4>
+<h4 id="text-inputs-and-textareas"><a class="link" href="#text-inputs-and-textareas">5.14.6. Text inputs and textareas</a></h4>
 <div class="paragraph">
 <p>In the case of a text <code>input</code> or a <code>textarea</code>, the assigned value becomes the element&#8217;s <em>value</em> attribute.</p>
 </div>
@@ -3827,7 +3940,7 @@ You can track this issue <a href="https://github.com/SeleniumHQ/selenium-google-
 </div>
 </div>
 <div class="sect3">
-<h4 id="file-upload"><a class="link" href="#file-upload">4.14.7. File upload</a></h4>
+<h4 id="file-upload"><a class="link" href="#file-upload">5.14.7. File upload</a></h4>
 <div class="paragraph">
 <p>It&#8217;s currently not possible with WebDriver to simulate the process of a user clicking on a file upload control and choosing a file to upload via the normal file chooser.
 However, you can directly set the value of the upload control to the <em>absolute path</em> of a file on the system where the driver is running and on form submission that file will be uploaded.
@@ -3849,13 +3962,13 @@ So if your html looks like&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="complex-interactions"><a class="link" href="#complex-interactions">4.15. Complex interactions</a></h3>
+<h3 id="complex-interactions"><a class="link" href="#complex-interactions">5.15. Complex interactions</a></h3>
 <div class="paragraph">
 <p>WebDriver supports interactions that are more complex than simply clicking or typing into items, such as dragging.
 You can use this API directly when using Geb or use the more Geb friendly <a href="#interact-closures"><code>interact</code> DSL</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="using-actions"><a class="link" href="#using-actions">4.15.1. Using the WebDriver <code>Actions</code> API directly</a></h4>
+<h4 id="using-actions"><a class="link" href="#using-actions">5.15.1. Using the WebDriver <code>Actions</code> API directly</a></h4>
 <div class="paragraph">
 <p>A Geb navigator object is built on top of a collection of WebDriver <a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.49.0/org/openqa/selenium/WebElement.html">WebElement</a> objects.
 It is possible to access the contained <code>WebElement</code> instances via the following methods on navigator objects:</p>
@@ -3896,7 +4009,7 @@ First you will need to create an <code>Actions</code> instance after obtaining t
 </div>
 </div>
 <div class="sect3">
-<h4 id="interact-closures"><a class="link" href="#interact-closures">4.15.2. Using <code>interact()</code></a></h4>
+<h4 id="interact-closures"><a class="link" href="#interact-closures">5.15.2. Using <code>interact()</code></a></h4>
 <div class="paragraph">
 <p>To avoid having to manage building and performing an <code>Action</code> via the lifecycle of an <code>Actions</code> instance as well as having to obtain <code>WebElement</code> instances from <code>Navigator</code> when emulating user
 gestures, Geb adds the <code>interact()</code> method.
@@ -3933,7 +4046,7 @@ which take <code>WebElement</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="interact-examples"><a class="link" href="#interact-examples">4.15.3. Interact examples</a></h4>
+<h4 id="interact-examples"><a class="link" href="#interact-examples">5.15.3. Interact examples</a></h4>
 <div class="paragraph">
 <p>Calls to <code>interact()</code> can be used to perform behaviors that are more complicated than clicking buttons and anchors or typing in input fields.</p>
 </div>
@@ -4003,7 +4116,7 @@ which take <code>WebElement</code>.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="pages"><a class="link" href="#pages">5. Pages</a></h2>
+<h2 id="pages"><a class="link" href="#pages">6. Pages</a></h2>
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -4020,7 +4133,7 @@ which take <code>WebElement</code>.</p>
 </table>
 </div>
 <div class="sect2">
-<h3 id="the-page-object-pattern-2"><a class="link" href="#the-page-object-pattern-2">5.1. The Page Object pattern</a></h3>
+<h3 id="the-page-object-pattern-2"><a class="link" href="#the-page-object-pattern-2">6.1. The Page Object pattern</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="rouge highlight"><code data-lang="groovy"><span class="n">Browser</span><span class="o">.</span><span class="na">drive</span> <span class="o">{</span>
@@ -4081,13 +4194,13 @@ Geb&#8217;s support for the Page Object pattern addresses this problem.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-page-superclass"><a class="link" href="#the-page-superclass">5.2. The <code>Page</code> superclass</a></h3>
+<h3 id="the-page-superclass"><a class="link" href="#the-page-superclass">6.2. The <code>Page</code> superclass</a></h3>
 <div class="paragraph">
 <p>All page objects <strong>must</strong> inherit from <code><a href="api/geb/Page.html">Page</a></code>.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="content-dsl"><a class="link" href="#content-dsl">5.3. The content DSL</a></h3>
+<h3 id="content-dsl"><a class="link" href="#content-dsl">6.3. The content DSL</a></h3>
 <div class="paragraph">
 <p>Geb features a DSL for defining page content in a <em>templated</em> fashion, which allows very concise yet flexible page definitions.
 Pages define a <code>static</code> closure property called <code>content</code> that describes the page content.</p>
@@ -4245,7 +4358,7 @@ This allows code like the following&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="template-options"><a class="link" href="#template-options">5.3.1. Template options</a></h4>
+<h4 id="template-options"><a class="link" href="#template-options">6.3.1. Template options</a></h4>
 <div class="paragraph">
 <p>Template definitions can take different options. The syntax is&#8230;&#8203;</p>
 </div>
@@ -4798,7 +4911,7 @@ Like <code>waitFor()</code> a <code><a href="api/geb/waiting/WaitTimeoutExceptio
 </div>
 </div>
 <div class="sect3">
-<h4 id="aliasing"><a class="link" href="#aliasing">5.3.2. Aliasing</a></h4>
+<h4 id="aliasing"><a class="link" href="#aliasing">6.3.2. Aliasing</a></h4>
 <div class="paragraph">
 <p>If you wish to have the same content definitions available under different names you can create a content definition that specifies <code>aliases</code> parameter:</p>
 </div>
@@ -4823,7 +4936,7 @@ Like <code>waitFor()</code> a <code><a href="api/geb/waiting/WaitTimeoutExceptio
 </div>
 </div>
 <div class="sect3">
-<h4 id="accessing-content-names"><a class="link" href="#accessing-content-names">5.3.3. Accessing content names</a></h4>
+<h4 id="accessing-content-names"><a class="link" href="#accessing-content-names">6.3.3. Accessing content names</a></h4>
 <div class="paragraph">
 <p>Should you need to access names of the content defined using the DSL at runtime you can use the <code>contentNames</code> property of a page instance:</p>
 </div>
@@ -4846,7 +4959,7 @@ Like <code>waitFor()</code> a <code><a href="api/geb/waiting/WaitTimeoutExceptio
 </div>
 </div>
 <div class="sect2">
-<h3 id="at-checker"><a class="link" href="#at-checker">5.4. &#8220;At&#8221; verification</a></h3>
+<h3 id="at-checker"><a class="link" href="#at-checker">6.4. &#8220;At&#8221; verification</a></h3>
 <div class="paragraph">
 <p>Each page can define a way to check whether the underlying browser is at the page that the page class actually represents.
 This is done via a <code>static</code> <code>at</code> closure&#8230;&#8203;</p>
@@ -5090,7 +5203,7 @@ of such pages.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="page-urls"><a class="link" href="#page-urls">5.5. Page URLs</a></h3>
+<h3 id="page-urls"><a class="link" href="#page-urls">6.5. Page URLs</a></h3>
 <div class="paragraph">
 <p>Pages can define URLs via the <code>static</code> <code>url</code> property.</p>
 </div>
@@ -5114,7 +5227,7 @@ of such pages.</p>
 <p>See the section on <a href="#base-url">the base url</a> for notes about URLs and slashes.</p>
 </div>
 <div class="sect3">
-<h4 id="url-fragments"><a class="link" href="#url-fragments">5.5.1. URL fragments</a></h4>
+<h4 id="url-fragments"><a class="link" href="#url-fragments">6.5.1. URL fragments</a></h4>
 <div class="paragraph">
 <p>Pages can also define URL fragment identifiers (the part after a <code>#</code> character at the end of an url) via the <code>static</code> <code>fragment</code> property.</p>
 </div>
@@ -5160,7 +5273,7 @@ The latter is particularly useful when dealing with single page applications tha
 </div>
 </div>
 <div class="sect3">
-<h4 id="page-level-at-check-waiting"><a class="link" href="#page-level-at-check-waiting">5.5.2. Page level <code>atCheckWaiting</code> configuration</a></h4>
+<h4 id="page-level-at-check-waiting"><a class="link" href="#page-level-at-check-waiting">6.5.2. Page level <code>atCheckWaiting</code> configuration</a></h4>
 <div class="paragraph">
 <p>At checkers for a specific page can be configured to be implicitly wrapped with <code>waitFor()</code> calls.
 This can be set with the <code>static</code> <code>atCheckWaiting</code> property.</p>
@@ -5181,7 +5294,7 @@ This can be set with the <code>static</code> <code>atCheckWaiting</code> propert
 </div>
 </div>
 <div class="sect2">
-<h3 id="advanced-page-navigation"><a class="link" href="#advanced-page-navigation">5.6. Advanced page navigation</a></h3>
+<h3 id="advanced-page-navigation"><a class="link" href="#advanced-page-navigation">6.6. Advanced page navigation</a></h3>
 <div class="paragraph">
 <p>Page classes can customise how they generate URLs when used in conjunction with the browser <code>to()</code> method.</p>
 </div>
@@ -5266,7 +5379,7 @@ Consider the following&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="named-params"><a class="link" href="#named-params">5.6.1. Named params</a></h4>
+<h4 id="named-params"><a class="link" href="#named-params">6.6.1. Named params</a></h4>
 <div class="paragraph">
 <p>Any type of argument can be used with the <code>to()</code> method, <strong>except</strong> named parameters (i.e. a <code>Map</code>).
 Named parameters are <strong>always</strong> interpreted as query parameters and they are never sent
@@ -5284,7 +5397,7 @@ using the classes from the above example&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="advanced-page-navigation-url-fragments"><a class="link" href="#advanced-page-navigation-url-fragments">5.6.2. URL fragments</a></h4>
+<h4 id="advanced-page-navigation-url-fragments"><a class="link" href="#advanced-page-navigation-url-fragments">6.6.2. URL fragments</a></h4>
 <div class="paragraph">
 <p>An instance of <code><a href="api/geb/url/UrlFragment.html">UrlFragment</a></code> can be passed as an argument which follows a page class or instance when calling <code>to()</code> in order to dynamically control the fragment identifier part of the url.
 The <code>UrlFragment</code> class comes with two static factory methods: <a href="api/geb/url/UrlFragment.html#of(java.lang.String)">one for creating a fragment from an explicit <code>String</code></a> and <a href="api/geb/url/UrlFragment.html#of(Map)">one for creating a fragment from a <code>Map</code> which is then form encoded</a>.</p>
@@ -5329,7 +5442,7 @@ The <code>UrlFragment</code> class comes with two static factory methods: <a hre
 </div>
 </div>
 <div class="sect2">
-<h3 id="parameterized-pages"><a class="link" href="#parameterized-pages">5.7. Parametrized pages</a></h3>
+<h3 id="parameterized-pages"><a class="link" href="#parameterized-pages">6.7. Parametrized pages</a></h3>
 <div class="paragraph">
 <p><code>Browser</code> methods like <code><a href="api/geb/Browser.html#to(java.util.Map,%20T,%20java.lang.Object)">to()</a></code>, <code><a href="api/geb/Browser.html#via(java.util.Map,%20T,%20java.lang.Object)">via()</a></code>, <code><a href="api/geb/Browser.html#at(T)">at()</a></code> and <code><a href="api/geb/Browser.html#page(Class)">page()</a></code> accept not only page classes but page instances as well.
 This is useful for example when parameterizing pages to use property values in &#8220;at&#8221; checkers:</p>
@@ -5381,7 +5494,7 @@ Failing to pass the page instance to one of these methods and calling any method
 </div>
 </div>
 <div class="sect2">
-<h3 id="pages-inheritance"><a class="link" href="#pages-inheritance">5.8. Inheritance</a></h3>
+<h3 id="pages-inheritance"><a class="link" href="#pages-inheritance">6.8. Inheritance</a></h3>
 <div class="paragraph">
 <p>Pages can be arranged in an inheritance hierarchy. The content definitions are merged&#8230;&#8203;</p>
 </div>
@@ -5414,12 +5527,12 @@ Failing to pass the page instance to one of these methods and calling any method
 </div>
 </div>
 <div class="sect2">
-<h3 id="lifecycle-hooks"><a class="link" href="#lifecycle-hooks">5.9. Lifecycle hooks</a></h3>
+<h3 id="lifecycle-hooks"><a class="link" href="#lifecycle-hooks">6.9. Lifecycle hooks</a></h3>
 <div class="paragraph">
 <p>Page classes can optionally implement methods that are called when the page is set as the browser&#8217;s current page and when it is swapped out for another page. This can be used to transfer state between pages.</p>
 </div>
 <div class="sect3">
-<h4 id="onloadpage-previouspage"><a class="link" href="#onloadpage-previouspage">5.9.1. <code>onLoad(Page previousPage)</code></a></h4>
+<h4 id="onloadpage-previouspage"><a class="link" href="#onloadpage-previouspage">6.9.1. <code>onLoad(Page previousPage)</code></a></h4>
 <div class="paragraph">
 <p>The <code>onLoad()</code> method is called with previous page object instance when the page becomes the new page object for a browser.</p>
 </div>
@@ -5448,7 +5561,7 @@ Failing to pass the page instance to one of these methods and calling any method
 </div>
 </div>
 <div class="sect3">
-<h4 id="onunloadpage-newpage"><a class="link" href="#onunloadpage-newpage">5.9.2. <code>onUnload(Page newPage)</code></a></h4>
+<h4 id="onunloadpage-newpage"><a class="link" href="#onunloadpage-newpage">6.9.2. <code>onUnload(Page newPage)</code></a></h4>
 <div class="paragraph">
 <p>The <code>onUnload()</code> method is called with next page object instance when the page is being replaced as the page object for the browser.</p>
 </div>
@@ -5477,7 +5590,7 @@ Failing to pass the page instance to one of these methods and calling any method
 </div>
 </div>
 <div class="sect3">
-<h4 id="listening-to-page-events"><a class="link" href="#listening-to-page-events">5.9.3. Listening to Page events</a></h4>
+<h4 id="listening-to-page-events"><a class="link" href="#listening-to-page-events">6.9.3. Listening to Page events</a></h4>
 <div class="paragraph">
 <p>It is possible to register a listener that gets notified every time certain events around switching and at checking pages occur.
 The best reference for events that can be listened to is <a href="api/geb/PageEventListener.html">the documentation for <code>PageEventListener</code> interface</a>.
@@ -5505,13 +5618,13 @@ If you wish to only listen to a subset of page events then <code><a href="api/ge
 </div>
 </div>
 <div class="sect2">
-<h3 id="dealing-with-frames"><a class="link" href="#dealing-with-frames">5.10. Dealing with frames</a></h3>
+<h3 id="dealing-with-frames"><a class="link" href="#dealing-with-frames">6.10. Dealing with frames</a></h3>
 <div class="paragraph">
 <p>Frames might seem a thing of the past, but if you&#8217;re accessing or testing some legacy application with Geb, you might still need to deal with them.
 Thankfully, Geb makes working with them groovier thanks to the <code>withFrame()</code> method which is available on <code>Browser</code>, <code>Page</code> and <code>Module</code> instances.</p>
 </div>
 <div class="sect3">
-<h4 id="executing-code-in-the-context-of-a-frame"><a class="link" href="#executing-code-in-the-context-of-a-frame">5.10.1. Executing code in the context of a frame</a></h4>
+<h4 id="executing-code-in-the-context-of-a-frame"><a class="link" href="#executing-code-in-the-context-of-a-frame">6.10.1. Executing code in the context of a frame</a></h4>
 <div class="paragraph">
 <p>There are multiple flavours of the <code>withFrame()</code> method, but for all of them the last closure parameter is executed in the context of a frame specified by the first parameter.
 The value returned by the closure parameter is returned from the method and after the execution the page is restored to what it was before the call.
@@ -5594,7 +5707,7 @@ at index <code>2</code></p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="switching-pages-and-frames-at-once"><a class="link" href="#switching-pages-and-frames-at-once">5.10.2. Switching pages and frames at once</a></h4>
+<h4 id="switching-pages-and-frames-at-once"><a class="link" href="#switching-pages-and-frames-at-once">6.10.2. Switching pages and frames at once</a></h4>
 <div class="paragraph">
 <p>All of the aforementioned <code>withFrame()</code> variants also accept an optional second argument (a page class or a page instance) which allows to switch page for the execution of the closure passed as
 the last parameter. If the page used specifies an &#8220;at&#8221; checker it will be verified after switching the context to the frame.</p>
@@ -5658,7 +5771,7 @@ the last parameter. If the page used specifies an &#8220;at&#8221; checker it wi
 </div>
 </div>
 <div class="sect1">
-<h2 id="modules"><a class="link" href="#modules">6. Modules</a></h2>
+<h2 id="modules"><a class="link" href="#modules">7. Modules</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Modules are re-usable definitions of content that can be used across multiple pages.
@@ -5761,7 +5874,7 @@ They are useful for modelling things like UI widgets that are used across multip
 </div>
 </div>
 <div class="sect2">
-<h3 id="base-and-context"><a class="link" href="#base-and-context">6.1. Base and context</a></h3>
+<h3 id="base-and-context"><a class="link" href="#base-and-context">7.1. Base and context</a></h3>
 <div class="paragraph">
 <p>Modules can be localised to a specific section of the page that they are used in, or they can specify an absolute context as part of their definition.
 There are two ways that a modules base/context can be defined.</p>
@@ -5888,7 +6001,7 @@ If the initialization statement does not use a <code>Navigator</code>, the modul
 </div>
 </div>
 <div class="sect2">
-<h3 id="module-is-a-navigator"><a class="link" href="#module-is-a-navigator">6.2. <code>Module</code> is-a <code>Navigator</code></a></h3>
+<h3 id="module-is-a-navigator"><a class="link" href="#module-is-a-navigator">7.2. <code>Module</code> is-a <code>Navigator</code></a></h3>
 <div class="paragraph">
 <p>Modules always have a base navigator associated with them (if you don&#8217;t specify a base for a module at all then it will be assigned the root element of the document as the base) so it is natural to
 think of them as navigators.
@@ -5955,7 +6068,7 @@ Keeping in mind that <code>Module</code> implements <code>Navigator</code> and c
 </div>
 </div>
 <div class="sect2">
-<h3 id="reusing-modules-across-pages"><a class="link" href="#reusing-modules-across-pages">6.3. Reusing modules across pages</a></h3>
+<h3 id="reusing-modules-across-pages"><a class="link" href="#reusing-modules-across-pages">7.3. Reusing modules across pages</a></h3>
 <div class="paragraph">
 <p>As previously stated, modules can be used to model page fragments that are reused across multiple pages.
 For example, many different types of pages in your application may show information about the user&#8217;s shopping cart.
@@ -5989,7 +6102,7 @@ You could handle this with modules&#8230;&#8203;</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="repeating-content"><a class="link" href="#repeating-content">6.4. Using modules for repeating content</a></h3>
+<h3 id="repeating-content"><a class="link" href="#repeating-content">7.4. Using modules for repeating content</a></h3>
 <div class="paragraph">
 <p>Other than content that is repeated on different pages (like the shopping cart mentioned above), pages also can have content that is repeated on the page itself.
 On a checkout page, the contents of the shopping cart could be summarized with the product name, the quantity and price for each product contained.
@@ -6112,20 +6225,20 @@ To be able to return a list of different instances it needs a closure which acts
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-content-dsl"><a class="link" href="#the-content-dsl">6.5. The content DSL</a></h3>
+<h3 id="the-content-dsl"><a class="link" href="#the-content-dsl">7.5. The content DSL</a></h3>
 <div class="paragraph">
 <p>The Content DSL used for modules is <em>exactly</em> the same as the <a href="#content-dsl">one used for pages</a>, so all of the same options and techniques can be used.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="inheritance"><a class="link" href="#inheritance">6.6. Inheritance</a></h3>
+<h3 id="inheritance"><a class="link" href="#inheritance">7.6. Inheritance</a></h3>
 <div class="paragraph">
 <p>Modules can use inheritance in the <a href="#pages-inheritance">same way that pages can</a>.
 That is, their content definitions are merged with any content redefined in the subclass taking precedence over the superclass.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="form-control-modules"><a class="link" href="#form-control-modules">6.7. Form control modules</a></h3>
+<h3 id="form-control-modules"><a class="link" href="#form-control-modules">7.7. Form control modules</a></h3>
 <div class="paragraph">
 <p>If you are using Geb in <a href="#strong-typing">a strongly typed manner</a> you might consider using the provided <a href="api/geb/module/package-summary.html">modules modelling form controls</a> instead of
 <a href="#setting-form-control-values">manipulating them directly using the <code>Navigator</code> API</a>.
@@ -6149,7 +6262,7 @@ They also verify that the base contains an element of the expected type providin
 </table>
 </div>
 <div class="sect3">
-<h4 id="form-element"><a class="link" href="#form-element">6.7.1. <code>FormElement</code></a></h4>
+<h4 id="form-element"><a class="link" href="#form-element">7.7.1. <code>FormElement</code></a></h4>
 <div class="paragraph">
 <p><code><a href="api/geb/module/FormElement.html">FormElement</a></code> is a base class for all modules modelling form controls (apart from <a href="#radio-buttons-module"><code>RadioButtons</code></a>) and provides shortcut property methods for checking if a control is disabled or read
 only.
@@ -6181,7 +6294,7 @@ You will usually call these methods on the module classes for specific control t
 </div>
 </div>
 <div class="sect3">
-<h4 id="checkbox-module"><a class="link" href="#checkbox-module">6.7.2. <code>Checkbox</code></a></h4>
+<h4 id="checkbox-module"><a class="link" href="#checkbox-module">7.7.2. <code>Checkbox</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/Checkbox.html">Checkbox</a></code> module provides utility methods for checking and unchecking checkboxes as well as property methods for retrieving their state.</p>
 </div>
@@ -6218,7 +6331,7 @@ You will usually call these methods on the module classes for specific control t
 </div>
 </div>
 <div class="sect3">
-<h4 id="select-2"><a class="link" href="#select-2">6.7.3. <code>Select</code></a></h4>
+<h4 id="select-2"><a class="link" href="#select-2">7.7.3. <code>Select</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/Select.html">Select</a></code> module provides property methods for selecting options as well as retrieving selected option&#8217;s value and text of a single choice select element.</p>
 </div>
@@ -6257,7 +6370,7 @@ You will usually call these methods on the module classes for specific control t
 </div>
 </div>
 <div class="sect3">
-<h4 id="multipleselect"><a class="link" href="#multipleselect">6.7.4. <code>MultipleSelect</code></a></h4>
+<h4 id="multipleselect"><a class="link" href="#multipleselect">7.7.4. <code>MultipleSelect</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/MultipleSelect.html">MultipleSelect</a></code> module provides property methods for selecting options as well as retrieving selected option&#8217;s value and text of a multiple choice select element.
 These methods take and return lists of strings.</p>
@@ -6299,7 +6412,7 @@ These methods take and return lists of strings.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="textinput"><a class="link" href="#textinput">6.7.5. <code>TextInput</code></a></h4>
+<h4 id="textinput"><a class="link" href="#textinput">7.7.5. <code>TextInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/TextInput.html">TextInput</a></code> module provides property methods for setting and retrieving text of an input text element.</p>
 </div>
@@ -6328,7 +6441,7 @@ These methods take and return lists of strings.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="textarea"><a class="link" href="#textarea">6.7.6. <code>Textarea</code></a></h4>
+<h4 id="textarea"><a class="link" href="#textarea">7.7.6. <code>Textarea</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/Textarea.html">Textarea</a></code> module provides property methods for setting and retrieving text of a textarea element.</p>
 </div>
@@ -6357,7 +6470,7 @@ These methods take and return lists of strings.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="fileinput"><a class="link" href="#fileinput">6.7.7. <code>FileInput</code></a></h4>
+<h4 id="fileinput"><a class="link" href="#fileinput">7.7.7. <code>FileInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/FileInput.html">FileInput</a></code> module provides a setter for the file location of a file input element.
 The method takes a <code>File</code> instance.</p>
@@ -6387,7 +6500,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="radio-buttons-module"><a class="link" href="#radio-buttons-module">6.7.8. <code>RadioButtons</code></a></h4>
+<h4 id="radio-buttons-module"><a class="link" href="#radio-buttons-module">7.7.8. <code>RadioButtons</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/RadioButtons.html">RadioButtons</a></code> module provides property methods for checking radio buttons as well as retrieving selected button&#8217;s value and text of the label associated with it.</p>
 </div>
@@ -6427,7 +6540,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="searchinput"><a class="link" href="#searchinput">6.7.9. <code>SearchInput</code></a></h4>
+<h4 id="searchinput"><a class="link" href="#searchinput">7.7.9. <code>SearchInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/SearchInput.html">SearchInput</a></code> module provides property methods for setting and retrieving text of a search input element.</p>
 </div>
@@ -6456,7 +6569,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="dateinput"><a class="link" href="#dateinput">6.7.10. <code>DateInput</code></a></h4>
+<h4 id="dateinput"><a class="link" href="#dateinput">7.7.10. <code>DateInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/DateInput.html">DateInput</a></code> module provides property methods for setting and retrieving date of a date input element.</p>
 </div>
@@ -6489,7 +6602,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="datetimelocalinput"><a class="link" href="#datetimelocalinput">6.7.11. <code>DateTimeLocalInput</code></a></h4>
+<h4 id="datetimelocalinput"><a class="link" href="#datetimelocalinput">7.7.11. <code>DateTimeLocalInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/DateTimeLocalInput.html">DateTimeLocalInput</a></code> module provides property methods for setting and retrieving date and time of a datetime-local input element.</p>
 </div>
@@ -6522,7 +6635,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="timeinput"><a class="link" href="#timeinput">6.7.12. <code>TimeInput</code></a></h4>
+<h4 id="timeinput"><a class="link" href="#timeinput">7.7.12. <code>TimeInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/TimeInput.html">TimeInput</a></code> module provides property methods for setting and retrieving time of a time input element.</p>
 </div>
@@ -6562,7 +6675,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="monthinput"><a class="link" href="#monthinput">6.7.13. <code>MonthInput</code></a></h4>
+<h4 id="monthinput"><a class="link" href="#monthinput">7.7.13. <code>MonthInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/MonthInput.html">MonthInput</a></code> module provides property methods for setting and retrieving the month of a month input element.</p>
 </div>
@@ -6602,7 +6715,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="weekinput"><a class="link" href="#weekinput">6.7.14. <code>WeekInput</code></a></h4>
+<h4 id="weekinput"><a class="link" href="#weekinput">7.7.14. <code>WeekInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/WeekInput.html">WeekInput</a></code> module provides property methods for setting and retrieving the week of a week input element.</p>
 </div>
@@ -6642,7 +6755,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="emailinput"><a class="link" href="#emailinput">6.7.15. <code>EmailInput</code></a></h4>
+<h4 id="emailinput"><a class="link" href="#emailinput">7.7.15. <code>EmailInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/EmailInput.html">EmailInput</a></code> module provides property methods for setting and retrieving text of an email input element.</p>
 </div>
@@ -6671,7 +6784,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="telinput"><a class="link" href="#telinput">6.7.16. <code>TelInput</code></a></h4>
+<h4 id="telinput"><a class="link" href="#telinput">7.7.16. <code>TelInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/TelInput.html">TelInput</a></code> module provides property methods for setting and retrieving text of a tel input element.</p>
 </div>
@@ -6700,7 +6813,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="numberinput"><a class="link" href="#numberinput">6.7.17. <code>NumberInput</code></a></h4>
+<h4 id="numberinput"><a class="link" href="#numberinput">7.7.17. <code>NumberInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/NumberInput.html">NumberInput</a></code> module provides property methods for setting and retrieving the current number value of a number input element. It also provides methods to retrieve the values of its <code>min</code>, <code>max</code> and <code>step</code> attributes.</p>
 </div>
@@ -6732,7 +6845,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="rangeinput"><a class="link" href="#rangeinput">6.7.18. <code>RangeInput</code></a></h4>
+<h4 id="rangeinput"><a class="link" href="#rangeinput">7.7.18. <code>RangeInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/RangeInput.html">RangeInput</a></code> module provides property methods for setting and retrieving the current number value of a range input element. It also provides methods to retrieve the values of its <code>min</code>, <code>max</code> and <code>step</code> attributes.</p>
 </div>
@@ -6764,7 +6877,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="urlinput"><a class="link" href="#urlinput">6.7.19. <code>UrlInput</code></a></h4>
+<h4 id="urlinput"><a class="link" href="#urlinput">7.7.19. <code>UrlInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/UrlInput.html">UrlInput</a></code> module provides property methods for setting and retrieving text of a url input element.</p>
 </div>
@@ -6793,7 +6906,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="passwordinput"><a class="link" href="#passwordinput">6.7.20. <code>PasswordInput</code></a></h4>
+<h4 id="passwordinput"><a class="link" href="#passwordinput">7.7.20. <code>PasswordInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/PasswordInput.html">PasswordInput</a></code> module provides property methods for setting and retrieving text of a password input element.</p>
 </div>
@@ -6822,7 +6935,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="colorinput"><a class="link" href="#colorinput">6.7.21. <code>ColorInput</code></a></h4>
+<h4 id="colorinput"><a class="link" href="#colorinput">7.7.21. <code>ColorInput</code></a></h4>
 <div class="paragraph">
 <p>The <code><a href="api/geb/module/ColorInput.html">ColorInput</a></code> module provides property methods for setting and retrieving the color of a color input element.</p>
 </div>
@@ -6865,7 +6978,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="unwrapping-modules-returned-from-the-content-dsl"><a class="link" href="#unwrapping-modules-returned-from-the-content-dsl">6.8. Unwrapping modules returned from the <code>content</code> DSL</a></h3>
+<h3 id="unwrapping-modules-returned-from-the-content-dsl"><a class="link" href="#unwrapping-modules-returned-from-the-content-dsl">7.8. Unwrapping modules returned from the <code>content</code> DSL</a></h3>
 <div class="paragraph">
 <p>For the sake of better error reporting, current implementation wraps any module declared within <code>content</code> block into
 <code>geb.content.TemplateDerivedPageContent</code> instance.</p>
@@ -6977,7 +7090,7 @@ The method takes a <code>File</code> instance.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuration"><a class="link" href="#configuration">7. Configuration</a></h2>
+<h2 id="configuration"><a class="link" href="#configuration">8. Configuration</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb provides a configuration mechanism that allows you to control various aspects of Geb in a flexible way.
@@ -6987,9 +7100,9 @@ At the heart of this is the <code><a href="api/geb/Configuration.html">Configura
 <p>There are three general mechanisms for influencing configuration; <em>system properties</em>, <em>config script</em> and the <em>build adapter</em>.</p>
 </div>
 <div class="sect2">
-<h3 id="mechanisms"><a class="link" href="#mechanisms">7.1. Mechanisms</a></h3>
+<h3 id="mechanisms"><a class="link" href="#mechanisms">8.1. Mechanisms</a></h3>
 <div class="sect3">
-<h4 id="the-config-script"><a class="link" href="#the-config-script">7.1.1. The config script</a></h4>
+<h4 id="the-config-script"><a class="link" href="#the-config-script">8.1.1. The config script</a></h4>
 <div class="paragraph">
 <p>Geb attempts to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> script named <code>GebConfig.groovy</code> from the <em>default package</em> (in other words, in the root of a directory that is on the classpath).
 If it is not found, Geb will try to load a <code><a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/gapi/groovy/util/ConfigSlurper.html">ConfigSlurper</a></code> class named <code>GebConfig</code> from the <em>default package</em> - this is useful if you run tests that use Geb from an IDE because you won&#8217;t have
@@ -7067,7 +7180,7 @@ For example, when using Gradle you could control the Geb environment by specifyi
 </div>
 </div>
 <div class="sect3">
-<h4 id="system-properties"><a class="link" href="#system-properties">7.1.2. System properties</a></h4>
+<h4 id="system-properties"><a class="link" href="#system-properties">8.1.2. System properties</a></h4>
 <div class="paragraph">
 <p>Some config options can be specified by system properties.
 In general, config options specified by system properties will <em>override</em> values set in the config script.
@@ -7075,7 +7188,7 @@ See the config options below for which options are controllable via system prope
 </div>
 </div>
 <div class="sect3">
-<h4 id="build-adapter-config"><a class="link" href="#build-adapter-config">7.1.3. Build adapter</a></h4>
+<h4 id="build-adapter-config"><a class="link" href="#build-adapter-config">8.1.3. Build adapter</a></h4>
 <div class="paragraph">
 <p>The build adapter mechanism exists to allow Geb to integrate with development/build environments that logically dictate config options.</p>
 </div>
@@ -7106,9 +7219,9 @@ adapter which is not true for system properties.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-options"><a class="link" href="#config-options">7.2. Config options</a></h3>
+<h3 id="config-options"><a class="link" href="#config-options">8.2. Config options</a></h3>
 <div class="sect3">
-<h4 id="driver-implementation-configuration"><a class="link" href="#driver-implementation-configuration">7.2.1. Driver implementation</a></h4>
+<h4 id="driver-implementation-configuration"><a class="link" href="#driver-implementation-configuration">8.2.1. Driver implementation</a></h4>
 <div class="paragraph">
 <p>The driver to use is specified by the config key <code>driver</code>, or the system property <code>geb.driver</code>.</p>
 </div>
@@ -7231,7 +7344,7 @@ If none of these classes can be found, an <a href="api/geb/error/UnableToLoadAny
 </div>
 </div>
 <div class="sect3">
-<h4 id="navigator-factory"><a class="link" href="#navigator-factory">7.2.2. Navigator factory</a></h4>
+<h4 id="navigator-factory"><a class="link" href="#navigator-factory">8.2.2. Navigator factory</a></h4>
 <div class="paragraph">
 <p>It is possible to specify your own implementation of <a href="api/geb/navigator/factory/NavigatorFactory.html"><code>NavigatorFactory</code></a> via configuration.
 This is useful if you want to extend the <code><a href="api/geb/navigator/Navigator.html">Navigator</a></code> class to provide your own behaviour extensions.</p>
@@ -7271,7 +7384,7 @@ The benefit of the latter is that if you are <a href="#strong-typing">strongly t
 </div>
 </div>
 <div class="sect3">
-<h4 id="driver-caching-configuration"><a class="link" href="#driver-caching-configuration">7.2.3. Driver caching</a></h4>
+<h4 id="driver-caching-configuration"><a class="link" href="#driver-caching-configuration">8.2.3. Driver caching</a></h4>
 <div class="paragraph">
 <p>Geb&#8217;s ability to cache a driver and re-use it for the lifetime of the JVM (i.e. <a href="#implicit-driver-lifecycle">the implicit driver lifecycle</a>) can be disabled by setting the <code>cacheDriver</code> config option
 to <code>false</code>.
@@ -7288,7 +7401,7 @@ You can disable this by setting the config property <code>quitCachedDriverOnShut
 </div>
 </div>
 <div class="sect3">
-<h4 id="quitting-driver-on-browser-reset"><a class="link" href="#quitting-driver-on-browser-reset">7.2.4. Quitting driver on browser reset</a></h4>
+<h4 id="quitting-driver-on-browser-reset"><a class="link" href="#quitting-driver-on-browser-reset">8.2.4. Quitting driver on browser reset</a></h4>
 <div class="paragraph">
 <p>If for some reason you would like the driver not to be cached but quit after each test and recreated before the next one then Geb supports such management of the driver instance.
 To quit the driver after each test you can set the <code>quitDriverOnBrowserReset</code> config property to <code>true</code>.</p>
@@ -7314,7 +7427,7 @@ To quit the driver after each test you can set the <code>quitDriverOnBrowserRese
 </div>
 </div>
 <div class="sect3">
-<h4 id="configuration-base-url"><a class="link" href="#configuration-base-url">7.2.5. Base URL</a></h4>
+<h4 id="configuration-base-url"><a class="link" href="#configuration-base-url">8.2.5. Base URL</a></h4>
 <div class="paragraph">
 <p>The <a href="#base-url">base URL</a> to be used can be specified by setting the <code>baseUrl</code> config property (to a <code>String</code> value) or via the build adapter (the default implementation of which looks at the
 <code>geb.build.baseUrl</code> system property).
@@ -7322,7 +7435,7 @@ Any value set in the config script will take precedence over the value provided 
 </div>
 </div>
 <div class="sect3">
-<h4 id="template-options-default-values"><a class="link" href="#template-options-default-values">7.2.6. Template options default values</a></h4>
+<h4 id="template-options-default-values"><a class="link" href="#template-options-default-values">8.2.6. Template options default values</a></h4>
 <div class="paragraph">
 <p>Default values for some of the <a href="#template-options">content DSL template options</a> are configurable:</p>
 </div>
@@ -7341,7 +7454,7 @@ Any value set in the config script will take precedence over the value provided 
 </div>
 </div>
 <div class="sect3">
-<h4 id="waiting-configuration"><a class="link" href="#waiting-configuration">7.2.7. Waiting</a></h4>
+<h4 id="waiting-configuration"><a class="link" href="#waiting-configuration">8.2.7. Waiting</a></h4>
 <div class="paragraph">
 <p>The <a href="#waiting"><code>waitFor()</code></a> methods available on browser, page and module objects can be affected by configuration (this is also true for <a href="#content-dsl-wait">implicitly waiting content</a>).
 It is possible to specify default values for the timeout and retry interval, and to define presets of these values to be referred to by name.</p>
@@ -7407,7 +7520,7 @@ To make diagnostics easier in such situations it&#8217;s possible to configure G
 </div>
 </div>
 <div class="sect3">
-<h4 id="at-check-waiting"><a class="link" href="#at-check-waiting">7.2.8. Waiting in &#8220;at&#8221; checkers</a></h4>
+<h4 id="at-check-waiting"><a class="link" href="#at-check-waiting">8.2.8. Waiting in &#8220;at&#8221; checkers</a></h4>
 <div class="paragraph">
 <p>At checkers can be configured to be implicitly wrapped with <code>waitFor()</code> calls. This can be set with:</p>
 </div>
@@ -7424,7 +7537,7 @@ To make diagnostics easier in such situations it&#8217;s possible to configure G
 </div>
 </div>
 <div class="sect3">
-<h4 id="require-page-at-checkers"><a class="link" href="#require-page-at-checkers">7.2.9. Requiring &#8220;at&#8221; checkers for implicit &#8220;at&#8221; checks</a></h4>
+<h4 id="require-page-at-checkers"><a class="link" href="#require-page-at-checkers">8.2.9. Requiring &#8220;at&#8221; checkers for implicit &#8220;at&#8221; checks</a></h4>
 <div class="paragraph">
 <p>When explicitly &#8220;at&#8221; checking a page, that is passing it to <code>Browser</code>'s <code>at()</code> method, which does not define an &#8220;at&#8221; checker an <code>UndefinedAtCheckerException</code> is thrown.
 That is not the case by default when implicit &#8220;at checks&#8221; are being performed, like when using Browser&#8217;s <code>to()</code> method.
@@ -7437,7 +7550,7 @@ This behaviour can be changed to also throw <code>UndefinedAtCheckerException</c
 </div>
 </div>
 <div class="sect3">
-<h4 id="waiting-for-base-navigator"><a class="link" href="#waiting-for-base-navigator">7.2.10. Waiting for base navigator</a></h4>
+<h4 id="waiting-for-base-navigator"><a class="link" href="#waiting-for-base-navigator">8.2.10. Waiting for base navigator</a></h4>
 <div class="paragraph">
 <p>Sometimes Firefox driver times out when trying to find the root HTML element of the page. This manifests itself in an error similar to:</p>
 </div>
@@ -7461,7 +7574,7 @@ For documentation on this error, please visit: https://www.selenium.dev/document
 </div>
 </div>
 <div class="sect3">
-<h4 id="unexpected-pages-config"><a class="link" href="#unexpected-pages-config">7.2.11. Unexpected pages</a></h4>
+<h4 id="unexpected-pages-config"><a class="link" href="#unexpected-pages-config">8.2.11. Unexpected pages</a></h4>
 <div class="paragraph">
 <p>The <code>unexpectedPages</code> configuration property allows to specify a list of unexpected <code>Page</code> classes that will be checked for when &#8220;at&#8221; checks are performed.
 Given that <code>PageNotFoundPage</code> and <code>InternalServerErrorPage</code> have been defined you can use the following to configure them as unexpected pages:</p>
@@ -7476,7 +7589,7 @@ Given that <code>PageNotFoundPage</code> and <code>InternalServerErrorPage</code
 </div>
 </div>
 <div class="sect3">
-<h4 id="default-values-for-withwindow-options"><a class="link" href="#default-values-for-withwindow-options">7.2.12. Default values for <code>withWindow()</code> options</a></h4>
+<h4 id="default-values-for-withwindow-options"><a class="link" href="#default-values-for-withwindow-options">8.2.12. Default values for <code>withWindow()</code> options</a></h4>
 <div class="paragraph">
 <p>Default values for some of the <a href="#with-window-options">options for <code>withWindow()</code> calls</a> are configurable:</p>
 </div>
@@ -7487,7 +7600,7 @@ Given that <code>PageNotFoundPage</code> and <code>InternalServerErrorPage</code
 </div>
 </div>
 <div class="sect3">
-<h4 id="default-values-for-withnewwindow-options"><a class="link" href="#default-values-for-withnewwindow-options">7.2.13. Default values for <code>withNewWindow()</code> options</a></h4>
+<h4 id="default-values-for-withnewwindow-options"><a class="link" href="#default-values-for-withnewwindow-options">8.2.13. Default values for <code>withNewWindow()</code> options</a></h4>
 <div class="paragraph">
 <p>Default values for some of the <a href="#with-new-window-options">options for <code>withNewWindow()</code> calls</a> are configurable:</p>
 </div>
@@ -7501,7 +7614,7 @@ Given that <code>PageNotFoundPage</code> and <code>InternalServerErrorPage</code
 </div>
 </div>
 <div class="sect3">
-<h4 id="reporter-configuration"><a class="link" href="#reporter-configuration">7.2.14. Reporter</a></h4>
+<h4 id="reporter-configuration"><a class="link" href="#reporter-configuration">8.2.14. Reporter</a></h4>
 <div class="paragraph">
 <p>The <em>reporter</em> is the object responsible for snapshotting the state of the browser (see the <a href="#reporting">Reporting</a> chapter for details).
 All reporters are implementations of the <a href="api/geb/report/Reporter.html"><code>Reporter</code></a> interface.
@@ -7516,7 +7629,7 @@ This is a sensible default, but should you wish to use a custom reporter you can
 </div>
 </div>
 <div class="sect3">
-<h4 id="reports-directory-configuration"><a class="link" href="#reports-directory-configuration">7.2.15. Reports directory</a></h4>
+<h4 id="reports-directory-configuration"><a class="link" href="#reports-directory-configuration">8.2.15. Reports directory</a></h4>
 <div class="paragraph">
 <p>The reports dir configuration is used by to control where the browser should write reports (see the <a href="#reporting">Reporting</a> chapter for details).</p>
 </div>
@@ -7560,7 +7673,7 @@ you <strong>must</strong> set a reports dir.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="report-test-failures-configuration"><a class="link" href="#report-test-failures-configuration">7.2.16. Report test failures only</a></h4>
+<h4 id="report-test-failures-configuration"><a class="link" href="#report-test-failures-configuration">8.2.16. Report test failures only</a></h4>
 <div class="paragraph">
 <p>By default Geb will take a report at the end of each <strong>failed</strong> test method.
 The <code>reportOnTestFailureOnly</code> setting can be set to <code>false</code> if you wish for reports to be taken after each test even if a failure does not occur.</p>
@@ -7572,25 +7685,25 @@ The <code>reportOnTestFailureOnly</code> setting can be set to <code>false</code
 </div>
 </div>
 <div class="sect3">
-<h4 id="reporting-listener"><a class="link" href="#reporting-listener">7.2.17. Reporting listener</a></h4>
+<h4 id="reporting-listener"><a class="link" href="#reporting-listener">8.2.17. Reporting listener</a></h4>
 <div class="paragraph">
 <p>It is possible to specify a listener that will be notified when reports are taken. See the section on <a href="#listening-to-reporting">listening to reporting</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="navigator-events-listener"><a class="link" href="#navigator-events-listener">7.2.18. Navigator events listener</a></h4>
+<h4 id="navigator-events-listener"><a class="link" href="#navigator-events-listener">8.2.18. Navigator events listener</a></h4>
 <div class="paragraph">
 <p>It is possible to specify a listener that will be notified on certain navigator events. See the section on <a href="#listening-to-navigator-events">listening to navigator events</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="page-events-listener"><a class="link" href="#page-events-listener">7.2.19. Page events listener</a></h4>
+<h4 id="page-events-listener"><a class="link" href="#page-events-listener">8.2.19. Page events listener</a></h4>
 <div class="paragraph">
 <p>It is possible to specify a listener that will be notified on certain page events. See the section on <a href="#listening-to-page-events">listening to page events</a> for details.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="auto-clearing-cookies-configuration"><a class="link" href="#auto-clearing-cookies-configuration">7.2.20. Auto clearing cookies</a></h4>
+<h4 id="auto-clearing-cookies-configuration"><a class="link" href="#auto-clearing-cookies-configuration">8.2.20. Auto clearing cookies</a></h4>
 <div class="paragraph">
 <p>Certain integrations will automatically clear the driver&#8217;s cookies for the current domain, which is usually necessary when using an <a href="#implicit-driver-lifecycle">implicit driver</a>.
 This configuration flag, which is <code>true</code> by default, can be disabled by setting the <code>autoClearCookies</code> value in the config to <code>false</code>.</p>
@@ -7602,7 +7715,7 @@ This configuration flag, which is <code>true</code> by default, can be disabled 
 </div>
 </div>
 <div class="sect3">
-<h4 id="auto-clearing-web-storage-configuration"><a class="link" href="#auto-clearing-web-storage-configuration">7.2.21. Auto clearing web storage</a></h4>
+<h4 id="auto-clearing-web-storage-configuration"><a class="link" href="#auto-clearing-web-storage-configuration">8.2.21. Auto clearing web storage</a></h4>
 <div class="paragraph">
 <p>Certain integrations will automatically clear the driver&#8217;s web storage, that is both local and session storage, which is usually necessary when using an <a href="#implicit-driver-lifecycle">implicit driver</a>.
 This configuration flag, which is <code>false</code> by default, can be enabled by setting the <code>autoClearWebStorage</code> value in the config to <code>true</code>.</p>
@@ -7615,7 +7728,7 @@ This configuration flag, which is <code>false</code> by default, can be enabled 
 </div>
 </div>
 <div class="sect2">
-<h3 id="runtime-overrides"><a class="link" href="#runtime-overrides">7.3. Runtime overrides</a></h3>
+<h3 id="runtime-overrides"><a class="link" href="#runtime-overrides">8.3. Runtime overrides</a></h3>
 <div class="paragraph">
 <p>The <a href="api/geb/Configuration.html">Configuration</a> object also has setters for all of the config properties it exposes, allowing you to override config properties at runtime in particular circumstances if you need to.</p>
 </div>
@@ -7657,7 +7770,7 @@ To avoid configuration runtime overrides bleeding from one test to another, you 
 </div>
 </div>
 <div class="sect1">
-<h2 id="implicit-assertions"><a class="link" href="#implicit-assertions">8. Implicit assertions</a></h2>
+<h2 id="implicit-assertions"><a class="link" href="#implicit-assertions">9. Implicit assertions</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>As of Geb 0.7.0, certain parts of Geb utilise &#8220;<strong>implicit assertions</strong>&#8221;. The sole goal of this feature is to provide more informative error messages. Put simply, it means that for a given block of code, all <em>expressions</em> are automatically turned into assertions. So the following code:</p>
@@ -7742,7 +7855,7 @@ To avoid configuration runtime overrides bleeding from one test to another, you 
 This means that even when implicit assertions are used, the value is still returned and it is usable.</p>
 </div>
 <div class="sect2">
-<h3 id="at-verification"><a class="link" href="#at-verification">8.1. At verification</a></h3>
+<h3 id="at-verification"><a class="link" href="#at-verification">9.1. At verification</a></h3>
 <div class="paragraph">
 <p>Let&#8217;s take the &#8220;at checker&#8221; case.</p>
 </div>
@@ -7825,7 +7938,7 @@ You might be familiar with Spock&#8217;s <code><a href="https://spockframework.o
 </div>
 </div>
 <div class="sect2">
-<h3 id="implicit-assertions-waiting"><a class="link" href="#implicit-assertions-waiting">8.2. Waiting</a></h3>
+<h3 id="implicit-assertions-waiting"><a class="link" href="#implicit-assertions-waiting">9.2. Waiting</a></h3>
 <div class="paragraph">
 <p>Another place where implicit assertions are utilised is for <em>waiting</em>.</p>
 </div>
@@ -7933,7 +8046,7 @@ To disable implicit assertions in a particular <code>waitFor()</code> or <code>r
 </div>
 </div>
 <div class="sect2">
-<h3 id="implicit-assertions-mechanics"><a class="link" href="#implicit-assertions-mechanics">8.3. How it works</a></h3>
+<h3 id="implicit-assertions-mechanics"><a class="link" href="#implicit-assertions-mechanics">9.3. How it works</a></h3>
 <div class="paragraph">
 <p>The &#8220;implicit assertions&#8221; feature is implemented as a <a href="https://www.groovy-lang.org/metaprogramming.html#_compile_time_metaprogramming">Groovy compile time transformation</a>, which literally
 turns all expressions in a candidate block of code into assertions.</p>
@@ -7956,13 +8069,13 @@ If your dependency management system does not do this, or if you are manually ma
 </div>
 </div>
 <div class="sect1">
-<h2 id="javascript-ajax-and-dynamic-pages"><a class="link" href="#javascript-ajax-and-dynamic-pages">9. Javascript, AJAX and dynamic pages</a></h2>
+<h2 id="javascript-ajax-and-dynamic-pages"><a class="link" href="#javascript-ajax-and-dynamic-pages">10. Javascript, AJAX and dynamic pages</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This section discusses how to deal with some of the challenges in testing and/or automating modern web applications.</p>
 </div>
 <div class="sect2">
-<h3 id="js-object"><a class="link" href="#js-object">9.1. The &#8220;js&#8221; object</a></h3>
+<h3 id="js-object"><a class="link" href="#js-object">10.1. The &#8220;js&#8221; object</a></h3>
 <div class="paragraph">
 <p>The browser instance exposes a <a href="api/geb/Browser.html#getJs()"><code>js</code></a> object that provides support for working with JavaScript over and above what WebDriver provides.
 It&#8217;s important to understand how WebDriver does handle JavaScript, which is through a driver&#8217;s implementation of
@@ -8010,7 +8123,7 @@ All drivers however throw <em>some kind</em> of exception when this happens.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="accessing-variables"><a class="link" href="#accessing-variables">9.1.1. Accessing variables</a></h4>
+<h4 id="accessing-variables"><a class="link" href="#accessing-variables">10.1.1. Accessing variables</a></h4>
 <div class="paragraph">
 <p>Any <em>global</em> JavaScript variables inside the browser can be read as <em>properties</em> of the <code>js</code> object.</p>
 </div>
@@ -8066,7 +8179,7 @@ All drivers however throw <em>some kind</em> of exception when this happens.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="calling-methods"><a class="link" href="#calling-methods">9.1.2. Calling methods</a></h4>
+<h4 id="calling-methods"><a class="link" href="#calling-methods">10.1.2. Calling methods</a></h4>
 <div class="paragraph">
 <p>Any <em>global</em> JavaScript functions can be called as methods on the <code>js</code> object.</p>
 </div>
@@ -8131,7 +8244,7 @@ All drivers however throw <em>some kind</em> of exception when this happens.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="executing-arbitrary-code"><a class="link" href="#executing-arbitrary-code">9.1.3. Executing arbitrary code</a></h4>
+<h4 id="executing-arbitrary-code"><a class="link" href="#executing-arbitrary-code">10.1.3. Executing arbitrary code</a></h4>
 <div class="paragraph">
 <p>The <code>js</code> object also has an <code>exec()</code> method that can be used to run snippets of JavaScript.
 It is identical to the <code><a href="https://www.javadoc.io/doc/org.seleniumhq.selenium/selenium-api/4.49.0/org/openqa/selenium/JavascriptExecutor.html#executeScript(java.lang.String,java.lang.Object&#8230;&#8203;)">JavascriptExecutor.executeScript()</a></code> method, except that it expects the code as last argument,
@@ -8171,7 +8284,7 @@ and accepts <code>Navigator</code> instances in addition to `WebElement`s&#8230;
 </div>
 </div>
 <div class="sect2">
-<h3 id="waiting"><a class="link" href="#waiting">9.2. Waiting</a></h3>
+<h3 id="waiting"><a class="link" href="#waiting">10.2. Waiting</a></h3>
 <div class="paragraph">
 <p>Geb provides some convenient methods for <em>waiting</em> for a certain condition to be true. This is useful for testing pages using AJAX, timers or effects.</p>
 </div>
@@ -8224,7 +8337,7 @@ closure again.</p>
 </table>
 </div>
 <div class="sect3">
-<h4 id="examples"><a class="link" href="#examples">9.2.1. Examples</a></h4>
+<h4 id="examples"><a class="link" href="#examples">10.2.1. Examples</a></h4>
 <div class="paragraph">
 <p>Here is an example showing one way of using <code>waitFor()</code> to deal with the situation where clicking a button invokes an AJAX request that creates a new <code>div</code> on its completion.</p>
 </div>
@@ -8314,7 +8427,7 @@ See the section on <a href="#implicit-assertions">implicit assertions</a> for mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="wait-for-custom-message"><a class="link" href="#wait-for-custom-message">9.2.2. Custom message</a></h4>
+<h4 id="wait-for-custom-message"><a class="link" href="#wait-for-custom-message">10.2.2. Custom message</a></h4>
 <div class="paragraph">
 <p>If you wish to add a custom message to <code>WaitTimeoutException</code> that is being thrown when <code>waitFor</code> call times out you can do so by providing a message parameter to the <code>waitFor</code> call:</p>
 </div>
@@ -8325,7 +8438,7 @@ See the section on <a href="#implicit-assertions">implicit assertions</a> for mo
 </div>
 </div>
 <div class="sect3">
-<h4 id="suppressing-waittimeoutexception"><a class="link" href="#suppressing-waittimeoutexception">9.2.3. Suppressing <code>WaitTimeoutException</code></a></h4>
+<h4 id="suppressing-waittimeoutexception"><a class="link" href="#suppressing-waittimeoutexception">10.2.3. Suppressing <code>WaitTimeoutException</code></a></h4>
 <div class="paragraph">
 <p>If you wish for <code>WaitTimeoutException</code> not to be thrown, and the last evaluation result to be returned instead when the wait times out then you can set the <code>noException</code> parameter to a truthy value:</p>
 </div>
@@ -8337,7 +8450,7 @@ See the section on <a href="#implicit-assertions">implicit assertions</a> for mo
 </div>
 </div>
 <div class="sect2">
-<h3 id="reloading-page-when-waiting"><a class="link" href="#reloading-page-when-waiting">9.3. Reloading the page when waiting</a></h3>
+<h3 id="reloading-page-when-waiting"><a class="link" href="#reloading-page-when-waiting">10.3. Reloading the page when waiting</a></h3>
 <div class="paragraph">
 <p>Apart from the generic waiting support Geb also comes with a convenience method which reloads the page each time before the block passed to it is evaluated.</p>
 </div>
@@ -8368,7 +8481,7 @@ This means that you can pass the same arguments to it as to <code>waitFor()</cod
 </div>
 </div>
 <div class="sect2">
-<h3 id="controlling-network-conditions"><a class="link" href="#controlling-network-conditions">9.4. Controlling network conditions</a></h3>
+<h3 id="controlling-network-conditions"><a class="link" href="#controlling-network-conditions">10.4. Controlling network conditions</a></h3>
 <div class="paragraph">
 <p>When driving modern, single page, highly asynchronous web applications timing issues frequently appear and are the bane of browser automation leading to flakey tests.
 Correctly waiting for asynchronous events to complete becomes essential.
@@ -8421,7 +8534,7 @@ Animations would be another example of asynchronicity in web applications and th
 </div>
 </div>
 <div class="sect2">
-<h3 id="alert-and-confirm-dialogs"><a class="link" href="#alert-and-confirm-dialogs">9.5. Alert and confirm dialogs</a></h3>
+<h3 id="alert-and-confirm-dialogs"><a class="link" href="#alert-and-confirm-dialogs">10.5. Alert and confirm dialogs</a></h3>
 <div class="paragraph">
 <p>WebDriver currently does not handle the alert() and confirm() dialog windows.
 However, we can fake it through some JavaScript magic as <a href="https://github.com/SeleniumHQ/selenium-google-code-issue-archive/issues/27#issuecomment-191402931">discussed on the WebDriver issue for this</a>.
@@ -8453,7 +8566,7 @@ To do this, you need to disable Geb&#8217;s handling by changing your code to no
 </table>
 </div>
 <div class="sect3">
-<h4 id="alert"><a class="link" href="#alert">9.5.1. <code>alert()</code></a></h4>
+<h4 id="alert"><a class="link" href="#alert">10.5.1. <code>alert()</code></a></h4>
 <div class="paragraph">
 <p>There are three methods that deal with <code>alert()</code> dialogs:</p>
 </div>
@@ -8543,7 +8656,7 @@ If a page change was detected the <code>withAlert()</code> method will return a 
 </div>
 </div>
 <div class="sect3">
-<h4 id="confirm"><a class="link" href="#confirm">9.5.2. <code>confirm()</code></a></h4>
+<h4 id="confirm"><a class="link" href="#confirm">10.5.2. <code>confirm()</code></a></h4>
 <div class="paragraph">
 <p>There are five methods that deal with <code>confirm()</code> dialogs:</p>
 </div>
@@ -8627,14 +8740,14 @@ If a page change was detected, the <code>withConfirm()</code> method will return
 </div>
 </div>
 <div class="sect3">
-<h4 id="prompt"><a class="link" href="#prompt">9.5.3. <code>prompt()</code></a></h4>
+<h4 id="prompt"><a class="link" href="#prompt">10.5.3. <code>prompt()</code></a></h4>
 <div class="paragraph">
 <p>Geb does not provide any support for <code>prompt()</code> due to its infrequent and generally discouraged use.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="jquery-integration"><a class="link" href="#jquery-integration">9.6. jQuery integration</a></h3>
+<h3 id="jquery-integration"><a class="link" href="#jquery-integration">10.6. jQuery integration</a></h3>
 <div class="paragraph">
 <p>Geb has special support for <a href="https://jquery.com/">jQuery</a>.
 Navigator objects have a special adapter that makes calling jQuery methods against the underlying DOM elements simple.
@@ -8764,7 +8877,7 @@ An alternative is using <a href="#interact-closures"><code>the interact() method
 </div>
 </div>
 <div class="sect1">
-<h2 id="direct-downloading"><a class="link" href="#direct-downloading">10. Direct downloading</a></h2>
+<h2 id="direct-downloading"><a class="link" href="#direct-downloading">11. Direct downloading</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb features an API that can be used to make direct HTTP requests from the application that is executing the Geb scripts or tests.
@@ -8779,7 +8892,7 @@ would want to, e.g. drive blocks, in tests/specs, methods on page objects, metho
 Consult the <code><a href="api/geb/download/DownloadSupport.html">DownloadSupport</a></code> API reference for the various <code>download*()</code> methods that are available.</p>
 </div>
 <div class="sect2">
-<h3 id="downloading-example"><a class="link" href="#downloading-example">10.1. Downloading example</a></h3>
+<h3 id="downloading-example"><a class="link" href="#downloading-example">11.1. Downloading example</a></h3>
 <div class="paragraph">
 <p>For example, let&#8217;s say you are using Geb to exercise a web application that generates PDF documents.
 The WebDriver API can only deal with HTML documents.
@@ -8826,7 +8939,7 @@ The PDF download link href may also be relative, and Geb handles this by resolvi
 </div>
 </div>
 <div class="sect2">
-<h3 id="fine-grained-request"><a class="link" href="#fine-grained-request">10.2. Fine grained request</a></h3>
+<h3 id="fine-grained-request"><a class="link" href="#fine-grained-request">11.2. Fine grained request</a></h3>
 <div class="paragraph">
 <p>The Direct Download API can also be used for making fine grained requests which can be useful for testing edge cases or abnormal behavior.</p>
 </div>
@@ -8865,7 +8978,7 @@ That said, there are scenarios where such fine grained request control can be us
 </div>
 </div>
 <div class="sect2">
-<h3 id="dealing-with-untrusted-certificates"><a class="link" href="#dealing-with-untrusted-certificates">10.3. Dealing with untrusted certificates</a></h3>
+<h3 id="dealing-with-untrusted-certificates"><a class="link" href="#dealing-with-untrusted-certificates">11.3. Dealing with untrusted certificates</a></h3>
 <div class="paragraph">
 <p>When facing web applications using untrusted (e.g. self-signed) SSL certificates, you will likely get exceptions when trying to use Geb&#8217;s download API.
 By overriding the behavior of the request you can get around this kind of problem.
@@ -8886,7 +8999,7 @@ Using the following code will allow running requests against a server which uses
 </div>
 </div>
 <div class="sect2">
-<h3 id="default-configuration"><a class="link" href="#default-configuration">10.4. Default configuration</a></h3>
+<h3 id="default-configuration"><a class="link" href="#default-configuration">11.4. Default configuration</a></h3>
 <div class="paragraph">
 <p>In the <a href="#configuration">configuration</a>, the default behaviour of the <code>HttpURLConnection</code> object can be specified by providing a closure as the <code>defaultDownloadConfig</code> property.</p>
 </div>
@@ -8905,14 +9018,14 @@ Using the following code will allow running requests against a server which uses
 </div>
 </div>
 <div class="sect2">
-<h3 id="proxy-configuration"><a class="link" href="#proxy-configuration">10.5. Proxy configuration</a></h3>
+<h3 id="proxy-configuration"><a class="link" href="#proxy-configuration">11.5. Proxy configuration</a></h3>
 <div class="paragraph">
 <p>As previously mentioned, the direct download API uses <a href="https://docs.oracle.com/javase/8/docs/api/java/net/HttpURLConnection.html"><code>java.net.HttpURLConnection</code></a> for performing http requests.
 This means that it can be configured to use a proxy in the exact same way as <code>java.net.HttpURLConnection</code>, that is by <a href="https://docs.oracle.com/javase/8/docs/api/java/net/doc-files/net-properties.html">setting <code>http.proxyHost</code> and <code>http.proxyPort</code> system properties</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="errors"><a class="link" href="#errors">10.6. Errors</a></h3>
+<h3 id="errors"><a class="link" href="#errors">11.6. Errors</a></h3>
 <div class="paragraph">
 <p>Any I/O type errors that occur during a download operation (e.g. HTTP 500 responses) will result in a <a href="api/geb/download/DownloadException.html"><code>DownloadException</code></a> being thrown that wraps the
 original exception and provides access to the <code>HttpURLConnection</code> used to make the request.</p>
@@ -8921,7 +9034,7 @@ original exception and provides access to the <code>HttpURLConnection</code> use
 </div>
 </div>
 <div class="sect1">
-<h2 id="binding"><a class="link" href="#binding">11. Scripts and binding</a></h2>
+<h2 id="binding"><a class="link" href="#binding">12. Scripts and binding</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb supports being used in scripting environments via both the <code>Browser.drive()</code> method, and by using the <a href="api/geb/binding/BindingUpdater.html"><code>geb.binding.BindingUpdater</code></a> class that populates and updates a
@@ -8929,7 +9042,7 @@ original exception and provides access to the <code>HttpURLConnection</code> use
 This is also the same mechanism that can be used with <a href="#cucumber-jvm">Cucumber-JVM</a>.</p>
 </div>
 <div class="sect2">
-<h3 id="setup"><a class="link" href="#setup">11.1. Setup</a></h3>
+<h3 id="setup"><a class="link" href="#setup">12.1. Setup</a></h3>
 <div class="paragraph">
 <p>To use the binding support, you simply create a <a href="api/geb/binding/BindingUpdater.html"><code>BindingUpdater</code></a> object with a <a href="https://docs.groovy-lang.org/docs/groovy-4.0.33/html/api/groovy/lang/Binding.html"><code>Binding</code></a> and <code><a href="api/geb/Browser.html">Browser</a></code>&#8230;&#8203;</p>
 </div>
@@ -8968,9 +9081,9 @@ This is also the same mechanism that can be used with <a href="#cucumber-jvm">Cu
 </div>
 </div>
 <div class="sect2">
-<h3 id="the-binding-environment"><a class="link" href="#the-binding-environment">11.2. The binding environment</a></h3>
+<h3 id="the-binding-environment"><a class="link" href="#the-binding-environment">12.2. The binding environment</a></h3>
 <div class="sect3">
-<h4 id="browser-methods-and-properties"><a class="link" href="#browser-methods-and-properties">11.2.1. Browser methods and properties</a></h4>
+<h4 id="browser-methods-and-properties"><a class="link" href="#browser-methods-and-properties">12.2.1. Browser methods and properties</a></h4>
 <div class="paragraph">
 <p>The <a href="api/geb/binding/BindingUpdater.html"><code>BindingUpdater</code></a> installs shortcuts into the binding for most of the <code><a href="api/geb/Browser.html">Browser</a></code> public methods.</p>
 </div>
@@ -9056,7 +9169,7 @@ This includes the <code>$()</code> method.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="the-current-page"><a class="link" href="#the-current-page">11.2.2. The current page</a></h4>
+<h4 id="the-current-page"><a class="link" href="#the-current-page">12.2.2. The current page</a></h4>
 <div class="paragraph">
 <p>The binding updater also updates the <code>page</code> property of the binding to be the browser&#8217;s current page&#8230;&#8203;</p>
 </div>
@@ -9084,7 +9197,7 @@ This includes the <code>$()</code> method.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="reporting"><a class="link" href="#reporting">12. Reporting</a></h2>
+<h2 id="reporting"><a class="link" href="#reporting">13. Reporting</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb includes a simple reporting mechanism which can be used to snapshot the state of the browser at any point in time.</p>
@@ -9152,7 +9265,7 @@ If you are going to use reporting you <strong>must</strong> specify a <code>repo
 </table>
 </div>
 <div class="sect2">
-<h3 id="reporting-on-contents-of-frames"><a class="link" href="#reporting-on-contents-of-frames">12.1. Reporting on contents of frames</a></h3>
+<h3 id="reporting-on-contents-of-frames"><a class="link" href="#reporting-on-contents-of-frames">13.1. Reporting on contents of frames</a></h3>
 <div class="paragraph">
 <p>If you wish to <a href="#reporter-configuration">configure the reporting</a> to also write reports which contain the source content of page frames you can do so the following way:</p>
 </div>
@@ -9165,7 +9278,7 @@ If you are going to use reporting you <strong>must</strong> specify a <code>repo
 </div>
 </div>
 <div class="sect2">
-<h3 id="reporting-on-multiple-windows"><a class="link" href="#reporting-on-multiple-windows">12.2. Reporting on multiple windows</a></h3>
+<h3 id="reporting-on-multiple-windows"><a class="link" href="#reporting-on-multiple-windows">13.2. Reporting on multiple windows</a></h3>
 <div class="paragraph">
 <p>By default, reports are only taken for the window which is set to be <a href="api/geb/Browser.html#getCurrentWindow()">the current browser window</a> at the time of taking a report.
 It&#8217;s also possible to take reports for each of the opened windows by <a href="#reporter-configuration">configuring the reporting</a> to use <code><a href="api/geb/report/MultiWindowReporter.html">MultiWindowReporter</a></code>:</p>
@@ -9179,7 +9292,7 @@ It&#8217;s also possible to take reports for each of the opened windows by <a hr
 </div>
 </div>
 <div class="sect2">
-<h3 id="report-group"><a class="link" href="#report-group">12.3. The report group</a></h3>
+<h3 id="report-group"><a class="link" href="#report-group">13.3. The report group</a></h3>
 <div class="paragraph">
 <p>The configuration mechanism allows you to specify the base <code>reportsDir</code> which is where reports are written to by default.
 It is also possible to change the <a href="api/geb/Browser.html#reportGroup(java.lang.String)">report group</a> to a relative path inside this directory.</p>
@@ -9237,7 +9350,7 @@ To go back to this after setting a report group, simply call <code>reportGroup(n
 </div>
 </div>
 <div class="sect2">
-<h3 id="listening-to-reporting"><a class="link" href="#listening-to-reporting">12.4. Listening to reporting</a></h3>
+<h3 id="listening-to-reporting"><a class="link" href="#listening-to-reporting">13.4. Listening to reporting</a></h3>
 <div class="paragraph">
 <p>It is possible to register a listener on the reporter that gets notified when a report is taken.
 This was added to make it possible to write something to stdout when a report is taken, which is how the
@@ -9259,7 +9372,7 @@ Reporting listeners are of type <code><a href="api/geb/report/ReportingListener.
 </div>
 </div>
 <div class="sect2">
-<h3 id="cleaning"><a class="link" href="#cleaning">12.5. Cleaning</a></h3>
+<h3 id="cleaning"><a class="link" href="#cleaning">13.5. Cleaning</a></h3>
 <div class="paragraph">
 <p>Geb does not automatically clean the reports dir for you. It does however provide a method that you can call to do this.</p>
 </div>
@@ -9294,13 +9407,13 @@ If it cannot do this it will throw an exception.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="testing"><a class="link" href="#testing">13. Testing</a></h2>
+<h2 id="testing"><a class="link" href="#testing">14. Testing</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Geb provides first class support for functional web testing via integration with popular testing frameworks such as <a href="https://spockframework.org/">Spock</a>, <a href="https://www.junit.org/">JUnit</a>, <a href="https://testng.org/">TestNG</a> and <a href="https://github.com/cucumber/cucumber-jvm">Cucumber-JVM</a>.</p>
 </div>
 <div class="sect2">
-<h3 id="spock-junit-testng"><a class="link" href="#spock-junit-testng">13.1. Spock, JUnit &amp; TestNG</a></h3>
+<h3 id="spock-junit-testng"><a class="link" href="#spock-junit-testng">14.1. Spock, JUnit &amp; TestNG</a></h3>
 <div class="paragraph">
 <p>The Spock, JUnit and TestNG integrations work fundamentally the same way.
 They provide superclasses that setup a <code><a href="api/geb/Browser.html">Browser</a></code> instance that all method calls and property accesses/references resolve against via Groovy&#8217;s <code>methodMissing</code> and <code>propertyMissing</code> mechanism.
@@ -9359,13 +9472,13 @@ Taking a look at the code of the superclasses providing the built-in support for
 </div>
 </div>
 <div class="sect3">
-<h4 id="configuration-2"><a class="link" href="#configuration-2">13.1.1. Configuration</a></h4>
+<h4 id="configuration-2"><a class="link" href="#configuration-2">14.1.1. Configuration</a></h4>
 <div class="paragraph">
 <p>The browser instance is created by the testing integrations via use of <code><a href="api/geb/test/GebTestManager.html">GebTestManager</a></code>. The <a href="#configuration">configuration mechanism</a> allows you to control aspects such as the driver implementation and base URL.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="testing-reporting"><a class="link" href="#testing-reporting">13.1.2. Reporting</a></h4>
+<h4 id="testing-reporting"><a class="link" href="#testing-reporting">14.1.2. Reporting</a></h4>
 <div class="paragraph">
 <p>The Spock, JUnit and TestNG integrations also ship a superclass (the name of the class for each integration module is provided below) that automatically takes reports with the label &#8220;failure&#8221; if a test fails.
 They also set the <a href="#report-group">report group</a> to the name of the test class (substituting &#8220;.&#8221; with &#8220;/&#8221;).</p>
@@ -9442,7 +9555,7 @@ Wherever possible, favour the use of the auto-reporting base classes.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="cookie-management-in-tests"><a class="link" href="#cookie-management-in-tests">13.1.3. Cookie management</a></h4>
+<h4 id="cookie-management-in-tests"><a class="link" href="#cookie-management-in-tests">14.1.3. Cookie management</a></h4>
 <div class="paragraph">
 <p><code><a href="api/geb/test/GebTestManager.html">GebTestManager</a></code> and thus also the Spock, JUnit and TestNG built-in integrations will automatically clear the browser&#8217;s cookies for the current domain at the end of each test method.
 This happens when <code>GebTestManager.afterTest()</code> is called unless <code>GebTestManager.resetBrowserAfterEachTestPredicate</code> evaluates to <code>false</code> like it does for <code>@Stepwise</code> Spock specifications - in such case cookie clearing happens in <code>GebTestManager.afterTestClass()</code> (meaning that all feature methods in a stepwise spec share the same browser state).</p>
@@ -9455,14 +9568,14 @@ This happens when <code>GebTestManager.afterTest()</code> is called unless <code
 </div>
 </div>
 <div class="sect3">
-<h4 id="web-storage-management-in-tests"><a class="link" href="#web-storage-management-in-tests">13.1.4. Web storage management</a></h4>
+<h4 id="web-storage-management-in-tests"><a class="link" href="#web-storage-management-in-tests">14.1.4. Web storage management</a></h4>
 <div class="paragraph">
 <p><code><a href="api/geb/test/GebTestManager.html">GebTestManager</a></code> and thus also the Spock, JUnit and TestNG built-in integrations can be <a href="#auto-clearing-web-storage-configuration">configured</a> to automatically clear the browser&#8217;s web storage, that is both local and session storage, for the current domain at the end of each test method.
 This happens when <code>GebTestManager.afterTest()</code> is called unless <code>GebTestManager.resetBrowserAfterEachTestPredicate</code> evaluates to <code>false</code> like it does for <code>@Stepwise</code> Spock specifications - in such case cookie clearing happens in <code>GebTestManager.afterTestClass()</code> (meaning that all feature methods in a stepwise spec share the same browser state).</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="restarting-the-browser-mid-test"><a class="link" href="#restarting-the-browser-mid-test">13.1.5. Restarting the browser mid-test</a></h4>
+<h4 id="restarting-the-browser-mid-test"><a class="link" href="#restarting-the-browser-mid-test">14.1.5. Restarting the browser mid-test</a></h4>
 <div class="paragraph">
 <p>Should you ever wish to restart the browser mid-test you have to be aware that there are two layers of caching of the driver instance within Geb&#8217;s testing support.
 Firstly the lazy initialised <code>Browser</code> instance stored as a field in the <code><a href="api/geb/test/GebTestManager.html">GebTestManager</a></code> instance held by base classes providing support for various test frameworks holds a reference to a <code>WebDriver</code> instance - you will therefore need to call the <code>resetBrowser()</code> method on the <code><a href="api/geb/test/GebTestManager.html">GebTestManager</a></code> instance to clear that field.
@@ -9479,7 +9592,7 @@ Secondly, Geb caches <code>WebDriver</code> instances by default as described in
 </div>
 </div>
 <div class="sect3">
-<h4 id="jar-and-class-names"><a class="link" href="#jar-and-class-names">13.1.6. JAR and class names</a></h4>
+<h4 id="jar-and-class-names"><a class="link" href="#jar-and-class-names">14.1.6. JAR and class names</a></h4>
 <div class="paragraph">
 <p>The following table illustrates the specific JARs and class names for various test frameworks that Geb integrates with.</p>
 </div>
@@ -9527,7 +9640,7 @@ Secondly, Geb caches <code>WebDriver</code> instances by default as described in
 </table>
 </div>
 <div class="sect3">
-<h4 id="example-projects"><a class="link" href="#example-projects">13.1.7. Example projects</a></h4>
+<h4 id="example-projects"><a class="link" href="#example-projects">14.1.7. Example projects</a></h4>
 <div class="paragraph">
 <p>The following projects can be used as starting references:</p>
 </div>
@@ -9541,7 +9654,7 @@ Secondly, Geb caches <code>WebDriver</code> instances by default as described in
 </div>
 </div>
 <div class="sect2">
-<h3 id="cucumber-jvm"><a class="link" href="#cucumber-jvm">13.2. Cucumber (Cucumber-JVM)</a></h3>
+<h3 id="cucumber-jvm"><a class="link" href="#cucumber-jvm">14.2. Cucumber (Cucumber-JVM)</a></h3>
 <div class="paragraph">
 <p>It is possible to both:</p>
 </div>
@@ -9556,7 +9669,7 @@ Secondly, Geb caches <code>WebDriver</code> instances by default as described in
 </ul>
 </div>
 <div class="sect3">
-<h4 id="writing-your-own-steps"><a class="link" href="#writing-your-own-steps">13.2.1. Writing your own steps</a></h4>
+<h4 id="writing-your-own-steps"><a class="link" href="#writing-your-own-steps">14.2.1. Writing your own steps</a></h4>
 <div class="paragraph">
 <p>Use Geb&#8217;s <a href="#binding">binding management features</a> to bind a browser in before / after hooks, often in a file named <code>env.groovy</code>:</p>
 </div>
@@ -9602,7 +9715,7 @@ Secondly, Geb caches <code>WebDriver</code> instances by default as described in
 </div>
 </div>
 <div class="sect3">
-<h4 id="using-pre-built-steps"><a class="link" href="#using-pre-built-steps">13.2.2. Using pre-built steps</a></h4>
+<h4 id="using-pre-built-steps"><a class="link" href="#using-pre-built-steps">14.2.2. Using pre-built steps</a></h4>
 <div class="paragraph">
 <p>The <a href="https://github.com/tomdcc/geb-cucumber">geb-cucumber</a> project has a set of pre-built cucumber steps that drive Geb. So for example a feature with steps similar to the above would look like:</p>
 </div>
@@ -9622,7 +9735,7 @@ Then the results table 1st row link matches /cucumber\/cucumber-jvm · GitHub.*/
 </div>
 </div>
 <div class="sect3">
-<h4 id="example-project"><a class="link" href="#example-project">13.2.3. Example project</a></h4>
+<h4 id="example-project"><a class="link" href="#example-project">14.2.3. Example project</a></h4>
 <div class="paragraph">
 <p>The following project has examples of both writing your own steps and using geb-cucumber:</p>
 </div>
@@ -9638,7 +9751,7 @@ Then the results table 1st row link matches /cucumber\/cucumber-jvm · GitHub.*/
 </div>
 </div>
 <div class="sect1">
-<h2 id="cloud-browser-testing"><a class="link" href="#cloud-browser-testing">14. Cloud browser testing</a></h2>
+<h2 id="cloud-browser-testing"><a class="link" href="#cloud-browser-testing">15. Cloud browser testing</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>When you want to perform web testing on multiple browsers and operating systems, it can be quite complicated to maintain machines for each of the target environments.
@@ -9647,7 +9760,7 @@ Geb provides easy integration with three such services, <a href="https://saucela
 This integration includes two parts: assistance with creating a driver in <code>GebConfig.groovy</code> and a Gradle plugin.</p>
 </div>
 <div class="sect2">
-<h3 id="creating-a-driver"><a class="link" href="#creating-a-driver">14.1. Creating a driver</a></h3>
+<h3 id="creating-a-driver"><a class="link" href="#creating-a-driver">15.1. Creating a driver</a></h3>
 <div class="paragraph">
 <p>For all three SauceLabs, BrowserStack and LambdaTest, a special driver factory is provided that, given a browser specification as well as a username and access key, creates an instance of <code>RemoteWebDriver</code> configured
 to use a browser in the cloud.
@@ -9746,7 +9859,7 @@ doesn&#8217;t take a string specification and allows you to simply specify all t
 This method might be useful if you just want to use the factory, but don&#8217;t need the build level parametrization.</p>
 </div>
 <div class="sect3">
-<h4 id="sauce-labs-driver-factory"><a class="link" href="#sauce-labs-driver-factory">14.1.1. <code>SauceLabsDriverFactory</code></a></h4>
+<h4 id="sauce-labs-driver-factory"><a class="link" href="#sauce-labs-driver-factory">15.1.1. <code>SauceLabsDriverFactory</code></a></h4>
 <div class="paragraph">
 <p>The following is an example of utilizing <code>SauceLabsDriverFactory</code> in <code>GebConfig.groovy</code> to configure a driver that will use a browser provided in the SauceLabs cloud.</p>
 </div>
@@ -9776,7 +9889,7 @@ The below example shows using the hostname of the EU data center:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="browser-stack-driver-factory"><a class="link" href="#browser-stack-driver-factory">14.1.2. <code>BrowserStackDriverFactory</code></a></h4>
+<h4 id="browser-stack-driver-factory"><a class="link" href="#browser-stack-driver-factory">15.1.2. <code>BrowserStackDriverFactory</code></a></h4>
 <div class="paragraph">
 <p>The following is an example of utilizing <code>BrowserStackDriverFactory</code> in <code>GebConfig.groovy</code> to configure a driver that will use a browser provided in the BrowserStack cloud.</p>
 </div>
@@ -9815,7 +9928,7 @@ The below example shows using the hostname of the EU data center:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="lambda-test-driver-factory"><a class="link" href="#lambda-test-driver-factory">14.1.3. <code>LambdaTestDriverFactory</code></a></h4>
+<h4 id="lambda-test-driver-factory"><a class="link" href="#lambda-test-driver-factory">15.1.3. <code>LambdaTestDriverFactory</code></a></h4>
 <div class="paragraph">
 <p>The following is an example of utilizing <code>LambdaTestDriverFactory</code> in <code>GebConfig.groovy</code> to configure a driver that will use a browser provided in the LambdaTest cloud.</p>
 </div>
@@ -9855,7 +9968,7 @@ The below example shows using the hostname of the EU data center:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="gradle-plugins"><a class="link" href="#gradle-plugins">14.2. Gradle plugins</a></h3>
+<h3 id="gradle-plugins"><a class="link" href="#gradle-plugins">15.2. Gradle plugins</a></h3>
 <div class="paragraph">
 <p>For SauceLabs, BrowserStack and LambdaTest, Geb provides a Gradle plugin which simplifies declaring the account and browsers that are desired, as well as configuring a tunnel to allow the cloud provider to
 access local applications.
@@ -9864,7 +9977,7 @@ The value of that property can be then passed in configuration file to <a href="
 Examples of typical usage are included below.</p>
 </div>
 <div class="sect3">
-<h4 id="geb-saucelabs-plugin"><a class="link" href="#geb-saucelabs-plugin">14.2.1. geb-saucelabs plugin</a></h4>
+<h4 id="geb-saucelabs-plugin"><a class="link" href="#geb-saucelabs-plugin">15.2.1. geb-saucelabs plugin</a></h4>
 <div class="paragraph">
 <p>Following is an example of using the geb-saucelabs Gradle plugin.</p>
 </div>
@@ -10057,7 +10170,7 @@ It can be done in the following way:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="geb-browserstack-plugin"><a class="link" href="#geb-browserstack-plugin">14.2.2. geb-browserstack plugin</a></h4>
+<h4 id="geb-browserstack-plugin"><a class="link" href="#geb-browserstack-plugin">15.2.2. geb-browserstack plugin</a></h4>
 <div class="paragraph">
 <p>Following is an example of using the geb-browserstack Gradle plugin.</p>
 </div>
@@ -10325,7 +10438,7 @@ It can be done in the following way:</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="geb-lambdatest-plugin"><a class="link" href="#geb-lambdatest-plugin">14.2.3. geb-lambdatest plugin</a></h4>
+<h4 id="geb-lambdatest-plugin"><a class="link" href="#geb-lambdatest-plugin">15.2.3. geb-lambdatest plugin</a></h4>
 <div class="paragraph">
 <p>Following is an example of using the geb-lambdatest Gradle plugin.</p>
 </div>
