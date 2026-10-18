@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel, micronaut-ai, quarkus-ai, graalvm, native-image'/><meta name='description' content='A tour of using Groovy with modern AI libraries including Ollama4j, LangChain4j, Spring AI, Embabel, Micronaut, and Quarkus, including native Micronaut.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, ai, ollama4j, langchain4j, spring-ai, embabel, micronaut-ai, quarkus-ai, graalvm, native-image, openrouter, llmao, decision-models, markdown'/><meta name='description' content='Using Groovy with Ollama4j, LangChain4j, Spring AI, Embabel, Micronaut (also native), and Quarkus, also OpenRouter, ASF llmao gateway, and decision models.'/><title>The Apache Groovy programming language - Blogs - Exploring AI with Groovy&trade;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,19 +63,19 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_using_micronaut_langchain4j' class='anchor-link'>Using Micronaut LangChain4j</a></li><li><a href='#_micronaut_native_images' class='anchor-link'>Micronaut native images</a></li><li><a href='#_using_quarkus_langchain4j' class='anchor-link'>Using Quarkus LangChain4j</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Exploring AI with Groovy&trade;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_using_ollama4j' class='anchor-link'>Using Ollama4j</a></li><li><a href='#_using_langchain4j' class='anchor-link'>Using LangChain4j</a></li><li><a href='#_markdown_as_a_structured_format' class='anchor-link'>Markdown as a structured format</a></li><li><a href='#_typed_decisions_instead_of_chat' class='anchor-link'>Typed decisions instead of chat</a></li><li><a href='#_using_spring_ai' class='anchor-link'>Using Spring AI</a></li><li><a href='#_using_embabel' class='anchor-link'>Using Embabel</a></li><li><a href='#_autonomous_agents_with_embabel' class='anchor-link'>Autonomous Agents with Embabel</a></li><li><a href='#_using_micronaut_langchain4j' class='anchor-link'>Using Micronaut LangChain4j</a></li><li><a href='#_micronaut_native_images' class='anchor-link'>Micronaut native images</a></li><li><a href='#_using_quarkus_langchain4j' class='anchor-link'>Using Quarkus LangChain4j</a></li><li><a href='#_hosted_models_with_an_openai_compatible_api' class='anchor-link'>Hosted models with an OpenAI-compatible API</a></li><li><a href='#_asking_several_providers_at_once' class='anchor-link'>Asking several providers at once</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&trade; and GraalVM</a></li><li><a href='./embabel-agentic-patterns'>Groovy&trade;, Embabel, and Agentic Design Patterns</a></li><li><a href='./working-with-sql-databases-with'>Working with SQL databases with Groovy&trade; and GraalVM</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Exploring AI with Groovy&trade;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2026-09-19 08:00PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2025-10-15 07:06AM (Last updated: 2026-10-18 09:00AM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="quoteblock">
 <blockquote>
 <div class="paragraph">
-<p><span class="blue">In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>Ollama4j</code>, <code>LangChain4j</code>, <code>Spring AI</code>, <code>Embabel</code>, <code>Micronaut LangChain4j</code>, and <code>Quarkus LangChain4j</code>.</span></p>
+<p><span class="blue">In this post, we’ll look at several ways to integrate Groovy with AI tools, including <code>Ollama4j</code>, <code>LangChain4j</code>, <code>Spring AI</code>, <code>Embabel</code>, <code>Micronaut LangChain4j</code>, and <code>Quarkus LangChain4j</code>. We’ll also reach hosted models through <code>OpenRouter</code> and the ASF <code>llmao</code> gateway, and try a <em>decision</em> model, which answers typed questions with probabilities rather than prose.</span></p>
 </div>
 </blockquote>
 </div>
@@ -98,6 +98,7 @@ sometimes just by changing a line or two of config in a properties file.</p>
 <p>The examples mostly use the <code>mistral:7b</code> model, which you&#8217;ll need to download to run the examples
 unchanged, but feel free to try other models and see what results you get.
 Some of the examples also use the <code>qwen3:8b</code> model. It seems to give better results when using tools.
+One example uses <code>tev1</code>, which is a <em>decision</em> model rather than a chat model.
 See the example repo for how to run the needed services using docker,
 or within GitHub actions if you don&#8217;t have Ollama already running locally.
 We also used Groovy 6 and JDK 25, but the examples should work on other Groovy and Java versions.</p>
@@ -515,6 +516,143 @@ Safe travels! 🌊📚</pre>
 </div>
 <div class="paragraph">
 <p>Note that it gave accurate recommendations that include our two fake weather forecasts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_markdown_as_a_structured_format">Markdown as a structured format</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our structured output example above asked for JSON, and needed a model advertising the
+<code>RESPONSE_FORMAT_JSON_SCHEMA</code> capability. If your model doesn&#8217;t support that, there is
+another format every chat model is fluent in: Markdown. Groovy 6 adds a <code>MarkdownSlurper</code>,
+completing the family alongside <code>JsonSlurper</code> and <code>XmlSlurper</code>.</p>
+</div>
+<div class="paragraph">
+<p>So let&#8217;s ask for a table instead of JSON:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var prompt = '''
+What are 4 interesting things to do for a weekend away in Caloundra?
+Reply with nothing but a Markdown table with these column headings:
+Activity, Location, Day, Time
+'''
+var answer = chatModel.chat(prompt)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then we slurp the reply. Each row arrives as a map keyed by the table&#8217;s headings,
+which is exactly the shape our <code>Activity</code> record needs:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var tables = new MarkdownSlurper().enableTables(true).parseText(answer).tables
+assert tables, 'expected the model to reply with a Markdown table'
+
+var activities = tables.first().rows.collect {
+    new Activity(it.Activity, it.Location, it.Day, it.Time)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The model&#8217;s reply, and the records we get from it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>| Activity                  | Location              | Day      | Time               |
+|---------------------------|-----------------------|----------|--------------------|
+| Glasshouse Mountains Hike | Mount Tibrogargan     | Saturday | 8:00 AM - 12:00 PM |
+| Bulcock Beach Picnic      | Bulcock Beach         | Sunday   | 11:00 AM - 2:00 PM |
+| visit Australia Zoo       | Australia Zoo         | Saturday | 9:00 AM - 5:00 PM  |
+| Sunset Cruise             | Marina Park Caloundra | Saturday | 6:00 PM - 8:30 PM  |
+
+Activities:
+Activity(Glasshouse Mountains Hike, Mount Tibrogargan, Saturday, 8:00 AM - 12:00 PM)
+Activity(Bulcock Beach Picnic, Bulcock Beach, Sunday, 11:00 AM - 2:00 PM)
+Activity(visit Australia Zoo, Australia Zoo, Saturday, 9:00 AM - 5:00 PM)
+Activity(Sunset Cruise, Marina Park Caloundra, Saturday, 6:00 PM - 8:30 PM)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As well as <code>tables</code>, <code>MarkdownSlurper</code> exposes <code>headings</code>, <code>links</code>, <code>codeBlocks</code>
+and <code>section(name)</code>. It comes from the <code>groovy-markdown</code> module; table support
+additionally needs <code>org.commonmark:commonmark-ext-gfm-tables</code>, which isn&#8217;t
+pulled in transitively.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_typed_decisions_instead_of_chat">Typed decisions instead of chat</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Everything so far has been a chat model: we send prose and get prose back.
+A <em>decision model</em> works differently. A single request carries a state and several
+named, typed questions, and each answer comes back with probabilities and a
+calibrated confidence. There is no conversation, no tool calling, and no streaming.</p>
+</div>
+<div class="paragraph">
+<p>This model class was popularised by <a href="https://typesafe.ai">TypeSafe AI</a>'s <em>System One</em>
+API and its <code>Jev</code> model, and LangChain4j 1.22 added a provider-neutral <code>DecisionModel</code>
+abstraction for it. Ollama serves the same API locally at <code>/v1/systemone</code> from version
+0.35, with decision models such as <code>tev1</code>, <code>nimble</code> and <code>clef</code>. Since LangChain4j&#8217;s
+TypeSafe integration already targets that path by default, aiming it at a local
+decision model needs no extra configuration:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var decisionModel = TypeSafeDecisionModel.builder()
+    .baseUrl('http://localhost:11434')
+    .apiKey('ollama')  // local Ollama ignores this, but the builder expects a key
+    .modelName('tev1')
+    .timeout(Duration.ofMinutes(5))
+    .build()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll reuse our fake weather forecast as the state, and ask three questions covering
+the three available kinds: a yes/no question, a choice between candidate activities,
+and a score on an ordered scale:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var response = decisionModel.decide(DecisionRequest.builder()
+    .input([saturday: saturday.toString(), sunday: sunday.toString()])
+    .question('beachDay', YesNoQuestion.of('Is the Saturday weather good for the beach?'))
+    .question('sundayPick', ChoiceQuestion.of('Which activity suits the Sunday weather best?', activities))
+    .question('effort', ScaleQuestion.of('How much physical effort does a summit hike need?',
+        ['Easy: a flat stroll', 'Moderate: some walking and climbing', 'Hard: a steep summit climb']))
+    .build())</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Which gives us numbers rather than prose:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Beach on Saturday?  yes (probability 0.684)
+Pick for Sunday?    gallery  "Browsing the Caloundra Regional Gallery"
+                    beach=0.001, gallery=0.993, hike=0.006
+                    confidence 0.957
+Effort for a hike?  1.71 on a 0..2 scale
+Tokens used:        496 in, 0 out</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The model gave the gallery 0.993 for the wet Sunday, and the beach 0.684 for the hot
+Saturday. A score is the probability-weighted average of the levels, so 1.71 sits
+between <em>Moderate</em> and <em>Hard</em>. Note that no output tokens were used: nothing is
+generated, only scored. Repeated runs against a loaded model give the same numbers,
+which suits this model class to classification, routing and gating, where a chat
+model&#8217;s variability is a liability.</p>
+</div>
+<div class="paragraph">
+<p>Two caveats. The <code>langchain4j-typesafe</code> module is published as a beta
+(<code>1.22.0-beta32</code> pairs with core <code>1.22.0</code>), and <code>tev1</code> is a 4.4GB download, so the
+example repo runs it separately from the other LangChain4j examples. There is also a
+higher-level declarative API, using <code>@Decide</code> on an interface in the style of the AI
+services we saw earlier; we use the lower-level API here since all three question
+kinds work with it against Ollama.</p>
 </div>
 </div>
 </div>
@@ -1163,12 +1301,128 @@ Answer:  1. Explore the Minneapolis Sculpture Garden: This 11-acre outdoor museu
 </div>
 </div>
 <div class="sect1">
+<h2 id="_hosted_models_with_an_openai_compatible_api">Hosted models with an OpenAI-compatible API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Our examples so far ran against local models, but most hosted services now expose an
+OpenAI-compatible API, which means the same code can reach them by changing a base URL,
+a key, and a model name. Two we&#8217;ll use here:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openrouter.ai">OpenRouter</a> is a gateway sitting in front of hundreds of models
+(Claude, GPT, Gemini, Llama, Mistral and more), including some free ones.</p>
+</li>
+<li>
+<p><a href="https://github.com/apache/tooling-llmao">llmao</a> is the ASF LLM gateway at
+<code>llm.apache.org</code>, giving Apache committers access to Foundation-sanctioned models
+such as <code>qwen3.8-27b</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Local Ollama speaks the same protocol at <code><a href="http://localhost:11434/v1" class="bare">http://localhost:11434/v1</a></code>, so a small record
+is enough to describe any of the three:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Provider(String name, String baseUrl, String apiKey, String model, Map&lt;String, Object&gt; extraBody) {
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since this is just HTTP and JSON, we can use Groovy 6&#8217;s new declarative HTTP client.
+The interface <em>is</em> the client: an AST transform generates the implementation, serializes
+the request body as JSON, parses the response back into a <code>Map</code>, and turns any 4xx or 5xx
+into an exception carrying the provider&#8217;s error message:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@HttpBuilderClient('http://localhost:11434/v1')
+interface ChatApi {
+    @Post('chat/completions')
+    Map chatCompletion(@Body Map request)
+}
+
+var api = ChatApi.create {
+    baseUri "$provider.baseUrl/"
+    header 'Authorization', "Bearer $provider.apiKey"
+    requestTimeout Duration.ofMinutes(5)
+}
+
+var json = api.chatCompletion([
+    model: provider.model,
+    messages: [[role: 'user', content: prompt]]
+] + provider.extraBody)
+
+println "Served by: $json.model"
+println "Response:\n" + json.choices[0].message.content</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That replaces the JDK <code>HttpClient</code> plumbing, the <code>JsonOutput</code>/<code>JsonSlurper</code> calls, and
+the manual status check we&#8217;d otherwise write by hand. A gateway can route a request to
+a different model than the one asked for, so it pays to print what actually answered.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_asking_several_providers_at_once">Asking several providers at once</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each provider is a separate endpoint, so there is no reason to wait for one before asking
+the next. Groovy 6&#8217;s new concurrency support makes the fan-out a one-liner, and its new
+<code>System.timed</code> method measures it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var parallel = System.timed {
+    ParallelScope.withPool(providers.size()) {
+        providers.collectParallel(ask)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>withPool</code> keeps these blocking calls off the CPU-sized common pool, and
+<code>collectParallel</code> preserves order, so the answers still line up with the providers that
+gave them. Asking llmao, OpenRouter and local Ollama the same question:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Asking 3 provider(s): llmao, OpenRouter, Ollama
+all 3 in parallel: 7,285 ms
+one at a time    : 11,539 ms
+
+llmao (asked qwen3.8-27b, served by qwen3.8-27b):
+  You must visit Coolum Beach because it offers stunning, wide sands ideal for swimming, walking, and watching vibrant sunsets.
+
+OpenRouter (asked nvidia/nemotron-3-super-120b-a12b:free, served by nvidia/nemotron-3-super-120b-a12b:free):
+  The Kings Beach promenade is a must-see attraction in Caloundra because it offers stunning ocean views, a safe swimming area, and a lively foreshore perfect for walking, picnicking, and watching the sunset.
+
+Ollama (asked mistral:7b, served by mistral:7b):
+  The must-see attraction in Caloundra is Kings Beach, renowned for its picturesque seaside setting, vibrant cafe culture, and family-friendly amenities, providing a perfect blend of relaxation and recreation along the Sunshine Coast.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three endpoints answered in a little over the time the slowest one needed, rather than
+the sum of all three. The gain only shows up with genuinely separate endpoints though:
+fanning several requests at a single local Ollama instance doesn&#8217;t help, since it serves
+them one model at a time.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Groovy’s interoperability, concise syntax, and powerful DSL capabilities make it an excellent language for prototyping and composing AI workflows on the JVM.
 Whether you’re chatting with Ollama, integrating via Spring, Micronaut, or Quarkus,
 or orchestrating agents with Embabel, Groovy keeps your code clear and compact.
+Groovy 6 adds to that: a declarative HTTP client for services with no dedicated library,
+<code>MarkdownSlurper</code> for pulling structure out of ordinary prose replies,
+and parallel collection methods for asking several providers at once.
 And thanks to Groovy 6&#8217;s native image support, those examples don&#8217;t have to stay
 on the JVM — the Micronaut ones compile to native executables.
 Feel free to experiment with different models and prompts to see what interesting results you can achieve!</p>
@@ -1185,7 +1439,8 @@ Other examples of using Groovy with Spring AI can be found at:<br>
 <div class="paragraph">
 <p><strong>15/Oct/2025</strong>: Initial version<br>
 <strong>14/Nov/2025</strong>: Updated with Micronaut, Quarkus, and AI tools examples.<br>
-<strong>19/Sep/2026</strong>: Updated for the latest library versions and added Micronaut tools and native image examples.</p>
+<strong>19/Sep/2026</strong>: Updated for the latest library versions and added Micronaut tools and native image examples.<br>
+<strong>18/Oct/2026</strong>: Added hosted model examples (OpenRouter, llmao), Groovy 6&#8217;s declarative HTTP client and parallel provider comparison, <code>MarkdownSlurper</code> structured output, and a decision model example.</p>
 </div>
 </div>
 </div>
