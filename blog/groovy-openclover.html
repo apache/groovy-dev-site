@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, openclover, code coverage, per-test coverage, test optimization, test selection, ai agents, spock, junit, gradle'/><meta name='description' content='Using OpenClover with Groovy 6: what per-test coverage gives you, &amp; turning it into a line-to-tests map that tells an AI agent exactly which tests to run.'/><title>The Apache Groovy programming language - Blogs - Which tests should I run? Per-test coverage for Groovy 6 with OpenClover</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Which tests should I run? Per-test coverage for Groovy 6 with OpenClover</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_wiring_openclover_into_gradle_9' class='anchor-link'>Wiring OpenClover into Gradle 9</a></li><li><a href='#_does_it_work_with_groovy_6' class='anchor-link'>Does it work with Groovy 6?</a></li><li><a href='#_per_test_coverage' class='anchor-link'>Per-test coverage</a></li><li><a href='#_openclovers_test_optimization' class='anchor-link'>OpenClover&#8217;s test optimization</a></li><li><a href='#_line_level_test_selection' class='anchor-link'>Line-level test selection</a></li><li><a href='#_telling_the_agent' class='anchor-link'>Telling the agent</a></li><li><a href='#_does_it_save_tokens' class='anchor-link'>Does it save tokens?</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./testing-your-java-with-groovy'>Testing your Java with Groovy&trade;, Spock, JUnit5, Jacoco, Jqwik and Pitest</a></li><li><a href='./testing_permutations_combinations'>Groovy&trade; Testing with Combinations and Permutations</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&trade;</a></li><li><a href='./netbeans'>Using Apache NetBeans with Apache Groovy&trade;</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&trade;, the Deep Java Library (DJL), and Apache MXNet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Which tests should I run? Per-test coverage for Groovy 6 with OpenClover</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-10-20 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><span class="blue">Most coverage tools answer "which lines did my tests run?". OpenClover can also answer the reverse question: "which tests ran this line?". In this post we check whether OpenClover works with Groovy 6, look at its per-test coverage and test optimization features, and turn its coverage database into a small tool that tells an AI coding agent exactly which tests to re-run after it changes a line.</span></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/openclover_test_selection.png" alt="Change one line, run only the tests that ran it" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p><a href="https://openclover.org">OpenClover</a> is the open source
+continuation of Atlassian&#8217;s Clover code coverage tool. Unlike
+tools such as JaCoCo, which run as a Java agent (<code>-javaagent</code>) and instrument
+bytecode as classes are loaded, OpenClover instruments <em>source</em>, and for Groovy it does
+this with an AST transformation hooked into the compiler.</p>
+</div>
+<div class="paragraph">
+<p>One long-standing Clover feature is easy to overlook: it instruments
+the <strong>tests</strong> as well as the code under test. Each test method records
+when it starts and stops, so every coverage hit can be attributed
+to the test that caused it. The result is <strong>per-test coverage</strong>, and
+once you have it you can invert it: for any line of production code,
+the exact set of tests that executed it.</p>
+</div>
+<div class="paragraph">
+<p>That inverted view is useful to humans (OpenClover&#8217;s HTML report
+shows it and it powers Clover&#8217;s <em>test optimization</em> feature), but it
+is arguably even more useful to AI coding agents. An agent that has
+just changed one line of a large code base faces a choice: run the
+whole suite (slow), run the tests it <em>guesses</em> are related (risky), or
+ask a tool that <em>knows</em>. We&#8217;ll build that tool.</p>
+</div>
+<div class="paragraph">
+<p>OpenClover 5.0 added support for Groovy 3 through 5. The current release
+is 5.1.1. Groovy 6 isn&#8217;t listed, so the first question is whether it works anyway.</p>
+</div>
+<div class="paragraph">
+<p>The example code is in the
+<a href="https://github.com/paulk-asert/groovy-openclover">groovy-openclover</a>
+companion repo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_example">The example</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll use a small coffee-shop pricing domain. A <code>Drink</code> has a cup size
+and some extras; <code>Pricing</code> works out what each costs, <code>Order</code> totals a
+list of drinks and applies discounts, and <code>Receipt</code> formats the result.
+It uses a few Groovy 6 features along the way: <code>val</code> declarations,
+map-style destructuring, and switch expressions.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Pricing {
+    static BigDecimal basePrice(Size size) {
+        switch (size) {
+            case SMALL -&gt; 3.50
+            case MEDIUM -&gt; 4.20
+            case LARGE -&gt; 4.90
+        }
+    }
+
+    static BigDecimal extraPrice(String extra) {
+        val price = switch (extra) {
+            case 'oat', 'soy' -&gt; 0.60
+            case 'shot' -&gt; 0.90
+            default -&gt; 0.40
+        }
+        price
+    }
+
+    static BigDecimal price(Drink drink) {
+        basePrice(drink.cup()) + drink.extras().sum(0.0) { extraPrice(it) }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>Receipt</code> destructures each record by property name:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class Receipt {
+    static String render(Order order) {
+        val lines = order.drinks.collect { drink -&gt;
+            def (name: n, cup: c, extras: xs) = drink
+            val label = xs ? "$n (${xs.join(', ')})" : n
+            "${c.name()[0]} $label".padRight(28) + Pricing.price(drink)
+        }
+        val discount = order.discount()
+        if (discount) {
+            lines &lt;&lt; 'Discount'.padRight(28) + "-$discount"
+        }
+        lines &lt;&lt; 'Total'.padRight(28) + order.total()
+        lines.join('\n')
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are 11 tests in total: JUnit 6 tests for <code>Pricing</code> and <code>Order</code>, and a
+Spock 2.5 specification for <code>Receipt</code>. That gives us both of the test
+frameworks OpenClover hooks into:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class PricingTest {
+    @Test
+    void extraShot() {
+        assert Pricing.extraPrice('shot') == 0.90
+    }
+
+    @Test
+    void priceIncludesExtras() {
+        assert Pricing.price(Drink.of('Latte', MEDIUM, 'soy', 'shot')) == 5.70
+    }
+    // ...
+}
+
+class ReceiptSpec extends Specification {
+    def "a receipt lists each drink and the total"() {
+        given:
+        def order = new Order() &lt;&lt; Drink.of('Cappuccino', MEDIUM, 'shot')
+
+        expect:
+        Receipt.render(order) == '''\
+            M Cappuccino (shot)         5.10
+            Total                       5.10'''.stripIndent()
+    }
+    // ...
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_wiring_openclover_into_gradle_9">Wiring OpenClover into Gradle 9</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenClover has a Maven plugin, which is maintained alongside the
+core. The Gradle plugin (<code>com.bmuschko.clover</code>) was last released in
+2024 and fails on Gradle 9 because it uses the removed <code>Convention</code> API:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>'java.util.Map org.gradle.api.plugins.Convention.getPlugins()'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>That&#8217;s less of a problem than it sounds. OpenClover&#8217;s own Ant tasks are
+small and well-defined, and Gradle can call Ant directly. The companion repo has
+a convention plugin, <code>openclover.gradle</code>, of around 130 lines. The heart of it
+compiles main and test sources through an instrumenting <code>&lt;groovyc&gt;</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">tasks.register('cloverInstrument') {
+    // ...
+    doLast {
+        defineCloverTasks()
+        ant.taskdef(name: 'groovyc', classname: 'org.codehaus.groovy.ant.Groovyc',
+                classpath: (configurations.cloverGroovyc + configurations.compileClasspath).asPath)
+        // Instrumenting the test sources too is what enables per-test coverage
+        ant.'clover-setup'(initString: cloverDb.get(), tmpDir: "$out/tmp") {
+            testSources(dir: testSrc) {
+                include(name: '**/*Test.groovy')
+                include(name: '**/*Spec.groovy')
+            }
+        }
+        ant.groovyc(srcdir: 'src/main/groovy', destdir: instrMain.get().asFile,
+                classpath: (configurations.compileClasspath + configurations.clover).asPath)
+        ant.groovyc(srcdir: testSrc, destdir: instrTest.get().asFile,
+                classpath: (configurations.testCompileClasspath + configurations.clover + files(instrMain)).asPath)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>&lt;clover-setup&gt;</code> registers a listener on the Ant project. When a
+<code>&lt;groovyc&gt;</code> task starts, it generates a small jar containing OpenClover&#8217;s
+global AST transformation and its configuration, and adds it to the
+compiler&#8217;s classpath. Groovy discovers the transformation through
+<code>META-INF/services</code>, and every class it compiles comes out instrumented.</p>
+</div>
+<div class="paragraph">
+<p>The tests then run with Gradle&#8217;s normal <code>Test</code> task, just pointed at the
+instrumented classes. OpenClover ships a JUnit Platform
+<code>TestExecutionListener</code> (and a Spock global extension), both
+discovered automatically, which tell each instrumented test class the
+name of the test currently running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">tasks.register('cloverTest', Test) {
+    testClassesDirs = files(instrTest)
+    classpath = files(instrTest, instrMain, sourceSets.main.output.resourcesDir,
+            sourceSets.test.output.resourcesDir, configurations.testRuntimeClasspath, configurations.clover)
+    doLast {
+        defineCloverTasks()
+        ant.'clover-snapshot'(initString: cloverDb.get())
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>./gradlew cloverReport</code> then produces the usual HTML and XML reports.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_does_it_work_with_groovy_6">Does it work with Groovy 6?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>Yes, with one small gap.</strong> Everything compiles, every test passes when
+instrumented, and both JUnit 6 and Spock 2.5 tests have their per-test
+coverage recorded.</p>
+</div>
+<div class="paragraph">
+<p>To check more systematically, the companion repo&#8217;s <code>compat</code> subproject
+has a tour of constructs. Some are familiar from Groovy 4 and 5
+(classic and arrow switches, switch expressions with and without
+<code>@CompileStatic</code>, ternaries, Elvis, closures, lambdas, method references,
+records, traits). Others are new in Groovy 6 (<code>val</code> with rest binding,
+map-style destructuring, statement-position arrow switches, <code>async</code>/<code>await</code>).
+I compared the per-line results with the same code on Groovy 5.1.3:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Construct</th>
+<th class="tableblock halign-left valign-top">Groovy 5.1.3</th>
+<th class="tableblock halign-left valign-top">Groovy 6.0.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Classic <code>switch</code>, <code>if</code>, ternary, Elvis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closures, lambdas, method references</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Records, traits</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arrow <code>switch</code> in statement position</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>val</code>, rest and map-style destructuring</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>async</code> / <code>await</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case</code> arms of a switch <em>expression</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>default</code> arm of a switch <em>expression</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">measured</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>not instrumented</strong></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The gap shows up clearly in the HTML report for <code>Pricing.groovy</code>:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/openclover_pricing_report.png" alt="OpenClover HTML report for Pricing.groovy" width="700"></span></p>
+</div>
+<div class="paragraph">
+<p>Line 33, the <code>default</code> arm of the <code>extraPrice</code> switch expression, has
+no count at all. It isn&#8217;t uncovered; OpenClover simply doesn&#8217;t know
+it&#8217;s there. Compare line 26: that red <code>0</code> is OpenClover&#8217;s synthetic
+"no case matched" branch for the statement-position switch in
+<code>basePrice</code>. It is correctly reported as never taken, since every <code>Size</code>
+is handled.</p>
+</div>
+<div class="paragraph">
+<p>The cause is a Groovy 6 change. Switch expressions are now first-class AST
+nodes (<code>SwitchExpression</code>), visited through a new
+<code>GroovyCodeVisitor.visitSwitchExpression</code> default method. Earlier
+versions rewrote them into ordinary switch statements, which OpenClover
+already handled. OpenClover overrides
+<code>visitSwitch</code> to wrap the <code>default</code> branch with a coverage recorder, but has
+no counterpart for the new node. The <code>case</code> arms are still reached by the
+generic traversal, so only the <code>default</code> arm is missed. The fix is a
+few lines in OpenClover, though it needs care since OpenClover still
+compiles against Groovy 3–5, where the new method doesn&#8217;t exist.</p>
+</div>
+<div class="paragraph">
+<p>In practice this costs a little accuracy in the statement coverage
+percentage for code using switch expressions. Nothing else is
+affected, and as we&#8217;ll see, the test-selection tooling copes with it gracefully.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_per_test_coverage">Per-test coverage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each instrumented test run leaves one coverage "slice" per test next to
+the database. The HTML report uses them in its <em>Contributing tests</em>
+section, and clicking a line&#8217;s hit count lists the tests that executed it.
+The data behind that popup is a per-line array of test ids embedded in the
+report, which shows how central the reverse view is to OpenClover&#8217;s design.</p>
+</div>
+<div class="paragraph">
+<p>The same information is available programmatically. <code>CloverDatabase</code>
+loads the coverage database, and <code>getTestHits(range)</code> returns the tests that
+executed any method, statement or branch. The companion repo&#8217;s
+<code>TestMap.groovy</code> uses this to export a portable JSON "test map":</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def db = CloverDatabase.loadWithCoverage(dbPath, new CoverageDataSpec())
+
+def tests = [:]                       // TestCaseInfo -&gt; id
+def testId = { TestCaseInfo t -&gt; tests.computeIfAbsent(t) { tests.size() } }
+def hits = { CoverageDataRange r -&gt; db.getTestHits(r).collect(testId).sort() }
+
+def files = db.fullModel.getFiles(HasMetricsFilter.ACCEPT_ALL).collectEntries { FileInfo f -&gt;
+    def regions = f.gatherSourceRegions()
+    def methods = regions.findAll { it instanceof MethodInfo }.collect { MethodInfo m -&gt;
+        [m.startLine, m.endLine, m.simpleName, hits(m)]
+    }
+    def statements = regions.findAll { it instanceof StatementInfo || it instanceof BranchInfo }.collect {
+        [it.startLine, it.endLine, hits(it)]
+    }
+    // ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For <code>extraPrice</code>, the relevant part of <code>build/clover/test-map.json</code> reads:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="json">"methods": [[29, 36, "extraPrice", [0, 4, 5, 6, 10]], ...],
+"statements": [[30, 34, [0, 4, 5, 6, 10]],
+               [31, 31, [4, 6, 10]],
+               [32, 32, [0, 5, 6]],
+               [35, 35, [0, 4, 5, 6, 10]], ...]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Five tests call <code>extraPrice</code>, but only three of them (ids 0, 5 and 6) ever
+price an extra shot.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_openclovers_test_optimization">OpenClover&#8217;s test optimization</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenClover already uses this data. <code>&lt;clover-snapshot&gt;</code> records, for every
+test, a checksum of each source file it touched. Later, a
+<code>&lt;clover-optimized-testset&gt;</code> re-runs only the test classes whose
+recorded files have changed, plus any that failed last time. The companion
+repo wraps this as <code>cloverOptimizedTest</code>.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s change one line, raising the price of an extra shot:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="diff">-            case 'shot' -&gt; 0.90
++            case 'shot' -&gt; 1.00</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew cloverOptimizedTest
+OpenClover selected 3 test class(es): [coffee.PricingTest, coffee.OrderTest, coffee.ReceiptSpec]
+11 tests completed, 3 failed</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It works, but in this example it saves nothing. Every test class prices
+<em>something</em>, so every test class touched <code>Pricing.groovy</code>, and the
+optimization works at file granularity. That&#8217;s a sensible, conservative
+design for a CI server. For an agent making one-line edits in a big
+code base, we can do much better.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_line_level_test_selection">Line-level test selection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>AffectedTests.groovy</code> reads the test map, asks git what has changed
+since the commit the map was built from, and resolves each changed hunk
+as precisely as the map allows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def resolve = { Hunk h -&gt;
+    def entry = map.files[h.file()]
+    // ... new or unmapped files handled here
+    // for each changed line, the innermost statement(s) covering it
+    def statements = h.insertion() ? [] : (h.from()..h.to()).collectMany { line -&gt;
+        def covering = entry.statements.findAll { it[0] &lt;= line &amp;&amp; it[1] &gt;= line }
+        def span = covering.collect { it[1] - it[0] }.min()
+        covering.findAll { it[1] - it[0] == span }
+    }
+    def signatures = entry.methods.findAll { it[0] in h.from()..h.to() }
+    if (statements || signatures) {
+        return [level: 'line', tests: (statements*.last() + signatures*.last()).flatten().unique()]
+    }
+    def method = entry.methods.findAll { encloses(it, h) }.min { it[1] - it[0] }
+    method ? [level: "method ${method[2]}", tests: method.last()] : [level: 'file', tests: entry.tests]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fallbacks go from narrow to broad:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>A changed line containing code maps to the tests that executed its
+innermost statement. Line 32 sits inside the multi-line <code>val price = switch &#8230;&#8203;</code>
+statement, but only the tests that hit line 32 itself are chosen.</p>
+</li>
+<li>
+<p>A changed line with no recorded code (a brace, a blank line, an
+inserted line) maps to the tests of the enclosing method.</p>
+</li>
+<li>
+<p>Anything else in a mapped file maps to every test that touched the file,
+which is what OpenClover&#8217;s own optimizer does.</p>
+</li>
+<li>
+<p>A changed build file, or any file the map doesn&#8217;t know, means the whole suite.</p>
+</li>
+<li>
+<p>A new test class is selected so it runs. A new production class is reported
+as having no coverage yet.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The uninstrumented <code>default</code> arm falls out of this naturally. Line 33
+has no statement of its own, so the innermost statement covering it is the
+whole <code>switch</code>, and all five callers of <code>extraPrice</code> are selected.</p>
+</div>
+<div class="paragraph">
+<p>Here it is on the same one-line change:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew -q :affectedTests
+src/main/groovy/coffee/Pricing.groovy:32             line               3 test(s)
+
+Run: ./gradlew :test --tests 'coffee.ReceiptSpec.a receipt lists each drink and the total' --tests 'coffee.PricingTest.extraShot' --tests 'coffee.PricingTest.priceIncludesExtras'</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Running those three tests gives three failures. Running the full suite
+also gives three failures, the same three. The other eight tests never
+executed the changed line, and they all pass.</p>
+</div>
+<div class="paragraph">
+<p>The suggested command runs the <em>ordinary</em> uninstrumented tests, so the fast
+feedback loop costs no instrumentation overhead. Only rebuilding the
+map runs instrumented.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_telling_the_agent">Telling the agent</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For an agent, <code>-Pjson</code> gives machine-readable output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="json">{
+    "baseline": {
+        "commit": "06b42e72f9308d7b9eb3683dd4844f171d646fdb",
+        "dirty": false
+    },
+    "runAll": false,
+    "tests": [
+        "coffee.ReceiptSpec.a receipt lists each drink and the total",
+        "coffee.PricingTest.extraShot",
+        "coffee.PricingTest.priceIncludesExtras"
+    ],
+    "uncovered": [],
+    "command": "./gradlew :test --tests 'coffee.ReceiptSpec.a receipt lists each drink and the total' --tests 'coffee.PricingTest.extraShot' --tests 'coffee.PricingTest.priceIncludesExtras'",
+    "hunks": [
+        { "location": "src/main/groovy/coffee/Pricing.groovy:32", "level": "line", "tests": 3 }
+    ]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>uncovered</code> list is arguably as valuable as the test list. If an
+agent changes a line that no test executes, it learns that immediately and
+can write a test, rather than reporting a green build that never
+exercised its change.</p>
+</div>
+<div class="paragraph">
+<p>The companion repo includes an <code>AGENTS.md</code> with instructions for coding
+agents: run <code>affectedTests -Pjson</code> after an edit, run the <code>command</code>,
+add tests for anything in <code>uncovered</code>, and run the full suite once
+before finishing. That last step matters. Selection is a fast feedback
+loop, not a proof. A change can affect a test that never executed the
+old line: a new branch that previously didn&#8217;t exist, a constant read
+elsewhere, or a change in behaviour reached through reflection or
+dynamic dispatch. Coverage tells you which tests <em>did</em> run the old code,
+not every test that <em>could</em> observe the new code.</p>
+</div>
+<div class="paragraph">
+<p>The map itself is just a JSON file, so in a larger project a CI job
+could build it nightly from the instrumented run and publish it as an
+artifact. Agents and developers would then pull it down instead of
+paying for instrumentation locally. The map records the commit it describes,
+and the selection tool diffs against that commit rather than <code>HEAD</code>, so a map
+that is a few commits old still gives correct line numbers.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_does_it_save_tokens">Does it save tokens?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Fewer test runs means less waiting, but for an agent it should also mean
+fewer tokens. Without a map, an agent works out which tests matter the
+same way a person new to the code would: it searches for callers, opens
+test files, and reasons about which ones look related, and all of that
+reading goes into its context. In an example as small as our coffee shop
+the difference would be negligible, so we ran a small pilot on Groovy itself.</p>
+</div>
+<div class="paragraph">
+<p>We picked the <code>groovy-json</code> module (1,102 tests) and its last 20 GROOVY-tagged
+production commits. For each commit, we set the module back to just after
+that commit, built a test map, and then reversed the commit&#8217;s production
+change. That reversal stands in for an edit an agent has just made, and the
+module&#8217;s full suite tells us which tests it breaks. 15 of the 20 reversals
+break at least one test.</p>
+</div>
+<div class="paragraph">
+<p>Headless Claude Code agents (Sonnet), in workspaces with no git history to
+peek at, were then given the same prompt for each task: find and run the
+tests relevant to this change, without running the whole suite. One group
+had to work the tests out for itself. The other was told about the selection
+tool. Each group ran every task twice, 40 runs per group:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 40%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-right valign-top">Without map</th>
+<th class="tableblock halign-right valign-top">With map</th>
+<th class="tableblock halign-right valign-top">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Input tokens</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">6.13M</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">4.48M</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">−27%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Output tokens</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">62k</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">38k</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">−39%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Turns</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">230</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">172</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">−25%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Cost</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">$4.32</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">$3.49</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">−19%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Caught every expected failure</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">25 of 30</p></td>
+<td class="tableblock halign-right valign-top"><p class="tableblock">30 of 30</p></td>
+<td class="tableblock halign-right valign-top"></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A few things stood out:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The saving comes from fewer turns, not from less test output. Every turn
+re-reads the whole conversation, so each round of searching and reading
+that the map makes unnecessary saves tens of thousands of tokens.</p>
+</li>
+<li>
+<p>Accuracy improved more than cost did. Without the map, agents sometimes
+picked plausible tests that never executed the changed code, ran them,
+and reported success while a real failure went unnoticed.</p>
+</li>
+<li>
+<p>The output format matters. Our first version of the tool printed every
+selected test, twice. With hundreds of tests selected, agents had to
+re-parse the output, and the map group used <em>more</em> tokens than the group
+without it. Adding a mode that runs the selection directly and reports
+counts rather than names gave the numbers above.</p>
+</li>
+<li>
+<p>Selection was not much smaller than an agent&#8217;s own guesses. A change
+to parser code that almost every test exercises selects hundreds of
+tests. What the map adds is that the selection is <em>right</em>.</p>
+</li>
+<li>
+<p>Coverage of a static initializer is credited to whichever test happened to
+load the class first, so selection for those lines is close to arbitrary.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This is one module, one model, and a fresh map for every task, so treat the
+numbers as indicative rather than definitive. The direction, though, is
+consistent: fewer turns, fewer tokens, and no missed failures.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>OpenClover 5.1.1 works with Groovy 6 today, despite only claiming
+Groovy 3–5. The one gap, the <code>default</code> arm of switch expressions, is
+small, well understood, and cosmetic for test selection. Its Gradle plugin
+hasn&#8217;t kept up with Gradle 9, but driving the Ant tasks directly
+takes little code.</p>
+</div>
+<div class="paragraph">
+<p>The feature that makes it stand out is per-test coverage. Because
+OpenClover instruments the tests as well as the code, its database knows
+which test executed which line. OpenClover uses that for file-level test
+optimization. With a script of under 100 lines on top, it also gives line-level test selection:
+exactly the question an AI agent needs answered after every edit.
+In a pilot on Groovy&#8217;s own <code>groovy-json</code> module, giving agents that answer
+cut their token use by about a quarter and stopped them missing failing tests.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openclover.org">OpenClover</a> and its
+<a href="https://github.com/openclover/clover">GitHub repository</a></p>
+</li>
+<li>
+<p><a href="https://openclover.org/documentation">OpenClover documentation</a>,
+including per-test coverage and test optimization</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-openclover">groovy-openclover</a> companion repo</p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html">Groovy 6.0 release notes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
