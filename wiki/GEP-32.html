@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-32</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-32</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_design' class='anchor-link'>Design</a></li><li><a href='#_positioning_and_the_threat_model' class='anchor-link'>Positioning and the threat model</a></li><li><a href='#_related_work_in_groovy' class='anchor-link'>Related work in Groovy</a></li><li><a href='#_excluded_and_deferred_features' class='anchor-link'>Excluded and deferred features</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_risks_maintenance_and_status' class='anchor-link'>Risks, maintenance and status</a></li><li><a href='#_references' class='anchor-link'>References</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-32</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-32</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Restricted Compiler Profile</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-10-19</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-10-19</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+This proposal is a <strong>draft</strong> for discussion. It does not change Groovy&#8217;s threat model. Compiling or running
+code from an untrusted author remains out of model (THREAT_MODEL.md §3), and the features this GEP combines
+remain on the threat model&#8217;s "false friends" list (§9). The profile is <strong>risk reduction for code you have
+chosen to run</strong>, not a sandbox. The name, API and defaults are proposals, not commitments.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This GEP proposes a single, named, documented and tested compiler configuration, the <strong>restricted profile</strong>,
+for compiling code that the host did not write by hand but has decided to run. Typical examples are an AI
+agent&#8217;s output in an edit-compile-check loop, cells written by an agent in a notebook, generated scripts,
+and in-house plugin or rules scripts.</p>
+</div>
+<div class="paragraph">
+<p>The profile combines mechanisms Groovy already has with one new checker:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>No execution at compile time:</strong> <code>@Grab</code>, <code>@ASTTest</code> and unexpected global AST transformations are off,
+so compiling a candidate runs nothing.</p>
+</li>
+<li>
+<p><strong>Static compilation forced</strong>, so every call has a resolved target the checkers can see.</p>
+</li>
+<li>
+<p><strong>A new effect checker</strong>, <code>RestrictedEffectsChecker</code>, a type-checking extension that refuses reflection,
+dynamic dispatch, metaclass access, class loading, process execution, dynamic evaluation and raw I/O,
+including their GDK forms (<code>"cmd".execute()</code>, <code>file.text</code>, <code>url.text</code>), unless the host grants them.</p>
+</li>
+<li>
+<p><strong>Existing checkers</strong> (strict <code>NullChecker</code> by default) and a cooperative runaway guard (<code>ThreadInterrupt</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It is delivered as a preset that hosts extend, a refused-snippet test suite that defines what "restricted"
+means, documentation of the limits, and a row in the threat model.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_code_nobody_wrote_by_hand_is_now_compiled_constantly">Code nobody wrote by hand is now compiled constantly</h3>
+<div class="paragraph">
+<p>AI coding agents generate Groovy, compile it, read the diagnostics and try again. Notebook kernels,
+MCP servers and agent harnesses compile snippets they received from a model. The person running these
+tools has chosen to run the code, but has not read every line. Today the question "how do I restrict what
+this script can do?" gets a scattered answer: SecureASTCustomizer javadoc, system properties in the threat
+model&#8217;s §5a table, and mailing-list posts. Each answer comes with a warning that it is not a sandbox, and
+none comes with tests.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_we_only_compiled_it_is_not_a_safety_argument">"We only compiled it" is not a safety argument</h3>
+<div class="paragraph">
+<p><code>@Grab</code> resolves and downloads dependencies, <code>@ASTTest</code> runs code and global AST transformations on the
+classpath run during compilation. An agent loop that compiles a hundred candidates should be able to do so
+without running any of them. The switches exist (<code>groovy.grape.enable</code>, <code>groovy.asttest.enable</code>,
+<code>CompilerConfiguration#setDisabledGlobalASTTransformations</code>). What is missing is one place that turns them
+all off and a test that proves it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_secureastcustomizer_cannot_do_the_job_alone">SecureASTCustomizer cannot do the job alone</h3>
+<div class="paragraph">
+<p>SecureASTCustomizer runs at <code>CANONICALIZATION</code>, before static type checking has inferred any types.
+Probes against Groovy 6.0.0, with <code>@CompileStatic</code> forced and <code>Class</code>, <code>Runtime</code>, <code>ProcessBuilder</code>
+and <code>System</code> denied as receivers:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 14.2857%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Snippet</th>
+<th class="tableblock halign-left valign-top">Result</th>
+<th class="tableblock halign-left valign-top">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Class.forName("java.lang.Runtime")</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">literal receiver class</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Runtime.getRuntime().exec("ls")</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">indirect import check</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"a".getClass().getMethods()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>compiles</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">receiver type not yet inferred</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"ls".execute().text</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>compiles</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a GDK method on <code>String</code>; denying <code>String</code> is not an option</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>"a".invokeMethod("toUpperCase", null)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>runs</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamic dispatch survives <code>@CompileStatic</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String.metaClass.trim = { &#8594; "x" }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">static compilation: no property <code>trim</code> on <code>MetaClass</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>A check that runs during type checking sees the inferred receiver of every call and the resolved target of
+every GDK method. That is where the existing checkers in <code>groovy-typecheckers</code> already work, and it is
+where the effect rules belong. SecureASTCustomizer stays useful as a cheap early layer for imports.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_static_compilation_is_the_enabler_not_the_control">Static compilation is the enabler, not the control</h3>
+<div class="paragraph">
+<p>The threat model is right that <code>@CompileStatic</code> is not a security control. Statically compiled code is
+just as privileged. Its value here is visibility: with dispatch resolved at compile time, a checker can
+say what a snippet touches. The profile uses static compilation for that reason and makes no other claim
+for it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design">Design</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_layers">Layers</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Layer</th>
+<th class="tableblock halign-left valign-top">Mechanism</th>
+<th class="tableblock halign-left valign-top">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No compile-time execution</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Grab transform disabled per compilation, Grab annotations refused, <code>@ASTTest</code> disabled, other global transforms disabled or a host-controlled compile classpath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">existing switches, plus a small refusal customizer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Static compilation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ASTTransformationCustomizer(CompileStatic, extensions: [&#8230;&#8203;])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">existing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Effect rules</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RestrictedEffectsChecker</code> (below)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>new</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Import layer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SecureASTCustomizer <code>disallowedImports</code>, <code>disallowedStarImports</code>, <code>indirectImportCheckEnabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">existing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Correctness checkers</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">strict <code>NullChecker</code> by default; <code>PurityChecker</code> and others opt-in</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">existing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Runaway guard</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ThreadInterrupt</code>, optionally <code>TimedInterrupt</code>; cooperative, robustness only</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">existing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Typed binding (REPL hosts)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">optional extension, specified separately</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">see <em>Related work</em></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_restrictedeffectschecker"><code>RestrictedEffectsChecker</code></h3>
+<div class="paragraph">
+<p>An opt-in type-checking extension in <code>groovy-typecheckers</code>, usable on its own or through the preset.
+It reports a static type error when a resolved call, constructor call, property access or method pointer
+targets one of these categories:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Category</th>
+<th class="tableblock halign-left valign-top">Examples (non-exhaustive)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Reflection and handles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.Class</code> members beyond name and simple-name queries, <code>java.lang.reflect.<strong></code>, <code>java.lang.invoke.</strong></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dynamic dispatch and the MOP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>invokeMethod</code>, <code>getProperty</code>/<code>setProperty</code> by name, <code>getMetaClass</code>, <code>groovy.lang.MetaClass</code>, <code>GroovySystem</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Class loading and evaluation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClassLoader</code>, <code>GroovyClassLoader</code>, <code>GroovyShell</code>, <code>Eval</code>, <code>javax.script.<strong></code>, <code>groovy.grape.</strong></code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Process and system</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Runtime</code>, <code>ProcessBuilder</code>, <code>System</code> (except time and line-separator queries), <code>ProcessGroovyMethods</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ambient I/O</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.io.File</code>, <code>java.nio.file.<strong></code>, <code>java.net.</strong></code>, <code>ResourceGroovyMethods</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Threads</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Thread</code> creation, executors (optional; on by default)</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Rules are written against resolved owners and GDK provider classes, not method names alone. The GDK&#8217;s
+split already follows authority: <code>ResourceGroovyMethods</code> makes authority from a name (<code>File</code>, <code>URL</code>),
+<code>ProcessGroovyMethods</code> starts processes, while <code>IOGroovyMethods</code> works on streams the code was already
+handed. The last stays allowed by default, so a host can pass in a <code>Reader</code> and the snippet can use
+<code>eachLine</code> on it.</p>
+</div>
+<div class="sect3">
+<h4 id="_grants">Grants</h4>
+<div class="paragraph">
+<p>Hosts widen the profile by naming grants, not by deleting rules:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def config = RestrictedProfile.builder()
+    .grant(RestrictedProfile.Grant.THREADS)
+    .grant(RestrictedProfile.Grant.FILE_READ)   // java.nio.file read operations only
+    .checkers('NullChecker(strict: true)', 'PurityChecker')
+    .build()                                     // a CompilerConfiguration</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grants are categories, not paths. Granting a category says "this code may use files". Which files is a
+runtime question for the host, which passes in the <code>Path</code> or stream it is willing to share. Path-scoped and
+capability-scoped grants are deferred (see <em>Excluded and deferred features</em>).</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_deny_list_or_allow_list">Deny list or allow list</h4>
+<div class="paragraph">
+<p>The default is a <strong>deny list</strong>: ordinary computation code compiles, and the refused categories are easy to
+explain. An <strong>allow-list mode</strong> (<code>.allowListOnly()</code>) admits only <code>java.lang</code> value types, <code>java.util</code>,
+<code>java.time</code>, <code>java.math</code>, <code>java.util.function</code>, <code>java.util.stream</code> and the GDK without its effect providers,
+plus anything granted. This is closer to the "safe mode" of the TACIT work for Scala. The same test suite
+runs against both modes.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_shared_lists_with_puritychecker">Shared lists with <code>PurityChecker</code></h4>
+<div class="paragraph">
+<p><code>PurityChecker</code> already classifies I/O, logging, metrics and non-determinism by type prefix. The two
+checkers should share those lists from one source so they cannot drift apart. They answer different
+questions: purity asks whether a method has an effect, while the profile asks whether the code may reach
+that kind of effect at all.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_preset">The preset</h3>
+<div class="paragraph">
+<p><code>RestrictedProfile</code> is a small builder returning a configured <code>CompilerConfiguration</code>. Because REPL hosts
+(notebook kernels, <code>groovysh</code>, MCP servers) add their own customizers, the profile must be a preset hosts
+extend in code, not only a <code>groovyc --configscript</code> file. A config script that applies the default profile
+is also shipped, for the command line and for <code>groovyc --check</code>.</p>
+</div>
+<div class="paragraph">
+<p>The preset sets, in addition to the layers above:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>groovy.grape.GrabAnnotationTransformation</code> disabled for its compilations, through
+<code>setDisabledGlobalASTTransformations</code>, together with all other global AST transformations except those
+the host lists explicitly;</p>
+</li>
+<li>
+<p>a refusal, reported as a compile error, of <code>@Grab</code>, <code>@GrabConfig</code>, <code>@GrabResolver</code> and <code>@GrabExclude</code>, so
+the snippet&#8217;s author learns that dependencies are unavailable, rather than meeting "unable to resolve
+class" later;</p>
+</li>
+<li>
+<p><code>@ASTTest</code> disabled.</p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="_why_grape_is_disabled_per_compilation">Why Grape is disabled per compilation</h4>
+<div class="paragraph">
+<p>There are three ways to turn Grape off. Only one is scoped to a compilation:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 28.5714%;">
+<col style="width: 42.8572%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Mechanism</th>
+<th class="tableblock halign-left valign-top">Scope</th>
+<th class="tableblock halign-left valign-top">Behaviour (6.0.0 probes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keep <code>groovy-grape-ivy</code> and <code>groovy-grape-maven</code> off the classpath</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the JVM</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Grab</code> is skipped with only a "Grapes disabled" warning. <code>@GrabConfig(systemProperties = &#8230;&#8203;)</code> <strong>still sets the JVM system property at runtime</strong>, because its generated initializer checks only <code>groovy.grape.enable</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>groovy.grape.enable=false</code> or <code>Grape.setEnableGrapes(false)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the JVM, read once into a static</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Also turns off Grape for the host&#8217;s own code, for example a notebook kernel&#8217;s normal mode in the same JVM.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Disable <code>GrabAnnotationTransformation</code> in the profile&#8217;s <code>CompilerConfiguration</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">one compilation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@Grab</code> and <code>@GrabConfig</code> have no effect. No property is set, and the host&#8217;s own Grape stays enabled.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The profile cannot control the host&#8217;s classpath, and a JVM-wide switch is too broad for hosts that use
+Grape themselves. The per-compilation switch is therefore the mechanism. Keeping the engines off the
+classpath remains good defence in depth for hosts that run in a dedicated JVM, such as a guarded kernel,
+an MCP server or a CI step running <code>groovyc --check</code>, and the documentation recommends it there.</p>
+</div>
+<div class="paragraph">
+<p>Disabling the transform does not cover a direct runtime call such as <code>Grape.grab(group: &#8230;&#8203;, module: &#8230;&#8203;,
+version: &#8230;&#8203;)</code>, which still resolves and loads the dependency. <code>groovy.grape.*</code> is therefore in the effect
+checker&#8217;s class-loading category.</p>
+</div>
+<div class="paragraph">
+<p>The <code>@GrabConfig(systemProperties)</code> behaviour without an engine looks unintended. It is proposed as a
+separate core ticket, <a href="https://issues.apache.org/jira/browse/GROOVY-12461">GROOVY-12461</a>: the generated initializer should also be skipped when no engine is available.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_per_method_scope">Per-method scope</h3>
+<div class="paragraph">
+<p>By default the profile covers a whole compilation. Some generated code, though, lives inside hand-written
+source. A spec-sync tool, for example, writes a generated method body into an existing class (see <em>Spec sync
+and <code>@Spec`</em> below). For that case the effect rules can be limited to methods carrying a marker annotation.
+`@Spec</code> is the expected marker; a host may name another.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def config = RestrictedProfile.builder()
+    .scopeToMethodsAnnotatedWith('groovy.transform.Spec')
+    .build()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In this mode:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the preset adds <code>@CompileStatic</code> to the marked methods only, so the rest of the class keeps its own
+compilation mode;</p>
+</li>
+<li>
+<p><code>RestrictedEffectsChecker</code> checks the marked method&#8217;s body, including closures, lambdas and local or
+anonymous classes declared in it;</p>
+</li>
+<li>
+<p>the compile-time layers (Grab, <code>@ASTTest</code>, global transforms) stay compilation-wide, because they cannot
+be applied per method;</p>
+</li>
+<li>
+<p>calls from a marked method to unmarked methods written by the host are allowed, as calls into trusted
+library code are. A generated body can therefore reach an effect through a helper the host wrote. That is
+the host&#8217;s choice and is documented. An optional strict setting refuses such calls unless the callee is
+itself marked or is <code>@Pure</code> under <code>PurityChecker</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The refused-snippet suite gains per-method variants of its cases, including an unmarked helper that does
+what the marked method may not.</p>
+</div>
+<div class="sect3">
+<h4 id="_probe_results_groovy_6_0_0">Probe results (Groovy 6.0.0)</h4>
+<div class="paragraph">
+<p>A prototype used a <code>CONVERSION</code> customizer that adds <code>@CompileStatic(extensions = &#8230;&#8203;)</code> to <code>@Spec</code> methods,
+with a toy extension that refuses <code>execute</code>:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Case</th>
+<th class="tableblock halign-left valign-top">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unmarked method in a dynamic class calls <code>"cmd".execute()</code> and uses dynamic dispatch</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compiles and runs as before</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method makes a dynamic call</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused by static type checking</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method calls <code>execute()</code> directly, in a closure, or in an anonymous inner class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused in all three</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method calls an unmarked helper that calls <code>execute()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allowed, as designed</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method in a class that is already <code>@CompileStatic</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the extension still applies to it</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method in a script</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused as expected</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unfilled marked method (empty body), with a small <code>@Spec</code> transform</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">throws <code>UnsupportedOperationException</code> instead of returning <code>null</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">marked method reads a <code>def</code> property of its dynamic class (<code>x + 1</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refused: the property is <code>Object</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The last row is a usability cost rather than a hole. Generated bodies in dynamic classes meet untyped fields.
+The sync tool sees the diagnostic and can add a cast or a typed local, but declaring field types is the better
+fix.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_loops_and_local_declarations">Loops and local declarations</h4>
+<div class="paragraph">
+<p><code>@Spec</code> can also mark a smaller hole. With <code>@ExtendedTarget(ExtendedElementType.LOOP)</code> it is accepted on
+<code>for</code>, <code>while</code> and <code>do-while</code> loops, and with <code>ElementType.LOCAL_VARIABLE</code> on local declarations. The
+<code>@Spec</code> transform receives the loop statement or the declaration as its target node, so an unfilled loop
+body can be made to throw just as an unfilled method does. Neither kind is ever written to the class file,
+so such specs exist only in source. That is enough for the sync tool, which works on source, but they are
+invisible to reflection and to documentation built from compiled classes.</p>
+</div>
+<div class="paragraph">
+<p><code>@CompileStatic</code> cannot be applied to a single statement. Restricting a loop therefore means statically
+compiling its enclosing method and limiting the effect checker to statements inside <code>@Spec</code> loops. A
+prototype did this: <code>execute()</code> inside the loop was refused, and <code>execute()</code> elsewhere in the same method was
+allowed. The cost is that the rest of that method must also type-check statically, so a dynamic call
+elsewhere in it is now refused. The profile should support loop scope on these terms, and the sync tool
+should prefer method-level holes where the surrounding code is dynamic.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_refused_snippet_test_suite">The refused-snippet test suite</h3>
+<div class="paragraph">
+<p>The suite <strong>defines</strong> the profile. It has two halves:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>must refuse:</strong> every row of the motivation table, every category above, and known SecureASTCustomizer
+bypasses (indirect class references, aliases, method pointers, <code>with</code>/<code>tap</code> delegation, string-to-class
+coercion, code relocated into constructors, initializers and synthetic methods);</p>
+</li>
+<li>
+<p><strong>must compile:</strong> representative data-processing, collection, string, date and math code, so the profile
+stays usable.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>It follows the style of the existing "refuted" test module: each snippet carries the reason it is refused,
+and a regression in either half fails the build.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_positioning_and_the_threat_model">Positioning and the threat model</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>THREAT_MODEL.md gains a §5a row and a §9 pointer. Suggested wording:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Restricted profile (<code>RestrictedProfile</code>).</strong> For code you would otherwise run with no restriction, such as
+your own agent&#8217;s output, generated scripts or in-house plugins, the profile removes compile-time execution
+and refuses reflection, dynamic dispatch, process execution, dynamic evaluation and ambient I/O unless
+granted. It combines features listed under <em>False friends</em> without changing their status. It is not a
+sandbox: for code from an untrusted author it is one layer beneath process or OS isolation, and §3 still
+applies.</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>The name says "restricted", not "secure" or "safe", for this reason.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_related_work_in_groovy">Related work in Groovy</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_gep_31_realm_based_dynamic_semantics">GEP-31: Realm based dynamic semantics</h3>
+<div class="paragraph">
+<p>GEP-31 lets a realm define its extension method set, its MetaClass layer and its object MOP, and states
+that static method selection uses the realm&#8217;s extension set. A <strong>restricted realm</strong> that drops
+<code>ProcessGroovyMethods</code> and <code>ResourceGroovyMethods</code>, has no MetaClass layer and excludes <code>invokeMethod</code> would
+express the GDK and dispatch rules of this profile structurally. <code>"ls".execute()</code> would simply not resolve,
+and the rule would hold for dynamically compiled code as well. If GEP-31 lands, the profile should define
+such a realm and shrink <code>RestrictedEffectsChecker</code> to the JDK-type rules. This GEP does not depend on
+GEP-31. It is a concrete use case for it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gep_25_data_flow_security">GEP-25: Data-flow security</h3>
+<div class="paragraph">
+<p>GEP-25 tracks where values go: taint inward, sensitive values outward. This GEP restricts what code may do
+at all. They are complementary and kept separate so that neither waits on the other. Later agent-harness
+work is expected to combine them, with GEP-25&#8217;s sensitive-value carrier used from snippets compiled under
+this profile.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_typed_binding_for_repl_hosts_groovy_12462">Typed binding for REPL hosts (GROOVY-12462)</h3>
+<div class="paragraph">
+<p>Under forced static compilation, a REPL snippet that reads a session variable from its <code>Binding</code> (<code>x + 1</code>)
+is refused as undeclared. <a href="https://issues.apache.org/jira/browse/GROOVY-12462">GROOVY-12462</a> proposes three small parts that REPL hosts add to their
+configuration:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>resolve:</strong> an <code>unresolvedVariable</code> type-checking extension looks names up in a session map of name to
+type;</p>
+</li>
+<li>
+<p><strong>export:</strong> top-level declarations stay ordinary locals while compiling, so flow typing applies, and are
+copied into the binding at the end of the snippet;</p>
+</li>
+<li>
+<p><strong>record:</strong> after type checking, the inferred type of each exported declaration, generics included, is
+stored in the session map for later snippets.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A prototype on Groovy 6.0.0 compiled <code>n + names.size()</code> statically against recorded types <code>int</code> and
+<code>ArrayList&lt;String&gt;</code>, and refused <code>names.first().foo()</code> and incompatible reassignments. Resolving from runtime
+classes alone loses generics, which is why the record step reads inferred types instead. This is useful
+without the profile, as an optional static mode for <code>groovysh</code> and notebook kernels. The preset can include
+it when it exists, and LACUNA-style holes filled at runtime would need it.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spec_sync_and_spec_outside_core">Spec sync and <code>@Spec</code> (outside core)</h3>
+<div class="paragraph">
+<p>Martin Odersky&#8217;s Scala Days 2026 keynote shows program holes filled ahead of time: a method with a typed
+signature, a prose spec string and <code>???</code>, whose body an agent writes into the source during a "sync" step.
+The Groovy form under discussion is <code>@Spec('''&#8230;&#8203;''')</code> on a method with an empty body, next to <code>@Requires</code>
+and <code>@Ensures</code>. A sync tool, starting outside core in groovy-verify or a small module, fills the body,
+checks it against the contracts and writes it back. Two points concern this GEP:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>filling must be a tool step, never an AST transform that calls a model, so that compiling still runs
+nothing;</p>
+</li>
+<li>
+<p>the tool compiles each candidate under this profile in per-method scope, with <code>@Spec</code> as the marker, so
+generated bodies are restricted while the hand-written code around them is not.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_puritychecker_closure_parameters_groovy_12460"><code>PurityChecker</code> closure parameters (GROOVY-12460)</h3>
+<div class="paragraph">
+<p>The ticket letting <code>@Pure</code> apply to closure and SAM parameters is independent. Hosts that enable
+<code>PurityChecker</code> under the profile benefit from it. GROOVY-12464 closes a related gap: mutation through operators
+(<code>&lt;&lt;</code>, subscript assignment, and GEP-15 <code>*Assign</code> methods such as <code>plusAssign</code>) is not yet
+detected, while the equivalent method calls are.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_excluded_and_deferred_features">Excluded and deferred features</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>A sandbox.</strong> Out of scope by design; see <em>Positioning</em>.</p>
+</li>
+<li>
+<p><strong>Runtime enforcement.</strong> The profile is compile-time only. Libraries on the classpath may do anything
+internally; a granted or allowed library call is trusted. Hosts that need more use process isolation.</p>
+</li>
+<li>
+<p><strong>Resource limits.</strong> Memory, CPU and output size are host concerns. <code>TimedInterrupt</code> is offered for
+accidental loops only.</p>
+</li>
+<li>
+<p><strong>Path-scoped and capability grants.</strong> Scoped grants such as "read under <code>/work</code> only", and a check that a
+granted handle does not escape the block it was given in, are deferred to a later GEP or ticket that builds
+on the grant vocabulary here.</p>
+</li>
+<li>
+<p><strong>Dynamic code.</strong> Without static compilation the checker cannot see dispatch targets. The profile forces
+static compilation; a realm (GEP-31) is the path to restricting dynamic code.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Purely additive. Nothing changes for code not compiled with the profile or the checker. Users who already
+combine SecureASTCustomizer with <code>@CompileStatic</code> can keep doing so.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_risks_maintenance_and_status">Risks, maintenance and status</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Being mistaken for a sandbox.</strong> The largest risk. It is mitigated by the name, the warning box, the
+threat-model wording and documentation that points to process isolation on every page.</p>
+</li>
+<li>
+<p><strong>Coverage gaps.</strong> A type-checking extension sees only what the compiler resolves. The suite exists to make
+gaps visible; each newly found bypass becomes a test.</p>
+</li>
+<li>
+<p><strong>List maintenance.</strong> The deny list needs updating as the JDK and GDK grow. Sharing lists with
+<code>PurityChecker</code> and, later, a realm definition keeps it to one place.</p>
+</li>
+<li>
+<p><strong>Usability.</strong> A profile nobody can use is no profile. The must-compile half of the suite guards this.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Status: <strong>Draft</strong>. The suggested order of work is the refused-snippet suite first, as failing tests; then the
+checker until the suite passes; then the preset, documentation and threat-model row. The typed-binding
+ticket proceeds in parallel, prototyped in the groovy-jupyter kernel.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>THREAT_MODEL.md §3 (scope), §5a (operational knobs), §9 (false friends), in the Groovy repository</p>
+</li>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/gapi/org/codehaus/groovy/control/customizers/SecureASTCustomizer.html">SecureASTCustomizer</a></p>
+</li>
+<li>
+<p><a href="https://docs.groovy-lang.org/latest/html/documentation/type-checking-extensions.html">Type checking extensions</a></p>
+</li>
+<li>
+<p><a href="GEP-8.html">GEP-8: Static type checking</a></p>
+</li>
+<li>
+<p><a href="GEP-10.html">GEP-10: Static compilation</a></p>
+</li>
+<li>
+<p><a href="GEP-25.html">GEP-25: Data-flow Security</a></p>
+</li>
+<li>
+<p><a href="GEP-31.html">GEP-31: Realm based dynamic semantics</a></p>
+</li>
+<li>
+<p><a href="https://arxiv.org/abs/2603.00991">TACIT: capability-safe agent code in Scala</a> (safe mode and scoped capabilities)</p>
+</li>
+<li>
+<p><a href="https://github.com/lampepfl/tacit">lampepfl/tacit</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=jlJyuJhDnlc">Martin Odersky, "The End of Programming?", Scala Days 2026 keynote</a> (spec holes filled ahead of time)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">1 (2026-10-19)</dt>
+<dd>
+<p>Initial draft, including Grape probe results, per-method scope, the revised typed binding
+design and the relation to spec sync, with per-method and loop scope probe results</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
