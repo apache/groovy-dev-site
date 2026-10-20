@@ -226,7 +226,7 @@ core. The Gradle plugin (<code>com.bmuschko.clover</code>) was last released in
 <div class="paragraph">
 <p>That&#8217;s less of a problem than it sounds. OpenClover&#8217;s own Ant tasks are
 small and well-defined, and Gradle can call Ant directly. The companion repo has
-a convention plugin, <code>openclover.gradle</code>, of around 130 lines. The heart of it
+a convention plugin, <code>openclover.gradle</code>, of around 150 lines. The heart of it
 compiles main and test sources through an instrumenting <code>&lt;groovyc&gt;</code>:</p>
 </div>
 <div class="listingblock">
@@ -547,16 +547,36 @@ whole <code>switch</code>, and all five callers of <code>extraPrice</code> are s
 <pre>$ ./gradlew -q :affectedTests
 src/main/groovy/coffee/Pricing.groovy:32             line               3 test(s)
 
-Run: ./gradlew :test --tests 'coffee.ReceiptSpec.a receipt lists each drink and the total' --tests 'coffee.PricingTest.extraShot' --tests 'coffee.PricingTest.priceIncludesExtras'</pre>
+  coffee.ReceiptSpec.a receipt lists each drink and the total
+  coffee.PricingTest.extraShot
+  coffee.PricingTest.priceIncludesExtras
+Run: ./gradlew -q :testAffected</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Running those three tests gives three failures. Running the full suite
-also gives three failures, the same three. The other eight tests never
-executed the changed line, and they all pass.</p>
+<p>The <code>testAffected</code> task asks the same script for the selection and
+applies it as a test filter, so one command picks the tests and runs them:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew -q :testAffected
+Running 3 test(s)
+
+ReceiptSpec &gt; a receipt lists each drink and the total FAILED
+    org.spockframework.runtime.SpockComparisonFailure at ReceiptSpec.groovy:30
+PricingTest &gt; priceIncludesExtras() FAILED
+    org.codehaus.groovy.runtime.powerassert.PowerAssertionError at PricingTest.groovy:45
+PricingTest &gt; extraShot() FAILED
+    org.codehaus.groovy.runtime.powerassert.PowerAssertionError at PricingTest.groovy:40
+3 tests completed, 3 failed</pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The suggested command runs the <em>ordinary</em> uninstrumented tests, so the fast
+<p>Running the full suite also gives three failures, the same three. The other
+eight tests never executed the changed line, and they all pass.</p>
+</div>
+<div class="paragraph">
+<p><code>testAffected</code> runs the <em>ordinary</em> uninstrumented tests, so the fast
 feedback loop costs no instrumentation overhead. Only rebuilding the
 map runs instrumented.</p>
 </div>
@@ -566,23 +586,21 @@ map runs instrumented.</p>
 <h2 id="_telling_the_agent">Telling the agent</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For an agent, <code>-Pjson</code> gives machine-readable output:</p>
+<p>For an agent, <code>testAffected</code> is usually all it needs. When it wants to look
+before running anything, <code>-Pjson</code> gives a machine-readable summary:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="json">{
     "baseline": {
-        "commit": "06b42e72f9308d7b9eb3683dd4844f171d646fdb",
+        "commit": "92c182ff1de6ce5136eaf0fb7c1fde1cee6dbc98",
         "dirty": false
     },
     "runAll": false,
-    "tests": [
-        "coffee.ReceiptSpec.a receipt lists each drink and the total",
-        "coffee.PricingTest.extraShot",
-        "coffee.PricingTest.priceIncludesExtras"
-    ],
+    "testCount": 3,
+    "testClasses": ["coffee.ReceiptSpec", "coffee.PricingTest"],
     "uncovered": [],
-    "command": "./gradlew :test --tests 'coffee.ReceiptSpec.a receipt lists each drink and the total' --tests 'coffee.PricingTest.extraShot' --tests 'coffee.PricingTest.priceIncludesExtras'",
+    "run": "./gradlew -q :testAffected",
     "hunks": [
         { "location": "src/main/groovy/coffee/Pricing.groovy:32", "level": "line", "tests": 3 }
     ]
@@ -590,15 +608,21 @@ map runs instrumented.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>uncovered</code> list is arguably as valuable as the test list. If an
+<p>The summary deliberately gives counts and classes rather than every test
+name. As we&#8217;ll see shortly, a long list costs an agent more than you
+might expect.</p>
+</div>
+<div class="paragraph">
+<p>The <code>uncovered</code> list is arguably as valuable as the selection. If an
 agent changes a line that no test executes, it learns that immediately and
 can write a test, rather than reporting a green build that never
-exercised its change.</p>
+exercised its change. <code>testAffected</code> prints the same information as
+<code>No test covers: &lt;file:lines&gt;</code>.</p>
 </div>
 <div class="paragraph">
 <p>The companion repo includes an <code>AGENTS.md</code> with instructions for coding
-agents: run <code>affectedTests -Pjson</code> after an edit, run the <code>command</code>,
-add tests for anything in <code>uncovered</code>, and run the full suite once
+agents: run <code>testAffected</code> after an edit, add tests for anything
+reported as uncovered, and run the full suite once
 before finishing. That last step matters. Selection is a fast feedback
 loop, not a proof. A change can affect a test that never executed the
 old line: a new branch that previously didn&#8217;t exist, a constant read
@@ -706,11 +730,12 @@ picked plausible tests that never executed the changed code, ran them,
 and reported success while a real failure went unnoticed.</p>
 </li>
 <li>
-<p>The output format matters. Our first version of the tool printed every
-selected test, twice. With hundreds of tests selected, agents had to
-re-parse the output, and the map group used <em>more</em> tokens than the group
-without it. Adding a mode that runs the selection directly and reports
-counts rather than names gave the numbers above.</p>
+<p>The output format matters. In an extra round where the tool&#8217;s JSON listed
+every selected test by name, and again inside a ready-to-run Gradle command,
+agents faced with hundreds of tests had to re-parse the output, and the map
+group used <em>more</em> tokens than the group without it. The numbers above come
+from running the selection directly, as <code>testAffected</code> does, and summarising
+it with counts rather than names, as <code>-Pjson</code> does.</p>
 </li>
 <li>
 <p>Selection was not much smaller than an agent&#8217;s own guesses. A change
