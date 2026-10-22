@@ -131,7 +131,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-10-21</p>
+<p>2026-10-23</p>
 </td>
 </tr>
 </table>
@@ -349,13 +349,38 @@ so <code>case foo()</code>, <code>case foo(bar)</code> and <code>case lower('ABC
 legacy <code>isCase</code> semantics.</p>
 </div>
 <div class="paragraph">
-<p>One narrow carve-out results. Argument forms such as <code>var x</code> do not
+<p>A record with no components is matched by empty parentheses:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">sealed interface Opt permits Some, None {}
+record Some(Object value) implements Opt {}
+record None() implements Opt {}
+
+switch (opt) {
+    case Some(var v) -&gt; "some $v"
+    case None()      -&gt; 'none'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Empty parentheses form a pattern only after a capitalised type name,
+optionally qualified (<code>case Opt.None() -&gt;</code>), so <code>case foo()</code> remains a
+call.</p>
+</div>
+<div class="paragraph">
+<p>Two narrow carve-outs result. Argument forms such as <code>var x</code> do not
 parse today, so claiming them breaks nothing; bare <code><em></code> does, because it
 is an ordinary identifier. A label spelled <code>case Foo(</em>) -&gt;</code>, where the
 name is capitalised and <code><em></code> is in scope as a variable, therefore changes
 meaning: it called <code>Foo(</em>)</code> before and is now read as a record pattern
-on the type <code>Foo</code>. The lower-case spelling <code>case foo(_) -&gt;</code> is
-unaffected and still calls <code>foo</code>.</p>
+on the type <code>Foo</code>. Likewise <code>case Foo() -&gt;</code>, where <code>Foo</code> names a
+zero-argument method, called <code>Foo()</code> before and is now a zero-component
+record pattern. The lower-case spellings <code>case foo(_) -&gt;</code> and
+<code>case foo() -&gt;</code> are unaffected and still call <code>foo</code>. To keep a call to
+a capitalised method, quote its name or give it a receiver:
+<code>case 'Foo'() -&gt;</code> or <code>case this.Foo() -&gt;</code>. A GString name, as in
+<code>case "$name"() -&gt;</code>, is always a call.</p>
 </div>
 <div class="paragraph">
 <p>A value deconstructs positionally if it is a record — native or
@@ -1045,7 +1070,7 @@ value of its type:</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Record pattern whose components are all <code>var</code> / <code>def</code> bindings or <code>_</code>,
- e.g. <code>case Circle(var r)</code></p></td>
+ e.g. <code>case Circle(var r)</code>, or that has no components, e.g. <code>case None()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes, for the record</p></td>
 </tr>
 <tr>
@@ -1445,6 +1470,18 @@ syntactic forms that currently fail to parse:</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case Foo() &#8594;</code> (capitalised)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — now a zero-component record pattern (carve-out)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case 'Foo'() &#8594;</code> / <code>case this.Foo() &#8594;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>case Foo():</code> (colon form)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy call label, unchanged</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>case []:</code> / <code>case [:]:</code> (colon form)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Yes — legacy, never matched, unchanged</p></td>
 </tr>
@@ -1512,17 +1549,30 @@ the capitalised spelling is affected; <code>case foo(_) -&gt;</code> still calls
 <code>foo</code>, and other argument shapes such as <code>var x</code> do not parse today
 so they claim no existing meaning.</p>
 </li>
+<li>
+<p><code>case Foo() -&gt;</code>, where <code>Foo</code> names a zero-argument method rather
+than a type: previously a call label, now a zero-component record
+pattern on the type <code>Foo</code> (see <em>Record patterns</em>). Unlike the other
+carve-outs this one is plausible in real code, so it fails loudly:
+with no type <code>Foo</code> in scope the label is a compile-time error
+("unable to resolve class Foo") rather than a silent change of
+meaning. Only a capitalised name is affected; <code>case foo() -&gt;</code> still
+calls <code>foo</code>, and <code>case 'Foo'() -&gt;</code> or <code>case this.Foo() -&gt;</code> keeps the
+call.</p>
+</li>
 </ul>
 </div>
 <div class="paragraph">
 <p>That is the complete list. Colon-form labels are deliberately not on
 it: a pattern requires the arrow form, so a colon-form label is never
 read as a pattern and keeps whatever it means today, including the
-never-matching <code>case []:</code> and <code>case [:]:</code>.</p>
+never-matching <code>case []:</code> and <code>case [:]:</code>, and <code>case Foo():</code>, which is
+still a call in a switch statement or a switch expression.</p>
 </div>
 <div class="paragraph">
-<p>No realistic program relies on either legacy meaning; they are
-itemised for completeness.</p>
+<p>No realistic program relies on the first two legacy meanings; they are
+itemised for completeness. The third is the one with real exposure,
+which is why it is a compile-time error rather than a silent change.</p>
 </div>
 </div>
 <div class="sect2">
