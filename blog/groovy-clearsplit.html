@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy 6, formal methods, verification, groovy-verify, design by contract, dafny, lemmascript, grails, groovyfx, javafx, android'/><meta name='description' content='Porting a Dafny/LemmaScript expense splitter to groovy-verify. A Grails 9 web app, a GroovyFX desktop app &amp; an Android app share the same verified core.'/><title>The Apache Groovy programming language - Blogs - ClearSplit: one verified core, three Groovy 6 apps</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&trade;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>ClearSplit: one verified core, three Groovy 6 apps</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_shape_of_the_project' class='anchor-link'>The shape of the project</a></li><li><a href='#_splitting_a_bill_exactly' class='anchor-link'>Splitting a bill, exactly</a></li><li><a href='#_balances_that_always_add_up' class='anchor-link'>Balances that always add up</a></li><li><a href='#_does_the_proof_have_teeth' class='anchor-link'>Does the proof have teeth?</a></li><li><a href='#_the_unverified_glue' class='anchor-link'>The unverified glue</a></li><li><a href='#_the_web_app_grails_9' class='anchor-link'>The web app: Grails 9</a></li><li><a href='#_the_desktop_app_groovy_fx' class='anchor-link'>The desktop app: groovy-fx</a></li><li><a href='#_the_android_app' class='anchor-link'>The Android app</a></li><li><a href='#_what_wasnt_ported' class='anchor-link'>What wasn&#8217;t ported</a></li><li><a href='#_what_we_learned' class='anchor-link'>What we learned</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li><li><a href='./groovy-android-tictactoe'>Playing with Groovy&trade; and Android</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>ClearSplit: one verified core, three Groovy 6 apps</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-10-23 08:00AM</span></p><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="./img/clearsplit-hero.png" alt="ClearSplit: one verified core, three Groovy 6 apps. The conservation theorem, proved at compile time with groovy-verify and Z3, beside the Grails, groovy-fx and Android apps showing balances that sum to $0.00" width="800"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Splitting the bill after a group dinner sounds like the easiest program in
+the world. Add up who paid, divide by who ate, done. Until the total is $10
+and there are three of you, and somebody&#8217;s app quietly loses a cent. Or gives
+it to the friend who stayed home.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/metareflection/dafny-replay/tree/main/clear-split">ClearSplit</a>
+is a small expense splitter written in Dafny to show that this kind of code can
+be proved correct, not just tested. A group has members; members record
+expenses, split among some of them, and settlements, where one member pays
+another back. ClearSplit proves the properties you&#8217;d want from a money app:
+an expense&#8217;s shares add up to exactly what was paid, each step moves each
+balance by exactly the right amount, and however long the history, the
+balances always sum to zero. Money is never created or destroyed. There is
+also a <a href="https://github.com/midspiral/clear-split-lemmascript">LemmaScript
+version</a>, where the same ideas are written as annotated TypeScript and
+verified.</p>
+</div>
+<div class="paragraph">
+<p>This post ports ClearSplit to Groovy 6. The proofs use
+<a href="https://github.com/paulk-asert/groovy-verify">groovy-verify</a>, which turns
+ordinary Groovy contracts into compile-time proofs checked by the Z3 SMT
+solver (the
+<a href="https://groovy.apache.org/blog/groovy6-formal-methods">formal methods post</a>
+has the full story). Then, because a verified kernel is more fun when someone
+can use it, we put three front ends over the very same core:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a web app using a <strong>Grails 9</strong> snapshot,</p>
+</li>
+<li>
+<p>a desktop app using the proposed <strong>groovy-fx</strong> module,</p>
+</li>
+<li>
+<p>and an <strong>Android</strong> app in dynamic Groovy.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/clearsplit-web.png" alt="The Grails app: balances for Alice, Bob and Carol summing to $0.00" width="520"></span>
+<span class="image"><img src="./img/clearsplit-fx.png" alt="The GroovyFX app: a bar chart of the same balances" width="340"></span>
+<span class="image"><img src="./img/clearsplit-android-balances.png" alt="The Android app: the same balances with bars" width="190"></span></p>
+</div>
+<div class="paragraph">
+<p>Same group, same history, same numbers, three apps.</p>
+</div>
+<div class="paragraph">
+<p>This is a spike, not a product. Several of the pieces are snapshots or
+previews: Grails 9 isn&#8217;t released, groovy-fx is still a pull request, and
+Groovy on Android is a Groovy 6 preview feature. Think of it as a look at
+where things are heading.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_shape_of_the_project">The shape of the project</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The project is a Gradle multi-project build:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 80%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Module</th>
+<th class="tableblock halign-left valign-top">What it holds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>core</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The verified kernel, <code>Split</code> and <code>Balances</code>, plus <code>Group</code>, the immutable
+model the apps use.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>web</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A Grails 9.0.0-SNAPSHOT app (Groovy 6.0.0, Spring Boot 4.1).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fx</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A desktop app using groovy-fx, built from the
+<a href="https://github.com/apache/groovy/pull/2989">pull request</a> sources.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>android</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An Android app, built the way the
+<a href="https://groovy.apache.org/blog/groovy-android-tictactoe">tic-tac-toe post</a>
+described.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The kernel works on member indices and amounts in cents, as the LemmaScript
+version does. It&#8217;s statically checked by groovy-verify, so a failed proof is a
+compile error. Everything else is ordinary Groovy, and much of the UI code is
+dynamic Groovy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_splitting_a_bill_exactly">Splitting a bill, exactly</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s start with a cautionary tale. groovy-verify&#8217;s examples include a port
+of the program on LemmaScript&#8217;s front page: an agent&#8217;s first try at splitting
+a total across weights. It floors each share, so <code>allocate(10, [1, 1, 1])</code>
+returns <code>[3, 3, 3]</code> and a cent vanishes. The fix hands the leftover cents
+back out, one at a time, and the port proves LemmaScript&#8217;s postcondition:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Ensures({ result.sum() == total })</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And it&#8217;s true! But look at what the leftover loop does: it gives the spare
+cents to positions 0, 1, 2, and so on, whatever their weights. So
+<code>allocate(1, [0, 1, 1])</code>, splitting one cent between members 1 and 2,
+returns <code>[1, 0, 0]</code>. It charges member 0, who wasn&#8217;t part of the expense at
+all. The proof is fine; the specification just doesn&#8217;t say that.</p>
+</div>
+<div class="paragraph">
+<p>A proof is only as good as its specification. ClearSplit&#8217;s version says a lot
+more. Here is the Groovy port&#8217;s <code>Split.equally</code>, where <code>joined[m]</code> is <code>1</code> when
+member <code>m</code> shares the cost and <code>0</code> otherwise:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
+class Split {
+    @Requires({ joined != null &amp;&amp; (0..&lt;joined.length).every { joined[it] == 0 || joined[it] == 1 } })
+    @Requires({ total &gt;= 0 &amp;&amp; joined.sum() &gt; 0 })
+    @Ensures({ result.length == joined.length &amp;&amp; result.sum() == total })
+    @Ensures({ (0..&lt;joined.length).every { joined[it] == 0 ==&gt; result[it] == 0 } })
+    @Ensures({ (0..&lt;joined.length).every { joined[it] == 1 ==&gt;
+        (result[it] == total.intdiv(joined.sum()) || result[it] == total.intdiv(joined.sum()) + 1) } })
+    static int[] equally(int total, int[] joined) {
+        ...
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Three promises: the shares add up to the total exactly; anyone who didn&#8217;t
+join pays nothing; and everyone who did pays the floor of an equal share or
+one cent more. The <code>=&#8658;</code> is Groovy 6&#8217;s implication operator, which reads
+nicely in specs. These are stock <code>groovy.contracts</code> annotations, so the same
+contracts also run as runtime checks wherever the code runs.</p>
+</div>
+<div class="paragraph">
+<p>The body works out the floored share and how many cents flooring lost, then
+leaves the rest to two smaller verified methods:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static int[] equally(int total, int[] joined) {
+    int p = joined.sum()
+    int base = total.intdiv(p)
+    int left = total - p * base             // the cents lost to flooring
+    assert 0 &lt;= left &amp;&amp; left &lt; p
+    int[] shares = baseShares(base, joined)
+    handOut(shares, joined, left)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>baseShares</code> gives everyone who joined the floored share, and proves that
+nobody else pays anything and the shares add up to <code>p * base</code>. <code>handOut</code> then
+gives the first <code>left</code> participants one cent more. Swap in `allocate&#8217;s
+leftover loop here and `equally&#8217;s second postcondition fails at compile time:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ shares != null &amp;&amp; joined != null &amp;&amp; shares.length == joined.length })
+@Requires({ (0..&lt;joined.length).every { joined[it] == 0 || joined[it] == 1 } &amp;&amp; 0 &lt;= left &amp;&amp; left &lt;= joined.sum() })
+@Ensures({ result != null &amp;&amp; result.length == shares.length &amp;&amp; result.sum() == shares.sum() + left })
+@Ensures({ (0..&lt;shares.length).every { result[it] == shares[it] || (joined[it] == 1 &amp;&amp; result[it] == shares[it] + 1) } })
+static int[] handOut(int[] shares, int[] joined, int left) {
+    int n = shares.length
+    int[] result = new int[n]
+    int given = 0
+    int r = 0
+    int s = 0
+    int c = 0
+    int k = 0
+    @Invariant({ 0 &lt;= k &amp;&amp; k &lt;= n &amp;&amp; n == shares.length &amp;&amp; n == joined.length &amp;&amp; result.length == n })
+    @Invariant({ r == result[0..&lt;k].sum(0) &amp;&amp; s == shares[0..&lt;k].sum(0) &amp;&amp; c == joined[0..&lt;k].sum(0) })
+    @Invariant({ given == (c &lt; left ? c : left) &amp;&amp; r == s + given })
+    @Invariant({ (0..&lt;k).every { result[it] == shares[it] || (joined[it] == 1 &amp;&amp; result[it] == shares[it] + 1) } })
+    @Decreases({ n - k })
+    while (k &lt; n) {
+        if (given &lt; left &amp;&amp; joined[k] == 1) {
+            result[k] = shares[k] + 1
+            given = given + 1
+        } else {
+            result[k] = shares[k]
+        }
+        r = r + result[k]
+        s = s + shares[k]
+        c = c + joined[k]
+        k = k + 1
+    }
+    return result
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The invariants carry the proof. <code>r</code>, <code>s</code> and <code>c</code> are running totals over the
+prefix seen so far (<code>result[0..&lt;k].sum(0)</code> is the sum of the first <code>k</code>
+elements). The key line is <code>given == (c &lt; left ? c : left)</code>: after seeing <code>c</code>
+participants we&#8217;ve handed out a cent to each of them, until the <code>left</code> cents
+ran out. At the end <code>c</code> is the number of participants, which is at least
+<code>left</code>, so <code>given == left</code>, and the shares add up to <code>shares.sum() + left</code>.
+Back in <code>equally</code>, that is <code>p * base + left</code>, which is <code>total</code>. Z3 does that
+arithmetic; we only had to say it.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_balances_that_always_add_up">Balances that always add up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Balances are in cents too: positive means the group owes you, negative means
+you owe the group. <code>Balances.afterExpense</code> and <code>afterSettlement</code> prove Dafny
+ClearSplit&#8217;s <em>delta laws</em>, which say exactly how each step moves each
+member&#8217;s balance:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ bal != null &amp;&amp; shares != null &amp;&amp; shares.length == bal.length &amp;&amp; 0 &lt;= payer &amp;&amp; payer &lt; bal.length })
+@Ensures({ result != null &amp;&amp; result.length == bal.length })
+@Ensures({ (0..&lt;bal.length).every { result[it] == bal[it] + (it == payer ? amount : 0) - shares[it] } })
+@Ensures({ shares.sum() == amount ==&gt; result.sum() == bal.sum() })
+static int[] afterExpense(int[] bal, int payer, int amount, int[] shares) { ... }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The payer is owed the amount, everyone owes their share, and when the shares
+add up to the amount the total doesn&#8217;t change.</p>
+</div>
+<div class="paragraph">
+<p>The headline result is ClearSplit&#8217;s <em>conservation theorem</em>: after any valid
+history of expenses and settlements, starting from nothing, the balances sum
+to zero. In Groovy, the history comes in as parallel arrays, and each
+expense&#8217;s shares are a row of one flat array (groovy-verify&#8217;s fragment
+doesn&#8217;t include <code>int[][]</code>, but slices of a flat array work well). The
+theorem is a fold of the two steps over the history:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Requires({ (0..&lt;payer.length).every { flat[off[it]..&lt;off[it] + members].sum(0) == amount[it] } })
+// ... plus the bounds and validity preconditions
+@Ensures({ result.length == members &amp;&amp; result.sum() == 0 })
+static int[] of(int members, int[] payer, int[] amount, int[] flat, int[] off, int[] from, int[] to, int[] paid) {
+    int[] bal = new int[members]
+    int e = 0
+    @Invariant({ bal != null &amp;&amp; bal.length == members &amp;&amp; bal.sum() == 0 })
+    // ...
+    while (e &lt; payer.length) {
+        int[] shares = row(flat, off[e], members)   // proved to sum to flat[off[e]..&lt;off[e] + members]
+        bal = afterExpense(bal, payer[e], amount[e], shares)
+        e = e + 1
+    }
+    int t = 0
+    @Invariant({ bal != null &amp;&amp; bal.length == members &amp;&amp; bal.sum() == 0 })
+    // ...
+    while (t &lt; from.length) {
+        bal = afterSettlement(bal, from[t], to[t], paid[t])
+        t = t + 1
+    }
+    return bal
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The one precondition that matters is the first: every expense&#8217;s shares add
+up to its amount. That is exactly what <code>Split.equally</code> guarantees, so the two
+proofs fit together. Each loop only needs the steps' contracts, not their
+bodies, which is what makes a proof built from smaller proofs manageable. On a
+laptop, the core module, verification included, compiles in about 45
+seconds.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_does_the_proof_have_teeth">Does the proof have teeth?</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A proof that passes no matter what is worse than no proof, because it gives
+false confidence. So for every proof I did what mutation testing does for
+tests: break the code, or delete a hypothesis, and check the build fails.
+Every proof in the kernel passes. Delete the "shares add up to the amount"
+precondition from <code>Balances.of</code>, or drop <code>from != to</code> for settlements, or hand out one cent too
+many in <code>equally</code>, or give the spare cents to whoever comes next, as
+<code>allocate</code> does, and each time the build fails.</p>
+</div>
+<div class="paragraph">
+<p>The checks earned their keep along the way. An early version of the fold
+still verified with its key precondition deleted, which led to a soundness
+fix in groovy-verify, and a few other issues the port turned up were fixed
+there too. groovy-verify is moving quickly, and this post uses a recent
+snapshot of it.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s the value of a real application as a test case for a verifier, and a
+reminder that "it verified" deserves the same scepticism as "the tests pass".</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_unverified_glue">The unverified glue</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Above the kernel sits <code>Group</code>, an immutable record holding the member names,
+expenses and settlements. It isn&#8217;t verified, but it&#8217;s built so the kernel&#8217;s
+preconditions always hold. Like the <code>Step</code> function in the Dafny version, it
+only lets valid actions in:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
+record Group(List&lt;String&gt; members, List&lt;Expense&gt; expenses, List&lt;Settlement&gt; settlements) implements Serializable {
+
+    /** An expense split equally among the participants, by the verified {@link Split#equally}. */
+    Expense splitEqually(String description, int payer, int amount, Collection&lt;Integer&gt; participants) { ... }
+
+    /** This group with the expense added; an invalid expense is rejected. */
+    Group plus(Expense e) {
+        if (!(0 &lt;= e.payer() &amp;&amp; e.payer() &lt; size())) throw new IllegalArgumentException('The payer must be a member')
+        ...
+        if (e.shares().sum(0) != e.amount()) throw new IllegalArgumentException('The shares must add up to the amount')
+        new Group(members, expenses + e, settlements)
+    }
+
+    /** This group with the settlement added; an invalid settlement is rejected. */
+    Group plus(Settlement s) { ... }
+
+    /** Everyone's balance, by the verified {@link Balances#of}: they always sum to zero. */
+    int[] balances() { ... }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since <code>plus</code> is Groovy&#8217;s <code>+</code> operator, the apps write <code>group + expense</code>. Each
+app&#8217;s job is then small: turn user input into a <code>Group</code>, catch the
+<code>IllegalArgumentException</code> and show its message.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_web_app_grails_9">The web app: Grails 9</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails 8 runs on Groovy 5, but groovy-verify needs Groovy 6, and so does
+everything else in this post. So the web app uses a Grails 9.0.0-SNAPSHOT,
+which brings Groovy 6.0.0 and Spring Boot 4.1. Apart from bumping the
+version and dropping the database (the group lives in the HTTP session), it&#8217;s
+a standard Grails app from <a href="https://start.grails.org">Grails Forge</a>. The
+controller is a few short actions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def expense(String description, Integer payer, String amount) {
+    attempt('expense') {
+        Group group = session.group as Group
+        Integer cents = Group.cents(amount)
+        if (!cents) throw new IllegalArgumentException('Enter an amount above zero')
+        List&lt;Integer&gt; participants = params.list('participant').collect { it as Integer }
+        session.group = group + group.splitEqually(description ?: 'Expense', payer ?: 0, cents, participants)
+        'Expense recorded'
+    }
+}
+
+private attempt(String tab, Closure&lt;String&gt; action) {
+    try {
+        flash.message = action()
+        redirect action: 'index', params: [tab: flash.message ? 'balances' : tab]
+    } catch (IllegalArgumentException e) {
+        flash.error = e.message
+        redirect action: 'index', params: [tab: tab]
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The views are GSP with Bootstrap: tabs for the balances, adding an expense,
+recording a payment and the history.</p>
+</div>
+<div class="paragraph">
+<p>The snapshot worked without surprises for this app, which is good news for
+anyone keen to try Groovy 6 on Grails.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_desktop_app_groovy_fx">The desktop app: groovy-fx</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/apache/groovy/pull/2989">Pull request #2989</a>
+(<a href="https://issues.apache.org/jira/browse/GROOVY-11434">GROOVY-11434</a>) proposes
+bringing GroovyFX into Groovy itself as a <code>groovy-fx</code> module. It targets
+Groovy 7, but its sources compiled unchanged against Groovy 6.0.0 once one
+ASM import was pointed at the package Groovy publishes. The build extracts the
+module&#8217;s sources from the PR branch and compiles them, so the app can use it
+today.</p>
+</div>
+<div class="paragraph">
+<p>The UI is a <code>SceneGraphBuilder</code> tree. Here is the Balances tab and part of
+the Expense tab:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">tabPane(tabClosingPolicy: 'UNAVAILABLE') {
+    tab('Balances') {
+        vbox(spacing: 8, padding: 12) {
+            barChart(id: 'chart', legendVisible: false, animated: false, prefHeight: 240,
+                xAxis: categoryAxis(), yAxis: numberAxis(label: 'dollars')) {
+                series('balance')
+            }
+            gridPane(id: 'table', hgap: 24, vgap: 4)
+        }
+    }
+    tab('Expense') {
+        gridPane(hgap: 8, vgap: 10, padding: 16) {
+            label('What for', row: 0, column: 0)
+            textField(id: 'description', promptText: 'Dinner', row: 0, column: 1, hgrow: 'ALWAYS')
+            label('Paid by', row: 1, column: 0)
+            choiceBox(id: 'payer', items: names, value: names[0], row: 1, column: 1)
+            ...
+            flowPane(id: 'participants', hgap: 12, row: 3, column: 1) {
+                names.each { checkBox(it, selected: true) }
+            }
+            button('Add expense', id: 'addExpense', row: 4, column: 1, onAction: {
+                def chosen = fx.participants.children.findAll { ((CheckBox) it).selected }.collect { indexOf(((CheckBox) it).text) }
+                act('Expense recorded') {
+                    group + group.splitEqually(fx.description.text ?: 'Expense', indexOf(fx.payer.value), amountOf(fx.amount.text), chosen)
+                }
+            })
+        }
+    }
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Every <code>id</code> becomes a variable on the builder, so the event handlers read
+<code>fx.description.text</code> and <code>fx.payer.value</code> directly.</p>
+</div>
+<div class="paragraph">
+<p>The app&#8217;s test runs the real UI headless using the Monocle glass platform.
+It types in a group, adds the dinner and taxi expenses, records a payment,
+checks the balances, and saves the screenshot used in this post. A desktop
+UI tested in CI with no display is a nice thing to have.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_android_app">The Android app</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="./img/clearsplit-android-expense.png" alt="The Android app&#8217;s expense form: a taxi paid by Carol, split between Bob and Carol" width="240"></span></p>
+</div>
+<div class="paragraph">
+<p>The Android app follows the recipe from the
+<a href="https://groovy.apache.org/blog/groovy-android-tictactoe">tic-tac-toe post</a>:
+a plain Groovy library module compiled against <code>android.jar</code>, a stock
+Android application module (AGP 9.4, minSdk 26) that depends on it like any
+jar, and the <code>grooid</code> flavour of the Groovy 6.0.0 runtime. No Groovy-specific
+Android plugin is needed.</p>
+</div>
+<div class="paragraph">
+<p>The screens are built in code in dynamic Groovy, with <code>tap</code> and closures
+doing the work:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">new Button(this).tap {
+    text = 'Add expense'
+    setOnClickListener {
+        def chosen = (0..&lt;boxes.size()).findAll { boxes[it].checked }
+        act('Expense recorded') {
+            group + group.splitEqually(description.text.toString().trim() ?: 'Expense',
+                payer.selectedItemPosition, amountOf(amount), chosen)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The group is saved after every change as a few lines of text: the members,
+then one line per expense or settlement. On launch the app replays them
+through <code>Group</code>, so a saved group goes through the same validation as one
+typed in by hand.</p>
+</div>
+<div class="paragraph">
+<p>The verified kernel ran on Android unchanged, but the contracts didn&#8217;t, at
+first. The app crashed on its first contract check:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>java.lang.NoClassDefFoundError: Failed resolution of: Ljava/lang/management/ManagementFactory;
+    at org.apache.groovy.contracts.generation.Configurator.initAssertionConfiguration(Configurator.java:76)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>groovy-contracts' runtime reads the JVM&#8217;s <code>-ea</code> and <code>-da</code> flags through
+<code>java.lang.management</code>, to support turning contract checks on and off per
+package. Android has no <code>java.lang.management</code>. For this spike, a small
+module supplies a stub that reports no flags, which leaves contracts on,
+their default. It&#8217;s the same trick as the existing <code>SwitchPoint</code> shim, and
+equally temporary: the real fix is for groovy-contracts to fall back to its
+default when the management API isn&#8217;t there. After that, preconditions are
+checked on the phone just as on the JVM.</p>
+</div>
+<div class="paragraph">
+<p>The R8-shrunk release APK comes in at about 1.1 MB, and both it and the debug
+build were exercised on an API 36 emulator for this post.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_wasnt_ported">What wasn&#8217;t ported</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Dafny original has more than this spike covers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dafny ClearSplit keys members by name in maps. This port follows the
+LemmaScript version and uses indices.</p>
+</li>
+<li>
+<p>The lemma that each member&#8217;s history explains their balance
+(<code>ExplainSumsToBalance</code>) is tested here, not proved.</p>
+</li>
+<li>
+<p>The collaboration modules, for groups shared between several users, aren&#8217;t
+ported.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_what_we_learned">What we learned</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A few practical lessons for anyone proving things with groovy-verify:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Specify what you mean.</strong> <code>allocate</code> and <code>equally</code> both "split money
+correctly", but only one of them says who pays.</p>
+</li>
+<li>
+<p><strong>Check the proof has teeth.</strong> Breaking the code on purpose is cheap, and it
+catches vacuous proofs, whether the spec or the verifier is at fault.</p>
+</li>
+<li>
+<p><strong>Help the solver with ghost totals.</strong> Running totals like
+<code>t == shares[0..&lt;i].sum(0)</code> in loop invariants, and the odd intermediate
+<code>assert</code>, turned solver timeouts into quick proofs. A longer
+solver timeout didn&#8217;t help; restructuring the code did.</p>
+</li>
+<li>
+<p><strong>Stay inside the fragment.</strong> Flat arrays with offsets instead of <code>int[][]</code>.</p>
+</li>
+<li>
+<p><strong>Build proofs from smaller proofs.</strong> Splitting <code>equally</code> into two
+contracted helpers, and writing conservation as a fold over the steps,
+keeps each proof small and the code close to the Dafny version.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>And for Groovy itself: Grails 9 on Groovy 6 worked well for this app,
+groovy-fx is already usable on Groovy 6, and Groovy on Android has one more
+rough edge to file, in groovy-contracts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/paulk-asert/clearsplit-groovy">Source code for this post</a></p>
+</li>
+<li>
+<p><a href="https://github.com/metareflection/dafny-replay/tree/main/clear-split">ClearSplit in Dafny</a></p>
+</li>
+<li>
+<p><a href="https://github.com/midspiral/clear-split-lemmascript">ClearSplit in LemmaScript</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-verify">groovy-verify</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy6-formal-methods">Groovy 6 features for formal method advocates</a></p>
+</li>
+<li>
+<p><a href="https://github.com/apache/groovy/pull/2989">The groovy-fx pull request</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-android-tictactoe">Playing with Groovy and Android</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>ClearSplit is a small app with real correctness requirements: nobody wants a
+money app that loses a cent. In Groovy 6, the kernel&#8217;s specifications are
+ordinary Groovy annotations, groovy-verify proves them at compile time, and
+the same contracts double as runtime checks. Over that one verified core sit
+a Grails web app, a GroovyFX desktop app and an Android app, all on Groovy
+6.0.0. Several pieces are previews, but they show where things are heading,
+and it&#8217;s a nice place to be heading.</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>23/Oct/2026</strong>: Initial version</p>
+</div>
+</div>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are either registered trademarks or trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
