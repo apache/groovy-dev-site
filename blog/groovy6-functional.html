@@ -69,7 +69,7 @@
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
   <div><small><i>PMC Member</i></small></div>
 </div>
-        </div><br/><span>Published: 2026-06-01 08:00AM (Last updated: 2026-09-11 08:00PM)</span></p><hr/><div class="sect1">
+        </div><br/><span>Published: 2026-06-01 08:00AM (Last updated: 2026-10-24 08:00AM)</span></p><hr/><div class="sect1">
 <h2 id="_introduction">Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -81,8 +81,10 @@
 virtual threads — every JDK carrier and combinator is available, with
 the usual Groovy sugar on top (closures, GINQ, parallel collections,
 <code>Awaitable</code>, async/await). Groovy brings along most of Java&#8217;s
-pattern/decomposition story with some enhancements and minor gaps
-being addressed in GEP-20 targeted for Groovy 7.
+pattern/decomposition story with some enhancements — multi-assignment
+destructuring (<a href="../wiki/GEP-20.html">GEP-20</a>) shipped in 6.0 — and the
+remaining gap, structural patterns in <code>switch</code>, is
+<a href="../wiki/GEP-19.html">GEP-19</a>, targeted for Groovy 7.
 For a lot of workaday code, that is already enough.</p>
 </div>
 <div class="paragraph">
@@ -167,14 +169,21 @@ holds runnable versions of every example in this post.</p>
 </div>
 <div class="paragraph">
 <p>One framing note before we start. Most of what
-follows is <strong>core Groovy 6</strong> — shipped or stabilising features like
-<code>NullChecker</code>, <code>DO</code>, <code>val</code> and the contract annotations. A few pieces
-are <strong>incubating</strong> and may still shift before release. And the final two
-sections — the <code>WIRE</code> DSL and the SMT-backed checker — are <strong>companion
-prototypes</strong>: spikes built on the same public extension SPI the Groovy
-team uses for the in-tree checkers, included here to show how far that
-SPI reaches, not as Groovy 6 features. Each is flagged again where it
-appears. The SMT spike has since grown into the separate
+follows is <strong>core Groovy 6</strong>, released as 6.0.0 in September 2026.
+<code>val</code>, destructuring, nested <code>copyWith</code> and the <code>groovy-contracts</code>
+module are stable. The rest of the checked toolkit — <code>DO</code> and
+<code>@Monadic</code>, the type checkers in <code>groovy-typecheckers</code> (<code>NullChecker</code>,
+<code>CombinerChecker</code>, <code>PurityChecker</code>, <code>ModifiesChecker</code>,
+<code>MonadicChecker</code>, <code>MonadicShapeChecker</code>), <code>@Associative</code>/<code>@Reducer</code>,
+and the loop-level <code>@Invariant</code>/<code>@Decreases</code> and <code>@Modifies</code> frame
+conditions — shipped as <strong>incubating</strong>: usable today, with the usual
+licence to refine the details during the 6.x line. Where Groovy 7
+work already touches a feature, it is noted in that section. And the
+final two sections — the <code>WIRE</code> DSL and the SMT-backed checker — are
+<strong>companion prototypes</strong>: spikes built on the same public extension SPI
+the Groovy team uses for the in-tree checkers, included here to show
+how far that SPI reaches, not as Groovy 6 features. Each is flagged
+again where it appears. The SMT spike has since grown into the separate
 <a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a> project,
 which the monoid section also draws on; it too is external to Groovy.</p>
 </div>
@@ -464,6 +473,17 @@ return a wrapped value. The familiar half is that the compiler knows
 what each method may and may not do, and a reader (or an AI agent) can
 work from the signature alone.</p>
 </div>
+<div class="paragraph">
+<p>One limitation in 6.0 is that purity stops at the method boundary:
+a closure passed to a <code>@Pure</code> method is opaque to the checker. Groovy 7
+work already on <code>master</code>
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12460">GROOVY-12460</a>)
+lets <code>@Pure</code> sit on parameters and local variables, so a higher-order
+pure method can require a pure closure argument, and accepts the
+closure-taking GDK and <code>java.util.stream</code> methods (<code>collect</code>, <code>inject</code>,
+<code>findAll</code>, <code>map</code>, <code>filter</code>, &#8230;&#8203;) inside a pure body when the closure
+they are given is itself pure.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -581,7 +601,11 @@ gets the comprehension for free.</p>
 does not mix carriers in one comprehension (nest for that), and it does
 not synthesise a <code>pure</code>/<code>return</code> — the body must explicitly yield a
 carrier value. That is the deliberate non-goal list in
-<a href="../wiki/GEP-23.html">GEP-23</a>.</p>
+<a href="../wiki/GEP-23.html">GEP-23</a>, which shipped in 6.0.0 as incubating.
+The one piece of the GEP deferred to Groovy 7 is user-configurable
+carrier registration: until that lands, a third-party carrier
+participates structurally (it has <code>flatMap</code>/<code>map</code>), by carrying
+<code>@Monadic</code>, or by being named in the core allow-list.</p>
 </div>
 </div>
 </div>
@@ -960,6 +984,18 @@ makes once; every downstream codebase running the matching checker
 recovers the value of it on every build.</p>
 </div>
 <div class="paragraph">
+<p>Groovy 7 extends the producer side in another direction. The
+<code>@Spec</code> annotation
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12468">GROOVY-12468</a>,
+on <code>master</code> for 7.0.0-alpha-1) records a prose specification next to
+the typed signature and any <code>@Requires</code>/<code>@Ensures</code> contracts — findable
+by tools where a comment is not, and with an <strong>unfilled hole</strong>
+(an annotated method, loop or local with no code yet) failing loudly
+at runtime instead of silently returning <code>null</code>. For agent-generated
+code it closes the loop: the informal intent, the formal contract and
+the implementation sit on the same declaration.</p>
+</div>
+<div class="paragraph">
 <p><a href="../wiki/GEP-24.html">GEP-24</a> is the natural extension of this
 story to errors: a candidate for Groovy 7 sketching library-side
 <code>@Raises</code> plus consumer-side <code>ExceptionChecker</code> for the declaration
@@ -1254,7 +1290,7 @@ ordinary code. Here is a call that <strong>looks</strong> guarded:</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
 static int go(int n) {
     if (n != 0) {
-        return ISqrt.isqrt(n)   // looks safe — but n could be -1
+        return ISqrt.isqrt(n)   // looks safe — but n could be negative
     }
     0
 }</code></pre>
@@ -1272,13 +1308,18 @@ the model is the counterexample:</p>
 <div class="content">
 <pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove precondition of isqrt at this call site
     required: (x &gt;= 0)
-    counterexample: n = -1, x = -1</code></pre>
+    counterexample: n = -2147483648
+    fails on: go(-2147483648)</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>That last line is the whole point. The diagnostic does not say
-"constraint not satisfied"; it says <strong>with <code>n = -1</code> it fails</strong>, as Dafny
-does if you ask it (via <code>--counterexample</code>). Tighten the guard and the
+<p>Those last two lines are the whole point. The diagnostic does not say
+"constraint not satisfied"; it says <strong>with <code>n = Integer.MIN_VALUE</code> it
+fails</strong>, as Dafny does if you ask it (via <code>--counterexample</code>), and turns
+the model into the concrete call that breaks — a ready-made regression
+test. (Z3 is free to pick any negative <code>n</code>; the JVM&#8217;s 32-bit bounds
+are part of what it reasons about, so the extreme value is as good a
+witness as <code>-1</code>.) Tighten the guard and the
 obligation discharges; the same code now compiles clean:</p>
 </div>
 <div class="listingblock">
@@ -1336,9 +1377,11 @@ shapes compiles because Z3 discharges <code>x &gt;= 0</code>:</p>
 </tbody>
 </table>
 <div class="paragraph">
-<p>And the rejections all arrive with a refuting model: the bare literal
-<code>isqrt(-1)</code> (<code>x = -1</code>), the unguarded <code>isqrt(n)</code> (<code>n = -1</code>), and the
-contradictory <code>if (n &lt; 0) isqrt(n)</code> (<code>n = -1</code>).</p>
+<p>And the rejections all arrive with a refutation: the unguarded
+<code>isqrt(n)</code> and the contradictory <code>if (n &lt; 0) isqrt(n)</code> with a
+counterexample and failing call (<code>n = -2147483648</code>), and the bare
+literal <code>isqrt(-1)</code>, which has no free variables to model, with just the
+failing call.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1359,11 +1402,19 @@ static int max(int a, int b) {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>One diagnostic per broken return path, each with its own witness:</p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove postcondition of max holds on this return path
     ensured: ((result &gt;= a) &amp;&amp; (result &gt;= b))
-    counterexample: a = 0, b = 1</code></pre>
+    counterexample: a = 1, b = 0
+    fails on: max(1, 0)
+[Static type checking] - Cannot prove postcondition of max holds on this return path
+    ensured: ((result &gt;= a) &amp;&amp; (result &gt;= b))
+    counterexample: a = -1, b = 0
+    fails on: max(-1, 0)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1403,7 +1454,8 @@ static int countUp(int n) {
 <div class="content">
 <pre class="prettyprint highlight"><code>[Static type checking] - Cannot prove loop invariant is preserved by the loop body in countUp
     invariant: ((0 &lt;= i) &amp;&amp; (i &lt;= n))
-    counterexample: i = 0, n = 1</code></pre>
+    counterexample: n = 1
+    fails on: countUp(1)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1458,15 +1510,18 @@ and none needs a compiler change.</p>
 <div class="sect2">
 <h3 id="_where_the_code_lives_2">Where the code lives</h3>
 <div class="paragraph">
-<p>The code lives in two subprojects under
-<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>:
-<code>verification/</code> (the Groovy-to-SMT encoder, the <code>VerifyChecker</code>
+<p>The checker itself — the Groovy-to-SMT encoder, the <code>VerifyChecker</code>
 extension, the Z3 backend, and a <code>CONVERSION</code>-phase transform that
-captures each stock <code>@groovy.contracts</code> contract&#8217;s source text — the
+captures each stock <code>@groovy.contracts</code> contract&#8217;s source text (the
 built-in annotation keeps only a generated closure class, so the text
-would otherwise be gone) and <code>verification-demo/</code> (the <code>ISqrt</code>,
-<code>MinMax</code>/<code>BadEnsures</code> and <code>Loops</code>/<code>BadLoops</code> worked examples). See the
-repo for the full breakdown.</p>
+would otherwise be gone) — started life as a <code>verification/</code> subproject
+of the companion repo and now lives in
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a>. The
+<code>verification-demo/</code> subproject under
+<a href="https://github.com/paulk-asert/groovy6-functional"><code>groovy6-functional</code></a>
+consumes it as a Gradle composite build and holds the <code>ISqrt</code>,
+<code>MinMax</code>/<code>BadEnsures</code> and <code>Loops</code>/<code>BadLoops</code> worked examples. See the
+repos for the full breakdown.</p>
 </div>
 <div class="paragraph">
 <p>This is a spike, not a product — in the same spirit as WireCat, it
@@ -1760,10 +1815,13 @@ following the same two-layer pattern used elsewhere in this post.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="../wiki/GEP-23.html">GEP-23 — Monadic comprehensions</a></p>
+<p><a href="../wiki/GEP-23.html">GEP-23 — Monadic comprehensions</a> (Final; shipped in 6.0.0 as incubating)</p>
 </li>
 <li>
-<p><a href="../wiki/GEP-24.html">GEP-24 — Errors as values: compile-time <code>Try</code> without the wrapper</a> (Groovy 7 candidate)</p>
+<p><a href="../wiki/GEP-24.html">GEP-24 — Errors as values: compile-time <code>Try</code> without the wrapper</a> (Draft; Groovy 7 candidate)</p>
+</li>
+<li>
+<p><a href="../wiki/GEP-19.html">GEP-19 — Structural pattern matching in <code>switch</code></a> (Draft; targets Groovy 7)</p>
 </li>
 <li>
 <p><a href="../releasenotes/groovy-6.0.html#type-checking-extensions">Groovy 6 release notes — type checking extensions</a></p>
@@ -1816,14 +1874,28 @@ the companion post covering groovy-verify in depth</p>
 <li>
 <p><a href="https://github.com/paulk-asert/groovy6-functional">Companion code for this post</a> — the <code>wire-*</code>
 subprojects covering the macro form (shown above) plus the
-builder and builder-with-checker variants, and the <code>verification</code>
-/ <code>verification-demo</code> subprojects for the SMT-backed precondition spike</p>
+builder and builder-with-checker variants, and the <code>verification-demo</code>
+subproject consuming groovy-verify for the SMT-backed checks</p>
 </li>
 </ul>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="title">Update history</div>
+<div class="paragraph">
+<p><strong>24/Oct/2026</strong>: Updated for the Groovy 6.0.0 release: the framing note
+now says which features shipped stable and which incubating, the
+pattern-matching gap is attributed to GEP-19 (GEP-20 destructuring
+shipped in 6.0), and the GEP-23 piece deferred to Groovy 7
+(user-configurable carrier registration) is called out. Added notes on
+Groovy 7 work already on <code>master</code>: <code>@Pure</code> on parameters and locals
+(GROOVY-12460) and the <code>@Spec</code> prose-contract annotation (GROOVY-12468).
+The companion repo now builds against Groovy 6.0.0 from Maven Central
+and consumes the SMT checker from groovy-verify rather than its retired
+<code>verification</code> subproject; the diagnostics quoted in the proof-grade
+section are refreshed to the current groovy-verify output, which adds
+a <code>fails on:</code> line naming a concrete failing call.</p>
+</div>
 <div class="paragraph">
 <p><strong>11/Sep/2026</strong>: The monoid section now shows the external <code>groovy-verify</code>
 project proving, or refuting with a counterexample, the laws of a
