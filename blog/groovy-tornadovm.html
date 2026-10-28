@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, tornadovm, gpu, metal, opencl, apple silicon, kernelcontext, ast transformation, mandelbrot'/><meta name='description' content='TornadoVM compiles Java bytecode to GPU kernels. We get Groovy code running on an Apple GPU with it today, and look at what upcoming Groovy fixes add.'/><title>The Apache Groovy programming language - Blogs - Running Groovy on the GPU with TornadoVM</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_setup' class='anchor-link'>Setup</a></li><li><a href='#_a_first_kernel' class='anchor-link'>A first kernel</a></li><li><a href='#_floats_get_in_the_way' class='anchor-link'>Floats get in the way</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_coming_soon_parallel_loops' class='anchor-link'>Coming soon: <code>@Parallel</code> loops</a></li><li><a href='#_caveats' class='anchor-link'>Caveats</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Running Groovy on the GPU with TornadoVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-10-28 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><span class="blue">TornadoVM compiles Java bytecode into GPU kernels. Its documentation talks about Java, but bytecode is bytecode. In this post we get Groovy code running on the GPU of an Apple M4 Pro, see which Groovy-isms get in the way and how to work around them, and look at what three upcoming Groovy fixes add.</span></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/groovy_tornadovm.png" alt="Groovy code compiled to GPU kernels by TornadoVM" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.tornadovm.org">TornadoVM</a> JIT-compiles JVM bytecode
+into OpenCL, CUDA and Apple Metal kernels
+and runs them on GPUs and other accelerators.
+Its 8.0.0 release replaced the Graal-based compiler it used to build on with
+its own bytecode-to-kernel compiler, called TC, and moved the project to
+the Apache License 2.0.</p>
+</div>
+<div class="paragraph">
+<p>TornadoVM&#8217;s FAQ says it "primarily supports Java" and that it
+supports "a subset of the Java programming language". Groovy isn&#8217;t mentioned.
+But TornadoVM works from bytecode, and statically compiled Groovy produces
+bytecode that is often very close to what javac produces. So, can we use it from Groovy?</p>
+</div>
+<div class="paragraph">
+<p>In an <a href="matrix-calculations-with-groovy-apache.html">earlier post</a> we ran
+matrix multiplication with cuBLAS, which needs an NVIDIA GPU, on a
+Google Colab notebook. TornadoVM has a Metal backend, as well as OpenCL and CUDA,
+so this time we can use the GPU in a Mac directly, and then run the same code on an NVIDIA GPU on Colab.</p>
+</div>
+<div class="paragraph">
+<p>The example code is in the
+<a href="https://github.com/paulk-asert/groovy-tornadovm">groovy-tornadovm</a>
+companion repo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setup">Setup</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TornadoVM&#8217;s runtime is distributed as an SDK with native drivers for each platform.
+We used the <code>jdk21</code> Metal and OpenCL SDKs for macOS from the
+<a href="https://github.com/beehive-lab/TornadoVM/releases/tag/v8.0.0">8.0.0 release</a>
+with JDK 21. Both find the GPU:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ tornado --devices
+Number of Tornado drivers: 1
+Driver: Metal
+  Total number of Metal devices  : 1
+  Tornado device=0:0  (DEFAULT)
+	METAL --  [Apple Metal] -- Apple M4 Pro
+		Global Memory Size: 48.0 GB
+		Local Memory Size: 32.0 KB
+		Workgroup Dimensions: 3
+		Total Number of Block Threads: [1024]
+		Max WorkGroup Configuration: [1024, 1024, 1024]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>tornado</code> launcher sets up the module path and JVM flags; we add our classes and
+the Groovy jar with <code>--classpath</code>. The companion repo wraps this in Gradle tasks.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_a_first_kernel">A first kernel</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TornadoVM offers two ways to write a kernel. The <em>loop parallel API</em> marks loops with
+<code>@Parallel</code> and lets TornadoVM work out how to spread them across GPU threads.
+The <em>KernelContext API</em> is closer to CUDA or OpenCL: the kernel body runs once per GPU thread,
+and asks the context for its thread index. We&#8217;ll start with <code>KernelContext</code>, for reasons
+we&#8217;ll come to later.</p>
+</div>
+<div class="paragraph">
+<p>Here is a vector add:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
+class VectorAdd {
+    static void vectorAdd(KernelContext ctx, FloatArray a, FloatArray b, FloatArray c) {
+        int i = ctx.globalIdx
+        c.set(i, a.get(i) + b.get(i))
+    }
+
+    static void main(String[] args) {
+        int size = 4096
+        def a = new FloatArray(size), b = new FloatArray(size), c = new FloatArray(size)
+        def r = new Random(42)
+        for (int i = 0; i &lt; size; i++) { a.set(i, r.nextFloat()); b.set(i, r.nextFloat()) }
+
+        def ctx = new KernelContext()
+        def graph = new TaskGraph('s0')
+            .transferToDevice(FIRST_EXECUTION, a, b)
+            .task('t0', VectorAdd::vectorAdd, ctx, a, b, c)
+            .transferToHost(EVERY_EXECUTION, c)
+        def grid = new GridScheduler('s0.t0', new WorkerGrid1D(size))
+        try (def plan = new TornadoExecutionPlan(graph.snapshot())) {
+            plan.withGridScheduler(grid).execute()
+        }
+        int bad = (0..&lt;size).count { int i -&gt; Math.abs(c.get(i) - (a.get(i) + b.get(i))) &gt; 1e-6f } as int
+        println "c[0..3] = ${(0..3).collect { int i -&gt; c.get(i) }}, mismatches = $bad"
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The kernel is the <code>vectorAdd</code> method. A <code>TaskGraph</code> says which data moves to the
+device, which kernel runs, and what comes back; a <code>GridScheduler</code> launches
+one GPU thread per element. <code>FloatArray</code> is TornadoVM&#8217;s off-heap array type.</p>
+</div>
+<div class="paragraph">
+<p>It works, first time, with Groovy 6.0.0:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>c[0..3] = [0.7822289, 0.7311627, 1.250793, 0.984789], mismatches = 0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With <code>--printKernel</code>, TornadoVM shows the Metal code it generated:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">kernel void VectorAdd_vectorAdd(... device unsigned char *a [[buffer(4)]], ...)
+{
+  int i;
+  device float *a_data, *b_data, *c_data;
+  i = (int) _thread_position_in_grid.x;
+  a_data = (device float *) (a + 16L);
+  b_data = (device float *) (b + 16L);
+  c_data = (device float *) (c + 16L);
+  c_data[i] = a_data[i] + b_data[i];
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Two things matter here. First, the class is <code>@CompileStatic</code>. TornadoVM finds the
+kernel method by inspecting the method reference passed to <code>task</code>. With static compilation, Groovy
+compiles <code>VectorAdd::vectorAdd</code> to the same serializable lambda javac would. Dynamic
+Groovy creates a closure coerced to a proxy instead, and TornadoVM rejects it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>TornadoInternalError: Kernel entry jdk.proxy2.$Proxy10 has no writeReplace(): ...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Second, Groovy and Java don&#8217;t quite agree about floats. In Groovy, <code>float + float</code>
+is computed as a <code>double</code>, so the bytecode for <code>a.get(i) + b.get(i)</code> widens both values,
+adds them as doubles, and narrows the result back to <code>float</code>. TornadoVM&#8217;s compiler
+recognised that pattern and generated a plain float add. For a single addition,
+that&#8217;s exact: a double has more than twice a float&#8217;s precision, so rounding to double
+and then to float gives the same answer as rounding to float directly. The same holds
+for subtraction, multiplication and division.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_floats_get_in_the_way">Floats get in the way</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A vector add is a bit too simple, so let&#8217;s render a Mandelbrot set. Each pixel is one GPU thread,
+which iterates <code>z = z² + c</code> until <code>z</code> escapes or we give up:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static final int MAX_ITER = 1000
+
+static void mandel(KernelContext ctx, IntArray out, int w, int h) {
+    int px = ctx.globalIdx
+    int py = ctx.globalIdy
+    float cx = -2.0f + px * 3.0f / w
+    float cy = -1.25f + py * 2.5f / h
+    float x = 0.0f, y = 0.0f
+    int n = 0
+    while (n &lt; MAX_ITER &amp;&amp; x * x + y * y &lt;= 4.0f) {
+        float xt = x * x - y * y + cx
+        y = 2.0f * x * y + cy
+        x = xt
+        n++
+    }
+    out.set(py * w + px, n)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This is where Groovy&#8217;s numeric semantics bite, in three ways.</p>
+</div>
+<div class="paragraph">
+<p>First, <code>@CompileStatic</code> refuses to compile it: <code>-2.0f + px * 3.0f / w</code> is a <code>double</code> in Groovy,
+and assigning it to a <code>float</code> is a "possible loss of precision". We could add <code>as float</code> casts.</p>
+</div>
+<div class="paragraph">
+<p>With the casts added, TornadoVM&#8217;s compiler rejects the kernel:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>TC-E1003 field Mandelbrot.$const$0 is not supported in kernels yet</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy moves <code>float</code> (and most <code>long</code>) literals into synthetic static fields named <code>$const$0</code>, <code>$const$1</code> and so on,
+even <code>0.0f</code>. javac would use the constant directly. <code>int</code> and <code>double</code> literals are not moved.</p>
+</div>
+<div class="paragraph">
+<p>Spelling every constant as <code>(float) 2.0d</code> gets past that, and leaves the arithmetic.
+Expressions like <code>x * x + y * y</code> are now computed in double precision
+throughout, and the GPU says no:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>TC-E4012 this kernel uses double precision, which the device does not support</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apple GPUs have no 64-bit floating point. Nor would we want it here even if they did:
+the point of writing the kernel with floats is that floats are fast on a GPU.</p>
+</div>
+<div class="paragraph">
+<p>There is also a smaller issue: javac inlines <code>static final</code> primitive constants such as <code>MAX_ITER</code>,
+while Groovy reads the field.</p>
+</div>
+<div class="sect2">
+<h3 id="_an_ast_transformation_to_the_rescue">An AST transformation to the rescue</h3>
+<div class="paragraph">
+<p>Recall that <em>one</em> float operation, done in double precision and rounded straight back
+to float, gives exactly the float result. So if every float operation is rounded back to
+float as soon as it is done, we get Java&#8217;s float arithmetic, bit for bit. We could write
+the casts by hand, but they quickly make the code unreadable, for example
+<code>(float) float) ((float) (x * x) - (float) (y * y + cx)</code>.</p>
+</div>
+<div class="paragraph">
+<p>Groovy lets us have the compiler write them for us. <code>@GpuKernel</code> is a small AST
+transformation (under 150 lines, in the companion repo) which runs before type checking. Within the annotated method it:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>wraps every <code>+</code>, <code>-</code>, <code>*</code> and <code>/</code> that has a <code>float</code> operand in a cast back to <code>float</code>,
+converting any <code>int</code> operand to <code>float</code> first, as javac would</p>
+</li>
+<li>
+<p>writes <code>float</code> literals as <code>(float) &lt;double literal&gt;</code>, which Groovy leaves in place,
+instead of moving them to a <code>$const$</code> field</p>
+</li>
+<li>
+<p>inlines <code>static final</code> primitive constants</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Its core is an expression transformer:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">if (e instanceof BinaryExpression &amp;&amp; !(e instanceof DeclarationExpression)
+        &amp;&amp; e.operation.type in ARITH) {
+    def left = transform(e.leftExpression)
+    def right = transform(e.rightExpression)
+    def lt = typeOf(left), rt = typeOf(right)
+    if ((isFloat(lt) || isFloat(rt)) &amp;&amp; isIntOrFloat(lt) &amp;&amp; isIntOrFloat(rt)) {
+        // int operands are widened to float first, as javac would
+        def bin = new BinaryExpression(toFloat(left, lt), e.operation,
+                toFloat(right, rt))
+        bin.sourcePosition = e
+        return castX(float_TYPE, bin)
+    }
+    ...
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Because it runs before the type checker, it does its own small type inference:
+declared types of variables and parameters, literals, casts, and the return types of
+methods like <code>IntArray.get</code>. That covers kernel-style code; anything it can&#8217;t work out
+is left alone.</p>
+</div>
+<div class="paragraph">
+<p>With <code>@GpuKernel</code> added to the <code>mandel</code> method above, and no other changes, the kernel compiles,
+and TornadoVM generates plain float code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">px = (int) _thread_position_in_grid.x;
+py = (int) _thread_position_in_grid.y;
+cx = -2.0f + (float) px * 3.0f / 3840.0f;
+cy = -1.25f + (float) py * 2.5f / 3200.0f;
+...
+xt = x * x - y * y + cx;
+y = 2.0f * x * y + cy;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>TornadoVM has also specialised the kernel for this launch:
+<code>w</code> and <code>h</code> appear as the constants <code>3840</code> and <code>3200</code>. (<code>MAX_ITER</code> was already inlined by <code>@GpuKernel</code>.)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_results">Results</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We rendered a 3840&#215;3200 image with up to 1000 iterations per pixel, and
+compared it with the same Groovy code (also using <code>@GpuKernel</code>) on the CPU, both in a single thread and as a parallel
+stream across the M4 Pro&#8217;s 12 CPU cores. The GPU times exclude the first run, which
+includes compiling the kernel. Times are from three runs of each:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Run</th>
+<th class="tableblock halign-left valign-top">Time per image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, Metal</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11–17 ms</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, OpenCL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11–13 ms</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, parallel stream, 12 cores</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.4–2.9 s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, single thread</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">about 18.5 s</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p><span class="image"><img src="./img/tornadovm_mandelbrot.png" alt="Mandelbrot set rendered by a Groovy kernel on the GPU" width="640"></span></p>
+</div>
+<div class="paragraph">
+<p>The GPU is more than 100 times faster than all 12 CPU cores. Treat the
+numbers as indicative: this is one machine and one kernel, and we haven&#8217;t compared the
+CPU numbers with an equivalent Java version.</p>
+</div>
+<div class="paragraph">
+<p>The GPU image differs from the CPU one in 0.45% of its pixels, identically on Metal and OpenCL.
+Near the boundary of the set the iteration is chaotic, and a difference in the last bit of
+a float can change the iteration count. We didn&#8217;t track down the exact cause, but GPU
+compilers can apply floating-point optimisations, such as fused multiply-add, that the JVM doesn&#8217;t.</p>
+</div>
+<div class="sect2">
+<h3 id="_on_an_nvidia_gpu">On an NVIDIA GPU</h3>
+<div class="paragraph">
+<p>Nothing above is specific to Apple hardware. The companion repo includes a
+<a href="https://github.com/paulk-asert/groovy-tornadovm/blob/main/notebooks/tornadovm-cuda-colab.ipynb">Colab notebook</a>
+which installs JDK 21 and TornadoVM&#8217;s CUDA SDK for Linux, then runs the same Gradle tasks.
+On a Colab runtime with an NVIDIA Tesla T4 (CUDA 13.0), TornadoVM found the GPU through its CUDA driver,
+and the unchanged Groovy code produced this CUDA C for the vector add:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">extern "C" __global__ void VectorAdd_vectorAdd(... unsigned char *a, unsigned char *b, unsigned char *c)
+{
+  int i;
+  float *a_data, *b_data, *c_data;
+  i = (int) (blockIdx.x * blockDim.x + threadIdx.x);
+  a_data = (float *) (a + 16LL);
+  b_data = (float *) (b + 16LL);
+  c_data = (float *) (c + 16LL);
+  c_data[i] = a_data[i] + b_data[i];
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The Mandelbrot image took 16.8 ms on the T4, from a single run of the notebook.
+(Colab runtimes have only two CPU cores, so the CPU timings there aren&#8217;t a useful comparison.)
+This time 0.28% of the pixels differed from the CPU result, and the total iteration count differs
+slightly from the Apple GPU&#8217;s. That fits the explanation above: each GPU compiler makes its own
+floating-point choices, and the chaotic boundary of the set magnifies them.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_coming_soon_parallel_loops">Coming soon: <code>@Parallel</code> loops</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TornadoVM&#8217;s other API is arguably the more natural one for Java and Groovy developers. You write
+ordinary loops and mark the loop variables that can be spread over GPU threads with <code>@Parallel</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@GpuKernel
+static void mandel(IntArray out, int w, int h) {
+    for (@Parallel int py = 0; py &lt; h; py++) {
+        for (@Parallel int px = 0; px &lt; w; px++) {
+            float cx = -2.0f + px * 3.0f / w
+            float cy = -1.25f + py * 2.5f / h
+            ...
+            out.set(py * w + px, n)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With Groovy 6.0.0, this fails to compile at all, and trying to make it work turned up three
+Groovy issues:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12540">GROOVY-12540</a>:
+a <code>TYPE_USE</code> annotation, like <code>@Parallel</code>, on a local variable of primitive type crashes the
+compiler (<code>Adding type annotation @Parallel to non-redirect node: java.lang.Integer</code>).</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12541">GROOVY-12541</a>:
+with <code>@CompileStatic</code>, type annotations on local variables are silently left out of the class file,
+so TornadoVM would never see <code>@Parallel</code> anyway.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12542">GROOVY-12542</a>:
+a comparison used as a loop condition, like <code>py &lt; h</code>, is compiled to a <code>0</code>/<code>1</code> value that is then
+tested, where javac jumps on the comparison directly. TornadoVM&#8217;s compiler only recognises a
+<code>@Parallel</code> loop, and works out its bounds, when the loop has javac&#8217;s shape. Otherwise it reports
+<code>TC-E3103 the bounds of the @Parallel loops are not compile-time constants</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Fixes for all three are expected in upcoming Groovy releases. The third makes Groovy&#8217;s bytecode
+smaller and closer to javac&#8217;s in general, not just for TornadoVM. With a Groovy build that includes
+them, the <code>@Parallel</code> versions of both examples run on Metal and OpenCL. They give the same results as
+the <code>KernelContext</code> versions, at 17–21 ms per Mandelbrot image. TornadoVM turns each <code>@Parallel</code>
+loop into a grid-stride loop, where each GPU thread starts at its own index and steps by the number of threads.
+Here is the vector add:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">i = (int) _thread_position_in_grid.x;
+while (i &lt; 4096) {
+  v6 = (long) i;
+  c_data[v6] = a_data[v6] + b_data[v6];
+  v15 = v6 + v2;   // v2 is the global thread count
+  i = (int) (v15 &gt; 2147483647L ? 2147483647L : v15);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The third fix also tidies the <code>KernelContext</code> kernels. The <code>while</code> condition in the
+Mandelbrot kernel no longer goes through an extra <code>0</code>/<code>1</code> flag variable in the generated Metal code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_caveats">Caveats</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This was an experiment rather than a supported configuration, so:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>We used macOS on an M4 Pro, with TornadoVM&#8217;s Metal and OpenCL backends, and a single
+Colab run of the CUDA backend on a T4, all with JDK 21. We haven&#8217;t tried other platforms.</p>
+</li>
+<li>
+<p>Kernels must be <code>@CompileStatic</code>, and should be written in the Java-like subset of Groovy that
+TornadoVM supports: primitives, TornadoVM&#8217;s array types, simple loops and calls.</p>
+</li>
+<li>
+<p><code>@GpuKernel</code> is a demo. Its type inference only covers the kind of code shown here.</p>
+</li>
+<li>
+<p>TornadoVM&#8217;s kernel listings label source lines <code>Mandelbrot.java</code> rather than <code>Mandelbrot.groovy</code>. That&#8217;s cosmetic.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TornadoVM doesn&#8217;t mention Groovy, but with Groovy 6.0.0 and TornadoVM 8.0.0 you can write GPU
+kernels in Groovy today. Use <code>@CompileStatic</code> and the <code>KernelContext</code> API, and take care with floats:
+Groovy&#8217;s habit of widening float arithmetic to double, and moving float literals into fields, is
+harmless on the JVM but not on a GPU without double precision. A small AST transformation
+takes care of both and keeps the kernel code readable. The result renders a 3840&#215;3200 Mandelbrot
+image in well under 20 ms on an Apple M4 Pro GPU, and the same code runs unchanged on an NVIDIA T4 through CUDA.</p>
+</div>
+<div class="paragraph">
+<p>The more Java-like <code>@Parallel</code> loops need three Groovy fixes, which should arrive in upcoming
+releases, and those fixes make Groovy&#8217;s bytecode a little more javac-like along the way.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://www.tornadovm.org">TornadoVM</a>, its
+<a href="https://github.com/beehive-lab/TornadoVM">GitHub repository</a> and
+<a href="https://tornadovm.readthedocs.io">documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/beehive-lab/TornadoVM/releases/tag/v8.0.0">TornadoVM 8.0.0 release</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-tornadovm">groovy-tornadovm</a> companion repo, including the
+<a href="https://colab.research.google.com/github/paulk-asert/groovy-tornadovm/blob/main/notebooks/tornadovm-cuda-colab.ipynb">CUDA notebook for Colab</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12540">GROOVY-12540</a>,
+<a href="https://issues.apache.org/jira/browse/GROOVY-12541">GROOVY-12541</a> and
+<a href="https://issues.apache.org/jira/browse/GROOVY-12542">GROOVY-12542</a></p>
+</li>
+<li>
+<p><a href="matrix-calculations-with-groovy-apache.html">Matrix calculations with Groovy</a>, including cuBLAS on a GPU</p>
+</li>
+<li>
+<p><a href="../releasenotes/groovy-6.0.html">Groovy 6.0 release notes</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
