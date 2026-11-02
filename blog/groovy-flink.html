@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, flink, flink ml, kmeans, clustering, whisky, whiskey, tornadovm, gpu'/><meta name='description' content='We cluster Scotch whiskies with Apache Flink and Groovy: with Flink ML, by hand on Flink 2.3, and with the hot loop on the GPU via TornadoVM.'/><title>The Apache Groovy programming language - Blogs - Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_using_flink_ml' class='anchor-link'>Using Flink ML</a></li><li><a href='#_k_means_by_hand_on_flink_2_3' class='anchor-link'>K-means by hand on Flink 2.3</a></li><li><a href='#_onto_the_gpu' class='anchor-link'>Onto the GPU</a></li><li><a href='#_scaling_up' class='anchor-link'>Scaling up</a></li><li><a href='#_groovy_notes' class='anchor-link'>Groovy notes</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whisky-revisited'>Whisky flavor profiles revisited</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&reg; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&reg; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-tornadovm'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-10-31 12:00PM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="./img/groovy_flink.png" alt="K-means over whisky profiles on Flink 2.3, with the assignment step as a Groovy GPU kernel" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p><span class="image right"><img src="https://www.apache.org/logos/res/flink/default.png" alt="Flink logo" width="150"></span>
+In our ongoing series of data science posts clustering 86 Scotch whiskies by their flavour profiles,
+we have looked at how Groovy scales up with distributed data processing frameworks like
+<a href="using-groovy-with-apache-wayang.html">Apache Spark and Apache Wayang</a> and
+<a href="whiskey-clustering-with-groovy-and.html">Apache Ignite</a>.
+This time we look at another heavyweight of the Apache ecosystem:
+<a href="https://flink.apache.org/">Apache Flink</a>.</p>
+</div>
+<div class="paragraph">
+<p>Flink is best known for stateful computations over unbounded streams of data,
+but it is equally at home with bounded data sets.
+Groovy compiles to JVM bytecode, so we can use Flink&#8217;s Java APIs directly,
+and Groovy keeps the pipeline code short.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll take three passes at the problem:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>using the K-means implementation from Flink&#8217;s machine learning library, Flink ML (see caveats below)</p>
+</li>
+<li>
+<p>writing K-means ourselves on the current Flink 2.3 DataStream API</p>
+</li>
+<li>
+<p>moving the expensive part of each K-means iteration onto the GPU with
+<a href="https://www.tornadovm.org">TornadoVM</a>, following on from our
+<a href="groovy-tornadovm.html">earlier post</a> on running Groovy on the GPU</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Along the way we&#8217;ll hit a Flink bug, a caching trap, a couple of Groovy compiler issues, and
+Amdahl&#8217;s law.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whiskey_clustering">Whiskey Clustering</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image right"><img src="./img/groovy_logo.png" alt="Groovy logo" width="200"></span>
+A quick reminder of the problem. The whiskies produced by
+<a href="https://www.niss.org/sites/default/files/ScotchWhisky01.txt">86 distilleries</a> have been
+ranked by expert tasters on 12 criteria (Body, Sweetness, Smoky, Medicinal, Tobacco, Honey,
+Spicy, Winey, Nutty, Malty, Fruity and Floral), each scored from 0 to 4:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>RowID,Distillery,Body,Sweetness,Smoky,Medicinal,Tobacco,Honey,Spicy,Winey,Nutty,Malty,Fruity,Floral
+01,Aberfeldy,2,2,2,0,0,2,1,2,2,2,2,2
+02,Aberlour,3,3,1,0,0,4,3,2,2,3,3,2
+03,AnCnoc,1,3,2,0,0,2,0,0,2,2,3,2
+04,Ardbeg,4,1,4,4,0,0,2,0,1,2,1,0
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><span class="image right"><img src="./img/whiskey_bottles.jpg" alt="whiskey_bottles" width="300"></span>
+K-means groups whiskies with similar characteristics into clusters. If we have a favourite
+whisky, chances are we&#8217;ll like others in the same cluster. If we feel like a change, we can try one
+from another cluster. Each cluster&#8217;s <em>centroid</em> is the notional point in the middle of the cluster:
+the average score of its members for each criterion.</p>
+</div>
+<div class="paragraph">
+<p>The algorithm is simple. Start with <em>k</em> guesses for the centroids, then repeat two steps:
+<em>assign</em> every whisky to its nearest centroid, and <em>update</em> each centroid to the average
+of the whiskies assigned to it. Stop when the centroids stop moving.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_using_flink_ml">Using Flink ML</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flink ML provides a distributed K-means, so let&#8217;s start there. Flink ML works with Flink&#8217;s
+Table API: we read the CSV file as a stream, turn each row into a distillery name plus a
+<code>DenseVector</code> of features, and hand the resulting table to the estimator:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var file = WhiskeyFlink.classLoader.getResource('whiskey.csv').file
+var eEnv = StreamExecutionEnvironment.executionEnvironment
+var tEnv = StreamTableEnvironment.create(eEnv)
+
+var source = FileSource.forRecordStreamFormat(new TextLineInputFormat(), new Path(file)).build()
+var stream = eEnv
+    .fromSource(source, WatermarkStrategy.noWatermarks(), 'csvfile')
+    .filter(line -&gt; !line.startsWith('RowID'))
+    .map(line -&gt; {
+        var cols = line.split(',')
+        Row.of(cols[1], Vectors.dense(cols[2..-1] as double[]))
+    }).returns(new RowTypeInfo(Types.STRING, DenseVectorTypeInfo.INSTANCE))
+
+var inputTable = tEnv.fromDataStream(stream).as('distillery', 'features')
+var kmeans = new KMeans(k: 5, seed: 1L)
+var kmeansModel = kmeans.fit(inputTable)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy&#8217;s named-argument constructor lets us set the estimator&#8217;s parameters
+(<code>k</code>, <code>seed</code>) in one line. Converting the feature columns to doubles is just
+<code>cols[2..-1] as double[]</code>.</p>
+</div>
+<div class="paragraph">
+<p>The model&#8217;s <code>transform</code> method adds a <code>prediction</code> column to the table. We collect the result,
+group the rows by cluster, and print each cluster&#8217;s centroid and members:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var outputTable = kmeansModel.transform(inputTable)[0]
+var clusters = outputTable.execute().collect().toList()
+    .groupBy { Row row -&gt; row.getField(kmeans.predictionCol) as int }
+    .sort { it.key }
+
+println 'Centroids:'
+clusters.each { k, rows -&gt;
+    var features = rows.collect { (DenseVector) it.getField('features') }
+    var centroid = (0..&lt;features[0].size()).collect { int j -&gt; (features.sum { it.get(j) } as double) / features.size() }
+    println "Cluster $k: ${centroid.collect { sprintf '%.2f', it }.join(', ')}"
+}
+clusters.each { k, rows -&gt;
+    println "Cluster $k (${rows.size()} members): ${rows*.getField('distillery').sort().join(', ')}"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Why calculate the centroids from the members, when the model holds them already?
+Flink&#8217;s Table API is lazy. Reading the model data with <code>kmeansModel.modelData</code> and
+then calling <code>transform</code> runs two separate jobs, and <em>each one trains the model again</em>. Within
+each job the result is consistent, but the cluster numbers in one job needn&#8217;t match the other.
+Working from a single <code>transform</code> result avoids the problem.</p>
+</div>
+<div class="paragraph">
+<p>Here is the output (minus Flink&#8217;s logging):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Centroids:
+Cluster 0: 3.67, 1.50, 3.67, 3.33, 0.67, 0.17, 1.67, 0.50, 1.17, 1.33, 1.17, 0.17
+Cluster 1: 1.76, 2.52, 1.24, 0.24, 0.14, 1.24, 1.62, 0.76, 0.48, 1.81, 1.67, 1.90
+Cluster 2: 1.36, 2.32, 1.00, 0.27, 0.00, 0.91, 0.77, 0.36, 1.64, 1.73, 2.09, 2.18
+Cluster 3: 2.68, 2.48, 1.48, 0.04, 0.04, 1.84, 1.68, 1.92, 2.04, 2.00, 2.12, 1.76
+Cluster 4: 1.83, 1.83, 2.08, 1.25, 0.17, 1.17, 1.33, 0.75, 1.83, 1.75, 1.17, 1.08
+Cluster 0 (6 members): Ardbeg, Caol Ila, Clynelish, Lagavulin, Laphroig, Talisker
+Cluster 1 (21 members): ArranIsleOf, Belvenie, Benriach, Bladnoch, Dalwhinnie, Deanston, GlenDeveronMacduff, GlenElgin, GlenGarioch, GlenOrd, GlenSpey, Glenkinchie, Glenlossie, Inchgower, Linkwood, RoyalBrackla, Speyburn, Teaninich, Tomatin, Tomintoul, Tullibardine
+Cluster 2 (22 members): AnCnoc, Auchentoshan, Aultmore, Bunnahabhain, Cardhu, Craigganmore, Dufftown, GlenGrant, GlenMoray, Glenallachie, Glenfiddich, Glengoyne, Glenmorangie, Loch Lomond, Mannochmore, Miltonduff, Scapa, Speyside, Strathmill, Tamdhu, Tamnavulin, Tobermory
+Cluster 3 (25 members): Aberfeldy, Aberlour, Auchroisk, Balmenach, BenNevis, Benrinnes, Benromach, BlairAthol, Craigallechie, Dailuaine, Dalmore, Edradour, GlenKeith, Glendronach, Glendullan, Glenfarclas, Glenlivet, Glenrothes, Glenturret, Knochando, Longmorn, Macallan, Mortlach, RoyalLochnagar, Strathisla
+Cluster 4 (12 members): Ardmore, Balblair, Bowmore, Bruichladdich, GlenScotia, Highland Park, Isle of Jura, Oban, OldFettercairn, OldPulteney, Springbank, Tomore</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Cluster 0 is the big, smoky, medicinal Islay style. Cluster 3 holds the rich, sherried
+(Winey) Speyside malts such as Macallan, Glenfarclas and Mortlach. Even with a fixed seed, the
+clusters vary a little from run to run, because the order in which Flink&#8217;s parallel
+tasks see the data varies.</p>
+</div>
+<div class="paragraph">
+<p>One caveat. Flink ML&#8217;s last release, 2.3.0, came out in mid-2023 and supports Flink up to 1.17.
+The example above runs on Flink 1.18.1. Flink itself has moved on to 2.3, and Flink 2.0
+removed APIs that Flink ML depends on, including the DataSet API. So for current Flink,
+we&#8217;ll write K-means ourselves.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_k_means_by_hand_on_flink_2_3">K-means by hand on Flink 2.3</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Older Flink K-means examples used the DataSet API and its built-in bulk iterations.
+Both are gone in Flink 2. The DataStream API can run in <code>BATCH</code> mode over bounded input, so
+we make each K-means iteration a separate bounded job. Our Groovy driver holds the current centroids,
+runs a job, and reads back the new centroids. It is the same pattern a Spark K-means driver uses.</p>
+</div>
+<div class="paragraph">
+<p>Each job assigns every profile to its nearest centroid, then sums the
+profiles and counts the members of each cluster. The profiles themselves are read and parsed
+only once, by the first job, and cached for the rest (more on that below):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var points = load(env, file)
+for (iteration in 1..maxIterations) {
+    var updated = assign(points, centroids, assigner)
+        .map(t -&gt; Tuple3.of(t.f0, t.f2, 1)).returns(SUM)
+        .keyBy(t -&gt; t.f0, Types.INT)
+        .reduce((a, b) -&gt; Tuple3.of(a.f0, plus(a.f1, b.f1), a.f2 + b.f2)).returns(SUM)
+        .executeAndCollect(k)
+    float[][] next = centroids.collect { float[] c -&gt; c.clone() } as float[][]
+    updated.each { next[it.f0] = it.f1.collect { float v -&gt; v / it.f2 } as float[] }
+    boolean converged = (0..&lt;k).every { int c -&gt; distance(next[c], centroids[c]) &lt; 1e-3d }
+    centroids = next
+    if (converged) {
+        println "Converged after $iteration iterations"
+        break
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>SUM</code> is the type of a <code>(cluster, sum of profiles, count)</code> tuple. Flink inspects
+functions to work out the types flowing between operators, but generic types are erased
+at runtime, so for tuples we tell it with <code>returns</code>, much as we would with Java lambdas.
+Flink couldn&#8217;t infer the key type of the Groovy lambda passed to <code>keyBy</code> either, so we pass <code>Types.INT</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>load</code> method reads the CSV file into a stream of <code>(distillery, profile)</code> tuples and caches it,
+and <code>assign</code> adds the assignment step:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static DataStream&lt;Tuple2&lt;String, float[]&gt;&gt; load(StreamExecutionEnvironment env, String file) {
+    var source = FileSource.forRecordStreamFormat(new TextLineInputFormat(), new Path(file)).build()
+    env.fromSource(source, WatermarkStrategy.noWatermarks(), 'whiskey').setParallelism(env.parallelism)
+        .filter(line -&gt; !line.startsWith('RowID'))
+        .map(WhiskeyKMeans::parse).returns(POINT)
+        .cache()
+}
+
+static DataStream&lt;Tuple3&lt;Integer, String, float[]&gt;&gt; assign(DataStream&lt;Tuple2&lt;String, float[]&gt;&gt; points,
+        float[][] centroids, Assigner assigner) {
+    points.transform('assign', ASSIGNED, new AssignOperator(centroids, assigner))
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The assignment step uses a small custom operator. It collects the profiles arriving at
+its parallel instance and, once the input ends, assigns the whole batch in one go:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@CompileStatic
+class AssignOperator extends AbstractStreamOperator&lt;Tuple3&lt;Integer, String, float[]&gt;&gt;
+        implements OneInputStreamOperator&lt;Tuple2&lt;String, float[]&gt;, Tuple3&lt;Integer, String, float[]&gt;&gt;, BoundedOneInput {
+    private final float[][] centroids
+    private final Assigner assigner
+    private transient List&lt;Tuple2&lt;String, float[]&gt;&gt; batch
+
+    ...
+
+    void processElement(StreamRecord&lt;Tuple2&lt;String, float[]&gt;&gt; element) {
+        batch &lt;&lt; element.value
+    }
+
+    void endInput() {
+        if (!batch) return
+        List&lt;float[]&gt; points = new ArrayList&lt;&gt;(batch.size())
+        for (Tuple2&lt;String, float[]&gt; p : batch) points.add(p.f1)
+        int[] clusters = assigner.nearest(points, centroids)
+        batch.eachWithIndex { p, i -&gt;
+            output.collect(new StreamRecord&lt;&gt;(Tuple3.of(clusters[i], p.f0, p.f1)))
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Working a batch at a time doesn&#8217;t matter much for the CPU, but it&#8217;s what a GPU needs, as we&#8217;ll see shortly.
+The CPU <code>Assigner</code> is the obvious nested loop:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static int nearest(float[] point, float[][] centroids) {
+    int best = 0
+    float bestDist = Float.MAX_VALUE
+    for (int c = 0; c &lt; centroids.length; c++) {
+        float dist = 0
+        for (int j = 0; j &lt; point.length; j++) {
+            float diff = point[j] - centroids[c][j]
+            dist += diff * diff
+        }
+        if (dist &lt; bestDist) { bestDist = dist; best = c }
+    }
+    best
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We start from five whiskies chosen at random (with a fixed seed), and run it on JDK 21:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew :flink:runWhiskeyKMeansCpu
+Converged after 8 iterations
+Centroids:
+Cluster 0: 1.93, 2.33, 1.63, 0.41, 0.11, 1.78, 1.44, 1.11, 1.70, 1.96, 1.37, 1.56
+Cluster 1: 2.00, 2.50, 1.21, 0.21, 0.14, 1.14, 1.71, 0.86, 0.29, 1.64, 2.07, 2.14
+Cluster 2: 1.40, 2.36, 1.04, 0.24, 0.00, 0.80, 0.88, 0.36, 1.64, 1.76, 2.00, 2.16
+Cluster 3: 3.18, 2.45, 1.55, 0.09, 0.00, 1.91, 1.82, 2.64, 2.00, 2.00, 2.45, 1.45
+Cluster 4: 3.11, 1.44, 3.11, 2.89, 0.56, 0.22, 1.56, 0.44, 1.44, 1.44, 1.33, 0.44
+Cluster 0 (27 members): Aberfeldy, Ardmore, Auchroisk, BenNevis, Benrinnes, Benromach, BlairAthol, Bowmore, Bruichladdich, Craigallechie, Dalwhinnie, Deanston, GlenDeveronMacduff, GlenKeith, GlenScotia, Glenrothes, Glenturret, Highland Park, ...
+Cluster 1 (14 members): ArranIsleOf, Belvenie, Benriach, Bladnoch, GlenElgin, GlenGarioch, GlenOrd, Glenkinchie, Glenlivet, Linkwood, RoyalBrackla, Speyburn, Teaninich, Tullibardine
+Cluster 2 (25 members): AnCnoc, Auchentoshan, Aultmore, Balblair, Bunnahabhain, Cardhu, Craigganmore, Dufftown, GlenGrant, GlenMoray, GlenSpey, Glenallachie, Glenfiddich, Glengoyne, Glenlossie, Glenmorangie, Loch Lomond, Longmorn, Mannochmore, ...
+Cluster 3 (11 members): Aberlour, Balmenach, Dailuaine, Dalmore, Glendronach, Glendullan, Glenfarclas, Macallan, Mortlach, RoyalLochnagar, Strathisla
+Cluster 4 (9 members): Ardbeg, Caol Ila, Clynelish, Isle of Jura, Lagavulin, Laphroig, Oban, OldPulteney, Talisker</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again we see a peaty cluster (4) and a sherried one (3).</p>
+</div>
+<div class="sect2">
+<h3 id="_why_not_mappartition">Why not <code>mapPartition</code>?</h3>
+<div class="paragraph">
+<p>Flink 1.20 added <code>fullWindowPartition().mapPartition(&#8230;&#8203;)</code> to the DataStream API, which
+seemed exactly right for batching the assignment step. With it, our jobs failed with
+<code>IllegalArgumentException: Cannot append empty data</code>, returned corrupted values, or hung.
+A plain Java version with eight integers did the same on Flink 1.20 and every 2.x release we tried, so
+it isn&#8217;t a Groovy problem. The cause is in <code>MapPartitionOperator</code>, which calls the user function on a
+separate <code>TaskUDFExecutor</code> thread. Records it emits are written to the network output from that thread.
+Meanwhile the task&#8217;s own thread forwards the end-of-input watermark to the same output, and when the two
+overlap, the output buffers are corrupted. Only functions that emit while still reading their input,
+as our assignment step did, are affected. A function that reads everything before emitting
+anything, such as one summing a partition, finishes after the watermark has gone, which may be why
+the problem hasn&#8217;t been noticed. We reported it as
+<a href="https://issues.apache.org/jira/browse/FLINK-41296">FLINK-41296</a>.</p>
+</div>
+<div class="paragraph">
+<p>The custom operator above does all its work on the task thread, in <code>processElement</code> and <code>endInput</code>,
+so only one thread ever writes to its output. It is also a bit more general: we decide how a batch is processed.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_caching_between_jobs">Caching between jobs</h3>
+<div class="paragraph">
+<p>Every iteration needs the same parsed profiles. Without help, each job would re-read and re-parse the file.
+Flink&#8217;s answer for batch jobs is <code>DataStream.cache()</code>: the first job that uses a cached stream
+keeps its result on the cluster, and later jobs read that instead of recomputing it.</p>
+</div>
+<div class="paragraph">
+<p>Our first attempt cached the stream but still re-parsed every row in every iteration, and was
+slower for it. A counter in the parsing step showed what was happening. A cached result only lives as long as the cluster it was
+written on, and when a program runs locally, each <code>execute</code> starts a fresh mini cluster for that one job. So every
+iteration wrote a new cache, which nothing ever read. Flink falls back to recomputing a missing cache, so nothing fails.
+On a real deployment the iterations would be submitted to a long-running session cluster.
+Locally we do the equivalent: start one <code>MiniCluster</code> and point the environment at it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">try (var miniCluster = new MiniCluster(new MiniClusterConfiguration.Builder().setNumSlotsPerTaskManager(4).build())) {
+    miniCluster.start()
+    var uri = miniCluster.restAddress.get()
+    var env = StreamExecutionEnvironment.createRemoteEnvironment(uri.host, uri.port)
+    env.runtimeMode = RuntimeExecutionMode.BATCH
+    env.parallelism = 4
+    var points = load(env, file)
+    // the iterations, as above
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With that change, the profiles are parsed once, in the first iteration. There was one more catch.
+For our small file, Flink infers a parallelism of 1 for the source, so the cache is written as a single
+partition, and the next job, running at parallelism 4, fails with <code>ClusterDatasetCorruptedException</code>.
+That is why <code>load</code> sets the source&#8217;s parallelism explicitly.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_onto_the_gpu">Onto the GPU</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Most of the arithmetic in K-means is in the assignment step: for each of <em>n</em> points, <em>k</em> distances
+over <em>d</em> dimensions. Each point is independent of the others, which is ideal for a GPU.</p>
+</div>
+<div class="sect2">
+<h3 id="_flink_and_tornadovm_earlier_work">Flink and TornadoVM: earlier work</h3>
+<div class="paragraph">
+<p>Running Flink operators on GPUs has been tried before. In
+<a href="https://www.vldb.org/pvldb/vol15/p3869-xekalaki.pdf"><em>Enabling Transparent Acceleration of Big Data Frameworks Using Heterogeneous Hardware</em></a>
+(PVLDB 15(13), 2022), the TornadoVM team integrated TornadoVM into Flink so that
+<em>unmodified</em> Flink programs could run their map and reduce functions on GPUs and FPGAs.
+Their <a href="https://github.com/mairooni/Flink-TornadoVM-Artifact">artifact</a> is a patched Flink 1.11.1:
+around twenty runtime classes, such as <code>MapDriver</code>, <code>ReduceDriver</code> and <code>JobGraphGenerator</code>, are modified.
+At job submission it reads the bytecode of the user&#8217;s DataSet <code>MapFunction</code> and <code>ReduceFunction</code> classes,
+generates a "skeleton" class from them, and compiles that with a fork of TornadoVM containing
+Flink-specific hooks. K-means was one of their benchmarks.</p>
+</div>
+<div class="paragraph">
+<p>That design depends on things which no longer exist: the DataSet API, JDK 8 with JVMCI, and
+TornadoVM&#8217;s old Graal-based compiler, which TornadoVM 8.0.0 replaced with its own compiler, TC.
+Bringing it forward would mean rewriting it rather than upgrading it.
+Instead, we do the integration explicitly: our Flink operator hands each batch to a TornadoVM kernel.
+It is less transparent, but works with stock Flink 2.3 and TornadoVM 8.0.0, today.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_the_kernel">The kernel</h3>
+<div class="paragraph">
+<p>As in the <a href="groovy-tornadovm.html">earlier post</a>, we write the kernel with TornadoVM&#8217;s <code>KernelContext</code>
+API, statically compiled, using the small <code>@GpuKernel</code> AST transformation from that post. It keeps
+float arithmetic in float, rather than Groovy&#8217;s default of widening it to double, which Apple GPUs don&#8217;t support.
+Each GPU thread handles one point:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@GpuKernel
+static void nearest(KernelContext ctx, FloatArray points, FloatArray centroids, IntArray out, int n, int k, int d) {
+    int i = ctx.globalIdx
+    if (i &lt; n) {
+        int best = 0
+        float bestDist = 0.0f
+        for (int c = 0; c &lt; k; c++) {
+            float dist = 0.0f
+            for (int j = 0; j &lt; d; j++) {
+                float diff = points.get(i * d + j) - centroids.get(c * d + j)
+                dist = dist + diff * diff
+            }
+            if (c == 0 || dist &lt; bestDist) {
+                bestDist = dist
+                best = c
+            }
+        }
+        out.set(i, best)
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are two small differences from the CPU version. <code>@GpuKernel</code> doesn&#8217;t handle compound assignments
+like <code>+=</code>, so we write <code>dist = dist + diff * diff</code>. And we avoid <code>Float.MAX_VALUE</code>, a field
+of another class, by treating the first centroid specially.</p>
+</div>
+<div class="paragraph">
+<p>The GPU <code>Assigner</code> copies the batch into TornadoVM&#8217;s off-heap arrays and runs the kernel.
+Every K-means iteration is a new Flink job, with new operator instances, so building a new
+<code>TaskGraph</code> each time would recompile the kernel every iteration. Instead we keep each compiled execution plan,
+along with its buffers, in a static pool, and reuse it in later jobs that run in the same JVM:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Plan(int n, int k, int d) {
+    ...
+    var name = "assign${COUNT.incrementAndGet()}"
+    var graph = new TaskGraph(name)
+        .transferToDevice(EVERY_EXECUTION, points, centroids)
+        .task('nearest', GpuAssigner::nearest, new KernelContext(), points, centroids, assigned, n, k, d)
+        .transferToHost(EVERY_EXECUTION, assigned)
+    executionPlan = new TornadoExecutionPlan(graph.snapshot())
+        .withGridScheduler(new GridScheduler("${name}.nearest".toString(), new WorkerGrid1D(n)))
+}
+
+int[] run(List&lt;float[]&gt; pts, float[][] cs) {
+    for (int i = 0; i &lt; n; i++) for (int j = 0; j &lt; d; j++) points.set(i * d + j, pts[i][j])
+    for (int c = 0; c &lt; k; c++) for (int j = 0; j &lt; d; j++) centroids.set(c * d + j, cs[c][j])
+    executionPlan.execute()
+    assigned.toHeapArray()
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We run the same Flink job through TornadoVM&#8217;s <code>tornado</code> launcher, which puts TornadoVM on the module path.
+Flink runs as a local mini cluster in the same JVM, so its tasks can use the GPU directly:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew :flink:runWhiskeyKMeansGpu -PtornadoFlags=--threadInfo
+Task info: assign1.nearest
+	Backend           : METAL
+	Device            : Apple M4 Pro METAL_DEVICE_TYPE_GPU (available)
+	Dims              : 1
+	Global work size  : [86, 1, 1]
+...
+Converged after 8 iterations
+Centroids:
+Cluster 0: 1.93, 2.33, 1.63, 0.41, 0.11, 1.78, 1.44, 1.11, 1.70, 1.96, 1.37, 1.56
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The centroids and clusters are identical to the CPU run&#8217;s. The same happens with TornadoVM&#8217;s
+OpenCL backend. Here is part of the Metal code TornadoVM generated from the Groovy kernel:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">  i = (int) _thread_position_in_grid.x;
+  if (i &gt;= 86) {
+    v3 = 0;
+  } else {
+    v3 = 1;
+  }
+  if (v3 != 0) {
+    ...
+      for (;;) {
+        ...
+        diff = points_data[(int) ((uint) i_off + (uint) j)] - centroids_data[(int) ((uint) c_off + (uint) j)];
+        dist = dist + diff * diff;
+        j = (int) ((uint) j + (uint) 1);
+      }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The float arithmetic stays float. TornadoVM has specialised the kernel for this batch, so
+<code>n</code> is the constant <code>86</code>. The <code>v3 = 0</code>/<code>v3 = 1</code> flags come from Groovy compiling comparisons to
+a <code>0</code>/<code>1</code> value; <a href="https://issues.apache.org/jira/browse/GROOVY-12542">GROOVY-12542</a>, mentioned
+in the earlier post, makes this more javac-like in the upcoming Groovy 6.0.1.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_scaling_up">Scaling up</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>86 whiskies are about 3KB of data, which is far too little for the GPU to make a difference.
+To get something bigger, a generator writes 4 million synthetic profiles: each is one of the real
+86 with Gaussian noise added, as if a few more tasters had a go. They go into four files, so each of
+Flink&#8217;s four source tasks reads one. We timed the assignment step for each million-row batch,
+and each iteration of the whole job, for different numbers of clusters, with and without caching
+(the <code>nocache</code> option re-reads the data every iteration):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>$ ./gradlew :flink:generateWhiskies
+$ ./gradlew :flink:runWhiskeyKMeansCpu -Pdata=build/whiskies -Ptiming -Pk=50 -Piterations=4
+$ ./gradlew :flink:runWhiskeyKMeansGpu -Pdata=build/whiskies -Ptiming -Pk=50 -Piterations=4
+$ ./gradlew :flink:runWhiskeyKMeansCpu -Pdata=build/whiskies -Ptiming -Pk=50 -Piterations=4 -Pnocache</pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 9.0909%;">
+<col style="width: 18.1818%;">
+<col style="width: 18.1818%;">
+<col style="width: 27.2727%;">
+<col style="width: 27.2728%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">k</th>
+<th class="tableblock halign-left valign-top">Assign 1M points, CPU</th>
+<th class="tableblock halign-left valign-top">Assign 1M points, GPU</th>
+<th class="tableblock halign-left valign-top">Iteration, CPU (no cache / cached)</th>
+<th class="tableblock halign-left valign-top">Iteration, GPU (no cache / cached)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">95 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">64 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.95 s / 1.68 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.95 s / 1.58 s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">285 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">108 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.33 s / 1.87 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.29 s / 1.71 s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">552 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">120 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.53 s / 2.09 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.03 s / 1.75 s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">969 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">91 ms</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.95 s / 2.51 s</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.09 s / 1.59 s</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>These are medians over three iterations, on an Apple M4 Pro, excluding the first iteration
+(which includes JIT and kernel compilation, and with caching, parsing the data), so treat them as indicative.
+The CPU assignment time grows with <em>k</em>, as expected. On the GPU, the kernel itself takes only
+about 5 ms for a million points with <em>k</em> = 5. Most of the GPU column is copying the batch into
+TornadoVM&#8217;s arrays, which doesn&#8217;t depend on <em>k</em>, and the four Flink tasks sharing one GPU.</p>
+</div>
+<div class="paragraph">
+<p>The iteration times tell the other half of the story. This is Amdahl&#8217;s law: speeding up one part of a job
+only helps as much as that part contributes. Without caching, every iteration re-reads and parses
+320MB of CSV, which costs about 1.4 seconds whatever else we do. On top of that sit the rest of the job and the
+assignment step. With 5 or 20 clusters the GPU saves nothing worth measuring; with 100 it saves about 0.9 seconds of 4.</p>
+</div>
+<div class="paragraph">
+<p>Caching removes the parsing from every iteration after the first. Now the assignment step is a much bigger share of
+what remains, and the GPU makes a clear difference: at <em>k</em> = 100 an iteration takes 2.5 seconds on the CPU and 1.6 on the GPU.
+The GPU iteration time hardly changes with <em>k</em>. What is left, about 1.6 seconds, is reading the cached records back,
+serialising them between operators, copying them into TornadoVM&#8217;s arrays, and shuffling the partial sums.
+That is now the part to work on, for example by keeping the profiles in a form the GPU can use directly.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_notes">Groovy notes</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Statically compiled Groovy worked well with both Flink and TornadoVM, but we did find two compiler issues:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Cloning arrays.</strong> Under <code>@CompileStatic</code>, <code>a[0].clone()</code> on a <code>float[][]</code>, or <code>it.clone()</code> in a closure
+over one, compiles to a call of <code>Object.clone()</code> on a reference the JVM verifier only knows is an
+<code>Object</code>, and fails with <code>VerifyError: Bad access to protected data</code>
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12595">GROOVY-12595</a>). Declaring the closure parameter&#8217;s type,
+<code>{ float[] c &#8594; c.clone() }</code>, avoids it.</p>
+</li>
+<li>
+<p><strong>Spread-dot over large lists.</strong> We first wrote <code>batch*.f1</code> in <code>AssignOperator</code>. That took around
+400 ms per million points, more than the assignment itself. Groovy compiles the spread into a loop which keeps
+the result list on the JVM&#8217;s operand stack, and HotSpot can&#8217;t compile a loop like that while it is running
+(<code>COMPILE SKIPPED: OSR starts with non-empty stack</code>). In a method that runs once over a big list, the loop stays in
+the interpreter. A plain loop was around ten times faster
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12642">GROOVY-12642</a>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both are present in Groovy 6.0.0 and current snapshots. Like GROOVY-12542, the second is a case where
+bytecode closer to javac&#8217;s would make a real difference.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy makes a pleasant language for Flink jobs, whether through Flink ML&#8217;s high-level
+estimators or the DataStream API. Flink ML is a quick way to cluster our whiskies, but it is
+tied to Flink 1.x. Writing K-means by hand on Flink 2.3 takes a little more code, and a custom
+operator gives us batches to send to a GPU. With TornadoVM 8.0.0 and the <code>@GpuKernel</code>
+transformation, the assignment step runs as a Groovy kernel on an Apple GPU, unchanged on Metal and OpenCL,
+with results identical to the CPU version.</p>
+</div>
+<div class="paragraph">
+<p>For our 86 whiskies, the GPU makes no difference. At four million, it is many times faster at the arithmetic, but
+end-to-end speed depends on everything else the job does. Caching the parsed data lets more of that
+speed show, but moving data, not computing on it, still limits jobs like this one.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://flink.apache.org/">Apache Flink</a> and <a href="https://nightlies.apache.org/flink/flink-ml-docs-stable/">Flink ML</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-data-science/tree/master/subprojects/WhiskeyFlink">WhiskeyFlink</a>: the Flink ML example</p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-tornadovm/tree/main/flink">groovy-tornadovm/flink</a>: the Flink 2.3 K-means, with CPU and GPU assignment</p>
+</li>
+<li>
+<p><a href="groovy-tornadovm.html">Running Groovy on the GPU with TornadoVM</a>, including <code>@GpuKernel</code></p>
+</li>
+<li>
+<p><a href="https://www.vldb.org/pvldb/vol15/p3869-xekalaki.pdf">Enabling Transparent Acceleration of Big Data Frameworks Using Heterogeneous Hardware</a>
+and its <a href="https://github.com/mairooni/Flink-TornadoVM-Artifact">artifact</a></p>
+</li>
+<li>
+<p>Earlier whisky posts: <a href="using-groovy-with-apache-wayang.html">Apache Wayang and Apache Spark</a>,
+<a href="whiskey-clustering-with-groovy-and.html">Apache Ignite</a> and <a href="whisky-revisited.html">Whisky flavor profiles revisited</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>

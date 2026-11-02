@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_setup' class='anchor-link'>Setup</a></li><li><a href='#_a_first_kernel' class='anchor-link'>A first kernel</a></li><li><a href='#_floats_get_in_the_way' class='anchor-link'>Floats get in the way</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_coming_soon_parallel_loops' class='anchor-link'>Coming soon: <code>@Parallel</code> loops</a></li><li><a href='#_caveats' class='anchor-link'>Caveats</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Running Groovy on the GPU with TornadoVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_setup' class='anchor-link'>Setup</a></li><li><a href='#_a_first_kernel' class='anchor-link'>A first kernel</a></li><li><a href='#_floats_get_in_the_way' class='anchor-link'>Floats get in the way</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_coming_soon_parallel_loops' class='anchor-link'>Coming soon: <code>@Parallel</code> loops</a></li><li><a href='#_caveats' class='anchor-link'>Caveats</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-flink'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Running Groovy on the GPU with TornadoVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -510,7 +510,7 @@ tested, where javac jumps on the comparison directly. TornadoVM&#8217;s compiler
 </ul>
 </div>
 <div class="paragraph">
-<p>Fixes for all three are expected in upcoming Groovy releases. The third makes Groovy&#8217;s bytecode
+<p>All three are fixed for the upcoming Groovy 6.0.1 and 7.0.0-alpha-1 releases. The third makes Groovy&#8217;s bytecode
 smaller and closer to javac&#8217;s in general, not just for TornadoVM. With a Groovy build that includes
 them, the <code>@Parallel</code> versions of both examples run on Metal and OpenCL. They give the same results as
 the <code>KernelContext</code> versions, at 17–21 ms per Mandelbrot image. TornadoVM turns each <code>@Parallel</code>
@@ -572,8 +572,8 @@ takes care of both and keeps the kernel code readable. The result renders a 3840
 image in well under 20 ms on an Apple M4 Pro GPU, and the same code runs unchanged on an NVIDIA T4 through CUDA.</p>
 </div>
 <div class="paragraph">
-<p>The more Java-like <code>@Parallel</code> loops need three Groovy fixes, which should arrive in upcoming
-releases, and those fixes make Groovy&#8217;s bytecode a little more javac-like along the way.</p>
+<p>The more Java-like <code>@Parallel</code> loops need three Groovy fixes, coming in Groovy 6.0.1,
+and those fixes make Groovy&#8217;s bytecode a little more javac-like along the way.</p>
 </div>
 </div>
 </div>
