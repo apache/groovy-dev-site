@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, actors, pekko, groovy.concurrent, gpars'/><meta name='description' content='This post looks at using Apache Pekko Actors and Groovy 6&apos;s built-in groovy.concurrent Actors.'/><title>The Apache Groovy programming language - Blogs - Using Apache Pekko actors and Groovy&reg; 6 actors</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='concurrency, groovy, actors, pekko, groovy.concurrent, gpars, groovy-verify, contracts'/><meta name='description' content='This post looks at using Apache Pekko Actors and Groovy 6&apos;s built-in groovy.concurrent Actors.'/><title>The Apache Groovy programming language - Blogs - Using Apache Pekko actors and Groovy&reg; 6 actors</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&reg; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_an_activeobject_implementation' class='anchor-link'>An @ActiveObject implementation</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&reg; List Processing Cheat Sheet</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&reg; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-08-22 12:00AM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&reg; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_an_activeobject_implementation' class='anchor-link'>An @ActiveObject implementation</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_checking_actor_code_at_compile_time' class='anchor-link'>Checking actor code at compile time</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&reg; List Processing Cheat Sheet</a></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&reg; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-11-08 12:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekko logo" width="100"></span>
@@ -147,7 +147,7 @@ to tell it the maximum number of times to echo the message before stopping.</p>
 <h2 id="_a_pekko_implementation_in_groovy">A Pekko implementation in Groovy</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This example uses Groovy 6.0.0-beta-2 and Pekko 1.7.0.
+<p>This example uses Groovy 6.0.0 and Pekko 2.0.0 (which requires JDK 17 or later).
 It was tested with JDK 21 and 25.</p>
 </div>
 <div class="paragraph">
@@ -557,12 +557,161 @@ for the bigger picture.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="_checking_actor_code_at_compile_time">Checking actor code at compile time</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Actors remove a whole class of bugs: state touched only by its own actor,
+one message at a time, needs no locks. They don&#8217;t remove all bugs, though.
+Each handler still has to keep the actor&#8217;s state sensible, and actors that
+wait on one another can still deadlock.</p>
+</div>
+<div class="paragraph">
+<p>The experimental
+<a href="https://github.com/paulk-asert/groovy-verify"><code>groovy-verify</code></a> project,
+covered in the
+<a href="https://groovy.apache.org/blog/groovy6-formal-methods">Groovy 6 features for formal method advocates</a>
+post, can help with both. It is a type-checking extension, backed by the Z3
+SMT solver, that turns Groovy 6&#8217;s <code>groovy.contracts</code> annotations into proofs,
+or into compile errors with counterexamples. It is not part of Apache Groovy.
+The examples below were checked with Groovy 6.0.0 and <code>groovy-verify</code> 0.1.0.</p>
+</div>
+<div class="sect2">
+<h3 id="_the_bots_invariant">The bot&#8217;s invariant</h3>
+<div class="paragraph">
+<p>Our <code>@ActiveObject</code> bot keeps a counter which should never exceed its
+maximum. We can say that with a class invariant. <code>groovy-verify</code> reasons
+about sequential code, so it doesn&#8217;t check interleavings. It doesn&#8217;t need to
+here: <code>@ActiveObject</code> runs one <code>@ActiveMethod</code> call at a time, so it is enough
+to prove that each call, run on its own, preserves the invariant. We keep just
+the bot&#8217;s bookkeeping (the <code>println</code> and the reply to the greeter are outside
+the subset of Groovy that <code>groovy-verify</code> handles):</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
+@ActiveObject
+@Invariant({ max &gt;= 1 &amp;&amp; 0 &lt;= greetingCounter &amp;&amp; greetingCounter &lt;= max })
+class HelloWorldBot {
+    private final int max
+    private int greetingCounter
+
+    @Requires({ max &gt;= 1 })
+    HelloWorldBot(int max) { this.max = max }
+
+    @ActiveMethod(blocking = false)
+    void greeted(String whom) {
+        greetingCounter++
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This doesn&#8217;t compile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove class invariant of greeted holds at method exit
+    invariant: (((max &gt;= 1) &amp;&amp; (0 &lt;= greetingCounter)) &amp;&amp; (greetingCounter &lt;= max))
+    counterexample: greetingCounter = 1, max = 1
+    fails on: greeted("")</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The counterexample is a bot that has already had all the greetings it
+wanted (one, in this case) and then gets another. In our little system that
+never happens, because the bot stops replying once it reaches its maximum.
+But nothing in the bot itself guarantees that. A misbehaving or duplicated
+sender could push it past its limit. An actor can&#8217;t refuse delivery, so the
+natural fix is to ignore late greetings:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">    @ActiveMethod(blocking = false)
+    void greeted(String whom) {
+        if (greetingCounter == max) return  // a late greeting: ignore it
+        greetingCounter++
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now the class compiles, and the invariant is proved for every possible call,
+not just the ones our tests happen to make.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_mailbox_deadlock">A mailbox deadlock</h3>
+<div class="paragraph">
+<p>By default, a <code>groovy.concurrent</code> actor&#8217;s mailbox is unbounded, so sending a
+message never blocks. A bounded mailbox with the <code>BLOCK</code> overflow policy is
+different: once the mailbox is full, the sender waits until the actor takes
+another message. Combine that with a handler that is itself waiting for the
+sender and you have the classic actor deadlock. Here is the smallest version,
+from the <code>groovy-verify</code>
+<a href="https://github.com/paulk-asert/groovy-verify/blob/main/examples/concurrency.md">concurrency examples</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">import groovy.concurrent.*
+import groovy.transform.TypeChecked
+
+@TypeChecked(extensions = 'verification.VerifyChecker')
+class Knot {
+    static int knot() {
+        AsyncChannel&lt;Integer&gt; gate = AsyncChannel.create(4)
+        Actor&lt;Integer&gt; worker = Actor.reactor({ Integer m -&gt; gate.first() },
+            ActorOptions.DEFAULTS.withBoundedMailbox(1, ActorOptions.Overflow.BLOCK))
+        worker.send(1)
+        worker.send(2)
+        worker.send(3)
+        gate.send(0)
+        return 0
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The worker&#8217;s handler waits on the <code>gate</code> channel. Its mailbox holds just one
+message. The first message is being handled (and waiting on <code>gate</code>), the
+second fills the mailbox, and the third send has to wait. But <code>gate</code> is only
+fed after that third send, so neither side can make progress. At runtime this
+just hangs. With <code>groovy-verify</code> it is a compile error that names both halves
+of the cycle:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Actor mailbox deadlock in 'knot': the send to 'worker' (line 12)
+is the 3rd to a mailbox bounded at 1 with Overflow.BLOCK — one message is being handled and
+1 waits behind it, so this send parks the sending thread until the handler takes another.
+The handler cannot: it is waiting for the receive on 'gate' (line 8), which this method
+sends only at line 13, after the send that blocks. ... Feed 'gate' before the burst, raise
+the bound above the burst, or choose a non-blocking overflow policy and handle the loss.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The same burst on an unbounded mailbox isn&#8217;t reported, because there the
+sends are queued and nobody waits. The concurrency examples also cover messages
+an actor stashes but never replays, <code>become</code> phases checked against a
+protocol, and a <code>sendAndGet</code> that waits forever for a reply to a stashed
+message.</p>
+</div>
+<div class="paragraph">
+<p>Neither check makes <code>groovy-verify</code> a model checker. It doesn&#8217;t explore
+thread schedules, and it relies on the actor runtime to deliver messages one
+at a time. What it does is catch the local mistakes, an invariant a handler
+breaks or a send that can never complete, while you compile.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_conclusion">Conclusion</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>We have had a quick glimpse at using actors with Apache Pekko and with Groovy 6&#8217;s
 built-in <code>groovy.concurrent</code> package&#8201;&#8212;&#8201;both with explicit actors and with
-<code>@ActiveObject</code> classes (with GPars noted as the pre-Groovy-6 option).</p>
+<code>@ActiveObject</code> classes (with GPars noted as the pre-Groovy-6 option).
+We also saw how the experimental <code>groovy-verify</code> project can check actor
+code at compile time.</p>
 </div>
 <div class="paragraph">
 <p>The sample code can be found here:</p>
@@ -583,7 +732,8 @@ built-in <code>groovy.concurrent</code> package&#8201;&#8212;&#8201;both with ex
 <strong>25/Jun/2024</strong>: Update to Pekko 1.0.3.<br>
 <strong>28/Sep/2024</strong>: Update to Pekko 1.1.1.<br>
 <strong>12/Jul/2026</strong>: Update to Pekko 1.6.0 and Groovy 6; replace the GPars example with the built-in <code>groovy.concurrent</code> actors (GPars retained as a legacy reference).<br>
-<strong>22/Aug/2026</strong>: Update to Pekko 1.7.0 and Groovy 6.0.0-beta-2; add an <code>@ActiveObject</code> version of the example.</p>
+<strong>22/Aug/2026</strong>: Update to Pekko 1.7.0 and Groovy 6.0.0-beta-2; add an <code>@ActiveObject</code> version of the example.<br>
+<strong>08/Nov/2026</strong>: Update to Pekko 2.0.0 and Groovy 6.0.0; add a section on compile-time checking of actor code with <code>groovy-verify</code>.</p>
 </div>
 </div>
 </div>
