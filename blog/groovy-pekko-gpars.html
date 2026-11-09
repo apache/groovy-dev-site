@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&reg; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_an_activeobject_implementation' class='anchor-link'>An @ActiveObject implementation</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_checking_actor_code_at_compile_time' class='anchor-link'>Checking actor code at compile time</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&reg; List Processing Cheat Sheet</a></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&reg; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-11-08 12:00AM)</span></p><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Using Apache Pekko actors and Groovy&reg; 6 actors</a></li><li><a href='#_the_example' class='anchor-link'>The example</a></li><li><a href='#_a_pekko_implementation_in_groovy' class='anchor-link'>A Pekko implementation in Groovy</a></li><li><a href='#_a_groovy_6_implementation_using_groovy_concurrent' class='anchor-link'>A Groovy 6 implementation using groovy.concurrent</a></li><li><a href='#_an_activeobject_implementation' class='anchor-link'>An @ActiveObject implementation</a></li><li><a href='#_discussion' class='anchor-link'>Discussion</a></li><li><a href='#_checking_actor_code_at_compile_time' class='anchor-link'>Checking actor code at compile time</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./gpars-meets-virtual-threads'>GPars meets Virtual Threads</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&reg; List Processing Cheat Sheet</a></li><li><a href='./groovy6-formal-methods'>Groovy 6 features for formal method advocates</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Using Apache Pekko actors and Groovy&reg; 6 actors</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span><i>Paul King</i></div><br/><span>Published: 2023-07-17 11:24PM (Last updated: 2026-11-09 12:00AM)</span></p><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p><span class="image right"><img src="https://pekko.apache.org/assets/images/pekko_logo.png" alt="pekko logo" width="100"></span>
@@ -573,7 +573,10 @@ covered in the
 post, can help with both. It is a type-checking extension, backed by the Z3
 SMT solver, that turns Groovy 6&#8217;s <code>groovy.contracts</code> annotations into proofs,
 or into compile errors with counterexamples. It is not part of Apache Groovy.
-The examples below were checked with Groovy 6.0.0 and <code>groovy-verify</code> 0.1.0.</p>
+The examples below were checked with Groovy 6.0.0, Pekko 2.0.0 and <code>groovy-verify</code> 0.1.0.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/groovy_verify_actors.png" alt="The Pekko bot with its invariant proved, and three compile errors: a weaker invariant, a missing reply, and a mailbox deadlock" width="800"></span></p>
 </div>
 <div class="sect2">
 <h3 id="_the_bots_invariant">The bot&#8217;s invariant</h3>
@@ -694,11 +697,166 @@ an actor stashes but never replays, <code>become</code> phases checked against a
 protocol, and a <code>sendAndGet</code> that waits forever for a reply to a stashed
 message.</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_the_pekko_bots_invariant">The Pekko bot&#8217;s invariant</h3>
 <div class="paragraph">
-<p>Neither check makes <code>groovy-verify</code> a model checker. It doesn&#8217;t explore
-thread schedules, and it relies on the actor runtime to deliver messages one
-at a time. What it does is catch the local mistakes, an invariant a handler
-breaks or a send that can never complete, while you compile.</p>
+<p>The same checks work on the Pekko version. <code>groovy-verify</code> includes a small
+pack of facts about Pekko&#8217;s typed actors, such as <em>a handler is never passed a
+<code>null</code> message</em> and <em>nothing is delivered after <code>Behaviors.stopped()</code>.</em> Each
+fact was measured against Pekko 2.0.0 before the verifier relies on it. Here
+is our Pekko <code>HelloWorldBot</code> with the same invariant. This time nothing is
+removed: the logging and the reply to the greeter stay as they were.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@TypeChecked(extensions = 'verification.VerifyChecker')
+@Invariant({ max &gt;= 1 &amp;&amp; 0 &lt;= greetingCounter &amp;&amp; greetingCounter &lt;= max })
+class HelloWorldBot extends AbstractBehavior&lt;HelloWorld.Greeted&gt; {
+
+    @Requires({ max &gt;= 1 })
+    static Behavior&lt;HelloWorld.Greeted&gt; create(int max) {
+        Behaviors.&lt;HelloWorld.Greeted&gt;setup(context -&gt; new HelloWorldBot(context, max))
+    }
+
+    private final int max
+    private int greetingCounter
+
+    @Requires({ max &gt;= 1 })
+    private HelloWorldBot(ActorContext&lt;HelloWorld.Greeted&gt; context, int max) {
+        super(context)
+        this.max = max
+    }
+
+    @Override
+    Receive&lt;HelloWorld.Greeted&gt; createReceive() {
+        newReceiveBuilder().onMessage(HelloWorld.Greeted.class, this::onGreeted).build()
+    }
+
+    private Behavior&lt;HelloWorld.Greeted&gt; onGreeted(HelloWorld.Greeted message) {
+        greetingCounter++
+        context.log.info "Greeting $greetingCounter for $message.whom"
+        if (greetingCounter == max) {
+            return Behaviors.stopped()
+        } else {
+            message.from.tell(new HelloWorld.Greet(message.whom, context.self))
+            return this
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Apart from the annotations, there is one change, and it comes from Groovy
+rather than the verifier. Under <code>@TypeChecked</code>, Groovy 6.0.0 doesn&#8217;t infer
+the type argument of <code>Behaviors.setup</code> from the lambda, so we write
+<code>Behaviors.&lt;HelloWorld.Greeted&gt;setup(&#8230;&#8203;)</code>. This limitation is being looked at for a future Groovy version.</p>
+</div>
+<div class="paragraph">
+<p>This doesn&#8217;t compile either, and the counterexample is the same one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - Cannot prove class invariant of onGreeted holds at method exit
+    invariant: (((max &gt;= 1) &amp;&amp; (0 &lt;= greetingCounter)) &amp;&amp; (greetingCounter &lt;= max))
+    counterexample: greetingCounter = 1, max = 1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s no <code>fails on:</code> line this time, because there is no call to show:
+<code>onGreeted</code> is private and only Pekko calls it.</p>
+</div>
+<div class="paragraph">
+<p>The fix is different, though. The <code>@ActiveObject</code> bot could be sent a late
+greeting, so it had to ignore one. The Pekko bot can&#8217;t be: once a handler
+returns <code>Behaviors.stopped()</code>, Pekko delivers nothing more to the actor. The
+bot has no public methods or properties, so nothing else can see its state
+after that either. So the counterexample is a state the bot never reaches.
+The weaker invariant is true of every state the bot does reach, but it isn&#8217;t
+<em>inductive</em>: a step that starts where it holds can break it. The property of
+the bot&#8217;s <em>live</em> states, the ones that can still receive a message, is the
+sharper one:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Invariant({ max &gt;= 1 &amp;&amp; 0 &lt;= greetingCounter &amp;&amp; greetingCounter &lt; max })</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With that, the bot compiles unchanged. The counter reaches <code>max</code> only on the
+path that returns <code>Behaviors.stopped()</code>, and no invariant is owed there.
+The pack&#8217;s other facts are at work too. <code>message.whom</code> needs no null check,
+because only Pekko calls <code>onGreeted</code> and it never passes <code>null</code>.
+<code>message.from.tell(&#8230;&#8203;)</code> only queues a message, so it can&#8217;t change the bot&#8217;s
+counter behind the verifier&#8217;s back.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_a_reply_that_never_comes">A reply that never comes</h3>
+<div class="paragraph">
+<p>The greeter&#8217;s <code>Greet</code> message carries an <code>ActorRef</code> called <code>replyTo</code>. That
+is Pekko&#8217;s convention for a request that expects an answer, and
+<code>groovy-verify</code> holds the handler to it: on every path, the handler must
+either reply on <code>replyTo</code> or hand it on to someone who will. Suppose we teach
+the greeter to skip names that are too long:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">    private Behavior&lt;Greet&gt; onGreet(Greet command) {
+        if (command.whom.size() &gt; 40) return this  // too long to greet
+        context.log.info "Hello $command.whom!"
+        command.replyTo.tell(new Greeted(command.whom, context.self))
+        this
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This runs fine until someone says hello with a long name. Then the bot never
+hears back, and its conversation just stops, without an error anywhere. With
+Pekko&#8217;s <code>ask</code> pattern, where the requester waits with a timeout, the same
+mistake shows up later as a <code>TimeoutException</code> in a different actor. With
+<code>groovy-verify</code>, it is a compile error, reported at the early <code>return</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[Static type checking] - onGreet may return without a reply on command.replyTo (pekko pack)
+    counterexample: command.whom = "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghi"</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The counterexample is a name 41 characters long. The solver picks the
+characters, so they look odd, but any name that long takes the path that
+doesn&#8217;t reply.</p>
+</div>
+<div class="paragraph">
+<p>Answering on that path too, even without the greeting, makes it compile:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">        if (command.whom.size() &gt; 40) {  // too long to greet,
+            command.replyTo.tell(new Greeted(command.whom, context.self))  // but still answer
+            return this
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Only paths that can actually run are reported. A path that throws owes no
+reply. The whole sample program verifies too, including <code>HelloWorldMain</code> and
+the <code>Run</code> script that starts the actor system. The verifier lists every Pekko
+fact it relied on, so you can see exactly what was assumed rather than proved.
+Not all of Pekko is covered yet: a handler that uses timers, stashing,
+<code>pipeToSelf</code>, or an <code>ask</code> of its own isn&#8217;t checked, and the compiler says so
+rather than staying silent.</p>
+</div>
+<div class="paragraph">
+<p>None of these checks makes <code>groovy-verify</code> a model checker. It doesn&#8217;t
+explore thread schedules, and it relies on the actor runtime to deliver
+messages one at a time. What it does is catch the local mistakes while you
+compile: an invariant a handler breaks, a reply that never comes, or a send
+that can never complete. It doesn&#8217;t replace the other tools, either. Nothing
+here notices a handler that blocks and starves Pekko&#8217;s dispatcher, or a
+mailbox that fills faster than it drains. Runtime monitoring and load tests
+still find those.</p>
 </div>
 </div>
 </div>
@@ -733,7 +891,8 @@ code at compile time.</p>
 <strong>28/Sep/2024</strong>: Update to Pekko 1.1.1.<br>
 <strong>12/Jul/2026</strong>: Update to Pekko 1.6.0 and Groovy 6; replace the GPars example with the built-in <code>groovy.concurrent</code> actors (GPars retained as a legacy reference).<br>
 <strong>22/Aug/2026</strong>: Update to Pekko 1.7.0 and Groovy 6.0.0-beta-2; add an <code>@ActiveObject</code> version of the example.<br>
-<strong>08/Nov/2026</strong>: Update to Pekko 2.0.0 and Groovy 6.0.0; add a section on compile-time checking of actor code with <code>groovy-verify</code>.</p>
+<strong>08/Nov/2026</strong>: Update to Pekko 2.0.0 and Groovy 6.0.0; add a section on compile-time checking of actor code with <code>groovy-verify</code>.<br>
+<strong>09/Nov/2026</strong>: Add Pekko examples to the compile-time checking section.</p>
 </div>
 </div>
 </div>
