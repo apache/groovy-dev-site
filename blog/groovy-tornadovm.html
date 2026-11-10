@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, tornadovm, gpu, metal, opencl, apple silicon, kernelcontext, ast transformation, mandelbrot'/><meta name='description' content='TornadoVM compiles Java bytecode to GPU kernels. We get Groovy code running on an Apple GPU with it today, and look at what upcoming Groovy fixes add.'/><title>The Apache Groovy programming language - Blogs - Running Groovy on the GPU with TornadoVM</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, tornadovm, gpu, metal, opencl, cuda, apple silicon, intel arc, kernelcontext, ast transformation, mandelbrot'/><meta name='description' content='TornadoVM compiles Java bytecode to GPU kernels. We get Groovy code running on an Apple GPU with it today, and look at what upcoming Groovy fixes add.'/><title>The Apache Groovy programming language - Blogs - Running Groovy on the GPU with TornadoVM</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_setup' class='anchor-link'>Setup</a></li><li><a href='#_a_first_kernel' class='anchor-link'>A first kernel</a></li><li><a href='#_floats_get_in_the_way' class='anchor-link'>Floats get in the way</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_coming_soon_parallel_loops' class='anchor-link'>Coming soon: <code>@Parallel</code> loops</a></li><li><a href='#_caveats' class='anchor-link'>Caveats</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-flink'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Running Groovy on the GPU with TornadoVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_setup' class='anchor-link'>Setup</a></li><li><a href='#_a_first_kernel' class='anchor-link'>A first kernel</a></li><li><a href='#_floats_get_in_the_way' class='anchor-link'>Floats get in the way</a></li><li><a href='#_results' class='anchor-link'>Results</a></li><li><a href='#_coming_soon_parallel_loops' class='anchor-link'>Coming soon: <code>@Parallel</code> loops</a></li><li><a href='#_caveats' class='anchor-link'>Caveats</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li><li><a href='./groovy-flink'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Running Groovy on the GPU with TornadoVM</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -100,7 +100,7 @@ bytecode that is often very close to what javac produces. So, can we use it from
 <p>In an <a href="matrix-calculations-with-groovy-apache.html">earlier post</a> we ran
 matrix multiplication with cuBLAS, which needs an NVIDIA GPU, on a
 Google Colab notebook. TornadoVM has a Metal backend, as well as OpenCL and CUDA,
-so this time we can use the GPU in a Mac directly, and then run the same code on an NVIDIA GPU on Colab.</p>
+so this time we can use the GPU in a Mac directly, and then run the same code on an NVIDIA GPU on Colab and an Intel GPU on Windows.</p>
 </div>
 <div class="paragraph">
 <p>The example code is in the
@@ -460,6 +460,84 @@ slightly from the Apple GPU&#8217;s. That fits the explanation above: each GPU c
 floating-point choices, and the chaotic boundary of the set magnifies them.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_on_an_intel_gpu">On an Intel GPU</h3>
+<div class="paragraph">
+<p>We also tried a Windows 11 laptop with an Intel Core Ultra X7 358H, which has an integrated
+Intel Arc B390 GPU. TornadoVM&#8217;s 8.0.0 release has OpenCL and CUDA SDKs for Windows, and the
+<code>jdk21</code> OpenCL one finds the GPU through Intel&#8217;s OpenCL driver:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; tornado --devices
+Number of Tornado drivers: 1
+Driver: OpenCL
+  Total number of OpenCL devices  : 1
+  Tornado device=0:0  (DEFAULT)
+	OPENCL --  [Intel(R) OpenCL Graphics] -- Intel(R) Arc(TM) B390 GPU
+		Global Memory Size: 33.6 GB
+		Local Memory Size: 128.0 KB
+		Workgroup Dimensions: 3
+		Total Number of Block Threads: [1024]
+		Max WorkGroup Configuration: [1024, 1024, 1024]
+		Device OpenCL C version: OpenCL C 1.2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The only change needed was in the companion repo&#8217;s build, which now runs the launcher as
+<code>tornado.exe</code> on Windows. The Groovy code ran unchanged. The vector add gave the same results as on the Mac,
+and the Mandelbrot timings were:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 60%;">
+<col style="width: 40%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Run</th>
+<th class="tableblock halign-left valign-top">Time per image</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GPU, OpenCL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8.8–9.2 ms</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, parallel stream, 16 cores</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.2–2.5 s</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CPU, single thread</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">29–34 s</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>So this integrated GPU is a little faster than the M4 Pro&#8217;s GPU on this kernel, and
+more than 200 times faster than all 16 CPU cores. As before, treat these numbers as indicative.
+The GPU image differs from the CPU one in 0.28% of its pixels, much as it did on the T4.</p>
+</div>
+<div class="paragraph">
+<p>There is one more difference from the Apple GPU. This GPU accepts double-precision kernels,
+so we could try the Mandelbrot kernel with <code>double</code> instead of <code>float</code>, and without <code>@GpuKernel</code>. TornadoVM
+generated OpenCL code that really is double precision:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="c">#pragma OPENCL EXTENSION cl_khr_fp64 : enable
+...
+  double cx, cy, x, y, xt;
+  cx = -2.0 + (double) px * 3.0 / 3840.0;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>It ran, at about 85 ms per image, nearly ten times slower than the <code>float</code> version.
+So even where double precision is available, the float semantics <code>@GpuKernel</code> gives us
+are worth having.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -512,8 +590,8 @@ tested, where javac jumps on the comparison directly. TornadoVM&#8217;s compiler
 <div class="paragraph">
 <p>All three are fixed for the upcoming Groovy 6.0.1 and 7.0.0-alpha-1 releases. The third makes Groovy&#8217;s bytecode
 smaller and closer to javac&#8217;s in general, not just for TornadoVM. With a Groovy build that includes
-them, the <code>@Parallel</code> versions of both examples run on Metal and OpenCL. They give the same results as
-the <code>KernelContext</code> versions, at 17–21 ms per Mandelbrot image. TornadoVM turns each <code>@Parallel</code>
+them, such as a 6.0.1-SNAPSHOT build, the <code>@Parallel</code> versions of both examples run on Metal and OpenCL. They give the same results as
+the <code>KernelContext</code> versions, at 17–21 ms per Mandelbrot image on the M4 Pro, and 14–17 ms on the Arc B390. TornadoVM turns each <code>@Parallel</code>
 loop into a grid-stride loop, where each GPU thread starts at its own index and steps by the number of threads.
 Here is the vector add:</p>
 </div>
@@ -544,7 +622,8 @@ Mandelbrot kernel no longer goes through an extra <code>0</code>/<code>1</code> 
 <ul>
 <li>
 <p>We used macOS on an M4 Pro, with TornadoVM&#8217;s Metal and OpenCL backends, and a single
-Colab run of the CUDA backend on a T4, all with JDK 21. We haven&#8217;t tried other platforms.</p>
+Colab run of the CUDA backend on a T4, and the OpenCL backend on Windows with an Intel Arc B390,
+all with JDK 21. We haven&#8217;t tried other platforms.</p>
 </li>
 <li>
 <p>Kernels must be <code>@CompileStatic</code>, and should be written in the Java-like subset of Groovy that
@@ -569,7 +648,7 @@ kernels in Groovy today. Use <code>@CompileStatic</code> and the <code>KernelCon
 Groovy&#8217;s habit of widening float arithmetic to double, and moving float literals into fields, is
 harmless on the JVM but not on a GPU without double precision. A small AST transformation
 takes care of both and keeps the kernel code readable. The result renders a 3840&#215;3200 Mandelbrot
-image in well under 20 ms on an Apple M4 Pro GPU, and the same code runs unchanged on an NVIDIA T4 through CUDA.</p>
+image in well under 20 ms on an Apple M4 Pro GPU, and the same code runs unchanged on an NVIDIA T4 through CUDA and on an Intel Arc B390 through OpenCL on Windows.</p>
 </div>
 <div class="paragraph">
 <p>The more Java-like <code>@Parallel</code> loops need three Groovy fixes, coming in Groovy 6.0.1,
