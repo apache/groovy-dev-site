@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
-    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, flink, flink ml, kmeans, clustering, whisky, whiskey, tornadovm, gpu'/><meta name='description' content='We cluster Scotch whiskies with Apache Flink and Groovy: with Flink ML, by hand on Flink 2.3, and with the hot loop on the GPU via TornadoVM.'/><title>The Apache Groovy programming language - Blogs - Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, flink, flink ml, kmeans, clustering, whisky, whiskey, tornadovm, gpu, metal, opencl, intel arc'/><meta name='description' content='We cluster Scotch whiskies with Apache Flink and Groovy: with Flink ML, by hand on Flink 2.3, and with the hot loop on the GPU via TornadoVM.'/><title>The Apache Groovy programming language - Blogs - Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
 </head><body>
     <div id='fork-me'>
         <a href='https://github.com/apache/groovy'>
@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_using_flink_ml' class='anchor-link'>Using Flink ML</a></li><li><a href='#_k_means_by_hand_on_flink_2_3' class='anchor-link'>K-means by hand on Flink 2.3</a></li><li><a href='#_onto_the_gpu' class='anchor-link'>Onto the GPU</a></li><li><a href='#_scaling_up' class='anchor-link'>Scaling up</a></li><li><a href='#_groovy_notes' class='anchor-link'>Groovy notes</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./whisky-revisited'>Whisky flavor profiles revisited</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&reg; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&reg; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-tornadovm'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_whiskey_clustering' class='anchor-link'>Whiskey Clustering</a></li><li><a href='#_using_flink_ml' class='anchor-link'>Using Flink ML</a></li><li><a href='#_k_means_by_hand_on_flink_2_3' class='anchor-link'>K-means by hand on Flink 2.3</a></li><li><a href='#_onto_the_gpu' class='anchor-link'>Onto the GPU</a></li><li><a href='#_scaling_up' class='anchor-link'>Scaling up</a></li><li><a href='#_groovy_notes' class='anchor-link'>Groovy notes</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./groovy-tornadovm'>Running Groovy on the GPU with TornadoVM</a></li><li><a href='./whisky-revisited'>Whisky flavor profiles revisited</a></li><li><a href='./whiskey-clustering-with-groovy-and'>Whiskey Clustering with Groovy&reg; and Apache Ignite</a></li><li><a href='./using-groovy-with-apache-wayang'>Using Groovy&reg; with Apache Wayang and Apache Spark&trade;</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./matrix-calculations-with-groovy-apache'>Matrix calculations with Groovy&reg;, Apache Commons Math, ojAlgo, Nd4j and EJML</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Whiskey Clustering with Groovy&reg; and Apache Flink&reg;</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
 <a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
 <div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
   <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
@@ -575,6 +575,42 @@ a <code>0</code>/<code>1</code> value; <a href="https://issues.apache.org/jira/b
 in the earlier post, makes this more javac-like in the upcoming Groovy 6.0.1.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_on_an_intel_gpu">On an Intel GPU</h3>
+<div class="paragraph">
+<p>As in the <a href="groovy-tornadovm.html">earlier post</a>, we also ran the job on a Windows 11 laptop
+with an Intel Arc B390 integrated GPU, using TornadoVM&#8217;s OpenCL SDK for Windows.
+The Groovy code is unchanged:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>&gt; gradlew :flink:runWhiskeyKMeansGpu -PtornadoFlags=--threadInfo
+Task info: assign1.nearest
+	Backend           : OPENCL
+	Device            : Intel(R) Arc(TM) B390 GPU CL_DEVICE_TYPE_GPU (available)
+	Dims              : 1
+	Global work size  : [86, 1, 1]
+...
+Converged after 8 iterations
+Centroids:
+Cluster 0: 1.93, 2.33, 1.63, 0.41, 0.11, 1.78, 1.44, 1.11, 1.70, 1.96, 1.37, 1.56
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Again, the centroids and clusters are identical to the CPU run&#8217;s.</p>
+</div>
+<div class="paragraph">
+<p>Unlike Apple GPUs, this one supports double precision, so do we still need <code>@GpuKernel</code>?
+Simply removing it doesn&#8217;t work, whatever the GPU: Groovy moves the <code>0.0f</code> literals into a
+<code>$const$0</code> field, and TornadoVM rejects the kernel with <code>TC-E1003</code>. Declaring <code>bestDist</code>, <code>dist</code> and
+<code>diff</code> as <code>double</code> instead, with <code>0.0d</code> literals, does work without <code>@GpuKernel</code>. TornadoVM generates
+double-precision OpenCL code, and the clusters are again identical. But for a million points and
+<em>k</em> = 100, TornadoVM&#8217;s profiler puts the double kernel at about 22 ms, against 1.4 ms for the float one.
+That&#8217;s around 16 times slower, though it hardly changes the iteration time, because, as we&#8217;ll see next,
+the kernel is only a small part of each iteration.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -678,8 +714,8 @@ That is now the part to work on, for example by keeping the profiles in a form t
 <p><strong>Cloning arrays.</strong> Under <code>@CompileStatic</code>, <code>a[0].clone()</code> on a <code>float[][]</code>, or <code>it.clone()</code> in a closure
 over one, compiles to a call of <code>Object.clone()</code> on a reference the JVM verifier only knows is an
 <code>Object</code>, and fails with <code>VerifyError: Bad access to protected data</code>
-(<a href="https://issues.apache.org/jira/browse/GROOVY-12595">GROOVY-12595</a>). Declaring the closure parameter&#8217;s type,
-<code>{ float[] c &#8594; c.clone() }</code>, avoids it.</p>
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12595">GROOVY-12595</a>). With 6.0.0, declaring the closure
+parameter&#8217;s type, <code>{ float[] c &#8594; c.clone() }</code>, avoids it.</p>
 </li>
 <li>
 <p><strong>Spread-dot over large lists.</strong> We first wrote <code>batch*.f1</code> in <code>AssignOperator</code>. That took around
@@ -692,8 +728,11 @@ the interpreter. A plain loop was around ten times faster
 </ul>
 </div>
 <div class="paragraph">
-<p>Both are present in Groovy 6.0.0 and current snapshots. Like GROOVY-12542, the second is a case where
-bytecode closer to javac&#8217;s would make a real difference.</p>
+<p>Both are present in Groovy 6.0.0 and fixed for the upcoming Groovy 6.0.1 and 7.0.0-alpha-1 releases.
+With a current 6.0.1-SNAPSHOT build, both <code>a[0].clone()</code> and <code>it.clone()</code> in a closure work, so the
+closure parameter no longer needs its type. The spread-dot loop no longer blocks on-stack compilation:
+in a standalone test spreading over four million elements, it took 76–127 ms, against 384–590 ms with 6.0.0.
+Like GROOVY-12542, the second is a case where bytecode closer to javac&#8217;s makes a real difference.</p>
 </div>
 </div>
 </div>
@@ -706,7 +745,7 @@ estimators or the DataStream API. Flink ML is a quick way to cluster our whiskie
 tied to Flink 1.x. Writing K-means by hand on Flink 2.3 takes a little more code, and a custom
 operator gives us batches to send to a GPU. With TornadoVM 8.0.0 and the <code>@GpuKernel</code>
 transformation, the assignment step runs as a Groovy kernel on an Apple GPU, unchanged on Metal and OpenCL,
-with results identical to the CPU version.</p>
+and on an Intel GPU through OpenCL on Windows, with results identical to the CPU version.</p>
 </div>
 <div class="paragraph">
 <p>For our 86 whiskies, the GPU makes no difference. At four million, it is many times faster at the arithmetic, but
