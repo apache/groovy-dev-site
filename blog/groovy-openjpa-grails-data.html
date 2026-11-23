@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, openjpa, grails data, gorm, jpa, jakarta persistence, hibernate, where queries, data services'/><meta name='description' content='One set of Groovy entity classes, two persistence stacks: standard JPA with Apache OpenJPA, and finders and data services with Grails Data, no Grails app.'/><title>The Apache Groovy programming language - Blogs - Groovy&reg; Persistence Two Ways: OpenJPA and Grails&reg; Data</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Groovy&reg; Persistence Two Ways: OpenJPA and Grails&reg; Data</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_standard_jpa_with_openjpa' class='anchor-link'>Standard JPA with OpenJPA</a></li><li><a href='#_grails_data_without_grails' class='anchor-link'>Grails Data without Grails</a></li><li><a href='#_mixing_the_two' class='anchor-link'>Mixing the two</a></li><li><a href='#_which_should_you_use' class='anchor-link'>Which should you use?</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Groovy&reg; Persistence Two Ways: OpenJPA and Grails&reg; Data</h1><p><div style='display:flex;padding:0.2ex'><span>Author:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-11-23 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><span class="blue">Apache OpenJPA gives Groovy standard Jakarta Persistence. Grails Data gives it finders, compile-time checked queries, validation and data services, and it doesn&#8217;t need a Grails application. In this post we run the same Groovy entity classes on both, and look at when you might pick each.</span></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/groovy_openjpa_grails_data.png" alt="One set of Groovy entity classes running on both Apache OpenJPA and Grails Data" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p>Many Groovy users know persistence through Grails and GORM, which lives on today as
+<a href="https://grails.apache.org">Apache Grails</a> Data. Others use the
+<a href="https://jakarta.ee/specifications/persistence/">Jakarta Persistence</a> (JPA) API directly.
+These can look like separate worlds, but Grails Data understands JPA annotations,
+so one set of entity classes can serve both.</p>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll use these two classes throughout:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Entity
+class Author {
+    @Id @GeneratedValue
+    Long id
+
+    String name
+
+    @OneToMany(mappedBy = 'author', fetch = FetchType.LAZY)
+    List&lt;Book&gt; books = []
+}
+
+@Entity
+class Book {
+    @Id @GeneratedValue
+    Long id
+
+    String title
+
+    Integer pages
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    Author author
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>They import only <code>jakarta.persistence</code>. We&#8217;ll run them first on
+<a href="https://openjpa.apache.org">Apache OpenJPA</a>, then on Grails Data with Hibernate,
+and finally look at mixing the two.
+The tested code, along with notes on smaller details, is in the
+<a href="https://github.com/paulk-asert/groovy-openjpa">groovy-openjpa</a> companion repo.</p>
+</div>
+<div class="paragraph">
+<p>For the examples we use Groovy 6.0.0 and H2.
+We picked a Grails Data 9 snapshot, for alignment with Groovy 6,
+and an OpenJPA 4.3.0 snapshot, to incorporate a few recent bug fixes.
+Both come from the Apache snapshots repository:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">repositories {
+    mavenCentral()
+    maven {
+        url = 'https://repository.apache.org/content/groups/snapshots'
+        mavenContent { snapshotsOnly() }
+    }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_standard_jpa_with_openjpa">Standard JPA with OpenJPA</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_enhancing_groovy_classes">Enhancing Groovy classes</h3>
+<div class="paragraph">
+<p>OpenJPA tracks changes and lazy loading by enhancing entity bytecode. Its enhancer
+works on class files, so it doesn&#8217;t mind that <code>groovyc</code> produced them.
+We list the classes in <code>META-INF/persistence.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="xml">&lt;persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.2"&gt;
+    &lt;persistence-unit name="library"&gt;
+        &lt;provider&gt;org.apache.openjpa.persistence.PersistenceProviderImpl&lt;/provider&gt;
+        &lt;class&gt;library.Author&lt;/class&gt;
+        &lt;class&gt;library.Book&lt;/class&gt;
+        &lt;exclude-unlisted-classes&gt;true&lt;/exclude-unlisted-classes&gt;
+        &lt;properties&gt;
+            &lt;property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/&gt;
+            &lt;property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:library;DB_CLOSE_DELAY=-1"/&gt;
+            &lt;property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/&gt;
+            &lt;property name="openjpa.RuntimeUnenhancedClasses" value="unsupported"/&gt;
+        &lt;/properties&gt;
+    &lt;/persistence-unit&gt;
+&lt;/persistence&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A small Gradle task then runs the enhancer over the compiler output:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def enhance = tasks.register('enhance', JavaExec) {
+    def classesDir = sourceSets.main.groovy.destinationDirectory
+    dependsOn tasks.named('compileGroovy'), tasks.named('processResources')
+    classpath = files(classesDir, sourceSets.main.output.resourcesDir) +
+        configurations.runtimeClasspath
+    mainClass = 'org.apache.openjpa.enhance.PCEnhancer'
+    args '-d', classesDir.get().asFile.absolutePath
+    outputs.upToDateWhen { false }
+}
+tasks.named('classes') { dependsOn enhance }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lazy loading and dirty tracking then work as they do for Java entities,
+from both dynamic and <code>@CompileStatic</code> Groovy code.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jakarta_persistence_3_2_in_groovy">Jakarta Persistence 3.2 in Groovy</h3>
+<div class="paragraph">
+<p>OpenJPA 4.2 and later implement Jakarta Persistence 3.2, whose new transaction methods
+take functional interfaces, so Groovy closures fit nicely:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var emf = Persistence.createEntityManagerFactory('library')
+
+emf.runInTransaction { em -&gt;
+    var ann = new Author(name: 'Ann')
+    em.persist(ann)
+    em.persist(new Book(title: 'Long', pages: 900, author: ann))
+    em.persist(new Book(title: 'Short', pages: 100, author: ann))
+}
+
+var titles = emf.callInTransaction { em -&gt;
+    em.createQuery('select b.title from Book b where b.pages &gt; :min', String)
+      .setParameter('min', 300)
+      .resultList
+}
+assert titles == ['Long']</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Other 3.2 features work too. A Groovy record can be an embeddable:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Embeddable
+record Price(BigDecimal amount, String currency) {}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>JPQL gains <code>||</code> concatenation, <code>left()</code> and set operations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">em.createQuery('select a.name from Author a union select b.title from Book b', String)
+  .resultList</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_one_groovy_feature_to_avoid">One Groovy feature to avoid</h3>
+<div class="paragraph">
+<p>Groovy&#8217;s direct field access operator, <code>obj.@field</code>, compiles to a plain field access from
+outside the class. An enhanced entity relies on intercepting field access,
+so <code>.@</code> from outside skips it:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">emf.runInTransaction { em -&gt;
+    var author = em.find(Author, id)
+    assert author.@books == null    // lazy field not loaded
+    assert author.books.size() == 2 // normal property access loads it
+
+    author.@name = 'Lost update'    // not tracked, so never written
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use normal property access on managed entities and both problems disappear.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_single_file_scripts">Single-file scripts</h3>
+<div class="paragraph">
+<p><code>PersistenceConfiguration</code>, also new in 3.2, removes the need for <code>persistence.xml</code>, so
+a complete persistent application fits in a script:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@GrabResolver(name = 'apache-snapshots', root = 'https://repository.apache.org/content/groups/snapshots')
+@Grab('org.apache.openjpa:openjpa:4.3.0-SNAPSHOT')
+@Grab('com.h2database:h2:2.5.252')
+import jakarta.persistence.*
+
+@Entity
+class Author {
+    @Id @GeneratedValue Long id
+    String name
+    @OneToMany(mappedBy = 'author') List&lt;Book&gt; books = []
+}
+
+@Entity
+class Book {
+    @Id @GeneratedValue Long id
+    String title
+    @ManyToOne Author author
+}
+
+var config = new PersistenceConfiguration('library')
+    .provider('org.apache.openjpa.persistence.PersistenceProviderImpl')
+    .managedClass(Author)
+    .managedClass(Book)
+    .property(PersistenceConfiguration.JDBC_DRIVER, 'org.h2.Driver')
+    .property(PersistenceConfiguration.JDBC_URL, 'jdbc:h2:mem:library;DB_CLOSE_DELAY=-1')
+    .property('openjpa.jdbc.SynchronizeMappings', 'buildSchema(ForeignKeys=true)')
+    .property('openjpa.Log', 'DefaultLevel=WARN')
+    .property('openjpa.RuntimeUnenhancedClasses', 'supported')
+
+var emf = config.createEntityManagerFactory()
+
+emf.runInTransaction { em -&gt;
+    var dierk = new Author(name: 'Dierk')
+    em.persist(dierk)
+    ['Groovy in Action', 'ReGinA'].each { em.persist(new Book(title: it, author: dierk)) }
+}
+
+var em = emf.createEntityManager()
+em.createQuery('select b from Book b order by b.title', Book).resultList.each {
+    println "$it.title by $it.author.name"
+}
+em.close()
+emf.close()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A script&#8217;s classes are loaded before the enhancer can reach them, so this uses OpenJPA&#8217;s runtime
+subclassing instead. It logs a warning and loads to-one relations eagerly,
+which is a fair trade for a script but not what you&#8217;d want in an application.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_grails_data_without_grails">Grails Data without Grails</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Grails Data is usable as a plain library, with no Grails application and no Spring Boot.
+It needs Java 21 and one dependency, plus a JDBC driver:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">implementation "org.apache.grails.data:grails-data-hibernate7-core:$grailsDataVersion"
+runtimeOnly "com.h2database:h2:$h2Version"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Spring libraries still come along transitively, but there&#8217;s no application framework to
+configure. A single constructor starts the datastore:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var config = ['dataSource.url'     : 'jdbc:h2:mem:library;DB_CLOSE_DELAY=-1',
+              'dataSource.dbCreate': 'create-drop']
+
+new HibernateDatastore(config, Author, Book).withCloseable { datastore -&gt;
+    Book.withTransaction {
+        Book.where { pages &gt; 500 &amp;&amp; author.name == 'Dierk' }.list().each {
+            println "$it.title by $it.author.name"
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Grails Data&#8217;s global AST transform turns any <code>@jakarta.persistence.Entity</code> class into a GORM entity,
+so our <code>Author</code> and <code>Book</code> get the full API without any source changes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">Book.withTransaction {
+    assert Book.count() == 2
+    assert Book.findByTitle('Short').author.name == 'Ann'
+    assert Book.where { pages &gt; 300 &amp;&amp; author.name == 'Ann' }.list()*.title == ['Long']
+}</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_queries_checked_by_the_compiler">Queries checked by the compiler</h3>
+<div class="paragraph">
+<p>The closure passed to <code>where</code> isn&#8217;t run as ordinary code. An AST transform converts it to a
+query at compile time, against the entity&#8217;s properties. Queries compose, and a typo
+fails the build:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">def big = Book.where { pages &gt; 300 }
+def annsBig = big.where { author.name == 'Ann' }
+
+Book.where { pagez &gt; 1 }
+// Cannot query on property "pagez" - no such property on class library.Book exists.</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_idiomatic_domain_classes_and_data_services">Idiomatic domain classes and data services</h3>
+<div class="paragraph">
+<p>If a class doesn&#8217;t need to stay plain JPA, the native GORM style is more compact and adds
+declarative constraints:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@grails.gorm.annotation.Entity
+class Book {
+    String title
+    Integer pages
+    Author author
+    static belongsTo = [author: Author]
+    static constraints = {
+        title blank: false
+        pages min: 1
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Data services go a step further. You declare an interface and the compiler implements it,
+checking finder names and the properties used in <code>@Query</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">@Service(Book)
+interface BookCatalog {
+    List&lt;Book&gt; findByPagesGreaterThan(Integer pages)
+
+    Number countByAuthor(Author author)
+
+    @Query("from ${Book b} where ${b.pages} &gt; $min order by ${b.title}")
+    List&lt;Book&gt; longerThan(Integer min)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We get the implementation from the datastore:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var catalog = datastore.getService(BookCatalog)
+assert catalog.longerThan(300)*.title == ['Long']</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mixing_the_two">Mixing the two</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Since the classes are shared, can GORM&#8217;s queries run on OpenJPA? Grails Data&#8217;s
+<code>JpaQueryBuilder</code> can turn a GORM query into JPQL, so a small bridge
+hands that JPQL to an OpenJPA <code>EntityManager</code>. The bridge is
+<a href="https://github.com/paulk-asert/groovy-openjpa/blob/main/mixed/src/main/groovy/mixed/GormJpql.groovy"><code>GormJpql</code></a>
+in the companion repo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">var big = Book.where { pages &gt; 200 }
+var annsBig = big.where { author.name == 'Ann' }
+
+GormJpql.list(em, annsBig) // managed OpenJPA entities with lazy associations</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The compile-time checking carries over. Comparisons, logic, <code>like</code>, <code>in</code>, ranges, association paths,
+criteria, ordering, projections and pagination all worked in our testing.
+The bridge adjusts the generated JPQL for <code>ilike</code> and <code>distinct</code>, and subqueries
+as comparison values aren&#8217;t supported.</p>
+</div>
+<div class="paragraph">
+<p>This is an experiment rather than a supported path. An in-memory datastore is still needed
+to initialise GORM&#8217;s metadata, <code>Book.where { }.list()</code> itself isn&#8217;t wired to OpenJPA,
+and the builder&#8217;s select path sees little production use.</p>
+</div>
+<div class="paragraph">
+<p>It does hint at what a full OpenJPA provider for Grails Data could look like.
+The Grails Data core is about 75,000 lines of code with a single Hibernate import,
+so its query model is largely independent of the provider. The Hibernate 7 module, at about 37,000 lines
+with 830 Hibernate imports, shows where the real work would be: mapping and session integration.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_which_should_you_use">Which should you use?</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">OpenJPA</th>
+<th class="tableblock halign-left valign-top">Grails Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Standard Jakarta Persistence</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">GORM, on top of Hibernate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Queries</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JPQL strings and Criteria API</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Finders, <code>where</code>, criteria, HQL</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Query checking</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At run time</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">At compile time for <code>where</code> and data services</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Separate, through Bean Validation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Built-in <code>constraints</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Repository layer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Write your own</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Generated data services</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Dependencies</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Small</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Larger, including Spring libraries</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21+</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Choose OpenJPA when you want the standard API, a small footprint, or portability between JPA providers.
+Choose Grails Data when you want more done for you by the compiler, even in an application that
+has nothing else to do with Grails.
+Because a plain <code>@Entity</code> model works with both, it isn&#8217;t a decision you have to get right on day one.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Groovy works well with standard JPA through OpenJPA, with one operator to avoid.
+Grails Data is just as approachable outside Grails, needing little more than a constructor call.
+Starting from one set of entity classes, you can use whichever suits the job.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://openjpa.apache.org">Apache OpenJPA</a></p>
+</li>
+<li>
+<p><a href="https://grails.apache.org">Apache Grails</a>, including Grails Data</p>
+</li>
+<li>
+<p><a href="https://jakarta.ee/specifications/persistence/3.2/">Jakarta Persistence 3.2</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-openjpa">groovy-openjpa</a> companion repo, including
+<a href="https://github.com/paulk-asert/groovy-openjpa/blob/main/NOTES.md">notes</a> on versions and gotchas</p>
+</li>
+<li>
+<p><a href="https://grails.apache.org/guides/gorm-without-grails/4/guide/index.html">Build a Spring Boot application with GORM</a>, an earlier guide to using GORM outside Grails</p>
+</li>
+</ul>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
