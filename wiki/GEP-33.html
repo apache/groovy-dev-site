@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-33</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-33</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_terminology' class='anchor-link'>Terminology</a></li><li><a href='#_design_principles' class='anchor-link'>Design principles</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_work_items' class='anchor-link'>Work items</a></li><li><a href='#where-this-leads' class='anchor-link'>Where this leads</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-33</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-33</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Functional Literals for Type-Parameter Slots</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>2</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Makes a closure, lambda or method reference that statically compiled code stores in a slot declared with a type parameter, such as <code>E</code> of <code>List.add(E)</code>, usable through the functional interface the call binds, without removing anything such a value can do in Groovy 6. Settles GROOVY-10979 and GROOVY-12561. The changes that do remove capabilities, in exchange for Java-aligned native lambdas and inference, are in GEP-34.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-11-25</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-11-25</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+This proposal is a draft for discussion. The behaviour tables come from probes of Groovy 5.1.3, 6.0.0, master
+and open pull requests in November 2026.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Under <code>@CompileStatic</code>, a closure literal passed with <code>list.add { .. }</code> to a <code>List&lt;Supplier&lt;String&gt;&gt;</code> is stored
+as a plain <code>Closure</code>. The type checker accepted the call, but the erasure of <code>E</code> is <code>Object</code>, so nothing
+converts the closure, and a statically compiled <code>list[0].get()</code> fails with ClassCastException. Typed lambdas
+passed the same way behave identically, and method references were rejected.</p>
+</div>
+<div class="paragraph">
+<p>This GEP fixes that by <strong>adding</strong> to what is stored, never by replacing it. A closure literal or lambda written
+for a type-parameter slot that the call binds to a functional interface is compiled as a closure class that
+also implements the interface. The value is still a <code>Closure</code>, with call syntax, <code>delegate</code>, <code>curry</code>, <code>isCase</code>,
+identity and serialization unchanged, and it is now also an instance of the interface. A method reference for
+such a slot is compiled for the interface, as in Groovy 6.0.1. Untyped parameters take their types from the
+interface, so code that failed to compile now compiles.</p>
+</div>
+<div class="paragraph">
+<p>Every change is one of three kinds: code that did not compile now compiles, a value that failed when read
+through the interface now works, or a new warning. Dynamic and <code>@TypeChecked</code> code are unchanged.</p>
+</div>
+<div class="paragraph">
+<p>GEP-34 builds on this to give Groovy Java&#8217;s model, where a lambda is the same native object wherever it is
+written and the target of a call can come from its context. That brings real benefits and real breaking
+changes, and is proposed separately so each can be judged on its own terms. The section
+<a href="#where-this-leads">Where this leads</a> summarises what the two together give.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_the_bug_reports">The bug reports</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10979">GROOVY-10979</a>: a method reference passed for a
+parameter declared with a type parameter, such as the <code>U</code> of <code>Stream.reduce</code>, was rejected with
+"parameter type is not a functional interface", although the call binds <code>U</code> to <code>Function&lt;String, Integer&gt;</code>.</p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-12561">GROOVY-12561</a>: under static compilation,
+<code>list.add { 'x' }</code> on a <code>List&lt;Supplier&lt;String&gt;&gt;</code> stores the closure itself, and <code>list[0].get()</code> fails with
+ClassCastException.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both have the same root: a functional literal flows into a slot whose erasure is not the functional interface
+the program means.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_what_groovy_6_0_0_does">What Groovy 6.0.0 does</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Under <code>@CompileStatic</code>, by where the literal is written (6.0.0)</caption>
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Site</th>
+<th class="tableblock halign-left valign-top">typed closure</th>
+<th class="tableblock halign-left valign-top">typed lambda</th>
+<th class="tableblock halign-left valign-top"><code>String::trim</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>F f = x</code>, <code>take(F f)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">coercion proxy, works</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native lambda, works</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native lambda, works</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list[0] = x</code>, <code>box.value = x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native lambda, works</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native lambda, works</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list.add(x)</code>, <code>list.set(0, x)</code>, <code>map.put('k', x)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list &lt;&lt; x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">method closure, <strong>read through F fails</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cond ? x : y</code> as an argument</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure, <strong>read through F fails</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">method closure, <strong>read through F fails</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">untyped (<code>it</code>, <code>s &#8594; ..</code>) at the sites above</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error when the body needs the type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">n/a</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>"Read through F fails" means a statically compiled read such as <code>list[0].get()</code> throws ClassCastException.
+Dynamic code reading the same value works, because it calls the closure.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_work_since_6_0_0">Work since 6.0.0</h3>
+<div class="paragraph">
+<p>Several pull requests have improved this area since 6.0.0. This GEP keeps most of them, reshapes some and
+defers one direction to GEP-34:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Pull request</th>
+<th class="tableblock halign-left valign-top">What it does</th>
+<th class="tableblock halign-left valign-top">Under this GEP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3089 (GROOVY-10979), merged on master and GROOVY_6_0_X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">method references for type-parameter slots compiled for the interface; an incubating <code>groovy.target.lambda.typearg</code> option to do the same for lambdas; the same for operator operands</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">method reference arguments kept (shipped in 6.0.1 by #3359). The option is removed: lambdas take the representation of section 2 here, and native lambdas move to GEP-34. The operand path for method references moves to GEP-34</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3359, GROOVY_6_0_X</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.0.1 keeps only the method reference arguments of #3089</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept; this GEP is a superset</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3090 (GROOVY-12561), open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure literals for type-parameter slots implement the interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the core of section 2; extended to lambdas</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3340 (GROOVY-12561), open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the same for operands and conditional arguments</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3338 (GROOVY-12824), open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">closure parameter types from the interface for operands, conditional and named arguments of SAM-typed parameters</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3336 (GROOVY-12822), open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a conditional of lambdas or method references assigned to a functional interface no longer throws GroovyCastException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept; an independent bug fix, also a 6.0.x candidate</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3265 (GROOVY-12727), merged on master</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a type argument a lambda or closure needs is taken from the call&#8217;s assignment, return or cast target</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3337 (GROOVY-12823), open</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the same for method references</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kept</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">#3026 (GROOVY-12492), merged on master</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">incubating compile-time adapter instead of a runtime proxy for closures with a declared SAM target</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unaffected; GEP-34 decides how it relates to closure literals at declared targets</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_terminology">Terminology</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Functional literal</dt>
+<dd>
+<p>A closure literal, a lambda expression or a method reference expression, written in the
+source at the position being typed. A method pointer (<code>x.&amp;m</code>) is not a functional literal; it creates a
+<code>MethodClosure</code>.</p>
+</dd>
+<dt class="hdlist1">Functional interface</dt>
+<dd>
+<p>An interface with a single abstract method that is not a public method of <code>Object</code>,
+as in JLS 9.8.</p>
+</dd>
+<dt class="hdlist1">Type-parameter slot</dt>
+<dd>
+<p>A parameter, operand or property whose declared type is a type variable, such as <code>E</code> of
+<code>List.add(E)</code> or <code>T</code> of <code>Box&lt;T&gt;.value</code>. Its erasure is <code>Object</code> or the variable&#8217;s first bound, so the bytecode
+carries no functional interface.</p>
+</dd>
+<dt class="hdlist1">Implementing closure</dt>
+<dd>
+<p>A closure class that also implements a functional interface, whose abstract method
+calls <code>doCall</code>. Written <code>C+I</code> in the tables.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_design_principles">Design principles</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Add, never remove.</strong> A value stored at a site that compiled in Groovy 6 keeps every capability it had, and
+gains the interface. Anything that would remove a capability belongs in GEP-34, where its benefit is argued.</p>
+</li>
+<li>
+<p><strong>Literals only.</strong> Only functional literals change. A value that already exists, such as a variable of type
+<code>Closure</code>, keeps its identity; converting it needs <code>as F</code>.</p>
+</li>
+<li>
+<p><strong>Static compilation only.</strong> Dynamic and <code>@TypeChecked</code> code are compiled as in Groovy 6.</p>
+</li>
+<li>
+<p><strong>No options.</strong> The representation does not depend on a system property or build setting.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_1_where_it_applies">1. Where it applies</h3>
+<div class="paragraph">
+<p>Under <code>@CompileStatic</code>, a functional literal is <strong>targeted</strong> when it is written in one of these positions and
+the type checker binds the slot&#8217;s type variable to a functional interface <code>F</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>an argument for a type-parameter slot (<code>list.add(x)</code>, <code>list.set(0, x)</code>, <code>map.put(k, x)</code>, varargs, constructor
+arguments);</p>
+</li>
+<li>
+<p>the operand of an operator method whose parameter is a type-parameter slot (<code>list &lt;&lt; x</code>, <code>list += x</code>);</p>
+</li>
+<li>
+<p>a subscript or property assignment whose setter or <code>putAt</code> parameter is a type-parameter slot
+(<code>list[0] = x</code>, <code>map['k'] = x</code>, <code>box.value = x</code>, <code>map?['k'] = x</code>), and a named constructor argument
+(<code>new Box&lt;F&gt;(value: x)</code>);</p>
+</li>
+<li>
+<p>a branch of a conditional or elvis expression in any of these positions.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The type variable is bound by the receiver&#8217;s type arguments, explicit type arguments, the other arguments as
+in Groovy 6, and the call&#8217;s assignment, return or cast target as GROOVY-12727 already does. This GEP adds no
+new inference.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_closure_literals_and_lambdas">2. Closure literals and lambdas</h3>
+<div class="paragraph">
+<p>A targeted closure literal or lambda is compiled as an implementing closure:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the closure class declares the interface&#8217;s abstract method with its parameterised signature, calling
+<code>doCall</code>; the verifier adds the erasure bridge;</p>
+</li>
+<li>
+<p>the stored value is the closure, so call syntax, <code>delegate</code>, <code>owner</code>, <code>curry</code>, <code>memoize</code>, <code>isCase</code> (<code>switch</code>
+and <code>grep</code>), <code>equals</code>, identity in <code>contains</code> and <code>remove</code>, and serialization behave as in Groovy 6;</p>
+</li>
+<li>
+<p>statically compiled reads through the interface (<code>list[0].get()</code>) work;</p>
+</li>
+<li>
+<p>untyped parameters take their types from the interface, so <code>list.add { it.trim() }</code> and
+<code>list.add(s &#8594; s.trim())</code> compile on a <code>List&lt;Function&lt;String, String&gt;&gt;</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A lambda at <code>list[0] = λ</code> or <code>box.value = λ</code> is already a native lambda in Groovy 6 and stays one: the rule
+applies only where Groovy 6 compiles the lambda as a closure. A lambda is therefore still a closure at some
+sites and a native lambda at others, as it has been since at least Groovy 5. GEP-34 removes that difference.</p>
+</div>
+<div class="paragraph">
+<p>In dynamic code, a value passed both to <code>m(Closure)</code> and <code>m(F)</code> overloads still selects <code>m(Closure)</code>, and
+<code>collect</code>, <code>switch</code> and <code>grep</code> treat it as the closure it is. This was checked with #3090.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_method_references">3. Method references</h3>
+<div class="paragraph">
+<p>A targeted method reference <strong>argument</strong> is compiled for the interface, as in Groovy 6.0.1, because Groovy 6.0.0
+rejected it. A method reference <strong>operand</strong> (<code>list &lt;&lt; String::trim</code>) and a method reference branch of a
+conditional argument were method closures in Groovy 6.0.0; they stay method closures, with the warning of
+section 4. Making them native lambdas removes dynamic call syntax, so it is in GEP-34.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_4_what_is_not_converted_and_the_warnings">4. What is not converted, and the warnings</h3>
+<div class="paragraph">
+<p>A targeted literal that cannot be compiled as an implementing closure is stored as in Groovy 6, and the type
+checker reports a warning at the <code>LIKELY_ERRORS</code> level: "the closure is stored as a Closure, not as F: a
+statically compiled read through F will fail; write 'as F' to convert it". This happens when:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Closure</code> already implements the interface (<code>Runnable</code>, <code>Callable</code>, <code>GroovyCallable</code>);</p>
+</li>
+<li>
+<p>the abstract method&#8217;s name is a <code>Closure</code> method (<code>call</code>, <code>run</code>, <code>doCall</code>, <code>isCase</code>, &#8230;&#8203;), or a default method
+of the interface clashes with one (<code>getOwner</code>, &#8230;&#8203;);</p>
+</li>
+<li>
+<p>the abstract method has its own type parameters;</p>
+</li>
+<li>
+<p>the target is an abstract class, a trait, a sealed interface, or an interface the closure class cannot
+access;</p>
+</li>
+<li>
+<p>the closure&#8217;s parameters do not fit the abstract method.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A value of type <code>Closure</code>, a method pointer or a call result in a type-parameter slot is stored as it is, with
+the same warning. Inference of the type variable treats such a value as Groovy 6 does, so
+<code>pick(function, closureValue)</code> still infers the common supertype and does not silently choose <code>F</code>.</p>
+</div>
+<div class="paragraph">
+<p>These cases fail today without a word. A warning is chosen over an error because programs that read such
+values only from dynamic code work today, and an error would break them.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_raw_targets">5. Raw targets</h3>
+<div class="paragraph">
+<p>For a raw target (<code>List&lt;Function&gt;</code>), the interface&#8217;s parameters are <code>Object</code>. A typed closure or lambda is
+compiled as an implementing closure of the raw interface with an unchecked conversion of its arguments, as a
+typed closure for a raw <code>Function</code> parameter is today.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All changes are under <code>@CompileStatic</code>, at the sites of section 1, compared with Groovy 6.0.x:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change</th>
+<th class="tableblock halign-left valign-top">Who can notice</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A closure literal or lambda stored at a targeted site is also an instance of the interface</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instanceof F</code> and reflection on the closure class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">addition</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A statically compiled read through the interface works instead of throwing ClassCastException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nobody relies on the exception</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fix</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Untyped closure and lambda parameters at targeted sites take the interface&#8217;s types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a body that compiled with an <code>Object</code> parameter may now select a different overload, such as <code>foo(String)</code> over <code>foo(Object)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile-time typing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list + {..}</code> and <code>list += λ</code> on a <code>List&lt;F&gt;</code> are reported as an ambiguous <code>plus</code> call instead of failing at run time with GroovyCastException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code that compiled but could never run</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">earlier error</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A call through a raw view with the wrong argument type fails in the bridge with ClassCastException instead of in the closure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">tests pinning exception types</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rare</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">New <code>LIKELY_ERRORS</code> warnings (section 4)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">builds that treat warnings as errors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">warning</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code that failed to compile now compiles (untyped literals, conditional and named arguments)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">addition</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Dynamic and <code>@TypeChecked</code> code are unchanged. No public API is added. The incubating
+<code>CompilerConfiguration.LAMBDA_TYPE_ARGUMENT</code> constant added on master by #3089 is removed; it was never
+released.</p>
+</div>
+<div class="sect2">
+<h3 id="_groovy_6">Groovy 6</h3>
+<div class="paragraph">
+<p>Groovy 6.0.1 ships method reference arguments only (#3359). The rest of this GEP is additive and could be
+considered for a later 6.0.x release once it has settled on master; that is left open.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_work_items">Work items</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Rebase #3090, #3338 and #3340 on master and review them as the implementation of sections 1, 2 and 4.</p>
+</li>
+<li>
+<p>Extend the implementing-closure path to lambdas that Groovy 6 compiles as closures.</p>
+</li>
+<li>
+<p>Remove the <code>groovy.target.lambda.typearg</code> option and the method reference operand path from master, matching
+6.0.1.</p>
+</li>
+<li>
+<p>Add the warnings of section 4 and keep Groovy 6 inference for <code>Closure</code> values.</p>
+</li>
+<li>
+<p>Land #3336 independently, and consider it for 6.0.x.</p>
+</li>
+<li>
+<p>A test class over site × literal kind × mode with the expected representation and read behaviour, from the
+probe matrix.</p>
+</li>
+<li>
+<p>Documentation: "Method references for a type parameter" in <code>core-semantics.adoc</code> becomes "Functional
+literals for a type parameter"; a Groovy 7 compatibility entry.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="where-this-leads">Where this leads</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After this GEP, statically compiled code can store closures, lambdas and method references at type-parameter
+slots and read them back through the interface, and nothing that worked in Groovy 6 stops working. Three
+things remain different from Java, and GEP-34 addresses them:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Two representations of a lambda.</strong> <code>list[0] = λ</code> is a native lambda; <code>list.add(λ)</code> is an implementing
+closure. GEP-34 makes every targeted lambda and method reference native, which removes dynamic call syntax
+and other closure behaviour from those values, and restores call syntax with a narrow runtime rule.</p>
+</li>
+<li>
+<p><strong>Inference from context.</strong> <code>Optional.of(String::trim)</code>, <code>Arrays.asList(s &#8594; ..)</code> and nested generic calls
+still need explicit types where javac infers them.</p>
+</li>
+<li>
+<p><strong>Coercion proxies at declared targets.</strong> <code>Supplier&lt;String&gt; s = { 'x' }</code> still creates a proxy, which is not
+the closure and is not callable from dynamic code.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>GEP-34 sets out the benefits of closing these gaps, the breaking changes they need, and how users can find
+affected code.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Native lambdas now (version 1 of this GEP)</dt>
+<dd>
+<p>Gives Java&#8217;s representation at once, but removes call syntax and
+closure behaviour from values that dynamic code reads today, and needs a runtime rule to restore call syntax.
+The adversarial review of version 1 found that rule hard to scope safely. Moved to GEP-34.</p>
+</dd>
+<dt class="hdlist1">Keep the 6.0 option</dt>
+<dd>
+<p>Lambdas native only under a JVM system property, so the representation depends on the
+build. Rejected.</p>
+</dd>
+<dt class="hdlist1">Convert values as well as literals</dt>
+<dd>
+<p>A new proxy per conversion breaks <code>contains</code>, <code>remove</code> and <code>equals</code> on the
+stored value. Rejected.</p>
+</dd>
+<dt class="hdlist1">Coerce at the read site</dt>
+<dd>
+<p>Statically compiled reads would coerce a closure taken from an erased slot. Covers
+values, but allocates per read and changes every generic-return cast. Left open.</p>
+</dd>
+<dt class="hdlist1">A compile error instead of the section 4 warning</dt>
+<dd>
+<p>Sound, but breaks programs that read such values only from
+dynamic code. Could be added later under a strict mode.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_open_questions">Open questions</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Should <code>@TypeChecked</code> code also store implementing closures? It is compiled dynamically, so this needs the
+dynamic closure writer to add the interface.</p>
+</li>
+<li>
+<p>Should the rest of this GEP be offered in a 6.0.x release?</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-10979">GROOVY-10979</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-12561">GROOVY-12561</a>,
+<a href="https://issues.apache.org/jira/browse/GROOVY-12727">GROOVY-12727</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-12822">GROOVY-12822</a>,
+<a href="https://issues.apache.org/jira/browse/GROOVY-12823">GROOVY-12823</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-12824">GROOVY-12824</a></p>
+</li>
+<li>
+<p>Pull requests <a href="https://github.com/apache/groovy/pull/3089">#3089</a>, <a href="https://github.com/apache/groovy/pull/3090">#3090</a>,
+<a href="https://github.com/apache/groovy/pull/3336">#3336</a>, <a href="https://github.com/apache/groovy/pull/3337">#3337</a>,
+<a href="https://github.com/apache/groovy/pull/3338">#3338</a>, <a href="https://github.com/apache/groovy/pull/3340">#3340</a>,
+<a href="https://github.com/apache/groovy/pull/3359">#3359</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-34.html">GEP-34: Native Functional Values</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-27.html">GEP-27: Compact Closure and Lambda Compilation</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">1 (2026-11-25)</dt>
+<dd>
+<p>Initial draft, covering native lambdas, context inference and runtime call syntax.</p>
+</dd>
+<dt class="hdlist1">2 (2026-11-25)</dt>
+<dd>
+<p>Reduced to the additive core after an adversarial review; native lambdas, context inference
+and runtime call syntax moved to GEP-34.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
