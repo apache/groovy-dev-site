@@ -94,7 +94,7 @@ reached Final Release in February 2022. It defines a small API for classifying i
 data) that different machine learning engines can implement.
 An earlier post, <a href="https://groovy.apache.org/blog/classifying-iris-flowers-with-deep">Classifying Iris Flowers with Deep Learning</a>,
 used the <a href="https://www.deepnetts.com/">Deep Netts</a> implementation of JSR 381 on tabular data.
-Geertjan&#8217;s recent foojay article
+Geertjan&#8217;s recent Foojay.io article
 <a href="https://foojay.io/today/jsr-381-java-visual-recognition-api/">JSR 381: Java Visual Recognition API</a>
 looked at the image side of the API from Java. It trained the reference implementation and
 then wrote a second <code>ImageClassifier</code> of its own: images shrunk to 8x8 pixels, stored in
@@ -250,7 +250,7 @@ We&#8217;ll see shortly how far that gets us.</p>
 <h2 id="_engine_2_nearest_neighbours_in_duckdb">Engine 2: nearest neighbours in DuckDB</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The second engine follows the foojay article. Each image is shrunk to 8x8 pixels, giving a vector of
+<p>The second engine follows the Foojay.io article. Each image is shrunk to 8x8 pixels, giving a vector of
 192 RGB values (an <em>embedding</em>), which is another extension method:</p>
 </div>
 <div class="listingblock">
@@ -525,7 +525,7 @@ post would lead us to expect. It didn&#8217;t classify a single apple correctly:
 </tbody>
 </table>
 <div class="paragraph">
-<p>The foojay article says the 8x8 pixel embedding isn&#8217;t suited to telling apart shapes, like cats and dogs.
+<p>The Foojay.io article says the 8x8 pixel embedding isn&#8217;t suited to telling apart shapes, like cats and dogs.
 With easy augmentation, though, it scores 96%: each emoji design is always drawn the same way, so the
 tiny thumbnails differ little between copies. With hard augmentation, the fruit move around, change
 size and turn sideways, and the pixel engine drops to 60%. The CNN holds up much better (90%), since
@@ -615,7 +615,7 @@ and a small CNN handles the harder cases best.</p>
 <p><a href="https://jcp.org/en/jsr/detail?id=381">JSR 381: Visual Recognition (VisRec) Specification</a></p>
 </li>
 <li>
-<p><a href="https://foojay.io/today/jsr-381-java-visual-recognition-api/">JSR 381: Java Visual Recognition API</a> on foojay</p>
+<p><a href="https://foojay.io/today/jsr-381-java-visual-recognition-api/">JSR 381: Java Visual Recognition API</a> on Foojay.io</p>
 </li>
 <li>
 <p><a href="https://github.com/JavaVisRec">JavaVisRec</a> on GitHub: the API, reference implementation and examples</p>
