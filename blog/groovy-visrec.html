@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><meta name='keywords' content='groovy, jsr 381, visrec, visual recognition, image classification, deep netts, duckdb, groovy sql, ginq, emoji, machine learning, deep learning'/><meta name='description' content='Classifying fruit emoji with Groovy and the JSR 381 VisRec API: a closure, a DuckDB nearest-neighbour search and a Deep Netts CNN behind one interface.'/><title>The Apache Groovy programming language - Blogs - Fruity Visual Recognition with Groovy&reg; and JSR 381</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='./'>Blog index</a></li><li class='active'><a href='#doc'>Fruity Visual Recognition with Groovy&reg; and JSR 381</a></li><li><a href='#_introduction' class='anchor-link'>Introduction</a></li><li><a href='#_the_jsr_381_api_in_brief' class='anchor-link'>The JSR 381 API in brief</a></li><li><a href='#_the_data' class='anchor-link'>The data</a></li><li><a href='#_engine_1_a_closure_is_a_classifier' class='anchor-link'>Engine 1: a closure is a classifier</a></li><li><a href='#_engine_2_nearest_neighbours_in_duckdb' class='anchor-link'>Engine 2: nearest neighbours in DuckDB</a></li><li><a href='#_engine_3_a_convolutional_neural_network' class='anchor-link'>Engine 3: a convolutional neural network</a></li><li><a href='#_comparing_the_engines_with_ginq' class='anchor-link'>Comparing the engines with GINQ</a></li><li><a href='#_making_it_harder' class='anchor-link'>Making it harder</a></li><li><a href='#_things_to_know' class='anchor-link'>Things to know</a></li><li><a href='#_conclusion' class='anchor-link'>Conclusion</a></li><li><a href='#_further_information' class='anchor-link'>Further information</a></li></ul><br/><ul class='nav-sidebar'><li style='padding: 0.35em 0.625em; background-color: #eee'><span>Related posts</span></li><li><a href='./classifying-iris-flowers-with-deep'>Classifying Iris Flowers with Deep Learning, Groovy&reg; and GraalVM</a></li><li><a href='./fizzbuzz-with-groovy-and-emojis'>FizzBuzz with Groovy and Emojis</a></li><li><a href='./zipping-collections-with-groovy'>Zipping Collections with Groovy&reg;</a></li><li><a href='./groovy-dauphine'>Processing Results for the Critérium du Dauphiné</a></li><li><a href='./deep-learning-and-eclipse-collections'>Deep Learning and Eclipse Collections</a></li><li><a href='./detecting-objects-with-groovy-the'>Detecting objects with Groovy&reg;, the Deep Java Library (DJL), and Apache MXNet</a></li><li><a href='./fruity-eclipse-grouping'>Grouping Fruity Collections</a></li><li><a href='./set-operations-with-groovy'>Set Operators with Groovy&reg;</a></li><li><a href='./parsing-json-with-groovy'>Parsing JSON with Groovy&reg;</a></li><li><a href='./groovy-list-processing-cheat-sheet'>Groovy&reg; List Processing Cheat Sheet</a></li><li><a href='./groovy-text-similarity'>Groovy&reg; Text Similarity</a></li><li><a href='./fruity-eclipse-collections'>Fruity Eclipse Collections</a></li><li><a href='./groovy-lucene'>Searching with Lucene</a></li><li><a href='./adventures-with-groovyfx'>Adventures with GroovyFX</a></li><li><a href='./comparators-and-sorting-in-groovy'>Comparators and Sorting in Groovy&reg;</a></li><li><a href='./helloworldemoji'>Hello World with Emojis</a></li><li><a href='./seasons-greetings-emoji'>Season&#8217;s Greetings with Emojis</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>Fruity Visual Recognition with Groovy&reg; and JSR 381</h1><p><div style='display:flex;padding:0.2ex'><span>Authors:&nbsp;</span>
+<a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/paulk-asert.png" alt="Paul King"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/paulk-asert/" target="_blank" rel="noopener noreferrer"><span>Paul King</span></a></div>
+  <div><small><i>PMC Member</i></small></div>
+</div>
+        <span style="width:2ex"></span>
+<a href="https://github.com/geertjanw/" target="_blank" rel="noopener noreferrer"><img style="border-radius:50%;height:48px;width:auto" src="img/geertjanw.png" alt="Geertjan Wielenga"></a>
+<div style="display:grid;align-items:center;margin:0.1ex;padding:0ex">
+  <div><a href="https://github.com/geertjanw/" target="_blank" rel="noopener noreferrer"><span>Geertjan Wielenga</span></a></div>
+  <div><small><i>ASF Member</i></small></div>
+</div>
+        </div><br/><span>Published: 2026-11-27 08:00AM</span></p><hr/><div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><span class="blue">JSR 381 gives Java a standard interface for image classifiers. In this post we put three very different engines behind that one interface, a Groovy closure, a nearest-neighbour search in DuckDB and a convolutional neural network, and see which of them can tell an apple from a cherry.</span></p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/visrec_hero.png" alt="A pixelated cherry classified by three engines behind one ImageClassifier: a Groovy closure, a DuckDB nearest-neighbour query and a Deep Netts CNN" width="800"></span></p>
+</div>
+<div class="paragraph">
+<p><a href="https://jcp.org/en/jsr/detail?id=381">JSR 381</a>, the Visual Recognition (VisRec) Specification,
+reached Final Release in February 2022. It defines a small API for classifying images (and other
+data) that different machine learning engines can implement.
+An earlier post, <a href="https://groovy.apache.org/blog/classifying-iris-flowers-with-deep">Classifying Iris Flowers with Deep Learning</a>,
+used the <a href="https://www.deepnetts.com/">Deep Netts</a> implementation of JSR 381 on tabular data.
+Geertjan&#8217;s recent foojay article
+<a href="https://foojay.io/today/jsr-381-java-visual-recognition-api/">JSR 381: Java Visual Recognition API</a>
+looked at the image side of the API from Java. It trained the reference implementation and
+then wrote a second <code>ImageClassifier</code> of its own: images shrunk to 8x8 pixels, stored in
+<a href="https://duckdb.org/">DuckDB</a>, and classified by a nearest-neighbour vote.</p>
+</div>
+<div class="paragraph">
+<p>This post takes up that idea of swapping engines behind one interface. Instead of cats and dogs, or
+sunsets and forests, we&#8217;ll use fruit, as in our earlier
+<a href="https://groovy.apache.org/blog/fruity-eclipse-collections">Fruity Eclipse Collections</a> post. Groovy makes each engine short
+enough that we can afford to compare three of them.</p>
+</div>
+<div class="paragraph">
+<p>All the code is in the <a href="https://github.com/paulk-asert/groovy-visrec">groovy-visrec</a> repo.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_jsr_381_api_in_brief">The JSR 381 API in brief</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The core interface is tiny:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">public interface Classifier&lt;T, R&gt; {
+    R classify(T input) throws ClassificationException;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>ImageClassifier&lt;IMAGE_CLASS&gt;</code> extends it with a result type of <code>Map&lt;String, Float&gt;</code>
+(label to confidence) and adds two convenience overloads, <code>classify(Path)</code> and <code>classify(InputStream)</code>.
+For neural networks there is also a builder, <code>NeuralNetImageClassifier.builder()</code>, which finds an
+implementation using the Java <code>ServiceLoader</code>. The reference implementation is backed by Deep Netts.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_data">The data</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>We&#8217;ll use eight fruit: 🍎 🍒 🍓 🍊 🍑 🍌 🍋 🍇. The first six are the ones from the earlier fruity posts.
+Strawberry and lemon join them because they look a lot like the apple and the banana.
+Each fruit comes in three emoji art styles, which form the first three rows of the image below:
+<a href="https://github.com/googlefonts/noto-emoji">Noto Color Emoji</a> in its 2D and 3D variants,
+and <a href="https://github.com/jdecked/twemoji">Twemoji</a>.</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./img/visrec_fruit_styles.png" alt="Eight fruit emoji in three art styles, followed by easy and hard augmented copies" width="512"></span></p>
+</div>
+<div class="paragraph">
+<p>One image per fruit per style isn&#8217;t much of a training set, so we make more. Each copy gets a random
+pale background, a rotation, a zoom and a shift. The last two rows of the image above show one
+example each of the two levels used later, <em>easy</em> and <em>hard</em>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static final Map&lt;String, Map&lt;String, Range&lt;BigDecimal&gt;&gt;&gt; LEVELS = [
+    easy: [rotate: -30..30, scale: 0.7..1.0, shift: -0.1..0.1],
+    hard: [rotate: -90..90, scale: 0.4..1.0, shift: -0.25..0.25]
+]
+
+static List&lt;Example&gt; augmented(String style, int perFruit, long seed, String level = 'easy') {
+    var rnd = new Random(seed)
+    Closure&lt;Double&gt; between = { double lo, double hi -&gt; lo + rnd.nextDouble() * (hi - lo) }
+    Closure&lt;Double&gt; pick = { Range r -&gt; between(r.from, r.to) }
+    var aug = LEVELS[level]
+    Fruit.values().collectMany { fruit -&gt;
+        var src = source(style, fruit)
+        (1..perFruit).collect {
+            var tint = Color.getHSBColor(rnd.nextFloat(), between(0, 0.15) as float, between(0.85, 1) as float)
+            var img = src.transform(size: SIZE, background: tint,
+                    rotate: pick(aug.rotate), scale: pick(aug.scale),
+                    dx: pick(aug.shift), dy: pick(aug.shift))
+            new Example(fruit, style, img)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>transform</code> isn&#8217;t a JDK method on <code>BufferedImage</code>. It&#8217;s one of a handful of
+<a href="https://groovy-lang.org/metaprogramming.html#_extension_modules">extension methods</a>
+in the repo, which make images feel like Groovy collections. For example, <code>img[x, y]</code> returns a pixel&#8217;s
+<code>Color</code>, and <code>img.pixels</code> returns them all:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static Color getAt(BufferedImage self, List&lt;Integer&gt; xy) {
+    new Color(self.getRGB(xy[0], xy[1]), true)
+}
+
+static List&lt;Color&gt; getPixels(BufferedImage self) {
+    (0..&lt;self.height).collectMany { y -&gt; (0..&lt;self.width).collect { x -&gt; self[x, y] } }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We train on 60 augmented copies of each fruit in two of the styles, and test on 20 fresh copies
+(different random seeds) from both the same two styles and the third, <em>unseen</em> style.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_engine_1_a_closure_is_a_classifier">Engine 1: a closure is a classifier</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>ImageClassifier</code> has three abstract methods, but two of them just load an image and call the first.
+A Groovy trait can supply those two, leaving a single abstract method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">trait FruitClassifier implements ImageClassifier&lt;BufferedImage&gt; {
+    Map&lt;String, Float&gt; classify(Path path) { classify(ImageIO.read(path.toFile())) }
+
+    Map&lt;String, Float&gt; classify(InputStream input) { classify(ImageIO.read(input)) }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Groovy can coerce a closure to any interface or trait with one abstract method. So any closure taking
+a <code>BufferedImage</code> is now a complete JSR 381 classifier.</p>
+</div>
+<div class="paragraph">
+<p>For our first engine, we&#8217;ll use colour alone. We build a 12-bin hue histogram of the pixels that differ from
+the background (the background colour is taken from the corner pixel, <code>self[0, 0]</code>), average the histograms of
+each fruit&#8217;s training images, and pick the fruit whose average is closest:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static FruitClassifier hue(List&lt;Example&gt; training) {
+    Map&lt;Fruit, double[]&gt; centroids = training.groupBy { it.fruit }.collectEntries { fruit, examples -&gt;
+        var hists = examples.collect { hueHistogram(it.image) }
+        [fruit, (0..&lt;BINS).collect { i -&gt; hists.sum { it[i] } / hists.size() } as double[]]
+    }
+    return { BufferedImage img -&gt;
+        var hist = hueHistogram(img)
+        var sims = centroids.collectEntries { fruit, c -&gt; [fruit.label, Math.max(cosine(hist, c), 0)] }
+        double total = sims.values().sum()
+        sims.collectEntries { label, sim -&gt; [label, (sim / total) as float] }
+            .sort { -it.value }
+    } as FruitClassifier
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The fruity Eclipse Collections post found that fruit emoji are mostly the colour you&#8217;d expect.
+We&#8217;ll see shortly how far that gets us.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_engine_2_nearest_neighbours_in_duckdb">Engine 2: nearest neighbours in DuckDB</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The second engine follows the foojay article. Each image is shrunk to 8x8 pixels, giving a vector of
+192 RGB values (an <em>embedding</em>), which is another extension method:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static float[] embedding(BufferedImage self, int size = 8) {
+    self.scaled(size).pixels.collectMany { c -&gt; [c.red, c.green, c.blue].collect { it / 255f } } as float[]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Training stores the embeddings in an in-memory DuckDB table. Classifying finds the five stored images most
+similar to the new one (by cosine similarity) and lets them vote, weighted by similarity.
+With <a href="https://groovy-lang.org/databases.html">Groovy SQL</a>, both the nearest-neighbour search and the vote
+are one query, and the GString placeholders become JDBC bind parameters:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">class DuckDbFruitClassifier implements FruitClassifier, AutoCloseable {
+    private final Sql sql = Sql.newInstance('jdbc:duckdb:')
+    private final Function&lt;BufferedImage, float[]&gt; embedder
+    private final int dims, k
+
+    DuckDbFruitClassifier(int dims, int k = 5, Function&lt;BufferedImage, float[]&gt; embedder) {
+        this.dims = dims
+        this.k = k
+        this.embedder = embedder
+        sql.execute "CREATE TABLE examples(label VARCHAR, embedding FLOAT[$dims])".toString()
+    }
+
+    private vec(BufferedImage image) {
+        sql.connection.createArrayOf('FLOAT', embedder.apply(image) as Float[])
+    }
+
+    void learn(List&lt;Example&gt; examples) {
+        sql.withBatch(100, 'INSERT INTO examples VALUES (?, ?)') { ps -&gt;
+            examples.each { ps.addBatch(it.fruit.label, vec(it.image)) }
+        }
+    }
+
+    Map&lt;String, Float&gt; classify(BufferedImage image) {
+        sql.rows("""
+            WITH nearest AS (
+                SELECT label, 1 - array_cosine_distance(embedding, ${vec(image)}::FLOAT[${Sql.expand(dims)}]) AS sim
+                FROM examples ORDER BY sim DESC LIMIT $k
+            )
+            SELECT label, sum(sim) / (SELECT sum(sim) FROM nearest) AS score
+            FROM nearest GROUP BY label ORDER BY score DESC
+        """).collectEntries { [it.label, it.score as float] }
+    }
+
+    void close() { sql.close() }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The array size can&#8217;t be a bind parameter, so <code>Sql.expand</code> writes it into the SQL text instead.
+The embedder is passed in as a function, so the same class would work with any other way of
+turning images into vectors.</p>
+</div>
+<div class="paragraph">
+<p>If you&#8217;ve read <a href="https://groovy.apache.org/blog/groovy-oracle23ai">Using the Oracle 23ai Vector data type with Groovy</a>,
+this will look familiar: there the nearest-neighbour vote over Iris measurements ran in Oracle using
+<code>vector_distance(features, $features, EUCLIDEAN)</code>. DuckDB&#8217;s <code>array_cosine_distance</code> is the same measure as
+Oracle&#8217;s <code>COSINE</code> option (one minus the cosine similarity). Here it works on fixed-size <code>FLOAT[n]</code> arrays
+rather than a dedicated <code>VECTOR</code> type.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_engine_3_a_convolutional_neural_network">Engine 3: a convolutional neural network</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The third engine is the JSR 381 reference implementation, which trains a Deep Netts convolutional
+neural network. It reads its network architecture from a JSON file, which we write with <code>JsonBuilder</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static File architecture(File dir, int size, int classes) {
+    new File(dir, 'fruit_arch.json').tap {
+        text = new JsonBuilder(
+            networkType: 'CONVOLUTIONAL',
+            lossFunction: 'CROSS_ENTROPY',
+            layers: [
+                [layerType: 'INPUT', width: size, height: size, channels: 3],
+                [layerType: 'CONVOLUTIONAL', filterWidth: 3, filterHeight: 3, channels: 8, stride: 1, activation: 'RELU'],
+                [layerType: 'MAXPOOLING', filterWidth: 2, filterHeight: 2, stride: 2],
+                [layerType: 'CONVOLUTIONAL', filterWidth: 3, filterHeight: 3, channels: 16, stride: 1, activation: 'RELU'],
+                [layerType: 'MAXPOOLING', filterWidth: 2, filterHeight: 2, stride: 2],
+                [layerType: 'FULLY_CONNECTED', width: 32, activation: 'RELU'],
+                [layerType: 'OUTPUT', width: classes, activation: 'SOFTMAX']
+            ]
+        ).toPrettyString()
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The builder takes options like <code>imageWidth(32)</code> and <code>maxEpochs(30)</code>. It&#8217;s tempting to configure it
+inside Groovy&#8217;s <code>with { }</code>, but there&#8217;s a catch: <code>inputClass(&#8230;&#8203;)</code> returns a <em>new</em> builder, so any options
+set on the original one are silently lost. Instead, we pass the options as a map and fold them
+into the builder with <code>inject</code>, which always carries forward whatever builder the previous call returned:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">static ImageClassifier&lt;BufferedImage&gt; neuralNet(Map options) {
+    options.inject(NeuralNetImageClassifier.builder()) { builder, option, value -&gt;
+        builder."$option"(value)
+    }.build()
+}
+
+static ImageClassifier&lt;BufferedImage&gt; cnn(List&lt;Example&gt; training, int epochs = 30) {
+    var dir = new File('build/dataset/train')
+    var index = Dataset.writeIndex(training, dir)
+    neuralNet(
+        inputClass: BufferedImage,
+        imageWidth: Dataset.SIZE,
+        imageHeight: Dataset.SIZE,
+        labelsFile: Path.of(dir.path, 'labels.txt'),
+        trainingFile: index.toPath(),
+        networkArchitecture: architecture(dir, Dataset.SIZE, Fruit.values().size()).toPath(),
+        exportModel: Path.of('build/fruit.dnet'),
+        maxError: 0.02f,
+        maxEpochs: epochs,
+        learningRate: 0.01f
+    )
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The reference implementation reads its training images from disk, so <code>writeIndex</code> saves them
+as PNG files along with an index file of <code>path label</code> lines.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_comparing_the_engines_with_ginq">Comparing the engines with GINQ</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>All three engines are now just <code>ImageClassifier</code> instances, so a single evaluation loop handles them all,
+recording a <code>Prediction</code> for every test image:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">record Prediction(String classifier, String test, Fruit actual, Fruit predicted, float score) {
+    boolean isCorrect() { actual == predicted }
+}
+
+List&lt;Prediction&gt; predictions = factories.collectMany { name, factory -&gt;
+    var classifier = factory()
+    tests.collectMany { test, examples -&gt;
+        examples.collect { ex -&gt;
+            var best = classifier.classify(ex.image).max { it.value }
+            new Prediction(name, test, ex.fruit, Fruit.of(best.key), best.value)
+        }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="https://groovy-lang.org/using-ginq.html">GINQ</a> then summarises the results:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println GQ {
+    from p in predictions
+    groupby p.classifier, p.test
+    orderby p.classifier, p.test
+    select p.classifier, p.test, count() as n, Math.round(avg(p.correct ? 100 : 0)) as accuracy
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Training on augmented Noto 2D and Twemoji images, and testing on those styles plus Noto 3D, gives:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>+------------+--------------+-----+----------+
+| classifier | test         | n   | accuracy |
++------------+--------------+-----+----------+
+| cnn        | seen styles  | 320 | 100      |
+| cnn        | unseen style | 160 | 99       |
+| hue        | seen styles  | 320 | 68       |
+| hue        | unseen style | 160 | 88       |
+| pixel      | seen styles  | 320 | 96       |
+| pixel      | unseen style | 160 | 96       |
++------------+--------------+-----+----------+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Another GINQ query lists the most common mistakes:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">println GQ {
+    from p in predictions
+    where !p.correct
+    groupby p.classifier, p.actual, p.predicted
+    orderby count() in desc
+    limit 8
+    select p.classifier, "$p.actual → $p.predicted" as mistake, count() as n
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>+------------+---------+----+
+| classifier | mistake | n  |
++------------+---------+----+
+| hue        | 🍎 → 🍑 | 40 |
+| hue        | 🍎 → 🍒 | 20 |
+| hue        | 🍓 → 🍒 | 20 |
+| hue        | 🍓 → 🍑 | 20 |
+| hue        | 🍊 → 🍌 | 19 |
+| pixel      | 🍎 → 🍑 | 5  |
+| pixel      | 🍓 → 🍎 | 4  |
+| hue        | 🍋 → 🍊 | 2  |
++------------+---------+----+</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Colour alone mixes up the red fruit, and the orange and the banana, much as the fruity Eclipse Collections
+post would lead us to expect. It didn&#8217;t classify a single apple correctly: each one came out as a peach or a cherry.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_making_it_harder">Making it harder</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Here are the accuracy figures (%) from three setups: the two choices of unseen style with easy augmentation, and hard augmentation:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6666%;">
+<col style="width: 16.6668%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Experiment</th>
+<th class="tableblock halign-left valign-top">Colour</th>
+<th class="tableblock halign-left valign-top">Pixel k-NN</th>
+<th class="tableblock halign-left valign-top">CNN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy augmentation, unseen style Noto 3D</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">88</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">96</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">99</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Easy augmentation, unseen style Twemoji</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">82</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">88</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hard augmentation, seen styles</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">69</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Hard augmentation, unseen style Noto 3D</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">87</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">84</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The foojay article says the 8x8 pixel embedding isn&#8217;t suited to telling apart shapes, like cats and dogs.
+With easy augmentation, though, it scores 96%: each emoji design is always drawn the same way, so the
+tiny thumbnails differ little between copies. With hard augmentation, the fruit move around, change
+size and turn sideways, and the pixel engine drops to 60%. The CNN holds up much better (90%), since
+its convolution and pooling layers respond to local patterns wherever they appear in the image.
+It needed 50 training epochs rather than 30 to get there.</p>
+</div>
+<div class="paragraph">
+<p>Colour behaves in the opposite way. A hue histogram doesn&#8217;t care where the fruit is or which way up
+it is, so the hard augmentation barely affects it, and on the hard unseen Noto 3D test it
+even edges out the CNN. But Twemoji uses a different palette, and colour drops to 30% when that
+style is held out.</p>
+</div>
+<div class="paragraph">
+<p>Changing art style hurts every engine. The CNN&#8217;s one consistent failure with Twemoji held out is the
+strawberry, which it calls an apple in 17 of 20 cases:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>cnn / unseen style
+     🍎  🍒  🍓  🍊  🍑  🍌  🍋  🍇
+ 🍎  19   .   .   .   .   .   .   1
+ 🍒   .  20   .   .   .   .   .   .
+ 🍓  17   .   2   .   .   .   .   1
+ 🍊   .   .   .  20   .   .   .   .
+ 🍑   .   .   .   .  20   .   .   .
+ 🍌   .   .   .   .   .  20   .   .
+ 🍋   .   .   .   .   .   .  20   .
+ 🍇   .   .   .   .   .   .   .  20</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Looking at the third row of the image at the top, the Twemoji strawberry is a plain red shape
+with a green top, not so far from the Noto apples the CNN was trained on.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_things_to_know">Things to know</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A few things to be aware of if you try this yourself:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The reference implementation, <code>javax.visrec:visrec-ri:1.0.3</code>, depends on Deep Netts 1.13.2, which in turn
+brings in log4j 2.7. That version is affected by
+<a href="https://nvd.nist.gov/vuln/detail/CVE-2021-44228">CVE-2021-44228</a>, so the repo&#8217;s build forces a current log4j.</p>
+</li>
+<li>
+<p>The reference implementation and Deep Netts are GPL-licensed with the Classpath Exception.</p>
+</li>
+<li>
+<p>The builder needs a <code>networkArchitecture</code> JSON file, in addition to the options shown in most examples.</p>
+</li>
+<li>
+<p>The DuckDB JDBC driver doesn&#8217;t accept a Java <code>float[]</code> as a parameter. <code>Connection.createArrayOf</code> works.</p>
+</li>
+<li>
+<p>The accuracy query above needs Groovy 6.0.1 or later. In Groovy 6.0.0, giving a GINQ alias to a
+method call that involves an aggregate, such as <code>Math.round(avg(n)) as mean</code>, fails to compile
+(<a href="https://issues.apache.org/jira/browse/GROOVY-12833">GROOVY-12833</a>).
+On 6.0.0, a cast, <code>(avg(n) as int) as mean</code>, works instead.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_conclusion">Conclusion</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>JSR 381 keeps the classifier interface small, and Groovy makes it cheap to put something behind it:
+a closure, a SQL query, or a neural network configured from a map.
+That made it easy to compare the three and to learn something about each: colour is robust to
+position but not to style, pixel thumbnails are better than their reputation when images are consistent,
+and a small CNN handles the harder cases best.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_further_information">Further information</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://jcp.org/en/jsr/detail?id=381">JSR 381: Visual Recognition (VisRec) Specification</a></p>
+</li>
+<li>
+<p><a href="https://foojay.io/today/jsr-381-java-visual-recognition-api/">JSR 381: Java Visual Recognition API</a> on foojay</p>
+</li>
+<li>
+<p><a href="https://github.com/JavaVisRec">JavaVisRec</a> on GitHub: the API, reference implementation and examples</p>
+</li>
+<li>
+<p><a href="https://www.deepnetts.com/">Deep Netts</a></p>
+</li>
+<li>
+<p><a href="https://duckdb.org/">DuckDB</a></p>
+</li>
+<li>
+<p><a href="https://github.com/paulk-asert/groovy-visrec">groovy-visrec</a> companion repo</p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/classifying-iris-flowers-with-deep">Classifying Iris Flowers with Deep Learning, Groovy and GraalVM</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/groovy-oracle23ai">Using the Oracle 23ai Vector data type with Groovy to classify Iris flowers</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/blog/fruity-eclipse-collections">Fruity Eclipse Collections</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Emoji images: <a href="https://github.com/googlefonts/noto-emoji">Noto Emoji</a> (Apache License 2.0) and
+<a href="https://github.com/jdecked/twemoji">Twemoji</a> (graphics licensed under
+<a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0</a>).</p>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>
