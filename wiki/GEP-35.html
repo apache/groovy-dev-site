@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-11-26</p>
+<p>2026-11-27</p>
 </td>
 </tr>
 </table>
@@ -235,6 +235,13 @@ its functional interface. No other object becomes callable.</p>
 </tbody>
 </table>
 <div class="paragraph">
+<p>Groovy 6.0.0 already calls the abstract method in one case: a local variable declared with the functional
+interface type, as in <code>StringTransform t = { .. }</code> for <code>interface StringTransform { String transform(String s) }</code>.
+There <code>t(x)</code> and <code>t.call(x)</code> call <code>transform</code>, converting the argument to the parameter type as a cast does, so
+<code>t.call(1)</code> passes <code>'1'</code>. That is unchanged by this GEP, and it is more lenient than the rule below, which
+rejects <code>1</code> for a <code>String</code> parameter. The table&#8217;s values are held in untyped variables, where 6.0.0 fails.</p>
+</div>
+<div class="paragraph">
 <p>The gap matters more with GEP-34, which makes statically compiled lambdas native at more sites: without this
 GEP, dynamic code would lose <code>f()</code> on every lambda it receives from statically compiled code. It also matters
 on its own, because the values above already exist in Groovy 6 programs, and a user who writes <code>f(x)</code> for a
@@ -265,7 +272,17 @@ this is checked per instance, not per class.</p>
 <div class="paragraph">
 <p>The method called is the single abstract method of the functional interface the value implements, as Groovy&#8217;s
 closure coercion defines it. Arguments are converted as for any dynamic call; if they do not fit, the call
-fails with MissingMethodException as before.</p>
+fails with MissingMethodException as before. So <code>f.call(x)</code> accepts exactly the arguments that a dynamic call of
+the abstract method itself accepts, and no others.</p>
+</div>
+<div class="paragraph">
+<p>The check is against the method&#8217;s erased signature, since that is all the value carries at run time. For a
+non-generic interface such as <code>StringTransform</code>, <code>t.call(1)</code> is a MissingMethodException, as <code>t.transform(1)</code> is.
+For a generic one such as <code>Function&lt;String, String&gt;</code>, the method is <code>apply(Object)</code>, so <code>f.call(1)</code> reaches the
+lambda and fails there with ClassCastException, as <code>f.apply(1)</code> does in Groovy 6 and as a raw call does in Java.
+Only the static type can check the type arguments: statically compiled and type-checked code reject <code>f.call(1)</code>
+for a <code>Function&lt;String, String&gt;</code>, and a value whose static type is the interface cannot be returned or
+assigned as a <code>Closure</code> without a cast.</p>
 </div>
 <div class="paragraph">
 <p>No other object is a functional value. In particular a <code>List</code> (through <code>Iterable</code>), a <code>Thread</code> or a
@@ -501,6 +518,12 @@ method <code>f</code> and no <code>methodMissing</code>? The same rule decides a
 <dd>
 <p>Split from section 4 of GEP-34 version 1, with the implementation&#8217;s rules for properties and
 the measured call costs.</p>
+</dd>
+<dt class="hdlist1">2 (2026-11-27)</dt>
+<dd>
+<p>Section 1 states which arguments <code>f.call(x)</code> accepts, and that a generic interface is checked
+against its erased signature. Motivation notes the typed-local case where Groovy 6.0.0 already calls the
+abstract method.</p>
 </dd>
 </dl>
 </div>

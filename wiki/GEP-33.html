@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>3</p>
+<p>4</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-11-26</p>
+<p>2026-11-27</p>
 </td>
 </tr>
 </table>
@@ -559,6 +559,29 @@ MissingMethodException, as in Groovy 6;</p>
 cast of the wrapper to the interface fails, as in Groovy 6.</p>
 </div>
 <div class="paragraph">
+<p>The interface&#8217;s parameter types are checked where the value is used through the interface, and only there:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>statically compiled and type-checked code see the slot&#8217;s type, <code>F</code>, so a wrong argument to <code>l[0].call(x)</code> or
+to the interface&#8217;s method is a compile error, and <code>l[0]</code> cannot be returned or assigned as a <code>Closure</code>
+without a cast;</p>
+</li>
+<li>
+<p>a call through the interface&#8217;s method, from any code, converts its arguments as a coercion proxy does, so a
+wrong argument is a MissingMethodException. For a generic interface the check is against the erased
+signature, as for a native lambda (GEP-35, section 1);</p>
+</li>
+<li>
+<p>through the <code>Closure</code> view, which dynamic code has and statically compiled code has after a cast, the value
+is a closure like any other: <code>call(Object&#8230;&#8203;)</code> takes any arguments, and a wrong one fails in the closure body,
+with ClassCastException where the parameter type came from the interface. <code>Closure&lt;V&gt;</code> types only the result,
+as in Groovy 6.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Dynamic code does not store implementing closures. The same source compiled dynamically stores a plain closure,
 so <code>f.apply(x)</code> works on a value statically compiled code built and is a MissingMethodException on the value
 dynamic code built, where Groovy 6 failed on both.</p>
@@ -880,6 +903,13 @@ accepting it is sound, as Java accepts an anonymous class there.</p>
 <p>Should <code>@PackedClosures(mode = STRICT)</code> exempt closures that are unpacked only because they implement an
 interface, so that section 6 is not a break?</p>
 </li>
+<li>
+<p>Should a wrong argument through the <code>Closure</code> view of an implementing closure be a MissingMethodException at
+the call, as it is through the interface, rather than a ClassCastException in the body? That needs <code>doCall</code> to
+declare the interface&#8217;s parameter types, which changes how the closure takes arguments in dynamic code. The
+ClassCastException matches what a native lambda for a generic interface does (GEP-35, section 1), so the
+current proposal keeps it.</p>
+</li>
 </ul>
 </div>
 </div>
@@ -938,6 +968,11 @@ their type from an assignment, return, cast or enclosing call (#3337, #3339); ty
 targeted and warn; <code>Runnable</code> and <code>Callable</code> do not warn; packed closures; call syntax for lambdas and proxies
 moved to GEP-35. The interface method calls the closure as a coercion proxy would, so a wrong argument is a
 MissingMethodException as in Groovy 6; read-site coercion is the fallback.</p>
+</dd>
+<dt class="hdlist1">4 (2026-11-27)</dt>
+<dd>
+<p>Section 2.2 states where the interface&#8217;s parameter types are checked: by the static type, by a
+call through the interface, and not through the <code>Closure</code> view; an open question on the <code>Closure</code> view.</p>
 </dd>
 </dl>
 </div>
