@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]--><head>
+    <meta charset='utf-8'/><meta http-equiv='X-UA-Compatible' content='IE=edge'/><meta name='viewport' content='width=device-width, initial-scale=1'/><title>The Apache Groovy programming language - Developer docs - GEP-35</title><link href='../img/favicon.ico' type='image/x-ico' rel='icon'/><script src='../js/matomo.js'></script><link rel='stylesheet' type='text/css' href='../css/bootstrap.css'/><link rel='stylesheet' type='text/css' href='../css/fontawesome.min.css'/><link rel='stylesheet' type='text/css' href='../css/brands.min.css'/><link rel='stylesheet' type='text/css' href='../css/regular.min.css'/><link rel='stylesheet' type='text/css' href='../css/solid.min.css'/><link rel='stylesheet' type='text/css' href='../css/style.css'/><link rel='stylesheet' type='text/css' href='../css/modern-design.css'/><link rel='stylesheet' type='text/css' href='../css/prettify.min.css'/>
+</head><body>
+    <div id='fork-me'>
+        <a href='https://github.com/apache/groovy'>
+            <img style='position: fixed; top: 20px; right: -58px; border: 0; z-index: 100; transform: rotate(45deg);' src='../img/horizontal-github-ribbon.png'/>
+        </a>
+    </div><div id='st-container' class='st-container st-effect-9'>
+        <nav class='st-menu st-effect-9' id='menu-12'>
+            <h2 class='icon icon-lab'>Socialize</h2><ul>
+                <li>
+                    <a href='https://groovy-lang.org/mailing-lists.html' class='icon'><span class='fa fa-classic fa-regular fa-envelope'></span> Discuss on the mailing list</a>
+                </li><li>
+                    <a href='https://x.com/ApacheGroovy' class='icon'><span class='fa fa-brands fa-x-twitter'></span> Groovy on X</a>
+                </li><li>
+                    <a href='https://bsky.app/profile/groovy.apache.org' class='icon'><span class='fa fa-brands fa-bluesky'></span> Groovy on Bluesky</a>
+                </li><li>
+                    <a href='https://fosstodon.org/@ApacheGroovy' class='icon'><span class='fa fa-brands fa-mastodon'></span> Groovy on Mastodon</a>
+                </li><li>
+                    <a href='https://www.linkedin.com/company/106402668/' class='icon'><span class='fa fa-brands fa-linkedin'></span> Groovy on LinkedIn</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/events.html' class='icon'><span class='fa fa-classic fa-solid fa-calendar-days'></span> Events and conferences</a>
+                </li><li>
+                    <a href='https://github.com/apache/groovy' class='icon'><span class='fa fa-brands fa-github'></span> Source code on GitHub</a>
+                </li><li>
+                    <a href='https://groovy-lang.org/reporting-issues.html' class='icon'><span class='fa fa-classic fa-solid fa-bug'></span> Report issues in Jira</a>
+                </li><li>
+                    <a href='http://stackoverflow.com/questions/tagged/groovy' class='icon'><span class='fa fa-brands fa-stack-overflow'></span> Stack Overflow questions</a>
+                </li><li>
+                    <a href='http://www.groovycommunity.com/' class='icon'><span class='fa fa-brands fa-slack'></span> Slack Community</a>
+                </li>
+            </ul>
+        </nav><div class='st-pusher'>
+            <div class='st-content'>
+                <div class='st-content-inner'>
+                    <!--[if lt IE 7]>
+                    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+                <![endif]--><div><div class='navbar navbar-default navbar-static-top' role='navigation'>
+                            <div class='container'>
+                                <div class='navbar-header'>
+                                    <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                                        <span class='sr-only'></span><span class='icon-bar'></span><span class='icon-bar'></span><span class='icon-bar'></span>
+                                    </button><a class='navbar-brand' href='../index.html'>
+                                        <i class='fa-classic fa-solid fa-star'></i> Apache Groovy&reg;
+                                    </a>
+                                </div><div class='navbar-collapse collapse'>
+                                    <ul class='nav navbar-nav navbar-right'>
+                                        <li class=''><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li class=''><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li class=''><a href='/download.html'>Download</a></li><li class=''><a href='https://groovy-lang.org/support.html'>Support</a></li><li class=''><a href='/'>Contribute</a></li><li class=''><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li class=''><a href='/blog'>Blog posts</a></li><li class=''><a href='https://groovy.apache.org/events.html'></a></li><li>
+                                            <a data-effect='st-effect-9' class='st-trigger' href='#'>Socialize</a>
+                                        </li><li class=''>
+                                            <a href='../search.html'>
+                                                <i class='fa-classic fa-solid fa-magnifying-glass'></i>
+                                            </a>
+                                        </li><li>
+                                            <button id='theme-switcher' class='theme-switcher' type='button' title='Toggle theme' aria-label='Toggle theme'>
+                                                <span class='theme-icon'></span>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-35</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_motivation' class='anchor-link'>Motivation</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_compatibility' class='anchor-link'>Compatibility</a></li><li><a href='#_relation_to_gep_33_and_gep_34' class='anchor-link'>Relation to GEP-33 and GEP-34</a></li><li><a href='#_work_items' class='anchor-link'>Work items</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-35</h1><hr/><div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="content">
+<div class="title">Metadata</div>
+<div class="hdlist">
+<table>
+<tr>
+<td class="hdlist1">
+<strong>Number</strong>
+</td>
+<td class="hdlist2">
+<p>GEP-35</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Title</strong>
+</td>
+<td class="hdlist2">
+<p>Call Syntax on Functional Values</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Version</strong>
+</td>
+<td class="hdlist2">
+<p>1</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Type</strong>
+</td>
+<td class="hdlist2">
+<p>Feature</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Status</strong>
+</td>
+<td class="hdlist2">
+<p>Draft</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Target</strong>
+</td>
+<td class="hdlist2">
+<p>Groovy 7.0</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Comment</strong>
+</td>
+<td class="hdlist2">
+<p>Dynamic code can call a native lambda, a method reference or a Groovy coercion proxy with call syntax, <code>f(x)</code> or <code>f.call(x)</code>, as it calls a closure. Split from GEP-34 version 1; independent of GEP-33, and needed by GEP-34.</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Leader</strong>
+</td>
+<td class="hdlist2">
+<p>Paul King</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Created</strong>
+</td>
+<td class="hdlist2">
+<p>2026-11-26</p>
+</td>
+</tr>
+<tr>
+<td class="hdlist1">
+<strong>Last modification</strong>
+</td>
+<td class="hdlist2">
+<p>2026-11-26</p>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<table class="tableblock frame-all grid-all" style="width: 80%;">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<em>WARNING:</em>
+Material on this page is still under development!
+This proposal is a draft for discussion. An implementation passes the core test suite; the behaviour table
+comes from running each example on Groovy 6.0.0 and on that implementation.
+</td>
+</tr>
+</table>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_abstract">Abstract</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Dynamic Groovy calls a closure with <code>f(x)</code>. It cannot call a native lambda that way, although dynamic code
+receives native lambdas today: from <code>Function&lt;String, String&gt; f = s &#8594; s.trim()</code> under <code>@CompileStatic</code>, from
+<code>String::trim</code>, and from Java libraries (<code>Function.identity()</code>, <code>Comparator.comparing(..)</code>). It cannot call a
+Groovy coercion proxy that way either, although <code>{ it } as Function</code> is made from a closure.</p>
+</div>
+<div class="paragraph">
+<p>This GEP lets dynamic code call such a value with <code>f(args)</code> or <code>f.call(args)</code>, invoking the abstract method of
+its functional interface. No other object becomes callable.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_motivation">Motivation</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 42.8571%;">
+<col style="width: 28.5714%;">
+<col style="width: 28.5715%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Dynamic code</th>
+<th class="tableblock halign-left valign-top">Groovy 6.0.0</th>
+<th class="tableblock halign-left valign-top">This GEP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def f = Function.identity(); f(' a ')</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MissingMethodException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>' a '</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f.call(' a ')</code> on the same value</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MissingMethodException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>' a '</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>def p = { it } as Function; p(' a ')</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">MissingMethodException</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>' a '</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a closure, <code>c(' a ')</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>' a '</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>' a '</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>The gap matters more with GEP-34, which makes statically compiled lambdas native at more sites: without this
+GEP, dynamic code would lose <code>f()</code> on every lambda it receives from statically compiled code. It also matters
+on its own, because the values above already exist in Groovy 6 programs, and a user who writes <code>f(x)</code> for a
+<code>Function</code> gets a message about a missing <code>call</code> method.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proposal">Proposal</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_1_which_values">1. Which values</h3>
+<div class="paragraph">
+<p>A <strong>functional value</strong> is:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a native lambda or method reference: an instance of a class created by <code>java.lang.invoke.LambdaMetafactory</code>;</p>
+</li>
+<li>
+<p>a Groovy coercion proxy: a <code>java.lang.reflect.Proxy</code> whose invocation handler is Groovy&#8217;s conversion handler,
+as <code>closure as F</code> and <code>map as F</code> create. A proxy class is shared by every proxy for the same interfaces, so
+this is checked per instance, not per class.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The method called is the single abstract method of the functional interface the value implements, as Groovy&#8217;s
+closure coercion defines it. Arguments are converted as for any dynamic call; if they do not fit, the call
+fails with MissingMethodException as before.</p>
+</div>
+<div class="paragraph">
+<p>No other object is a functional value. In particular a <code>List</code> (through <code>Iterable</code>), a <code>Thread</code> or a
+<code>Runnable</code>, an <code>InputStream</code> (through <code>AutoCloseable</code>), a <code>Comparable</code>, a <code>Comparator</code> that is not a lambda,
+such as <code>Comparator.naturalOrder()</code>, and a user class implementing a functional interface keep throwing
+MissingMethodException. A wider rule, "any object implementing exactly one functional interface", made
+<code>[1, 2]()</code> return an iterator and <code>stream()</code> close the stream, and was rejected for that reason.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_when_the_rule_applies">2. When the rule applies</h3>
+<div class="paragraph">
+<p>The rule runs after everything the MOP already tries, as a last resort before MissingMethodException:
+categories, <code>methodMissing</code>, <code>invokeMethod</code>, a <code>call</code> property, and the outer class of an inner class. So a
+class whose <code>methodMissing</code> answers <code>f(x)</code> keeps answering it, and the message of a MissingMethodException is
+unchanged for every object that is not a functional value.</p>
+</div>
+<div class="paragraph">
+<p>The rule applies to call syntax on the value itself: a local variable or a parameter holding it, as <code>f(x)</code> and
+<code>f.call(x)</code>. It does not apply to <code>obj.f(x)</code> where <code>f</code> is a property of <code>obj</code>
+holding a lambda: that call is a method call on <code>obj</code>, and it fails as it does today, while a property holding
+a closure keeps working as it does today. Extending the rule to properties is an open question.</p>
+</div>
+<div class="paragraph">
+<p>Statically compiled and type-checked code already call a typed functional value through its interface, since
+GROOVY-8466 rewrites call syntax on a receiver whose static type is a functional interface. This GEP changes
+dynamic dispatch only.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_performance">3. Performance</h3>
+<div class="paragraph">
+<p>The call is bound at the call site by the invokedynamic <code>Selector</code>, with guards that keep the binding to the
+receivers it was made for, so a hot <code>f(x)</code> does not take the missing-method path on each call.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Measured with JMH (November 2026)</caption>
+<colgroup>
+<col style="width: 75%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Call</th>
+<th class="tableblock halign-left valign-top">ns per call</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamic <code>f(x)</code> on a native lambda, bound at the call site</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.04</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamic <code>f.apply(x)</code> on the same lambda</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.90</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamic <code>c(x)</code> on a closure</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.98</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dynamic <code>f(x)</code> on a coercion proxy</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.8</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the same call through the meta-class, without the call-site binding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">195</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_4_realms">4. Realms</h3>
+<div class="paragraph">
+<p>Whether the rule depends on the caller&#8217;s realm is decided with GEP-31. Until then it applies to every caller.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_compatibility">Compatibility</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Change</th>
+<th class="tableblock halign-left valign-top">Who can notice</th>
+<th class="tableblock halign-left valign-top">Kind</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>f(x)</code> and <code>f.call(x)</code> on a native lambda, method reference or coercion proxy call it</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code that tells callable values from others by catching MissingMethodException, as in <code>try { value(x); 'callable' } catch (MissingMethodException e) { 'not callable' }</code>, now finds these values callable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">behaviour change</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nothing else becomes callable</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">none</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>No public API is added. The support class is internal.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_relation_to_gep_33_and_gep_34">Relation to GEP-33 and GEP-34</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>GEP-33 does not need this GEP: its implementing closures are closures, and dynamic code calls them as it
+calls any closure.</p>
+</li>
+<li>
+<p>GEP-34 needs this GEP, so that dynamic code keeps <code>f()</code> on the lambdas GEP-34 makes native.</p>
+</li>
+<li>
+<p>Version 1 of GEP-34 proposed closure literals at declared targets as implementing closures, partly so that
+dynamic <code>s()</code> would work on <code>Supplier&lt;String&gt; s = { 'x' }</code>. This GEP makes that call work on the proxy instead,
+without the overload, <code>grep</code> and <code>switch</code> changes, and GEP-34 version 2 defers that part.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This GEP can land before either of them.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_work_items">Work items</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The rule of sections 1 and 2 in the meta-class, after the existing MOP fallbacks.</p>
+</li>
+<li>
+<p>The call-site binding in <code>Selector</code>, with guards that are correct for a proxy class shared by proxies with
+different handlers.</p>
+</li>
+<li>
+<p>Tests: every value kind of section 1, the excluded objects, <code>methodMissing</code> and <code>invokeMethod</code> precedence,
+properties, wrong arity, and the indy and non-indy paths.</p>
+</li>
+<li>
+<p>The JMH benchmark in <code>subprojects/performance</code>.</p>
+</li>
+<li>
+<p>Documentation: call syntax in the closures and the functional-interfaces chapters; a Groovy 7 compatibility
+entry.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_alternatives_considered">Alternatives considered</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Call syntax on every functional-interface instance</dt>
+<dd>
+<p>Simplest to state, but makes ordinary objects callable
+(section 1). Rejected.</p>
+</dd>
+<dt class="hdlist1">Call syntax on every lambda, including through properties</dt>
+<dd>
+<p>Makes <code>obj.f(x)</code> call a lambda-valued property,
+as it calls a closure-valued one, but changes which of a class&#8217;s members answers a call. Left open.</p>
+</dd>
+<dt class="hdlist1">Convert the value to a closure first</dt>
+<dd>
+<p>Allocates per call and loses identity. Rejected.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_open_questions">Open questions</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Should <code>obj.f(x)</code> call a property <code>f</code> holding a functional value, as it does for a closure, when <code>obj</code> has no
+method <code>f</code> and no <code>methodMissing</code>? The same rule decides a map entry: with
+<code>Map&lt;String, Function&lt;String, String&gt;&gt; commands</code>, <code>commands.shout('hi')</code> is a MissingMethodException while
+<code>commands.shout.call('hi')</code> works, and the map-of-commands idiom is common with closures.</p>
+</li>
+<li>
+<p>Should this land in 6.x? It changes only calls that fail today, but code that relies on the failure exists.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references_and_useful_links">References and useful links</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-33.html">GEP-33: Functional Literals for Type-Parameter Slots</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-34.html">GEP-34: Native Functional Values</a></p>
+</li>
+<li>
+<p><a href="https://groovy.apache.org/wiki/GEP-31.html">GEP-31: Realm based dynamic semantics</a></p>
+</li>
+<li>
+<p><a href="https://issues.apache.org/jira/browse/GROOVY-8466">GROOVY-8466</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_update_history">Update history</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">1 (2026-11-26)</dt>
+<dd>
+<p>Split from section 4 of GEP-34 version 1, with the implementation&#8217;s rules for properties and
+the measured call costs.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div></div></div></div></div><footer id='footer'>
+                            <div class='row'>
+                                <div class='colset-3-footer'>
+                                    <div class='col-1'>
+                                        <h1>Groovy</h1><ul>
+                                            <li><a href='https://groovy-lang.org/learn.html'>Learn</a></li><li><a href='https://groovy-lang.org/documentation.html'>Documentation</a></li><li><a href='/download.html'>Download</a></li><li><a href='https://groovy-lang.org/support.html'>Support</a></li><li><a href='/'>Contribute</a></li><li><a href='https://groovy-lang.org/ecosystem.html'>Ecosystem</a></li><li><a href='/blog'>Blog posts</a></li><li><a href='https://groovy.apache.org/events.html'></a></li>
+                                        </ul>
+                                    </div><div class='col-2'>
+                                        <h1>About</h1><ul>
+                                            <li><a href='https://github.com/apache/groovy'>Source code</a></li><li><a href='https://groovy-lang.org/security.html'>Security</a></li><li><a href='https://groovy-lang.org/learn.html#books'>Books</a></li><li><a href='https://groovy-lang.org/thanks.html'>Thanks</a></li><li><a href='http://www.apache.org/foundation/sponsorship.html'>Sponsorship</a></li><li><a href='https://groovy-lang.org/faq.html'>FAQ</a></li><li><a href='https://groovy-lang.org/search.html'>Search</a></li>
+                                        </ul>
+                                    </div><div class='col-3'>
+                                        <h1>Socialize</h1><ul>
+                                            <li><a href='https://groovy-lang.org/mailing-lists.html'>Discuss on the mailing list</a></li><li><a href='https://x.com/ApacheGroovy'>Groovy on X</a></li><li><a href='https://bsky.app/profile/groovy.apache.org'>Groovy on Bluesky</a></li><li><a href='https://fosstodon.org/@ApacheGroovy'>Groovy on Mastodon</a></li><li><a href='https://www.linkedin.com/company/106402668/'>Groovy on LinkedIn</a></li><li><a href='https://groovy-lang.org/events.html'>Events and conferences</a></li><li><a href='https://github.com/apache/groovy'>Source code on GitHub</a></li><li><a href='https://groovy-lang.org/reporting-issues.html'>Report issues in Jira</a></li><li><a href='http://stackoverflow.com/questions/tagged/groovy'>Stack Overflow questions</a></li><li><a href='http://www.groovycommunity.com/'>Slack Community</a></li>
+                                        </ul>
+                                    </div><div class='col-right'>
+                                        <p>
+                                            The Groovy programming language is supported by the <a href='https://www.apache.org'>Apache Software Foundation</a> and the Groovy community.
+                                        </p><div text-align='right'>
+                                            <img src='https://www.apache.org/img/asf_logo.png' title='The Apache Software Foundation' alt='The Apache Software Foundation' style='width:60%'/>
+                                        </div><p>Apache, Apache Groovy, Groovy, and the ASF logo are registered trademarks of The Apache Software Foundation.</p>
+                                    </div>
+                                </div><div class='clearfix'>&copy; 2003-2026 The Apache Software Foundation &mdash; Groovy is Open Source: <a href='https://www.apache.org/licenses/LICENSE-2.0.html'>Apache 2</a> <a href='https://www.apache.org/licenses/'>License</a>, <a href='https://privacy.apache.org/policies/privacy-policy-public.html'>privacy policy</a>.</div>
+                            </div>
+                        </footer></div>
+                </div>
+            </div>
+        </div>
+    </div><script src='../js/vendor/jquery-1.10.2.min.js' defer></script><script src='../js/vendor/classie.js' defer></script><script src='../js/vendor/bootstrap.js' defer></script><script src='../js/vendor/sidebarEffects.js' defer></script><script src='../js/vendor/modernizr-2.6.2.min.js' defer></script><script src='../js/plugins.js' defer></script><script src='../js/theme-switcher.js' defer></script><script src='../js/vendor/prettify.min.js'></script><script>document.addEventListener('DOMContentLoaded',prettyPrint)</script>
+</body></html>

@@ -63,7 +63,7 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-34</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_the_benefit_in_full' class='anchor-link'>The benefit, in full</a></li><li><a href='#_what_it_costs' class='anchor-link'>What it costs</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#risks' class='anchor-link'>Implementation risks</a></li><li><a href='#_work_items' class='anchor-link'>Work items</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-34</h1><hr/><div id="preamble">
+                        </div><div id='content' class='page-1'><div class='row'><div class='row-fluid'><div class='col-lg-3'><ul class='nav-sidebar'><li><a href='geps.html'>GEP index</a></li><li class='active'><a href='#doc'>GEP-34</a></li><li><a href='#_abstract' class='anchor-link'>Abstract</a></li><li><a href='#_the_benefit_in_full' class='anchor-link'>The benefit, in full</a></li><li><a href='#_what_it_costs' class='anchor-link'>What it costs</a></li><li><a href='#_proposal' class='anchor-link'>Proposal</a></li><li><a href='#_implementation' class='anchor-link'>Implementation</a></li><li><a href='#deferred' class='anchor-link'>Deferred: closure literals at declared targets</a></li><li><a href='#_work_items' class='anchor-link'>Work items</a></li><li><a href='#_alternatives_considered' class='anchor-link'>Alternatives considered</a></li><li><a href='#_open_questions' class='anchor-link'>Open questions</a></li><li><a href='#_references_and_useful_links' class='anchor-link'>References and useful links</a></li><li><a href='#_update_history' class='anchor-link'>Update history</a></li></ul></div><div class='col-lg-8 col-lg-pull-0'><a name='doc'></a><h1>GEP-34</h1><hr/><div id="preamble">
 <div class="sectionbody">
 <div class="sidebarblock">
 <div class="content">
@@ -91,7 +91,7 @@
 <strong>Version</strong>
 </td>
 <td class="hdlist2">
-<p>1</p>
+<p>2</p>
 </td>
 </tr>
 <tr>
@@ -123,7 +123,7 @@
 <strong>Comment</strong>
 </td>
 <td class="hdlist2">
-<p>Builds on GEP-33. Under <code>@CompileStatic</code>, a lambda or method reference becomes the same native object wherever it is written, a call&#8217;s target can come from its context as in Java, and closure literals at declared targets keep their identity. Contains the breaking changes GEP-33 avoids, with the benefits they buy and a way to find affected code.</p>
+<p>Builds on GEP-33 and needs GEP-35. Under <code>@CompileStatic</code>, a lambda or method reference becomes the same native object wherever it is written, and a call&#8217;s target can come from its context, as in Java. Contains the breaking changes GEP-33 avoids, with the benefits they buy and a way to find affected code.</p>
 </td>
 </tr>
 <tr>
@@ -147,7 +147,7 @@
 <strong>Last modification</strong>
 </td>
 <td class="hdlist2">
-<p>2026-11-25</p>
+<p>2026-11-26</p>
 </td>
 </tr>
 </table>
@@ -169,8 +169,9 @@
 <td class="content">
 <em>WARNING:</em>
 Material on this page is still under development!
-This proposal is a draft for discussion. A prototype of most sections exists; its review findings are listed
-under <a href="#risks">Implementation risks</a>. Performance claims are expectations until the benchmarks of the work items are run.
+This proposal is a draft for discussion. An implementation of sections 1 to 3 passes the core test suite; the
+behaviour tables come from running each example on Groovy 6.0.0 and on builds of GEP-33 and of this GEP, and
+from javac 17 for the Java comparisons.
 </td>
 </tr>
 </table>
@@ -186,8 +187,8 @@ under <a href="#risks">Implementation risks</a>. Performance claims are expectat
 <div class="paragraph">
 <p>GEP-33 makes functional literals stored at type-parameter slots usable through their interface without
 taking anything away. It leaves Groovy with rules a Java developer would not predict: the same lambda is a
-native lambda at <code>list[0] = λ</code> and a closure at <code>list.add(λ)</code>; <code>Optional.of(String::trim)</code> needs explicit
-types; <code>Supplier&lt;String&gt; s = { 'x' }</code> creates a proxy that is not the closure.</p>
+native lambda at <code>list[0] = λ</code> and a closure at <code>list.add(λ)</code>, and <code>Arrays.asList(s &#8594; ..)</code> or <code>List&lt;F&gt; l = [λ]</code>
+need explicit types.</p>
 </div>
 <div class="paragraph">
 <p>This GEP proposes, for statically compiled code:</p>
@@ -202,17 +203,16 @@ types; <code>Supplier&lt;String&gt; s = { 'x' }</code> creates a proxy that is n
 collection literal), as in JLS 18.5.2;</p>
 </li>
 <li>
-<p>a closure literal with a declared target is an implementing closure rather than a coercion proxy, so it
-keeps its identity and closure behaviour;</p>
-</li>
-<li>
-<p>dynamic code can call a lambda or a Groovy coercion proxy with call syntax.</p>
+<p><code>@TypeChecked</code> code accepts the same literals as statically compiled code and never stores one that a read
+through the interface would reject.</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>The first item removes closure behaviour from values that dynamic code may read today. The rest of this GEP
-argues why that is worth it, lists every visible change, and gives users a way to find the code it affects.</p>
+<p>The first item removes closure behaviour from lambdas and method references that dynamic code may read today.
+It depends on GEP-35, which lets dynamic code call a native lambda with <code>f(x)</code>; without it, dynamic code would
+lose call syntax on every such value. Closure literals are not affected: a closure literal stays a closure
+everywhere.</p>
 </div>
 </div>
 </div>
@@ -221,9 +221,6 @@ argues why that is worth it, lists every visible change, and gives users a way t
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_one_representation_the_one_java_uses">One representation, the one Java uses</h3>
-<div class="paragraph">
-<p>After GEP-33, the representation of a lambda depends on where it is written:</p>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -285,12 +282,18 @@ argues why that is worth it, lists every visible change, and gives users a way t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>F f = id(id(λ))</code>, <code>pick(fv, String::strip)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">method references only (GEP-33 section 3)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>List&lt;F&gt; l = [λ]</code>, <code>Map&lt;String, F&gt; m = [k: λ]</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>list += λ</code> on a <code>List&lt;F&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">run-time failure (6.0.0), compile error (6.0.1)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">compile error</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">native</p></td>
 </tr>
@@ -304,9 +307,8 @@ which method a lambda is passed to, nor whether that method&#8217;s parameter is
 <div class="sect2">
 <h3 id="_java_code_moves_to_groovy_unchanged">Java code moves to Groovy unchanged</h3>
 <div class="paragraph">
-<p>The rows marked "compile error" above are ordinary Java. Java developers writing Groovy, and code ported
-from Java, currently hit them as type-checking errors with messages about type parameters that are not
-functional interfaces. Under this GEP they compile, with the same meaning as in Java.</p>
+<p>The rows marked "compile error" above are ordinary Java. Under this GEP they compile, with the same meaning as
+in Java. The cases Java rejects are rejected too (section 1), with the same reason.</p>
 </div>
 </div>
 <div class="sect2">
@@ -315,29 +317,9 @@ functional interfaces. Under this GEP they compile, with the same meaning as in 
 <p>A native lambda is created by <code>LambdaMetafactory</code>: no generated closure class per literal, no <code>Closure</code>
 object with its owner, delegate and resolve strategy, and no reflective <code>doCall</code> lookup on call. A
 non-capturing lambda can be hoisted by GEP-27 to a shared instance with no allocation at all. An
-implementing closure, which GEP-33 uses, keeps all of those costs. Every site in the table that moves from
-closure to native gets the cheaper form.</p>
-</div>
-<div class="paragraph">
-<p>Native lambdas also need no proxy or reflection metadata in a GraalVM native image, where a coercion proxy
-must be registered for each interface.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_identity_at_declared_targets">Identity at declared targets</h3>
-<div class="paragraph">
-<p><code>Supplier&lt;String&gt; s = { 'x' }</code> today creates a <code>java.lang.reflect.Proxy</code> around the closure. The proxy is not
-the closure: dynamic <code>s()</code> fails, <code>delegate</code> cannot be set through it, and converting the same closure twice
-gives two unequal objects. Under this GEP the literal is compiled as an implementing closure, the same as at
-type-parameter slots after GEP-33: one object, both a <code>Closure</code> and a <code>Supplier</code>.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_dynamic_code_can_call_functional_values">Dynamic code can call functional values</h3>
-<div class="paragraph">
-<p>Dynamic code can already receive native lambdas today, for example from <code>F f = λ</code> or from Java libraries,
-and cannot call them with <code>f()</code>. Coercion proxies from <code>as F</code> cannot be called that way either. Section 4
-makes <code>f(x)</code> and <code>f.call(x)</code> work for both, whether or not the rest of this GEP is accepted.</p>
+implementing closure, which GEP-33 uses, keeps all of those costs. Native lambdas also need no proxy or
+reflection metadata in a GraalVM native image. Creation cost and native-image behaviour are still to be
+measured (work items).</p>
 </div>
 </div>
 <div class="sect2">
@@ -355,7 +337,7 @@ makes <code>f(x)</code> and <code>f.call(x)</code> work for both, whether or not
 <div class="sect2">
 <h3 id="_breaking_changes">Breaking changes</h3>
 <div class="paragraph">
-<p>Compared with GEP-33, under <code>@CompileStatic</code>:</p>
+<p>Compared with GEP-33, under <code>@CompileStatic</code>. The dynamic version of every example is unchanged.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -373,43 +355,52 @@ makes <code>f(x)</code> and <code>f.call(x)</code> work for both, whether or not
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A lambda at a type-parameter slot, operand or conditional argument is native instead of an implementing closure</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">from dynamic code: <code>delegate</code>, <code>curry</code>, <code>memoize</code>, <code>&gt;&gt;</code>, <code>isCase</code> (<code>switch</code>, <code>grep</code> treat it as a value), <code>Closure</code>-only DGM methods, serialization unless the target is <code>Serializable</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">call syntax (section 4), the interface method, identity</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">from dynamic code: <code>instanceof Closure</code>, <code>delegate</code>, <code>curry</code>, <code>memoize</code>, <code>&gt;&gt;</code>, <code>Closure</code>-only DGM methods, serialization unless the target is <code>Serializable</code>. <code>grep</code> and <code>switch</code> use <code>equals</code>, so <code>grep</code> returns <code>[]</code> and <code>switch</code> takes the default branch, <strong>with no error</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">call syntax (GEP-35), the interface method, identity</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>list &lt;&lt; String::trim</code> stores a native lambda, not a method closure</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">the same, from dynamic code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">call syntax, the interface method</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the same, plus <code>.method</code> and the other <code>MethodClosure</code> properties</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">call syntax (GEP-35), the interface method</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A closure literal at a declared SAM target is an implementing closure, not a proxy</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>instanceof Proxy</code>; code that relied on <code>s.is(t)</code> being false for two conversions</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">everything the proxy did, plus closure behaviour</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A lambda in a closure that calls a method of the closure&#8217;s delegate, such as <code>list.with { add) &#8594; size( }</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error: a native lambda cannot reach the delegate</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">write a closure, or name the receiver</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Inference from context can choose a different overload of the enclosing call than Groovy 6</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">rare; listed by the migration report</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A lambda whose parameters do not fit the interface, a lambda for a method with its own type parameters, a lambda for an abstract class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error, as in javac. Groovy 6 stores a closure that no read through the interface could use</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a method reference, or a closure with <code>as</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Call syntax on lambdas and coercion proxies (section 4)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">code that caught MissingMethodException from <code>f()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A lambda for a slot whose type is a type variable of the enclosing method or class</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">compile error, as in javac ("T is not a functional interface"). Groovy 6 stores a closure that is not a <code>T</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">a closure literal, which GEP-33 warns about</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Inference from context (section 2)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">code whose overload or inferred type changes; listed by the report mode</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">—</p></td>
 </tr>
 </tbody>
 </table>
 <div class="paragraph">
-<p>Only <strong>lambdas and method references</strong> lose closure behaviour. A closure literal stays a closure everywhere.
-That gives users a simple rule for code that needs closure behaviour: write a closure literal.</p>
+<p>Only <strong>lambdas and method references</strong> lose closure behaviour. A closure literal stays a closure everywhere,
+which gives users a simple rule: where dynamic code needs closure behaviour, write a closure literal.</p>
+</div>
+<div class="paragraph">
+<p>Under <code>@TypeChecked</code>, see section 3.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_finding_affected_code">Finding affected code</h3>
 <div class="paragraph">
-<p>The compiler gets a report mode, <code>-Dgroovy.target.functional.report=true</code>, that changes nothing about the
-generated code. It lists every lambda or method reference whose representation differs from Groovy 6,
-with its location and the site kind, and every call whose overload choice or inferred type differs because
-of context inference. It is meant to be run once over a code base before upgrading, and by IDEs.</p>
+<p>The compiler has a report mode, <code>-Dgroovy.target.functional.report=true</code>
+(<code>CompilerConfiguration.FUNCTIONAL_REPORT</code>), that changes nothing about the generated code. It lists every
+lambda or method reference whose representation differs from Groovy 6, with its location and the site kind,
+and every call whose overload choice or inferred type differs because of context inference. It is meant to be
+run once over a code base before upgrading, and by IDEs.</p>
 </div>
 <div class="paragraph">
 <p>The usual fix for a reported site is to write the literal as a closure (<code>{ s &#8594; s.trim() }</code> instead of
@@ -422,7 +413,7 @@ of context inference. It is meant to be run once over a code base before upgradi
 <h2 id="_proposal">Proposal</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_1_native_lambdas_and_method_references_proposed">1. Native lambdas and method references (proposed)</h3>
+<h3 id="_1_native_lambdas_and_method_references">1. Native lambdas and method references</h3>
 <div class="paragraph">
 <p>Under <code>@CompileStatic</code>, every lambda or method reference with a functional-interface target is compiled as a
 native lambda, at every site of GEP-33 section 1, in collection literals with a declared element type, and
@@ -440,29 +431,40 @@ interface makes the target invalid, as in Java.</p>
 (JLS 15.27.3).</p>
 </li>
 <li>
+<p>A target that is a type variable of the enclosing method or class, a capture of a wildcard, or a class is not
+a functional interface: a lambda for it is a compile error, as in Java.</p>
+</li>
+<li>
 <p>A raw target (<code>List&lt;Function&gt;</code>) has <code>Object</code> parameters: a typed lambda is rejected, as in Java.</p>
 </li>
 <li>
-<p>A targeted literal that cannot be compiled for its target is a compile error, not a silent closure.</p>
+<p>A targeted lambda that cannot be compiled for its target is a compile error, not a silent closure. A
+method reference whose target cannot be found is rejected as in Groovy 6.</p>
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>The generic interface whose erased bridge collides with <code>Closure.call</code>, and the interface whose abstract method
+shares a <code>Closure</code> method&#8217;s parameters, which GEP-33 cannot implement with a closure (its section 4), are no
+problem for a native lambda, which does not extend <code>Closure</code>.</p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_2_inference_from_context_proposed">2. Inference from context (proposed)</h3>
+<h3 id="_2_inference_from_context">2. Inference from context</h3>
 <div class="paragraph">
-<p>The type arguments of a generic call are inferred from its arguments and its context together, following
-JLS 18.5.2:</p>
+<p>The type arguments of a generic call are inferred from its arguments and its context together:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>the context is an assignment, a return, a cast, a conditional branch, an element of a collection literal,
-or a parameter of an enclosing call;</p>
+or a parameter of an enclosing call, through any number of nested calls (<code>take(id(id(λ)))</code>);</p>
 </li>
 <li>
-<p>while the enclosing call&#8217;s overload is chosen, a functional literal whose target depends on that choice is
-<strong>not pertinent to applicability</strong> (JLS 15.12.2.2), rather than standing in as <code>Closure</code>;</p>
+<p>the overload of the enclosing call is chosen as in Groovy 6. A functional literal whose target depends on
+that choice is then typed for the chosen parameter. Choosing the overload with the literal "not pertinent to
+applicability" (JLS 15.12.2.2) was tried and rejected: it changes which overload Groovy 6 chooses for
+programs such as <code>println(K.id { 1 })</code>;</p>
 </li>
 <li>
 <p>a value of type <code>Closure</code> is a witness like any other value, so <code>pick(function, closureValue)</code> infers the
@@ -474,109 +476,105 @@ common supertype as in Groovy 6 and is not silently treated as <code>F</code>;</
 </ul>
 </div>
 <div class="paragraph">
-<p>Groovy 6 and GEP-33 do part of this, from the declaration a call is assigned to (GROOVY-12727). This section
-replaces that special case with one rule, including nested calls such as <code>take(id(id(λ)))</code>.</p>
+<p>GROOVY-12727 (assignment, return and cast targets for lambdas and closures) and GEP-33 section 3 (the same, and
+enclosing calls, for method references; #3337 and #3339) are special cases of this rule. The implementation
+must replace their mechanism with the one protocol of this section, not keep two.</p>
 </div>
 <div class="paragraph">
-<p>The specification must state what type-checking extensions see. The prototype checks a pending inner call
-twice, so <code>beforeMethodCall</code> and <code>onMethodSelection</code> fire twice, the first time with placeholder types. The
-proposal is that the first check is internal and does not reach extensions.</p>
+<p>The implementation checks a call whose arguments are pending, and resumes it when the enclosing call is chosen.
+Type-checking extensions must see each call once: the provisional check must not reach <code>beforeMethodCall</code> or
+<code>onMethodSelection</code>. This is a requirement still to be tested.</p>
+</div>
+<div class="paragraph">
+<p>Known gaps in the implementation, to close or to list as limits: an element of a list literal passed as an
+argument (<code>take([λ])</code>), a diamond constructor (<code>new Box&lt;&gt;(λ)</code>), and nested shapes of these.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_3_closure_literals_at_declared_targets_proposed">3. Closure literals at declared targets (proposed)</h3>
+<h3 id="_3_type_checked_code">3. Type-checked code</h3>
 <div class="paragraph">
-<p>A closure literal with a declared functional-interface target (<code>Supplier&lt;String&gt; s = { 'x' }</code>,
-<code>take { .. }</code> for an <code>F</code> parameter) is compiled as an implementing closure, as GEP-33 does at type-parameter
-slots. The exclusions of GEP-33 section 4 still apply; such a literal keeps today&#8217;s proxy.</p>
-</div>
-<div class="paragraph">
-<p>The incubating compile-time adapter of GROOVY-12492 (<code>groovy.target.closure.sam</code>) solves a related problem,
-avoiding the run-time proxy, with an object that is not a <code>Closure</code>. The two must be reconciled: either the
-adapter becomes the fallback for the exclusions, or this section replaces it.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_4_call_syntax_on_functional_values_proposed">4. Call syntax on functional values (proposed)</h3>
-<div class="paragraph">
-<p>In dynamic code, <code>f(args)</code> and <code>f.call(args)</code> on a value that has no <code>call</code> method invoke the abstract method
-of its functional interface when the value is:</p>
+<p><code>@TypeChecked</code> code is compiled dynamically, so it cannot store native lambdas. At the sites of section 1:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>a native lambda or method reference (a class created by <code>LambdaMetafactory</code>), or</p>
+<p>an untyped closure literal or lambda takes its parameter types from the interface, as under <code>@CompileStatic</code>,
+so <code>list.add { it.toUpperCase() }</code> compiles on a <code>List&lt;Function&lt;String, String&gt;&gt;</code>, as dynamic Groovy already
+runs it;</p>
 </li>
 <li>
-<p>a Groovy coercion proxy (a <code>java.lang.reflect.Proxy</code> whose handler is Groovy&#8217;s closure or map conversion
-handler, checked per instance, not per class).</p>
+<p>a closure literal or lambda is stored as an implementing closure (GEP-33 section 2), which dynamic code
+handles like any closure;</p>
+</li>
+<li>
+<p>a method reference at a type-parameter slot stays a method closure, with GEP-33&#8217;s warning, at every site where
+Groovy 6 compiled it. Version 1 of this GEP made <code>list &lt;&lt; String::trim</code> and <code>list[0] = String::trim</code> a
+compile error under <code>@TypeChecked</code>; they work in Groovy 6, so that is withdrawn.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p>No other object gets call syntax. In particular a <code>List</code> (through <code>Iterable</code>), a <code>Thread</code> or a <code>Runnable</code>,
-an <code>InputStream</code> (through <code>AutoCloseable</code>), a <code>Comparable</code> and a user class implementing a functional
-interface keep throwing MissingMethodException, as today. A prototype of a wider rule, "any object
-implementing exactly one functional interface", made <code>[1, 2]()</code> return an iterator and <code>stream()</code> close the
-stream, and was rejected for that reason.</p>
-</div>
-<div class="paragraph">
-<p>The rule runs after everything the MOP already tries: categories, <code>methodMissing</code>, <code>invokeMethod</code>, a <code>call</code>
-property, and the outer class of an inner class. The message of a MissingMethodException is unchanged for all
-other objects.</p>
-</div>
-<div class="paragraph">
-<p>The call should be bound at the call site by the indy <code>Selector</code> with a class guard, so that a hot <code>f(x)</code> on a
-lambda does not take the missing-method path on every call.</p>
-</div>
-<div class="paragraph">
-<p>Whether section 4 depends on the caller&#8217;s realm is decided with GEP-31.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_5_type_checked_code_proposed">5. Type-checked code (proposed)</h3>
-<div class="paragraph">
-<p><code>@TypeChecked</code> code is compiled dynamically. Its closure literals and lambdas at targeted sites become
-implementing closures, which dynamic code handles like any closure. A method reference at a type-parameter
-slot stays a compile error under <code>@TypeChecked</code>, because it cannot become a native lambda there.</p>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="risks">Implementation risks</h2>
+<h2 id="_implementation">Implementation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>A prototype of sections 1, 2 and 4 (November 2026) passed the full core test suite, but an adversarial review
-found problems that the specification above already answers and the implementation must fix:</p>
+<p>An implementation of sections 1 to 3 (November 2026), on top of GEP-33 and GEP-35, passes the full core test
+suite. Closure literals at declared targets are proxies again (<a href="#deferred">Deferred: closure literals at declared targets</a>), and section 2&#8217;s protocol is the only
+inference mechanism: it replaces the code paths of #3337 and #3339, whose tests pass unchanged, and type-checking
+extensions see each call once. Still open:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>a deferred argument of a call that takes the map-constructor path was never type checked, giving a <code>BUG!</code>
-in class generation for <code>new Foo(Map.of('name', { &#8594; s.length() + 1 }))</code>;</p>
+<p>the gaps of section 2;</p>
 </li>
 <li>
-<p><code>@TypeChecked</code> code accepted programs that then failed with MissingMethodException;</p>
+<p>a subscript or operand on a <code>List&lt;?&gt;</code> (<code>l[0] = (s &#8594; s)</code>, <code>l &lt;&lt; (s &#8594; s)</code>) still stores a closure, as in Groovy 6,
+while an argument is rejected;</p>
 </li>
 <li>
-<p>the overload of the enclosing call was chosen with <code>Closure</code> placeholders;</p>
-</li>
-<li>
-<p>an error reported during the provisional check of an inner call could hide the real one;</p>
-</li>
-<li>
-<p>node metadata from the first check (delegation metadata, the call target type) was not always cleared;</p>
-</li>
-<li>
-<p>the wide call-syntax rule of section 4.</p>
+<p>a closure literal assigned by subscript to a type-variable slot (<code>l[0] = { .. }</code> on a <code>List&lt;T&gt;</code>) gets no warning.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>Section 2 is the expensive part: it adds state to <code>StaticTypeCheckingVisitor</code> that is set and cleared across
-nested visits. It needs one documented protocol for deferred arguments and the probe matrix as a permanent
-test class.</p>
+<p>Two bugs found on the way are older than this GEP: a lambda whose parameter is declared with a superinterface of
+the interface&#8217;s parameter type, <code>(CharSequence s) &#8594; ..</code> for a <code>Function&lt;String, String&gt;</code>, fails in the lambda
+writer in Groovy 6.0.0 too (fixed in the implementation); and an <code>ExpandoMetaClass</code> that adds a method to an
+interface after a class implementing it has its own <code>ExpandoMetaClass</code> fails with NullPointerException in
+<code>MetaMethodIndex</code> on Groovy 5.1.3 and later, with no closure involved (to be reported separately).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deferred">Deferred: closure literals at declared targets</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Version 1 proposed that a closure literal with a declared functional-interface target
+(<code>Function&lt;String, String&gt; f = { .. }</code>, <code>take { .. }</code> for an <code>F</code> parameter) be an implementing closure instead
+of a coercion proxy, for its identity and closure behaviour. Running the examples showed that it changes, with
+no error, what dynamic code does with such values:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>overload choice: <code>which(f)</code> with overloads <code>which(Closure)</code> and <code>which(Function)</code> selects <code>which(Closure)</code>;</p>
+</li>
+<li>
+<p><code>grep</code> and <code>switch</code> call the value instead of comparing it;</p>
+</li>
+<li>
+<p>the closure can no longer be packed (GEP-27), and a metaclass that intercepts <code>doCall</code> is bypassed when the
+value is called through the interface.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The benefit is mostly identity, and the most visible gap of the proxy, that dynamic <code>f()</code> fails, is closed by
+GEP-35 without any of these changes. The change also overlaps the compile-time adapter of GROOVY-12492. It is
+deferred until those two are reconciled.</p>
 </div>
 </div>
 </div>
@@ -587,27 +585,30 @@ test class.</p>
 <ol class="arabic">
 <li>
 <p>Native lambdas and method references at every targeted site, with secondary bounds and the compile errors of
-section 1.</p>
+section 1, including type-variable targets.</p>
 </li>
 <li>
-<p>Inference from context (section 2), with one protocol for deferred arguments and no extension callbacks for
-the provisional check.</p>
+<p>Inference from context (section 2), replacing the mechanisms of GROOVY-12727, #3337 and #3339, with no
+extension callbacks for the provisional check, and the gaps of section 2 closed or documented.</p>
 </li>
 <li>
-<p>Implementing closures at declared targets (section 3), reconciled with GROOVY-12492.</p>
+<p>Type-checked code (section 3), with method references kept as method closures.</p>
 </li>
 <li>
-<p>Call syntax on lambdas and coercion proxies (section 4), with an indy fast path.</p>
-</li>
-<li>
-<p>Implementing closures under <code>@TypeChecked</code> (section 5).</p>
+<p>Remove implementing closures at declared targets from the implementation (<a href="#deferred">Deferred: closure literals at declared targets</a>).</p>
 </li>
 <li>
 <p>The report mode for finding affected code.</p>
 </li>
 <li>
+<p>The lambda writer fix for parameters declared with a superinterface, also a 6.0.x candidate.</p>
+</li>
+<li>
 <p>Benchmarks: closure, implementing closure, proxy and native lambda, for creation and call, on the JVM and
 in a native image.</p>
+</li>
+<li>
+<p>Cases checked against javac in <code>GenericsJavaCompatibilityTest</code>, so "as in Java" is tested.</p>
 </li>
 <li>
 <p>Documentation and a Groovy 7 compatibility entry.</p>
@@ -623,18 +624,13 @@ in a native image.</p>
 <dl>
 <dt class="hdlist1">Stop at GEP-33</dt>
 <dd>
-<p>Nothing breaks, but the two representations of a lambda, the coercion proxies and the gaps in
-inference remain, and lambdas keep the cost of closures at type-parameter slots.</p>
+<p>Nothing breaks, but the two representations of a lambda and the gaps in inference remain, and
+lambdas keep the cost of closures at type-parameter slots.</p>
 </dd>
-<dt class="hdlist1">Native lambdas without call syntax</dt>
+<dt class="hdlist1">Native lambdas without GEP-35</dt>
 <dd>
 <p>Smaller, but dynamic code loses <code>f()</code> on every lambda it receives from
-statically compiled code.</p>
-</dd>
-<dt class="hdlist1">Call syntax on every functional-interface instance</dt>
-<dd>
-<p>Simplest to state, but makes ordinary objects callable
-(see section 4). Rejected.</p>
+statically compiled code. Rejected: this GEP needs GEP-35.</p>
 </dd>
 <dt class="hdlist1">An option for the old behaviour</dt>
 <dd>
@@ -646,6 +642,11 @@ affected code instead.</p>
 <p>Keeps closure behaviour for lambdas, but gives up the
 native form and GEP-27 hoisting even where Groovy 6 already uses it. Rejected.</p>
 </dd>
+<dt class="hdlist1">Choose overloads with literals not pertinent to applicability</dt>
+<dd>
+<p>JLS 15.12.2.2. Changes Groovy 6 overload
+choice; rejected (section 2).</p>
+</dd>
 </dl>
 </div>
 </div>
@@ -656,15 +657,16 @@ native form and GEP-27 hoisting even where Groovy 6 already uses it. Rejected.</
 <div class="ulist">
 <ul>
 <li>
-<p>Should section 4 be split off and land first? It is useful on its own, since dynamic code already receives
-native lambdas.</p>
+<p>Should GEP-33 and this GEP land in the same release, so that no release ships lambdas as implementing
+closures at sites that later become native? If they cannot, GEP-33 could leave lambdas as Groovy 6 does and
+convert only closure literals.</p>
 </li>
 <li>
-<p>Should section 3 also cover closures coerced with <code>as F</code>?</p>
+<p>Should inference from context (section 2) be its own GEP? It does not depend on native lambdas: with GEP-33&#8217;s
+representation it would type closures and lambdas as well.</p>
 </li>
 <li>
-<p>Do the GEP-34 changes need to land in the same release as GEP-33, so that no release ships lambdas as
-implementing closures at sites that later become native?</p>
+<p>Should a closure literal at a type-variable slot also be a compile error, under a strict mode?</p>
 </li>
 </ul>
 </div>
@@ -679,14 +681,14 @@ implementing closures at sites that later become native?</p>
 <p><a href="https://groovy.apache.org/wiki/GEP-33.html">GEP-33: Functional Literals for Type-Parameter Slots</a></p>
 </li>
 <li>
+<p><a href="https://groovy.apache.org/wiki/GEP-35.html">GEP-35: Call Syntax on Functional Values</a></p>
+</li>
+<li>
 <p><a href="https://groovy.apache.org/wiki/GEP-27.html">GEP-27: Compact Closure and Lambda Compilation</a></p>
 </li>
 <li>
-<p><a href="https://groovy.apache.org/wiki/GEP-31.html">GEP-31: Realm based dynamic semantics</a></p>
-</li>
-<li>
 <p><a href="https://issues.apache.org/jira/browse/GROOVY-12492">GROOVY-12492</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-12727">GROOVY-12727</a>,
-<a href="https://issues.apache.org/jira/browse/GROOVY-12823">GROOVY-12823</a></p>
+<a href="https://issues.apache.org/jira/browse/GROOVY-12823">GROOVY-12823</a>, <a href="https://issues.apache.org/jira/browse/GROOVY-12825">GROOVY-12825</a></p>
 </li>
 <li>
 <p>Java Language Specification: 9.8, 9.9, 15.12.2.2, 15.13.2, 15.27.3, 18.5.2</p>
@@ -703,6 +705,13 @@ implementing closures at sites that later become native?</p>
 <dt class="hdlist1">1 (2026-11-25)</dt>
 <dd>
 <p>Initial draft, from the parts of GEP-33 version 1 that change existing behaviour.</p>
+</dd>
+<dt class="hdlist1">2 (2026-11-26)</dt>
+<dd>
+<p>From running every example on 6.0.0 and builds of GEP-33 and this GEP: the full list of
+breaking changes; type-variable targets; overload choice kept as in Groovy 6; <code>@TypeChecked</code> method
+references kept as method closures; #3337 and #3339 as special cases of section 2; closure literals at
+declared targets deferred; call syntax moved to GEP-35, on which this GEP depends.</p>
 </dd>
 </dl>
 </div>
